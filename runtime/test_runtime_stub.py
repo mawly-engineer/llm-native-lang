@@ -588,6 +588,8 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(replay["head"], self.rt.ui_head)
         self.assertIsNone(replay["snapshot_head"])
         self.assertEqual(replay["metrics"]["events_replayed"], 2)
+        self.assertEqual(replay["metrics"]["events_from_snapshot_seed"], 2)
+        self.assertEqual(replay["metrics"]["events_total"], 2)
         self.assertIsNone(replay["metrics"]["snapshot_seed_distance"])
 
     def test_replay_ui_timeline_exposes_metrics_with_snapshot_seed(self) -> None:
@@ -602,6 +604,8 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertEqual(replay["snapshot_head"], u0)
         self.assertEqual(replay["metrics"]["events_replayed"], 1)
+        self.assertEqual(replay["metrics"]["events_from_snapshot_seed"], 1)
+        self.assertEqual(replay["metrics"]["events_total"], 2)
         self.assertEqual(replay["metrics"]["snapshot_seed_distance"], 1)
 
     def test_validate_ui_merge_accepts_non_conflicting_branches(self) -> None:
@@ -962,6 +966,8 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertEqual(replay["snapshot_head"], base)
         self.assertEqual(replay["metrics"]["events_replayed"], 3)
+        self.assertEqual(replay["metrics"]["events_from_snapshot_seed"], 3)
+        self.assertEqual(replay["metrics"]["events_total"], 2)
         self.assertEqual(replay["metrics"]["snapshot_seed_distance"], 2)
 
     def test_merge_ui_branches_rejects_unknown_mode_with_dedicated_error(self) -> None:

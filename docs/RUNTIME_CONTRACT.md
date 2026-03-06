@@ -144,9 +144,11 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `head`: aufgelöster Replay-Head
     - `snapshot_head`: verwendeter Snapshot-Vorfahre oder `null`
     - `ops`: normalisierte UI-Ops nach Replay
-    - `metrics.events_replayed`: Anzahl tatsächlich replayter Timeline-Events auf dem effektiven Replay-Pfad (inkl. delta-base-seeded Pfaden, nicht nur Postorder-Näherung)
+    - `metrics.events_replayed`: kompatibler Alias für `events_from_snapshot_seed`
+    - `metrics.events_from_snapshot_seed`: Anzahl replayter Timeline-Events ab gewähltem Snapshot-Seed bis zum Ziel-Head
+    - `metrics.events_total`: Anzahl Event-Anwendungen auf dem gesamten traversierten Apply-Pfad (inkl. Delta-Base-Rekonstruktion)
     - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
-- `events_replayed` misst Replay-Kosten direkt am Event-Pfad und ist damit als Hook für Snapshot/Compaction-Tuning nutzbar.
+- Damit sind zwei Sichtweisen explizit getrennt: Seed-nahe Kosten (`events_from_snapshot_seed`) vs. Gesamtaufwand (`events_total`).
 
 ## Delta-Merge-Vorschau (Cycle 021/022)
 - `preview_ui_merge_delta(left_revision, right_revision, base_revision=None, policy="explicit_conflict", resolutions=None, resolution_notes=None)`

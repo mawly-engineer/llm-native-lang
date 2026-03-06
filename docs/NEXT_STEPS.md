@@ -96,7 +96,17 @@
 - Replay-Metriken im Runtime-Guide um Troubleshooting-Hinweise ergänzen ✅
 
 ## Cycle 025
-- Replay-Metrik-Zählweise für Delta+Snapshot bei Merge-Heads gegen tatsächlichen Apply-Pfad validieren
-- Optionalen Metrik-Split diskutieren (`events_from_snapshot_seed` vs `events_total`)
+- Replay-Metrik-Zählweise für Delta+Snapshot bei Merge-Heads gegen tatsächlichen Apply-Pfad validieren ✅
+- Optionalen Metrik-Split diskutieren (`events_from_snapshot_seed` vs `events_total`) ✅
 - Merge-Replay-Beispiele für größere DAG-Fan-in-Szenarien ergänzen
+
+## Cycle 026
+- Metrik-Split in Runtime-API ergänzen (`events_from_snapshot_seed`, `events_total`) ✅
+- Bestehende Replay-Metrik-Tests auf den Split ausweiten ✅
+- Runtime- und Contract-Doku auf den neuen Metrikvertrag aktualisieren ✅
+
+## Cycle 027
+- Merge-Replay-Beispiele für größere DAG-Fan-in-Szenarien ergänzen
+- Optionales Szenario für mehrfach verschachtelte Delta-Merges dokumentieren
+- Replay-Metriken in einem kompakten Vergleichsbeispiel zusammenfassen
 

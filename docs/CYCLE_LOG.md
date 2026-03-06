@@ -555,3 +555,29 @@ Delta-Replay-Metriken mit aktivem Snapshot-Seed absichern und Replay-/Merge-Fehl
 ### Nächster Schritt
 Cycle 025: Metrik-Zählweise bei Delta+Snapshot weiter präzisieren und Replay-Beispiele für komplexere Merge-DAGs ergänzen.
 
+## Cycle 025 — 2026-03-06T21:45:00Z
+### Fokus
+Replay-Metrik-Zählweise bei Delta+Snapshot gegen den tatsächlichen Apply-Pfad abgleichen und API-Split vorbereiten.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - `replay_ui_timeline(..., include_metrics=True)` liefert jetzt zusätzlich
+    - `events_from_snapshot_seed` (Seed-naher Replay-Pfad)
+    - `events_total` (gesamter traversierter Apply-Pfad inkl. Delta-Base)
+  - `events_replayed` bleibt als kompatibler Alias auf Seed-Pfad-Semantik erhalten.
+- Unit-Tests erweitert (3 bestehende Metrik-Tests geschärft):
+  - ohne Snapshot: beide Zähler sind identisch
+  - mit Snapshot-Seed: `events_from_snapshot_seed` < `events_total` wird explizit abgesichert
+  - Delta+Snapshot-Merge: Split zwischen Seed-Pfad und Gesamtaufwand wird validiert
+- Runtime-/Contract-Doku aktualisiert:
+  - neue Metrikfelder und deren Abgrenzung dokumentiert
+  - Troubleshooting bleibt mit alter Kennzahl kompatibel
+
+### Offene Lücken
+- Es fehlen weiterhin größere DAG-Fan-in-Replay-Beispiele mit reproduzierbaren Kostenmustern.
+- Kein dediziertes Beispiel für mehrfach verschachtelte Delta-Merges in der Doku.
+- Noch keine Aggregation/Historisierung der Replay-Metriken über mehrere Runs.
+
+### Nächster Schritt
+Cycle 026: Größere Merge-DAG-Beispiele und Metrikvergleichstabellen für Fan-in-Szenarien ergänzen.
+

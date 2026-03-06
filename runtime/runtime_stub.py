@@ -510,6 +510,8 @@ class KairoRuntime:
         replay_count = len(replay_ids) if best_snapshot_head in distances else events_replayed
         metrics = {
             "events_replayed": replay_count,
+            "events_from_snapshot_seed": replay_count,
+            "events_total": events_replayed,
             "snapshot_seed_distance": best_distance,
         }
         if snapshot_head is None:
