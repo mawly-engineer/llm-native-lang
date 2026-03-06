@@ -30,6 +30,13 @@ class UITimelineEvent:
     ops: List[Dict[str, Any]]
 
 
+@dataclass
+class UISnapshot:
+    id: str
+    event_head: str | None
+    ops: List[Dict[str, Any]]
+
+
 class PatchError(Exception):
     def __init__(self, code: str, message: str) -> None:
         self.code = code
@@ -51,6 +58,8 @@ class KairoRuntime:
 
         self.ui_timeline: Dict[str, UITimelineEvent] = {}
         self.ui_head: str | None = None
+        self.ui_snapshots: Dict[str, UISnapshot] = {}
+        self.ui_snapshot_index: Dict[str | None, str] = {}
 
     def _require_str(self, obj: Dict[str, Any], key: str, code: str) -> str:
         value = obj.get(key)
@@ -313,23 +322,56 @@ class KairoRuntime:
         self.ui_head = new_id
         return new_id
 
+    def _ui_path_to_root(self, head: str | None) -> List[str]:
+        path: List[str] = []
+        cursor = head
+        while cursor is not None:
+            event = self.ui_timeline.get(cursor)
+            if event is None:
+                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
+            path.append(cursor)
+            cursor = event.parent
+        return path
+
+    def create_ui_snapshot(self, head: str | None = None) -> str:
+        if head is None:
+            head = self.ui_head
+        if head is not None and head not in self.ui_timeline:
+            raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
+
+        ops = self.replay_ui_timeline(head=head)
+        snapshot_id = f"s-{len(self.ui_snapshots)}"
+        self.ui_snapshots[snapshot_id] = UISnapshot(
+            id=snapshot_id,
+            event_head=head,
+            ops=deepcopy(ops),
+        )
+        self.ui_snapshot_index[head] = snapshot_id
+        return snapshot_id
+
     def replay_ui_timeline(self, head: str | None = None) -> List[Dict[str, Any]]:
         if head is None:
             head = self.ui_head
         if head is not None and head not in self.ui_timeline:
             raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
 
-        ordered_events: List[UITimelineEvent] = []
-        cursor = head
-        while cursor is not None:
-            event = self.ui_timeline.get(cursor)
-            if event is None:
-                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
-            ordered_events.append(event)
-            cursor = event.parent
+        ordered_event_ids = self._ui_path_to_root(head)
 
-        ops: List[Dict[str, Any]] = []
-        for event in reversed(ordered_events):
+        seed_ops: List[Dict[str, Any]] = []
+        replay_ids = ordered_event_ids
+
+        for idx, event_id in enumerate(ordered_event_ids):
+            snapshot_id = self.ui_snapshot_index.get(event_id)
+            if snapshot_id is None:
+                continue
+            snapshot = self.ui_snapshots[snapshot_id]
+            seed_ops = deepcopy(snapshot.ops)
+            replay_ids = ordered_event_ids[:idx]
+            break
+
+        ops: List[Dict[str, Any]] = seed_ops
+        for event_id in reversed(replay_ids):
+            event = self.ui_timeline[event_id]
             ops.extend(deepcopy(event.ops))
 
         return self.normalize_ui_ops(ops)

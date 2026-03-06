@@ -310,3 +310,28 @@ Mehrere `ui_patch`-Ops pro Program-Patch erlauben und sequenzielle UI-Head-Valid
 
 ### Nächster Schritt
 Cycle 014: UI-Branch/Merge-Konfliktmodell skizzieren und Compaction/Snapshot-Ansatz konkretisieren.
+
+## Cycle 015 — 2026-03-06T19:16:00Z
+### Fokus
+UI-Replay für längere Eventketten per Snapshot-Compaction vorbereiten.
+
+### Geliefert
+- Runtime-Stub um UI-Snapshot-Modell erweitert:
+  - neue Snapshot-Struktur (`s-*`) mit referenziertem Timeline-Head + normalisierten Ops
+  - `create_ui_snapshot(head=None)` erzeugt kompaktisierte Replay-Basis
+- `replay_ui_timeline(...)` snapshot-aware gemacht:
+  - sucht den nächsten Vorfahren-Snapshot auf dem Head-Pfad
+  - replayt nur verbleibende Rest-Events bis zum Ziel-Head
+- Unit-Tests erweitert (2 neue Tests):
+  - Snapshot bildet den aktuellen Head-Stand konsistent ab
+  - Replay über Nachfolger-Events bleibt mit vorhandenem Snapshot deterministisch korrekt
+- Runtime-Doku auf Snapshot-/Compaction-Semantik aktualisiert
+
+### Offene Lücken
+- Kein Branch-/Merge-Modell für divergente UI-Timelines
+- Keine Persistenzstrategie für Snapshot-Retention/Cleanup
+- Kein Metrik-Hook zur Messung realer Replay-Performance
+
+### Nächster Schritt
+Cycle 016: UI-Branch/Merge-Konfliktmodell konkretisieren und erste Merge-Validierungstests vorbereiten.
+

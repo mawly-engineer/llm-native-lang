@@ -540,6 +540,42 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(self.rt.ui_head, "u-0")
         self.assertEqual(len(self.rt.ui_timeline), 1)
 
+    def test_ui_snapshot_replay_matches_head_state(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Live"}],
+            base_revision=u0,
+        )
+
+        snapshot_id = self.rt.create_ui_snapshot()
+
+        self.assertEqual(snapshot_id, "s-0")
+        self.assertEqual(self.rt.ui_snapshots[snapshot_id].event_head, self.rt.ui_head)
+        self.assertEqual(
+            self.rt.ui_snapshots[snapshot_id].ops,
+            self.rt.replay_ui_timeline(),
+        )
+
+    def test_ui_snapshot_accelerates_descendant_replay_consistently(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        self.rt.create_ui_snapshot(head=u0)
+        u1 = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "One"}],
+            base_revision=u0,
+        )
+        self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Two"}],
+            base_revision=u1,
+        )
+
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Two"},
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

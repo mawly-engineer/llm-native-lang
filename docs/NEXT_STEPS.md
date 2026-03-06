@@ -44,3 +44,14 @@
 - `ui_patch`-Konfliktmodell für Branch/Merge skizzieren
 - Replay-Performance mit Event-Compaction/Snapshot-Idee vorbereiten
 - Contract-/Runtime-Doku um Multi-`ui_patch`-Semantik präzisieren
+
+## Cycle 015
+- UI-Snapshot-API für Event-Compaction im Runtime-Stub ergänzen ✅
+- Replay-Logik snapshot-aware machen (Vorfahren-Snapshot + Rest-Events) ✅
+- Snapshot-Verhalten mit Unit-Tests und Runtime-Doku absichern ✅
+
+## Cycle 016
+- UI-Branch/Merge-Konfliktmodell für divergente UI-Timelines konkretisieren
+- Merge-Policy-Entscheidung dokumentieren (Last-Writer vs explicit conflict)
+- Erste Merge-Validierungstests im Runtime-Stub vorbereiten
+
