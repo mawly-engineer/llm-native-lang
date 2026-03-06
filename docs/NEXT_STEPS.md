@@ -131,7 +131,12 @@
 - Contract-Beispiel ergänzen: reproduzierbarer Bugreport mit Seed + minimalem Merge-Case ✅
 
 ## Cycle 032
-- Replay-Metriken für Resolver-Profile (`accept_left` vs `accept_right`) im Konfliktfall vergleichen
-- Delta-Mode auch für Resolver-Profil-Vergleiche in Random-Tests systematisch abdecken
-- Runtime-Doku um kurzes Diagnose-Rezept für divergente `merged_ops` zwischen Profilen ergänzen
+- Replay-Metriken für Resolver-Profile (`accept_left` vs `accept_right`) im Konfliktfall vergleichen ✅
+- Delta-Mode auch für Resolver-Profil-Vergleiche in Random-Tests systematisch abdecken ✅
+- Runtime-Doku um kurzes Diagnose-Rezept für divergente `merged_ops` zwischen Profilen ergänzen ✅
+
+## Cycle 033
+- Resolver-Profil-Vergleich um explizite Snapshot-Seeding-Fälle erweitern
+- Profilübergreifende Metrik-Deltas (`events_total`) als kurze Testmatrix dokumentieren
+- Runtime-Contract um Diagnose-Hinweis für Profil-Metriken ergänzen
 

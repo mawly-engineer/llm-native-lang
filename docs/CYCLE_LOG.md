@@ -713,3 +713,25 @@ Randomisierte Merge-Tests realistischer machen (strukturelle UI-Ops) und Resolve
 ### Nächster Schritt
 Cycle 032: Resolver-Profil-Metrikvergleich + Delta-Abdeckung + Diagnose-Rezept für divergente Merge-Ergebnisse.
 
+## Cycle 032 — 2026-03-06T23:35:00Z
+### Fokus
+Resolver-Profile (`accept_left`/`accept_right`) im Konfliktfall mit Replay-Metriken vergleichen und Delta-Mode dabei gleichwertig absichern.
+
+### Geliefert
+- Unit-Tests erweitert (1 neuer Random-Test):
+  - Konfliktfälle werden seed-basiert für beide Resolver-Profile durchlaufen.
+  - Vergleich läuft jetzt systematisch in **beiden** Merge-Modi (`materialized`, `delta`).
+  - Für beide Profile werden Replay-Metriken via `include_metrics=True` geprüft (gleicher Metrik-Key-Satz, nicht-negative Werte).
+  - Profilabhängige Ergebnisabweichung bleibt explizit abgesichert (`merged_ops` unterscheiden sich bei echten Konflikten).
+- Runtime-Doku ergänzt:
+  - kurzes Diagnose-Rezept für divergente `merged_ops` zwischen Resolver-Profilen (Seed/Mode fixieren, Konfliktkeys sichern, Metriken vergleichen, Bugreport-Format).
+- Next-Steps auf Cycle-033 fortgeschrieben.
+
+### Offene Lücken
+- Snapshot-nahe Profilvergleiche sind noch nicht als eigener Random-Testfall ausdefiniert.
+- Es fehlt eine kompakte Metrikmatrix nur für Resolver-Profile (fokussiert auf `events_total`-Deltas).
+- Contract-Doku enthält noch keinen expliziten Profil-Metrik-Diagnosehinweis.
+
+### Nächster Schritt
+Cycle 033: Snapshot-seeded Profilvergleich + kleine Metrikmatrix + Contract-Hinweis ergänzen.
+

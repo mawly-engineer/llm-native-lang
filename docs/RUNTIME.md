@@ -120,3 +120,11 @@ Kurzfazit:
 - Beide Profile müssen replaybar sein; bei echten Konflikten dürfen die resultierenden `merged_ops` bewusst voneinander abweichen.
 - Für reproduzierbare Reports reicht ein Minimalpaket:
   - Testname + Seed + Resolver-Profil + Erwartung/Ist (`merged_ops` oder Fehlercode).
+
+## Diagnose-Rezept für divergente `merged_ops` zwischen Resolver-Profilen (Cycle 032)
+Wenn `accept_left` und `accept_right` bei gleichem Seed unterschiedliche Endstände liefern, hilft dieses Kurzschema:
+1. **Seed + Merge-Modus fixieren** (`materialized` und `delta` jeweils separat prüfen).
+2. **Konfliktliste sichern** (`preview_ui_merge(...)["conflicts"]`), damit klar ist, welche Op-Keys tatsächlich umstritten waren.
+3. **Beide Profile explizit mergen** (`resolutions_left` vs `resolutions_right`) und `merged_ops` direkt diffen.
+4. **Replay-Metriken je Profil vergleichen** (`events_from_snapshot_seed`, `events_total`, `snapshot_seed_distance`) statt nur auf Payload zu schauen.
+5. **Bugreport kompakt halten**: Testname, Seed, Modus, Profil, Konflikt-Key(s), `merged_ops`-Delta, Metrik-Diff.

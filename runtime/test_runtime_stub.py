@@ -1299,6 +1299,47 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             if conflicts:
                 self.assertNotEqual(merged_left["merged_ops"], merged_right["merged_ops"])
 
+    def test_randomized_merge_resolution_profiles_expose_metrics_in_both_modes(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(600 + seed, include_structural_ops=True)
+            conflicts = case["preview"]["conflicts"]
+            if not conflicts:
+                continue
+
+            left = case["left"]
+            right = case["right"]
+
+            for mode in ("materialized", "delta"):
+                rt_accept_left = deepcopy(case["runtime"])
+                rt_accept_right = deepcopy(case["runtime"])
+
+                merged_left = rt_accept_left.merge_ui_branches(
+                    left,
+                    right,
+                    resolutions=case["resolutions_left"],
+                    mode=mode,
+                )
+                merged_right = rt_accept_right.merge_ui_branches(
+                    left,
+                    right,
+                    resolutions=case["resolutions_right"],
+                    mode=mode,
+                )
+
+                replay_left = rt_accept_left.replay_ui_timeline(
+                    merged_left["merged_revision"],
+                    include_metrics=True,
+                )
+                replay_right = rt_accept_right.replay_ui_timeline(
+                    merged_right["merged_revision"],
+                    include_metrics=True,
+                )
+
+                self.assertNotEqual(merged_left["merged_ops"], merged_right["merged_ops"])
+                self.assertEqual(set(replay_left["metrics"].keys()), set(replay_right["metrics"].keys()))
+                self.assertTrue(all(value >= 0 for value in replay_left["metrics"].values() if value is not None))
+                self.assertTrue(all(value >= 0 for value in replay_right["metrics"].values() if value is not None))
+
 
 if __name__ == "__main__":
     unittest.main()
