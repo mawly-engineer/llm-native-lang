@@ -360,3 +360,28 @@ UI-Branch/Merge-Konfliktmodell für divergente UI-Timelines spezifizieren und al
 ### Nächster Schritt
 Cycle 017: Merge-Vorschau in echte `merge_ui_branches(...)`-Operation überführen und Konfliktdetails als strukturiertes Ergebnis ausgeben.
 
+## Cycle 017 — 2026-03-06T19:44:00Z
+### Fokus
+UI-Branch-Merge von reiner Validierung/Vorschau zu einer echten Runtime-Operation ausbauen.
+
+### Geliefert
+- Runtime-Stub um zwei klare Merge-APIs erweitert:
+  - `preview_ui_merge(...)` für strukturierte Vorschau mit `conflicts[]`
+  - `merge_ui_branches(...)` für konfliktfreien Merge mit neuer `merged_revision`
+- `validate_ui_merge(...)` auf Preview-Logik umgestellt:
+  - Konflikte lösen weiterhin `E_UI_MERGE_CONFLICT` aus
+  - Konfliktdetails werden zusätzlich strukturiert in `PatchError.details` bereitgestellt
+- Unit-Tests erweitert (3 neue Tests):
+  - strukturierte Konfliktdetails bei `validate_ui_merge(...)`
+  - konfliktbehaftete Vorschau via `preview_ui_merge(...)`
+  - erfolgreicher `merge_ui_branches(...)` erzeugt neue UI-Head-Revision
+- Next-Steps und Runtime-Contract auf Cycle-017-Stand aktualisiert (inkl. Decision-Log-Hinweis für manuelle Auflösung)
+
+### Offene Lücken
+- Merge-Persistenz ist aktuell materialisiert/squash-artig und modelliert noch keine expliziten Dual-Parents
+- Manuelle Konfliktauflösung ist nur als Decision-Log-Konvention dokumentiert, noch ohne Resolver-API
+- Keine Policy für teilautomatische Auflösung (z. B. accept-left/right pro Op-Key)
+
+### Nächster Schritt
+Cycle 018: Merge-Commit-Struktur mit expliziten Parents + manuelle Konfliktauflösungs-API vorbereiten.
+

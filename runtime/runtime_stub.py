@@ -38,8 +38,9 @@ class UISnapshot:
 
 
 class PatchError(Exception):
-    def __init__(self, code: str, message: str) -> None:
+    def __init__(self, code: str, message: str, details: Any | None = None) -> None:
         self.code = code
+        self.details = details
         super().__init__(f"{code}: {message}")
 
 
@@ -407,7 +408,7 @@ class KairoRuntime:
                 raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
             cursor = event.parent
 
-    def validate_ui_merge(
+    def preview_ui_merge(
         self,
         left_revision: str | None,
         right_revision: str | None,
@@ -461,9 +462,6 @@ class KairoRuntime:
                     }
                 )
 
-        if conflicts:
-            raise PatchError("E_UI_MERGE_CONFLICT", f"ui merge conflict count: {len(conflicts)}")
-
         merged_by_key = {op_key(op): deepcopy(op) for op in base_ops}
         merged_by_key.update({op_key(op): deepcopy(op) for op in left_ops})
         merged_by_key.update({op_key(op): deepcopy(op) for op in right_ops})
@@ -474,8 +472,60 @@ class KairoRuntime:
             "left_revision": left_revision,
             "right_revision": right_revision,
             "policy": policy,
-            "conflicts": [],
+            "conflicts": conflicts,
             "merged_ops": merged_ops,
+        }
+
+    def validate_ui_merge(
+        self,
+        left_revision: str | None,
+        right_revision: str | None,
+        base_revision: str | None = None,
+        policy: str = "explicit_conflict",
+    ) -> Dict[str, Any]:
+        merge_info = self.preview_ui_merge(
+            left_revision=left_revision,
+            right_revision=right_revision,
+            base_revision=base_revision,
+            policy=policy,
+        )
+
+        conflicts = merge_info["conflicts"]
+        if conflicts:
+            raise PatchError(
+                "E_UI_MERGE_CONFLICT",
+                f"ui merge conflict count: {len(conflicts)}",
+                details={"conflicts": deepcopy(conflicts)},
+            )
+
+        return merge_info
+
+    def merge_ui_branches(
+        self,
+        left_revision: str | None,
+        right_revision: str | None,
+        base_revision: str | None = None,
+        policy: str = "explicit_conflict",
+    ) -> Dict[str, Any]:
+        merge_info = self.validate_ui_merge(
+            left_revision=left_revision,
+            right_revision=right_revision,
+            base_revision=base_revision,
+            policy=policy,
+        )
+
+        merged_ops = merge_info["merged_ops"]
+        new_id = f"u-{len(self.ui_timeline)}"
+        self.ui_timeline[new_id] = UITimelineEvent(
+            id=new_id,
+            parent=None,
+            ops=deepcopy(merged_ops),
+        )
+        self.ui_head = new_id
+
+        return {
+            **merge_info,
+            "merged_revision": new_id,
         }
 
     def query(

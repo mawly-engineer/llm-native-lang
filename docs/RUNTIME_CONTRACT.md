@@ -102,11 +102,20 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
 - Validierung ist transaktional: Jeder Fehler (inkl. UI-Base-Mismatch) verwirft den gesamten Patch.
 - Erfolgreiche Program-Revisionen persistieren die resultierende `ui_revision` für deterministisches Replay/Debugging.
 
-## UI Merge-Validierung (Cycle 016)
-- `validate_ui_merge(left_revision, right_revision, base_revision=None, policy="explicit_conflict")` prüft Branch-Merges ohne Timeline-Mutation.
+## UI Merge-Validierung und Merge-Operation (Cycle 016/017)
+- `preview_ui_merge(left_revision, right_revision, base_revision=None, policy="explicit_conflict")`
+  - liefert immer strukturierte Merge-Information inkl. `conflicts[]` und `merged_ops`
+  - mutiert keine Timeline
+- `validate_ui_merge(...)`
+  - nutzt dieselbe Logik, bricht aber bei Konflikten mit `E_UI_MERGE_CONFLICT` ab
+  - `PatchError.details` enthält dabei `{ "conflicts": [...] }` für maschinenlesbare Fehleranalyse
+- `merge_ui_branches(...)`
+  - führt einen konfliktfreien Merge aus und erzeugt eine neue UI-Revision `merged_revision`
+  - setzt `ui_head` auf die neue Merge-Revision
+  - Persistenzmodell im Stub ist aktuell materialisiert/squash-artig (`merged_ops` als Event-Payload)
 - Ohne `base_revision` wird automatisch der nächste gemeinsame Vorfahre (LCA) verwendet.
 - `base_revision` muss Vorfahre von beiden Branch-Heads sein (`E_UI_MERGE_BASE`).
 - Konfliktregel v0.1 (Policy `explicit_conflict`):
   - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
-  - Bei Konflikt wird abgebrochen (`E_UI_MERGE_CONFLICT`), kein implizites Last-Writer-Wins über Branches.
-- Bei konfliktfreiem Merge liefert die API deterministisch normalisierte `merged_ops` als Merge-Vorschau.
+  - Kein implizites Last-Writer-Wins über Branches.
+- Für manuelle Konfliktauflösung soll ein Decision-Log pro Op-Key geführt werden (vorerst als Contract-Konvention, noch ohne dedizierten Resolver im Stub).

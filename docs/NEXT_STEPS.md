@@ -56,7 +56,12 @@
 - Erste Merge-Validierungstests im Runtime-Stub vorbereiten ✅
 
 ## Cycle 017
-- Merge-Vorschau in echte `merge_ui_branches(...)`-Operation überführen
-- Konfliktdetails strukturiert zurückgeben (nicht nur Error-Code)
-- Decision-Log für manuelle Konfliktauflösung im Runtime-Contract ergänzen
+- Merge-Vorschau in echte `merge_ui_branches(...)`-Operation überführen ✅
+- Konfliktdetails strukturiert zurückgeben (nicht nur Error-Code) ✅
+- Decision-Log für manuelle Konfliktauflösung im Runtime-Contract ergänzen ✅
+
+## Cycle 018
+- UI-Merge-Commit mit expliziten Branch-Parents modellieren (statt squash-artigem Materialized Event)
+- Merge-Decision-Log als optionalen Input (`resolution_notes`) im Runtime-Contract definieren
+- Tests für manuelle Konfliktauflösung (accept-left/right per Op-Key) vorbereiten
 

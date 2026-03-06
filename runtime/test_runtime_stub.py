@@ -621,6 +621,53 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             self.rt.validate_ui_merge(left, right, base_revision=base)
 
         self.assertIn("E_UI_MERGE_CONFLICT", str(ctx.exception))
+        self.assertIsInstance(ctx.exception.details, dict)
+        self.assertEqual(len(ctx.exception.details["conflicts"]), 1)
+
+    def test_preview_ui_merge_returns_structured_conflicts(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+            base_revision=base,
+        )
+
+        preview = self.rt.preview_ui_merge(left, right, base_revision=base)
+
+        self.assertEqual(preview["base_revision"], base)
+        self.assertEqual(len(preview["conflicts"]), 1)
+        self.assertEqual(preview["conflicts"][0]["key"]["path"], "/root/a")
+        self.assertEqual(preview["conflicts"][0]["key"]["prop"], "title")
+
+    def test_merge_ui_branches_creates_new_ui_head(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base)
+
+        self.assertEqual(merged["merged_revision"], self.rt.ui_head)
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"},
+            ],
+        )
 
 
 if __name__ == "__main__":
