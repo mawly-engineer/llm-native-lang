@@ -1001,6 +1001,46 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertIn("E_UI_MERGE_BASE", str(ctx.exception))
 
+    def test_replay_delta_event_requires_base_revision(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, mode="delta")
+        self.rt.ui_timeline[merged["merged_revision"]].delta_base_revision = None
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.replay_ui_timeline(merged["merged_revision"])
+
+        self.assertIn("E_UI_DELTA_BASE", str(ctx.exception))
+
+    def test_replay_delta_event_rejects_unknown_base_revision(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, mode="delta")
+        self.rt.ui_timeline[merged["merged_revision"]].delta_base_revision = "u-404"
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.replay_ui_timeline(merged["merged_revision"])
+
+        self.assertIn("E_UI_DELTA_BASE", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

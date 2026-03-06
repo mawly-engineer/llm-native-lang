@@ -421,6 +421,14 @@ class KairoRuntime:
         events_replayed = 0
 
         if event.merge_mode == "delta":
+            if event.delta_base_revision is None:
+                raise PatchError("E_UI_DELTA_BASE", "delta merge event requires delta_base_revision")
+            if event.delta_base_revision not in self.ui_timeline:
+                raise PatchError(
+                    "E_UI_DELTA_BASE",
+                    f"unknown delta_base_revision: {event.delta_base_revision}",
+                )
+
             base_ops, base_count, _snap_head, _snap_distance = self._ui_event_apply_sequence(
                 event.delta_base_revision,
                 seen,
