@@ -29,7 +29,9 @@ class PatchError(Exception):
 
 class KairoRuntime:
     ATTR_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
-    QUERY_PATTERN = re.compile(r"^(modules|edges)(?:\[([a-z_][a-z0-9_.-]*)=([^\]]+)\])?$")
+    QUERY_PATTERN = re.compile(
+        r"^(modules|edges)(?:\[([a-z_][a-z0-9_.-]*)(=|!=|\^=|\*=)([^\]]+)\])?$"
+    )
 
     def __init__(self) -> None:
         self.state = RuntimeState()
@@ -83,7 +85,7 @@ class KairoRuntime:
 
         return node_id, key, value["value"]
 
-    def _parse_selector(self, selector: str) -> Tuple[str, str | None, str | None]:
+    def _parse_selector(self, selector: str) -> Tuple[str, str | None, str | None, str | None]:
         if not isinstance(selector, str) or not selector.strip():
             raise PatchError("E_QUERY_SELECTOR", "selector must be a non-empty string")
 
@@ -91,8 +93,8 @@ class KairoRuntime:
         if not match:
             raise PatchError("E_QUERY_SELECTOR", f"invalid selector: {selector}")
 
-        collection, key, value = match.groups()
-        return collection, key, value
+        collection, key, operator, value = match.groups()
+        return collection, key, operator, value
 
     def _query_arg_pair(self, *args: Any) -> Tuple[Dict[str, Any], str]:
         if len(args) == 1:
@@ -122,19 +124,40 @@ class KairoRuntime:
 
         raise PatchError("E_QUERY_KEY", f"selector key '{key}' not allowed for {collection}")
 
-    def _query_obj_matches(self, collection: str, obj: Dict[str, Any], key: str, value: str) -> bool:
+    def _query_obj_matches(
+        self,
+        collection: str,
+        obj: Dict[str, Any],
+        key: str,
+        operator: str,
+        value: str,
+    ) -> bool:
         if collection == "modules" and key.startswith("attr."):
             attrs = obj.get("attrs")
             if not isinstance(attrs, dict):
-                return False
-            attr_key = key[len("attr.") :]
-            return attrs.get(attr_key) == value
+                actual = None
+            else:
+                attr_key = key[len("attr.") :]
+                actual = attrs.get(attr_key)
+        else:
+            actual = obj.get(key)
 
-        return obj.get(key) == value
+        actual_text = "" if actual is None else str(actual)
+
+        if operator == "=":
+            return actual_text == value
+        if operator == "!=":
+            return actual_text != value
+        if operator == "^=":
+            return actual_text.startswith(value)
+        if operator == "*=":
+            return value in actual_text
+
+        raise PatchError("E_QUERY_SELECTOR", f"unsupported operator: {operator}")
 
     def query(self, *args: Any) -> List[Dict[str, Any]]:
         graph, selector = self._query_arg_pair(*args)
-        collection, key, value = self._parse_selector(selector)
+        collection, key, operator, value = self._parse_selector(selector)
 
         if not isinstance(graph, dict):
             raise PatchError("E_QUERY_GRAPH", "graph must be an object")
@@ -148,7 +171,7 @@ class KairoRuntime:
             return objects
 
         self._validate_query_key(collection, key)
-        return [obj for obj in objects if self._query_obj_matches(collection, obj, key, value)]
+        return [obj for obj in objects if self._query_obj_matches(collection, obj, key, operator, value)]
 
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):

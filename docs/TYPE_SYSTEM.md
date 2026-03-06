@@ -68,7 +68,7 @@ Constraints:
 ## Scope v0.1
 - Nur `program_graph`
 - Unterstützte Ops: `add_node`, `replace_node`, `remove_node`, `add_edge`, `remove_edge`, `set_attr`
-- Read-only Query DSL: `modules`/`edges` mit optionalem Equality-Filter auf Kernfeldern
+- Read-only Query DSL: `modules`/`edges` mit optionalen Operatoren `=`, `!=`, `^=` (Prefix), `*=` (Contains) auf Kernfeldern und `modules[attr.<key>...]`
 - Ziel: frühe Integritätschecks vor Commit + deterministische Graph-Inspektion
 
 ## Nächster Ausbau

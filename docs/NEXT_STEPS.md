@@ -6,11 +6,11 @@
 - Rollback-Strategie mit Testfällen validieren
 
 ## Cycle 007
-- Policy DSL v0.1
-- Sandbox Profiles (strict / balanced / permissive)
-- Approval Gates für sensitive operations
+- Query DSL um Operatoren erweitern (`!=`, Prefix/Contains)
+- Query-Operatoren mit Unit-Tests absichern
+- Type-System-Doku auf neuen Query-Stand bringen
 
 ## Cycle 008
 - Fehlercodes in eigenes Runtime-Contract-Dokument extrahieren
-- Query DSL um Operatoren erweitern (`!=`, Prefix/Contains)
 - Sortierungs-/Limit-Semantik für Query API definieren
+- UI Diff Protocol (deterministische Reihenfolge, conflict-safe) vorbereiten

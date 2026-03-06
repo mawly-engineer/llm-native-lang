@@ -223,6 +223,62 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["type"], "Node")
 
+    def test_query_supports_not_equal_operator(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "n1", "type": "Node"}},
+                    {"op": "add_node", "value": {"id": "n2", "type": "Service"}},
+                ],
+            }
+        )
+
+        result = self.rt.query("modules[type!=Node]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "n2")
+
+    def test_query_supports_prefix_operator_for_attrs(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "n1", "type": "Node"}},
+                    {"op": "add_node", "value": {"id": "n2", "type": "Node"}},
+                    {"op": "set_attr", "value": {"node_id": "n1", "key": "display.name", "value": "alpha-ui"}},
+                    {"op": "set_attr", "value": {"node_id": "n2", "key": "display.name", "value": "beta-api"}},
+                ],
+            }
+        )
+
+        result = self.rt.query("modules[attr.display.name^=alpha]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "n1")
+
+    def test_query_supports_contains_operator(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "n1", "type": "Renderer"}},
+                    {"op": "add_node", "value": {"id": "n2", "type": "Policy"}},
+                ],
+            }
+        )
+
+        result = self.rt.query("modules[type*=ender]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "n1")
+
     def test_query_rejects_invalid_selector(self) -> None:
         graph = self.rt.state.revisions[self.rt.state.head].graph
         with self.assertRaises(PatchError) as ctx:

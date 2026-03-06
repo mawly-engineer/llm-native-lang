@@ -141,3 +141,25 @@ Query DSL um Attribut-Selektoren erweitern und Query-API ergonomischer machen.
 
 ### Nächster Schritt
 Cycle 007: Query DSL um Vergleichsoperatoren erweitern und Runtime-Contract-Dokument für Fehlercodes auslagern.
+
+## Cycle 007 — 2026-03-06T17:30:00Z
+### Fokus
+Query DSL v0.1 um Vergleichsoperatoren erweitern und über Tests absichern.
+
+### Geliefert
+- Selector-Syntax auf Operatoren erweitert: `=`, `!=`, `^=` (Prefix), `*=` (Contains)
+- Query-Matcher auf stringbasierte Operatorauswertung erweitert
+- Unterstützung gilt für Kernfelder (`id`, `type`, `from`, `to`, `contract`) sowie `modules[attr.<key>...]`
+- Unit-Tests erweitert (3 neue Tests):
+  - Ungleich-Filter (`modules[type!=...]`)
+  - Prefix-Filter auf Attributen (`modules[attr.display.name^=...]`)
+  - Contains-Filter (`modules[type*=...]`)
+- Type-System-Dokumentation auf neuen Query-Funktionsumfang aktualisiert
+
+### Offene Lücken
+- Keine Sortierungs-/Limit-Semantik in Query-Ergebnissen
+- Fehlercodes noch nicht in separates Runtime-Contract-Dokument extrahiert
+- Keine Policy DSL / Approval Gates im Runtime-Stub
+
+### Nächster Schritt
+Cycle 008: Runtime-Contract-Dokument für Fehlercodes auslagern und Query um Sortierung/Limit ergänzen.
