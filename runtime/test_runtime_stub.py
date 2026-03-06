@@ -92,6 +92,55 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(len(head_graph["edges"]), 0)
         self.assertEqual([m["id"] for m in head_graph["modules"]], ["b"])
 
+    def test_set_attr_updates_node_attrs(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [{"op": "add_node", "value": {"id": "ui.shared", "type": "UIEngine"}}],
+            }
+        )
+
+        r2 = self.rt.apply_patch(
+            {
+                "patch_id": "p-2",
+                "base_revision": "r-1",
+                "target": "program_graph",
+                "ops": [
+                    {
+                        "op": "set_attr",
+                        "value": {"node_id": "ui.shared", "key": "render.mode", "value": "incremental"},
+                    }
+                ],
+            }
+        )
+
+        node = self.rt.state.revisions[r2].graph["modules"][0]
+        self.assertEqual(node["attrs"]["render.mode"], "incremental")
+
+    def test_set_attr_rejects_reserved_key(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+            }
+        )
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.apply_patch(
+                {
+                    "patch_id": "p-2",
+                    "base_revision": "r-1",
+                    "target": "program_graph",
+                    "ops": [{"op": "set_attr", "value": {"node_id": "n1", "key": "type", "value": "X"}}],
+                }
+            )
+
+        self.assertIn("E_ATTR_RESERVED", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

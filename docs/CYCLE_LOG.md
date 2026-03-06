@@ -68,3 +68,27 @@ Patch-Op-Abdeckung im Runtime-Stub auf zentrale Graph-Mutationen ausweiten + tes
 
 ### Nächster Schritt
 Cycle 004: `set_attr` + minimale Attribut-Schema-Prüfung ergänzen und Edge-/Node-Indexierung für schnellere Validierung vorbereiten.
+
+## Cycle 004 — 2026-03-06T16:45:00Z
+### Fokus
+`set_attr` als erste gezielte Node-Mutation mit Attribut-Constraints im Runtime-Stub ergänzen.
+
+### Geliefert
+- Neue Op `set_attr` in Validierung + Apply implementiert
+  - verlangt `{node_id, key, value}`
+  - blockiert unbekannte Nodes
+  - schützt reservierte Felder (`id`, `type`)
+  - validiert Attribut-Key via Pattern (`[A-Za-z_][A-Za-z0-9_.-]*`)
+  - erzwingt, dass bestehende `attrs`-Container Objekte sind
+- Runtime-Tests erweitert (2 neue Tests):
+  - erfolgreicher Attribut-Write auf bestehende Node
+  - Reserved-Key-Fehler (`E_ATTR_RESERVED`)
+- Type-System-Doku aktualisiert (Scope + Fehlercodes an Runtime-Stand angepasst)
+
+### Offene Lücken
+- Noch kein dediziertes Attribut-Typing pro Node-Typ (z. B. erlaubte Keys/Wertetypen)
+- Keine Query DSL Implementierung
+- Kein Merge-/Konfliktmodell
+
+### Nächster Schritt
+Cycle 005: Query DSL v0.1 (read-only) auf `modules`/`edges` einführen und als Runtime-API exponieren.

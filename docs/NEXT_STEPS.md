@@ -1,16 +1,16 @@
 # Next Steps
 
-## Cycle 002
-- Type System v0.1 (Schema + Constraints + Validation-Fehlercodes)
-- Query DSL v0.1 für Entity/Relationship/Context
-- Runtime Stub um Patch-Apply/Validate erweitern
+## Cycle 005
+- Query DSL v0.1 für read-only Selektoren auf `modules`/`edges`
+- Runtime-API `query(graph, selector)` als Stub ergänzen
+- Fehlercodes für ungültige Selektoren definieren
 
-## Cycle 003
+## Cycle 006
 - UI Diff Protocol (deterministische Reihenfolge, conflict-safe)
 - Event-Sourcing Modell für State + UI Timeline
-- Rollback-Strategie testen
+- Rollback-Strategie mit Testfällen validieren
 
-## Cycle 004
+## Cycle 007
 - Policy DSL v0.1
-- Sandbox profiles (strict / balanced / permissive)
-- Approval gates für sensitive operations
+- Sandbox Profiles (strict / balanced / permissive)
+- Approval Gates für sensitive operations

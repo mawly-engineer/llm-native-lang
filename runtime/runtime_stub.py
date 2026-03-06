@@ -4,6 +4,7 @@ mit einfachen Typ-/Constraint-Checks.
 """
 
 from dataclasses import dataclass, field
+import re
 from typing import Any, Dict, List, Set, Tuple
 
 
@@ -27,6 +28,8 @@ class PatchError(Exception):
 
 
 class KairoRuntime:
+    ATTR_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
+
     def __init__(self) -> None:
         self.state = RuntimeState()
         base_graph = {"modules": [], "edges": []}
@@ -62,6 +65,22 @@ class KairoRuntime:
         if isinstance(value, dict):
             return self._require_str(value, "id", "E_NODE_ID")
         raise PatchError("E_NODE_ID", "node reference must be string or object with id")
+
+    def _validate_set_attr_shape(self, value: Any) -> Tuple[str, str, Any]:
+        if not isinstance(value, dict):
+            raise PatchError("E_ATTR_SHAPE", "set_attr value must be an object")
+
+        node_id = self._require_str(value, "node_id", "E_ATTR_NODE")
+        key = self._require_str(value, "key", "E_ATTR_KEY")
+
+        if key in {"id", "type"}:
+            raise PatchError("E_ATTR_RESERVED", f"cannot mutate reserved key: {key}")
+        if not self.ATTR_KEY_PATTERN.match(key):
+            raise PatchError("E_ATTR_KEY", f"invalid attr key: {key}")
+        if "value" not in value:
+            raise PatchError("E_ATTR_VALUE", "set_attr requires value field")
+
+        return node_id, key, value["value"]
 
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):
@@ -140,6 +159,18 @@ class KairoRuntime:
                     raise PatchError("E_EDGE_DUPLICATE", f"duplicate edge: {edge_key}")
                 known_edges.add(edge_key)
 
+            elif kind == "set_attr":
+                node_id, _key, _attr_value = self._validate_set_attr_shape(value)
+                if node_id not in known_nodes:
+                    raise PatchError("E_NODE_NOT_FOUND", f"cannot set attr on unknown node: {node_id}")
+
+                for mod in modules:
+                    if self._require_str(mod, "id", "E_NODE_ID") == node_id:
+                        attrs = mod.get("attrs")
+                        if attrs is not None and not isinstance(attrs, dict):
+                            raise PatchError("E_ATTR_CONTAINER", "node attrs must be an object")
+                        break
+
             elif kind == "remove_edge":
                 self._validate_edge_shape(value)
                 edge_key = self._edge_tuple(value)
@@ -182,6 +213,19 @@ class KairoRuntime:
 
             elif kind == "add_edge":
                 new_graph["edges"].append(value)
+
+            elif kind == "set_attr":
+                node_id, key, attr_value = self._validate_set_attr_shape(value)
+                for mod in new_graph["modules"]:
+                    if isinstance(mod, dict) and mod.get("id") == node_id:
+                        attrs = mod.get("attrs")
+                        if attrs is None:
+                            attrs = {}
+                            mod["attrs"] = attrs
+                        elif not isinstance(attrs, dict):
+                            raise PatchError("E_ATTR_CONTAINER", "node attrs must be an object")
+                        attrs[key] = attr_value
+                        break
 
             elif kind == "remove_edge":
                 edge_key = self._edge_tuple(value)

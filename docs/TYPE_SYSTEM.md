@@ -51,10 +51,20 @@ Constraints:
 - `E_EDGE_TO` – Edge `to` ungültig
 - `E_EDGE_CONTRACT` – Edge `contract` ungültig
 - `E_EDGE_DANGLING` – Edge verweist auf unbekannte Node
+- `E_EDGE_DUPLICATE` – identische Edge bereits vorhanden
+- `E_EDGE_NOT_FOUND` – zu entfernende Edge existiert nicht
+- `E_NODE_NOT_FOUND` – referenzierte Node existiert nicht
+- `E_NODE_IN_USE` – Node hat noch abhängige Edges
+- `E_ATTR_SHAPE` – `set_attr` hat ungültiges Value-Objekt
+- `E_ATTR_NODE` – `set_attr.node_id` ungültig
+- `E_ATTR_KEY` – `set_attr.key` ungültig
+- `E_ATTR_VALUE` – `set_attr.value` fehlt
+- `E_ATTR_RESERVED` – Versuch, reservierte Felder (`id`, `type`) zu überschreiben
+- `E_ATTR_CONTAINER` – bestehendes `attrs` Feld ist kein Objekt
 
 ## Scope v0.1
 - Nur `program_graph`
-- Nur Ops: `add_node`, `add_edge`
+- Unterstützte Ops: `add_node`, `replace_node`, `remove_node`, `add_edge`, `remove_edge`, `set_attr`
 - Ziel: frühe Integritätschecks vor Commit
 
 ## Nächster Ausbau
