@@ -262,3 +262,28 @@ UI-Event-Sourcing im Runtime-Stub konkretisieren (append-only Timeline + Replay/
 
 ### Nächster Schritt
 Cycle 012: `ui_patch` in den Patch-Pfad integrieren und Program/UI-Revisionen transaktional koppeln.
+
+## Cycle 012 — 2026-03-06T18:41:00Z
+### Fokus
+`ui_patch` als reguläre Patch-Op in den Program-Patchfluss integrieren und Graph/UI-Revisionskopplung absichern.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - neue `Revision.ui_revision` zur Kopplung von Program- und UI-Head
+  - `ui_patch`-Validierung im regulären Patchpfad (`validate_patch`) integriert
+  - Shape-/Base-Checks für `ui_patch` ergänzt (inkl. Begrenzung auf eine `ui_patch`-Op pro Patch)
+  - `apply_patch` kann jetzt `ui_patch` anwenden und die resultierende UI-Revision im Program-Commit persistieren
+- Fehler-/Contract-Semantik präzisiert:
+  - neue Fehlercodes für `ui_patch`-Shape, Mehrfach-`ui_patch` und ungültige UI-Base-Revision
+  - transaktionales Verhalten dokumentiert: bei UI-Fehlern wird der gesamte Patch verworfen
+- Unit-Tests erweitert (2 neue Tests):
+  - erfolgreicher gemischter Graph+UI-Patch koppelt `r-*` und `u-*`
+  - UI-Base-Mismatch verwirft den gesamten Patch ohne Teilanwendung
+
+### Offene Lücken
+- Noch keine Unterstützung für mehrere `ui_patch`-Ops pro Patch (bewusst eingeschränkt)
+- Kein Branch-/Merge-Modell für divergente UI-Timelines
+- Kein Snapshot/Compaction für lange UI-Eventketten
+
+### Nächster Schritt
+Cycle 013: Mehrfach-`ui_patch`-Strategie + UI-Branch/Merge-Skizze + Compaction-Ansatz vorbereiten.

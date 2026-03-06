@@ -422,6 +422,79 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         replayed = self.rt.replay_ui_timeline()
         self.assertEqual(replayed, [{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
 
+    def test_apply_patch_supports_ui_patch_and_couples_revisions(self) -> None:
+        revision = self.rt.apply_patch(
+            {
+                "patch_id": "p-ui-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "ui.shared", "type": "UIEngine"}},
+                    {
+                        "op": "ui_patch",
+                        "value": {
+                            "ops": [
+                                {"op": "insert", "path": "/root/title", "value": {"kind": "label"}},
+                                {
+                                    "op": "set_prop",
+                                    "path": "/root/title",
+                                    "key": "text",
+                                    "value": "Hallo",
+                                },
+                            ]
+                        },
+                    },
+                ],
+            }
+        )
+
+        self.assertEqual(revision, "r-1")
+        self.assertEqual(self.rt.state.revisions[revision].ui_revision, "u-0")
+        self.assertEqual(self.rt.ui_head, "u-0")
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {"op": "insert", "path": "/root/title", "value": {"kind": "label"}},
+                {"op": "set_prop", "path": "/root/title", "key": "text", "value": "Hallo"},
+            ],
+        )
+
+    def test_apply_patch_rejects_ui_base_mismatch_transactionally(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-setup",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+            }
+        )
+        self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.apply_patch(
+                {
+                    "patch_id": "p-ui-bad",
+                    "base_revision": "r-1",
+                    "target": "program_graph",
+                    "ops": [
+                        {"op": "add_node", "value": {"id": "n2", "type": "Node"}},
+                        {
+                            "op": "ui_patch",
+                            "value": {
+                                "base_revision": "u-404",
+                                "ops": [{"op": "set_prop", "path": "/root/a", "key": "text", "value": "X"}],
+                            },
+                        },
+                    ],
+                }
+            )
+
+        self.assertIn("E_UI_BASE_MISMATCH", str(ctx.exception))
+        self.assertEqual(self.rt.state.head, "r-1")
+        self.assertEqual(len(self.rt.state.revisions[self.rt.state.head].graph["modules"]), 1)
+        self.assertEqual(self.rt.ui_head, "u-0")
+        self.assertEqual(len(self.rt.ui_timeline), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

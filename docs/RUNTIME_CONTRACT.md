@@ -55,6 +55,9 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 - `E_UI_OP_KEY` – `set_prop.key` fehlt oder ist leer
 
 ### UI Timeline / Replay
+- `E_UI_PATCH_SHAPE` – `ui_patch`-Value oder `ops`-Feld ist ungültig
+- `E_UI_PATCH_MULTI` – mehr als eine `ui_patch`-Op in einem Program-Patch
+- `E_UI_BASE_REV` – `ui_patch.base_revision` ist ungültig
 - `E_UI_BASE_MISMATCH` – UI-Patch basiert nicht auf aktuellem UI-Head
 - `E_UI_REVISION` – referenzierte UI-Revision unbekannt oder Timeline inkonsistent
 
@@ -84,3 +87,12 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
 - `None` = unbegrenzt
 - `0` = leeres Ergebnis
 - `n > 0` = erste `n` Elemente nach Filter + Sort
+
+## Gemischte Graph+UI Patches (Cycle 012)
+- `ui_patch` ist als reguläre Op im Program-Patch erlaubt.
+- Der Stub erlaubt derzeit maximal eine `ui_patch`-Op pro Patch (`E_UI_PATCH_MULTI`).
+- `ui_patch.value` erwartet:
+  - `ops`: non-empty UI-Op-Liste
+  - optional `base_revision`: UI-Revision, default = aktueller UI-Head
+- Validierung ist transaktional: Jeder Fehler (inkl. UI-Base-Mismatch) verwirft den gesamten Patch.
+- Erfolgreiche Program-Revisionen persistieren die resultierende `ui_revision` für deterministisches Replay/Debugging.

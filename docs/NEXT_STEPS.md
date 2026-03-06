@@ -31,6 +31,11 @@
 - Rollback-Verhalten mit Tests absichern ✅
 
 ## Cycle 012
-- `ui_patch` als reguläre Patch-Op in `apply_patch` integrieren
-- Program-Revision und UI-Revision transaktional koppeln
-- Fehler-/Rollback-Semantik für gemischte Graph+UI-Patches definieren
+- `ui_patch` als reguläre Patch-Op in `apply_patch` integrieren ✅
+- Program-Revision und UI-Revision transaktional koppeln ✅
+- Fehler-/Rollback-Semantik für gemischte Graph+UI-Patches definieren ✅
+
+## Cycle 013
+- Mehrere `ui_patch` Ops pro Patch unterstützen (oder bewusst verbieten + begründen)
+- `ui_patch`-Konfliktmodell für Branch/Merge skizzieren
+- Replay-Performance mit Event-Compaction/Snapshot-Idee vorbereiten

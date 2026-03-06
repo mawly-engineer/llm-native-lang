@@ -31,6 +31,7 @@ Alle Änderungen laufen über `PatchEnvelope`.
 - Keine dangling edges
 - Policy-Check vor Commit
 - Patch muss gegen `base_revision` validieren
+- `ui_patch` (falls vorhanden) muss gegen UI-Head validieren, sonst wird der gesamte Patch verworfen
 
 ## Merge-Strategie
 - Default: 3-way merge auf Revisionsgraph

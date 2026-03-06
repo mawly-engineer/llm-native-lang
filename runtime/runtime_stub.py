@@ -14,6 +14,7 @@ class Revision:
     id: str
     parent: str | None
     graph: Dict[str, Any]
+    ui_revision: str | None = None
 
 
 @dataclass
@@ -95,6 +96,20 @@ class KairoRuntime:
             raise PatchError("E_ATTR_VALUE", "set_attr requires value field")
 
         return node_id, key, value["value"]
+
+    def _validate_ui_patch_shape(self, value: Any) -> Tuple[List[Dict[str, Any]], str | None]:
+        if not isinstance(value, dict):
+            raise PatchError("E_UI_PATCH_SHAPE", "ui_patch value must be an object")
+
+        ops = value.get("ops")
+        if not isinstance(ops, list) or len(ops) == 0:
+            raise PatchError("E_UI_PATCH_SHAPE", "ui_patch.ops must be a non-empty list")
+
+        base_revision = value.get("base_revision")
+        if base_revision is not None and (not isinstance(base_revision, str) or not base_revision.strip()):
+            raise PatchError("E_UI_BASE_REV", "ui_patch.base_revision must be a non-empty string")
+
+        return ops, base_revision
 
     def _parse_selector(self, selector: str) -> Tuple[str, str | None, str | None, str | None]:
         if not isinstance(selector, str) or not selector.strip():
@@ -383,6 +398,8 @@ class KairoRuntime:
             self._validate_edge_shape(edge)
             known_edges.add(self._edge_tuple(edge))
 
+        ui_patch_seen = False
+
         for idx, op in enumerate(ops):
             if not isinstance(op, dict):
                 raise PatchError("E_OP_TYPE", f"op[{idx}] must be an object")
@@ -447,6 +464,17 @@ class KairoRuntime:
                     raise PatchError("E_EDGE_NOT_FOUND", f"cannot remove unknown edge: {edge_key}")
                 known_edges.remove(edge_key)
 
+            elif kind == "ui_patch":
+                if ui_patch_seen:
+                    raise PatchError("E_UI_PATCH_MULTI", "only one ui_patch op per patch is supported")
+                ui_patch_seen = True
+
+                ui_ops, ui_base_revision = self._validate_ui_patch_shape(value)
+                resolved_base = self.ui_head if ui_base_revision is None else ui_base_revision
+                if resolved_base != self.ui_head:
+                    raise PatchError("E_UI_BASE_MISMATCH", "ui base_revision mismatch")
+                self.normalize_ui_ops(ui_ops)
+
             else:
                 raise PatchError("E_OP_UNSUPPORTED", f"unsupported op in stub: {kind}")
 
@@ -457,6 +485,8 @@ class KairoRuntime:
             "modules": [m.copy() if isinstance(m, dict) else m for m in current.graph.get("modules", [])],
             "edges": [e.copy() if isinstance(e, dict) else e for e in current.graph.get("edges", [])],
         }
+
+        new_ui_revision = self.ui_head
 
         for op in patch["ops"]:
             kind = op.get("op")
@@ -503,8 +533,17 @@ class KairoRuntime:
                         del new_graph["edges"][i]
                         break
 
+            elif kind == "ui_patch":
+                ui_ops, ui_base_revision = self._validate_ui_patch_shape(value)
+                new_ui_revision = self.apply_ui_patch(ui_ops, base_revision=ui_base_revision)
+
         new_id = f"r-{len(self.state.revisions)}"
-        rev = Revision(id=new_id, parent=self.state.head, graph=new_graph)
+        rev = Revision(
+            id=new_id,
+            parent=self.state.head,
+            graph=new_graph,
+            ui_revision=new_ui_revision,
+        )
         self.state.revisions[new_id] = rev
         self.state.head = new_id
         return new_id
