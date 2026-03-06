@@ -110,3 +110,13 @@ Kurzfazit:
   3. Falls nötig, temporär Logging für `preview["conflicts"]`, `resolutions` und `merged_ops` aktivieren.
 - Praxisregel für Bugreports:
   - immer Seed + betroffener Testname + erwartetes vs. tatsächliches `merged_ops`-Delta mitschicken.
+
+## Random-Op-Mix + Resolver-Profile (Cycle 031)
+- Die Random-Testhülle deckt jetzt neben `set_prop` auch strukturelle Ops (`insert`, `remove`) auf gemeinsamen Unterpfaden ab.
+- Damit werden konfliktträchtige Sequenzen realistischer (z. B. konkurrierende Insert/Remove-Muster auf `/root/a/items/*`).
+- Zwei Resolver-Profile werden gegeneinander geprüft:
+  - `accept_left`
+  - `accept_right`
+- Beide Profile müssen replaybar sein; bei echten Konflikten dürfen die resultierenden `merged_ops` bewusst voneinander abweichen.
+- Für reproduzierbare Reports reicht ein Minimalpaket:
+  - Testname + Seed + Resolver-Profil + Erwartung/Ist (`merged_ops` oder Fehlercode).

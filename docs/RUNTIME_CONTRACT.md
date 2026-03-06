@@ -137,12 +137,30 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
   - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
   - Kein implizites Last-Writer-Wins über Branches ohne explizite Resolver-Entscheidung.
 
-### Harte Merge-Invarianten für randomisierte/property-nahe Tests (Cycle 029)
+### Harte Merge-Invarianten für randomisierte/property-nahe Tests (Cycle 029/031)
 - Die aufgelöste Base (`base_revision` oder Auto-LCA) muss Vorfahre von **beiden** Branch-Heads sein.
 - Ohne passende Resolver-Entscheidungen dürfen verbleibende Konflikte nie still gemerged werden (`E_UI_MERGE_CONFLICT`).
 - Mit vollständigen Resolver-Entscheidungen muss ein Merge deterministisch replaybar sein:
   - `replay_ui_timeline(merged_revision) == merged_ops`
+- Die Invarianten gelten auch bei gemischten Op-Mustern (`set_prop`, `insert`, `remove`) auf gemeinsamen Pfaden.
+- Resolver-Profile sind explizit auditierbar:
+  - `accept_left` und `accept_right` müssen jeweils einen replaybaren Merge liefern.
+  - Bei identischem Konflikt-Set dürfen sich die resultierenden `merged_ops` zwischen Profilen unterscheiden.
 - Diese Invarianten gelten unabhängig vom Merge-Modus (`materialized` oder `delta`).
+
+### Reproduzierbarer Bugreport-Minimalfall (Seed-basiert)
+Für externe Reports sollte immer ein minimales, reproduzierbares Paket angegeben werden:
+- Testname (z. B. `test_randomized_merge_with_structural_ops_roundtrip`)
+- Seed (z. B. `seed=417`)
+- Merge-Input (`left_revision`, `right_revision`, optional `base_revision`)
+- Resolver-Profil (`accept_left` oder `accept_right`)
+- Erwartung vs. Ist (`merged_ops` oder Fehlercode)
+
+Kurzschema:
+- `seed=<N>`
+- `profile=accept_left|accept_right`
+- `expected: replay_ui_timeline(merged_revision) == merged_ops`
+- `actual: <abweichendes merged_ops oder Fehlercode>`
 
 ## UI Replay-Metriken (Cycle 020)
 - `replay_ui_timeline(head=None, include_metrics=False)`

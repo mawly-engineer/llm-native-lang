@@ -1107,7 +1107,7 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(delta_materialized["metrics"]["events_total"], 6)
         self.assertEqual(delta_delta["metrics"]["events_total"], 3)
 
-    def _random_merge_case(self, seed: int) -> Dict[str, Any]:
+    def _random_merge_case(self, seed: int, include_structural_ops: bool = False) -> Dict[str, Any]:
         rng = random.Random(seed)
         rt = KairoRuntime()
         base = rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
@@ -1115,30 +1115,57 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         left_head = base
         right_head = base
         keys: List[str] = ["title", "subtitle", "badge", "footer"]
+        item_paths: List[str] = ["/root/a/items/left", "/root/a/items/right"]
+
+        def branch_op(prefix: str, step: int) -> Dict[str, Any]:
+            if not include_structural_ops:
+                key = rng.choice(keys)
+                return {"op": "set_prop", "path": "/root/a", "key": key, "value": f"{prefix}{seed}-{step}-{key}"}
+
+            op_kind = rng.choice(["set_prop", "insert", "remove"])
+            if op_kind == "set_prop":
+                key = rng.choice(keys)
+                return {
+                    "op": "set_prop",
+                    "path": "/root/a",
+                    "key": key,
+                    "value": f"{prefix}{seed}-{step}-{key}",
+                }
+
+            item_path = rng.choice(item_paths)
+            if op_kind == "insert":
+                return {
+                    "op": "insert",
+                    "path": item_path,
+                    "value": {"kind": "tag", "source": prefix.lower(), "step": step},
+                }
+
+            return {"op": "remove", "path": item_path}
 
         for i in range(rng.randint(1, 4)):
-            key = rng.choice(keys)
-            left_head = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": key, "value": f"L{seed}-{i}-{key}"}],
-                base_revision=left_head,
-            )
+            left_head = rt.apply_ui_patch([branch_op("L", i)], base_revision=left_head)
 
         rt.rollback_ui(base)
 
         for i in range(rng.randint(1, 4)):
-            key = rng.choice(keys)
-            right_head = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": key, "value": f"R{seed}-{i}-{key}"}],
-                base_revision=right_head,
-            )
+            right_head = rt.apply_ui_patch([branch_op("R", i)], base_revision=right_head)
 
         preview = rt.preview_ui_merge(left_head, right_head)
-        resolutions = [
+        resolutions_right = [
             {
                 "op": conflict["key"]["op"],
                 "path": conflict["key"]["path"],
                 "prop": conflict["key"]["prop"],
                 "decision": "accept_right",
+            }
+            for conflict in preview["conflicts"]
+        ]
+        resolutions_left = [
+            {
+                "op": conflict["key"]["op"],
+                "path": conflict["key"]["path"],
+                "prop": conflict["key"]["prop"],
+                "decision": "accept_left",
             }
             for conflict in preview["conflicts"]
         ]
@@ -1149,7 +1176,9 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             "left": left_head,
             "right": right_head,
             "preview": preview,
-            "resolutions": resolutions,
+            "resolutions": resolutions_right,
+            "resolutions_left": resolutions_left,
+            "resolutions_right": resolutions_right,
         }
 
     def test_randomized_merge_preview_base_is_common_ancestor(self) -> None:
@@ -1221,6 +1250,54 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
                 rt_materialized.replay_ui_timeline(merged_materialized["merged_revision"]),
                 rt_delta.replay_ui_timeline(merged_delta["merged_revision"]),
             )
+
+    def test_randomized_merge_with_structural_ops_roundtrip(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(400 + seed, include_structural_ops=True)
+            rt = case["runtime"]
+
+            merged = rt.merge_ui_branches(
+                case["left"],
+                case["right"],
+                resolutions=case["resolutions_right"],
+                mode="delta" if seed % 2 else "materialized",
+            )
+            self.assertEqual(rt.replay_ui_timeline(merged["merged_revision"]), merged["merged_ops"])
+
+    def test_randomized_merge_resolution_profiles_are_replayable(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(500 + seed, include_structural_ops=True)
+            left = case["left"]
+            right = case["right"]
+
+            rt_accept_left = deepcopy(case["runtime"])
+            rt_accept_right = deepcopy(case["runtime"])
+
+            merged_left = rt_accept_left.merge_ui_branches(
+                left,
+                right,
+                resolutions=case["resolutions_left"],
+                mode="materialized",
+            )
+            merged_right = rt_accept_right.merge_ui_branches(
+                left,
+                right,
+                resolutions=case["resolutions_right"],
+                mode="materialized",
+            )
+
+            self.assertEqual(
+                rt_accept_left.replay_ui_timeline(merged_left["merged_revision"]),
+                merged_left["merged_ops"],
+            )
+            self.assertEqual(
+                rt_accept_right.replay_ui_timeline(merged_right["merged_revision"]),
+                merged_right["merged_ops"],
+            )
+
+            conflicts = case["preview"]["conflicts"]
+            if conflicts:
+                self.assertNotEqual(merged_left["merged_ops"], merged_right["merged_ops"])
 
 
 if __name__ == "__main__":

@@ -126,7 +126,12 @@
 - Runtime-Doku um kurze Anleitung für reproduzierbare Seed-Debugs ergänzen ✅
 
 ## Cycle 031
-- Random-Testhülle um gezielte Remove/Insert-UI-Op-Mischungen erweitern
-- Merge-Resolver-Strategien (`accept_left` vs `accept_right`) im Seed-Vergleich gegeneinander profilieren
-- Contract-Beispiel ergänzen: reproduzierbarer Bugreport mit Seed + minimalem Merge-Case
+- Random-Testhülle um gezielte Remove/Insert-UI-Op-Mischungen erweitern ✅
+- Merge-Resolver-Strategien (`accept_left` vs `accept_right`) im Seed-Vergleich gegeneinander profilieren ✅
+- Contract-Beispiel ergänzen: reproduzierbarer Bugreport mit Seed + minimalem Merge-Case ✅
+
+## Cycle 032
+- Replay-Metriken für Resolver-Profile (`accept_left` vs `accept_right`) im Konfliktfall vergleichen
+- Delta-Mode auch für Resolver-Profil-Vergleiche in Random-Tests systematisch abdecken
+- Runtime-Doku um kurzes Diagnose-Rezept für divergente `merged_ops` zwischen Profilen ergänzen
 

@@ -690,3 +690,26 @@ Randomisierte Merge-Tests um harte Negativfälle und Modus-Äquivalenz erweitern
 ### Nächster Schritt
 Cycle 031: Random-Op-Mix erweitern + Resolver-Profile vergleichen + Seed-basiertes Bugreport-Beispiel ergänzen.
 
+## Cycle 031 — 2026-03-06T23:11:00Z
+### Fokus
+Randomisierte Merge-Tests realistischer machen (strukturelle UI-Ops) und Resolver-Profile direkt gegeneinander validieren.
+
+### Geliefert
+- Random-Testhülle erweitert:
+  - `_random_merge_case(..., include_structural_ops=True)` erzeugt jetzt neben `set_prop` auch `insert`/`remove` auf gemeinsamen Item-Pfaden.
+  - Konfliktmuster werden dadurch näher an realen UI-Branch-Divergenzen getestet.
+- Unit-Tests erweitert (2 neue Random-Tests):
+  - Roundtrip für strukturelle Op-Mischungen über Seeds abgesichert (replaybar in `materialized` und `delta`).
+  - Resolver-Profilvergleich (`accept_left` vs `accept_right`) ergänzt; beide Profile sind replaybar, Konfliktfälle dürfen unterschiedliche `merged_ops` liefern.
+- Contract-/Runtime-Doku aktualisiert:
+  - Merge-Invarianten explizit auf gemischte Op-Typen und Resolver-Profile erweitert.
+  - kompaktes Seed-basiertes Bugreport-Schema (Testname + Seed + Profil + Erwartung/Ist) ergänzt.
+
+### Offene Lücken
+- Resolver-Profilvergleiche messen aktuell primär Endzustands-Differenzen, aber noch keine systematischen Replay-Metrik-Unterschiede.
+- Delta-vs-Materialized ist für Profilvergleiche noch nicht als eigene Vergleichsmatrix dokumentiert.
+- Kein kurzes Diagnose-Rezept für „warum unterscheiden sich `merged_ops` zwischen Profilen?“ in der Runtime-Doku.
+
+### Nächster Schritt
+Cycle 032: Resolver-Profil-Metrikvergleich + Delta-Abdeckung + Diagnose-Rezept für divergente Merge-Ergebnisse.
+
