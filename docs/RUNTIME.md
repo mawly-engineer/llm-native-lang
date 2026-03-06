@@ -37,7 +37,7 @@
 - `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand DAG-nativ über `parent` + `secondary_parent`
 - `create_ui_snapshot(head)` speichert einen kompaktisierten UI-Stand (`s-*`) für einen Timeline-Head
 - Replay kann bei vorhandenen Snapshots vom nächsten (distanzbasierten) Snapshot-Vorfahren starten, auch wenn dieser über den sekundären Merge-Parent erreichbar ist
-- `replay_ui_timeline(..., include_metrics=True)` exponiert Replay-Kosten (`events_replayed`, `snapshot_seed_distance`) als Runtime-Metriken
+- `replay_ui_timeline(..., include_metrics=True)` exponiert Replay-Kosten (`events_replayed`, `snapshot_seed_distance`) als Runtime-Metriken; `events_replayed` zählt dabei den effektiven Replay-Pfad (auch bei delta-base-seeded Merge-Replays)
 - `rollback_ui(revision)` verschiebt nur den Head; Historie bleibt unverändert erhalten
 - `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein (auch mehrfach pro Patch) und schreibt atomar mit Graph-Änderungen
 - Jede Program-Revision trägt die gekoppelte `ui_revision` des resultierenden UI-Heads

@@ -925,6 +925,55 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             delta_merge["merged_ops"],
         )
 
+    def test_replay_metrics_for_delta_merge_are_base_seeded(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, mode="delta")
+        replay = self.rt.replay_ui_timeline(head=merged["merged_revision"], include_metrics=True)
+
+        self.assertEqual(replay["metrics"]["events_replayed"], 2)
+
+    def test_merge_ui_branches_rejects_unknown_mode_with_dedicated_error(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.merge_ui_branches(left, right, mode="fast-forward")
+
+        self.assertIn("E_UI_MERGE_MODE", str(ctx.exception))
+
+    def test_preview_ui_merge_auto_lca_supports_implicit_root(self) -> None:
+        preview = self.rt.preview_ui_merge(None, None)
+
+        self.assertIsNone(preview["base_revision"])
+        self.assertEqual(preview["merged_ops"], [])
+
+    def test_preview_ui_merge_auto_lca_rejects_none_and_branch_head_without_explicit_base(self) -> None:
+        right = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.preview_ui_merge(None, right)
+
+        self.assertIn("E_UI_MERGE_BASE", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

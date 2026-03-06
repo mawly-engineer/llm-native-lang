@@ -511,3 +511,26 @@ Delta-Merge als echten Persistenzmodus aktivieren und gemischte Replay-Historien
 ### Nächster Schritt
 Cycle 023: Delta-Metrikpräzision + dedizierter Merge-Mode-Fehlercode + zusätzliche Auto-LCA-Tests.
 
+## Cycle 023 — 2026-03-06T21:20:00Z
+### Fokus
+Replay-Metriken für Delta-Merge-Pfade präzisieren und Merge-/Auto-LCA-Randfälle robust absichern.
+
+### Geliefert
+- Runtime-Stub angepasst:
+  - `replay_ui_timeline(..., include_metrics=True)` nutzt für `events_replayed` jetzt den tatsächlich traversierten Replay-Pfad aus der Replay-Sequenz (inkl. delta-base-seeded Pfade), statt nur eine Postorder-Näherung.
+  - `merge_ui_branches(..., mode=...)` validiert ungültige Modi jetzt mit dediziertem Fehlercode `E_UI_MERGE_MODE`.
+- Unit-Tests erweitert (4 neue Tests):
+  - Delta-Merge-Replay meldet base-seeded `events_replayed` deterministisch.
+  - Ungültiger Merge-Mode liefert `E_UI_MERGE_MODE`.
+  - Auto-LCA funktioniert stabil für impliziten Root-Fall (`None` vs `None`).
+  - Auto-LCA bleibt korrekt für gemischten Root/Branch-Fall (`None` vs Branch-Head).
+- Runtime-/Contract-/Next-Steps-Doku auf Cycle-023-Stand aktualisiert.
+
+### Offene Lücken
+- Kombination aus Delta-Replay und aktivem Snapshot-Seed hat noch keinen expliziten Metrik-Regressionstest.
+- Beispiele zur klaren Abgrenzung von Merge-Policy- vs Merge-Mode-Fehlern können im Contract noch ergänzt werden.
+- Troubleshooting-Leitlinien für Replay-Metriken fehlen noch in der Runtime-Doku.
+
+### Nächster Schritt
+Cycle 024: Delta+Snapshot-Metriktests + Fehlercode-Doku schärfen + Replay-Metrik-Troubleshooting ergänzen.
+

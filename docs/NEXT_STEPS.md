@@ -86,7 +86,12 @@
 - Contract um Kompatibilitätsregeln für gemischte Materialized/Delta-Historien ergänzen ✅
 
 ## Cycle 023
-- Replay-Metrik `events_replayed` für Delta-Merge-Pfade präzisieren (base-seeded statt Postorder-Näherung)
-- Merge-Mode-Validierungsfehler in eigenen Fehlercode auslagern (`E_UI_MERGE_MODE`)
-- Auto-LCA-Verhalten mit implizitem Root (`None`) in separaten Tests absichern
+- Replay-Metrik `events_replayed` für Delta-Merge-Pfade präzisieren (base-seeded statt Postorder-Näherung) ✅
+- Merge-Mode-Validierungsfehler in eigenen Fehlercode auslagern (`E_UI_MERGE_MODE`) ✅
+- Auto-LCA-Verhalten mit implizitem Root (`None`) in separaten Tests absichern ✅
+
+## Cycle 024
+- Delta-Replay-Metriken mit Snapshot-Seed-Kombination absichern
+- Merge-API-Fehlercodes zwischen Policy/Mode noch klarer trennen (Doku-Beispiele)
+- Replay-Metriken im Runtime-Guide um Troubleshooting-Hinweise ergänzen
 

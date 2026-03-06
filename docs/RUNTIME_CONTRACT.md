@@ -62,6 +62,7 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 
 ### UI Merge
 - `E_UI_MERGE_POLICY` – nicht unterstützte Merge-Policy angefordert
+- `E_UI_MERGE_MODE` – nicht unterstützter Merge-Persistenzmodus angefordert (`materialized|delta`)
 - `E_UI_MERGE_BASE` – angegebene Base ist kein gemeinsamer Vorfahre beider Branches
 - `E_UI_MERGE_CONFLICT` – expliziter Konflikt erkannt (beide Branches ändern denselben Op-Key unterschiedlich)
 - `E_UI_MERGE_RESOLUTION` – Resolver-Einträge (`resolutions`/`resolution_notes`) haben ungültiges Format oder ungültige Entscheidung
@@ -135,7 +136,7 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `head`: aufgelöster Replay-Head
     - `snapshot_head`: verwendeter Snapshot-Vorfahre oder `null`
     - `ops`: normalisierte UI-Ops nach Replay
-    - `metrics.events_replayed`: Anzahl tatsächlich replayter Timeline-Events (nach Snapshot-Seeding)
+    - `metrics.events_replayed`: Anzahl tatsächlich replayter Timeline-Events auf dem effektiven Replay-Pfad (inkl. delta-base-seeded Pfaden, nicht nur Postorder-Näherung)
     - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
 - `events_replayed` misst Replay-Kosten direkt am Event-Pfad und ist damit als Hook für Snapshot/Compaction-Tuning nutzbar.
 

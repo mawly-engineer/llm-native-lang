@@ -507,8 +507,9 @@ class KairoRuntime:
             replay_ids = [event_id for event_id in postorder if event_id not in snapshot_ancestors]
 
         normalized_ops = self.normalize_ui_ops(ops)
+        replay_count = len(replay_ids) if best_snapshot_head in distances else events_replayed
         metrics = {
-            "events_replayed": len(replay_ids),
+            "events_replayed": replay_count,
             "snapshot_seed_distance": best_distance,
         }
         if snapshot_head is None:
@@ -768,7 +769,7 @@ class KairoRuntime:
         mode: str = "materialized",
     ) -> Dict[str, Any]:
         if mode not in {"materialized", "delta"}:
-            raise PatchError("E_UI_MERGE_POLICY", "merge mode must be 'materialized' or 'delta'")
+            raise PatchError("E_UI_MERGE_MODE", "merge mode must be 'materialized' or 'delta'")
 
         if mode == "delta":
             merge_info = self.preview_ui_merge_delta(
