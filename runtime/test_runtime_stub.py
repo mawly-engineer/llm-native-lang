@@ -1,5 +1,6 @@
+import random
 import unittest
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from runtime.runtime_stub import KairoRuntime, PatchError
 
@@ -1104,6 +1105,81 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(materialized_delta["metrics"]["events_total"], 3)
         self.assertEqual(delta_materialized["metrics"]["events_total"], 6)
         self.assertEqual(delta_delta["metrics"]["events_total"], 3)
+
+    def _random_merge_case(self, seed: int) -> Dict[str, Any]:
+        rng = random.Random(seed)
+        rt = KairoRuntime()
+        base = rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+
+        left_head = base
+        right_head = base
+        keys: List[str] = ["title", "subtitle", "badge", "footer"]
+
+        for i in range(rng.randint(1, 4)):
+            key = rng.choice(keys)
+            left_head = rt.apply_ui_patch(
+                [{"op": "set_prop", "path": "/root/a", "key": key, "value": f"L{seed}-{i}-{key}"}],
+                base_revision=left_head,
+            )
+
+        rt.rollback_ui(base)
+
+        for i in range(rng.randint(1, 4)):
+            key = rng.choice(keys)
+            right_head = rt.apply_ui_patch(
+                [{"op": "set_prop", "path": "/root/a", "key": key, "value": f"R{seed}-{i}-{key}"}],
+                base_revision=right_head,
+            )
+
+        preview = rt.preview_ui_merge(left_head, right_head)
+        resolutions = [
+            {
+                "op": conflict["key"]["op"],
+                "path": conflict["key"]["path"],
+                "prop": conflict["key"]["prop"],
+                "decision": "accept_right",
+            }
+            for conflict in preview["conflicts"]
+        ]
+
+        return {
+            "runtime": rt,
+            "base": base,
+            "left": left_head,
+            "right": right_head,
+            "preview": preview,
+            "resolutions": resolutions,
+        }
+
+    def test_randomized_merge_preview_base_is_common_ancestor(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(seed)
+            rt = case["runtime"]
+            preview = case["preview"]
+            base = preview["base_revision"]
+
+            self.assertIn(base, rt._ui_ancestors(case["left"]))
+            self.assertIn(base, rt._ui_ancestors(case["right"]))
+
+    def test_randomized_merge_conflict_resolution_roundtrip(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(100 + seed)
+            rt = case["runtime"]
+            left = case["left"]
+            right = case["right"]
+
+            if case["preview"]["conflicts"]:
+                with self.assertRaises(PatchError) as ctx:
+                    rt.merge_ui_branches(left, right)
+                self.assertIn("E_UI_MERGE_CONFLICT", str(ctx.exception))
+
+            merged = rt.merge_ui_branches(
+                left,
+                right,
+                resolutions=case["resolutions"],
+                mode="delta" if seed % 2 else "materialized",
+            )
+            self.assertEqual(rt.replay_ui_timeline(merged["merged_revision"]), merged["merged_ops"])
 
 
 if __name__ == "__main__":

@@ -645,3 +645,26 @@ Gemischte Merge-Modi im Fan-in-Szenario messbar vergleichen und eine kurze Modus
 ### Nächster Schritt
 Cycle 029: Property-basierte LCA/Base-Tests vorbereiten und Merge-Invarianten dafür festziehen.
 
+## Cycle 029 — 2026-03-06T22:41:00Z
+### Fokus
+Property-nahe Random-Tests für LCA/Base-Validierung aufsetzen und harte Merge-Invarianten dokumentieren.
+
+### Geliefert
+- Unit-Tests erweitert (2 neue randomisierte Tests + Helper):
+  - kleine seed-basierte Zufalls-Testhülle für divergente UI-Branches ohne zusätzliche Dependency
+  - Invariante geprüft: Auto-LCA/Base ist immer gemeinsamer Vorfahre beider Branch-Heads
+  - Konfliktpfad abgesichert: Merge ohne Resolver schlägt bei Konflikten mit `E_UI_MERGE_CONFLICT` fehl
+  - Roundtrip abgesichert: Merge mit vollständigen Resolver-Entscheidungen bleibt deterministisch replaybar (`replay == merged_ops`)
+  - beide Merge-Modi in der Random-Schleife abgedeckt (`materialized`/`delta`)
+- Runtime-Contract ergänzt:
+  - harte Merge-Invarianten für randomisierte/property-nahe Tests explizit dokumentiert
+- Next-Steps auf Cycle-030 fortgeschrieben.
+
+### Offene Lücken
+- Random-Hülle prüft noch keine expliziten Base-Mismatch-Negativfälle.
+- Kein direkter randomisierter Endzustandsvergleich zwischen `materialized` und `delta` bei identischem Szenario.
+- Seed-basierte Repro-Anleitung fehlt noch in der Runtime-Doku.
+
+### Nächster Schritt
+Cycle 030: Random-Merge-Negativfälle + Delta/Materialized-Äquivalenz über Seeds systematisch ausbauen.
+

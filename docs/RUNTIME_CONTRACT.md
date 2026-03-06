@@ -137,6 +137,13 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
   - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
   - Kein implizites Last-Writer-Wins über Branches ohne explizite Resolver-Entscheidung.
 
+### Harte Merge-Invarianten für randomisierte/property-nahe Tests (Cycle 029)
+- Die aufgelöste Base (`base_revision` oder Auto-LCA) muss Vorfahre von **beiden** Branch-Heads sein.
+- Ohne passende Resolver-Entscheidungen dürfen verbleibende Konflikte nie still gemerged werden (`E_UI_MERGE_CONFLICT`).
+- Mit vollständigen Resolver-Entscheidungen muss ein Merge deterministisch replaybar sein:
+  - `replay_ui_timeline(merged_revision) == merged_ops`
+- Diese Invarianten gelten unabhängig vom Merge-Modus (`materialized` oder `delta`).
+
 ## UI Replay-Metriken (Cycle 020)
 - `replay_ui_timeline(head=None, include_metrics=False)`
   - Default (`include_metrics=False`) bleibt rückwärtskompatibel und liefert nur normalisierte `ops[]`.

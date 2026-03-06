@@ -116,7 +116,12 @@
 - Optional: Property-basierte Tests für LCA/Base-Validierung in kleinen Zufalls-DAGs vorbereiten
 
 ## Cycle 029
-- Property-basierte Teststrategie für LCA/Base-Validierung konkretisieren (Generator + Invarianten)
-- Erste kleine Zufalls-DAG-Testhülle vorbereiten (noch ohne neue Test-Dependency)
-- Contract-Notiz ergänzen, welche Merge-Invarianten dabei hart gelten müssen
+- Property-basierte Teststrategie für LCA/Base-Validierung konkretisieren (Generator + Invarianten) ✅
+- Erste kleine Zufalls-DAG-Testhülle vorbereiten (noch ohne neue Test-Dependency) ✅
+- Contract-Notiz ergänzen, welche Merge-Invarianten dabei hart gelten müssen ✅
+
+## Cycle 030
+- Randomisierte Merge-Tests auf explizite Base-Mismatch-Negativfälle erweitern
+- Delta-vs-Materialized in Random-Szenarien auf identische Endzustände vergleichen
+- Runtime-Doku um kurze Anleitung für reproduzierbare Seed-Debugs ergänzen
 
