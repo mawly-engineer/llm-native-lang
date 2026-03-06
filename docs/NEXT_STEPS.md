@@ -106,7 +106,12 @@
 - Runtime- und Contract-Doku auf den neuen Metrikvertrag aktualisieren ✅
 
 ## Cycle 027
-- Merge-Replay-Beispiele für größere DAG-Fan-in-Szenarien ergänzen
-- Optionales Szenario für mehrfach verschachtelte Delta-Merges dokumentieren
-- Replay-Metriken in einem kompakten Vergleichsbeispiel zusammenfassen
+- Merge-Replay-Beispiele für größere DAG-Fan-in-Szenarien ergänzen ✅
+- Optionales Szenario für mehrfach verschachtelte Delta-Merges dokumentieren ✅
+- Replay-Metriken in einem kompakten Vergleichsbeispiel zusammenfassen ✅
+
+## Cycle 028
+- Replay-Metriken für gemischte Merge-Modi (`materialized -> delta`, `delta -> materialized`) systematisch vergleichen
+- Runtime-Doku um ein kurzes Entscheidungsraster für die Wahl des Merge-Modus ergänzen
+- Optional: Property-basierte Tests für LCA/Base-Validierung in kleinen Zufalls-DAGs vorbereiten
 

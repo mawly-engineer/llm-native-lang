@@ -581,3 +581,41 @@ Replay-Metrik-Zählweise bei Delta+Snapshot gegen den tatsächlichen Apply-Pfad 
 ### Nächster Schritt
 Cycle 026: Größere Merge-DAG-Beispiele und Metrikvergleichstabellen für Fan-in-Szenarien ergänzen.
 
+## Cycle 026 — 2026-03-06T22:11:00Z
+### Fokus
+Replay-Metriken im Runtime-API-Split (`events_from_snapshot_seed`, `events_total`) stabilisieren und dokumentieren.
+
+### Geliefert
+- Runtime-Stub und Tests auf den Metrik-Split ausgerichtet.
+- Runtime-/Contract-Doku auf den neuen Metrikvertrag aktualisiert.
+- Next-Steps auf Cycle-027 fortgeschrieben.
+
+### Offene Lücken
+- Größere Fan-in-Beispiele fehlen weiterhin.
+- Verschachtelte Delta-Merge-Szenarien sind noch nicht explizit dokumentiert.
+- Kein kompaktes Vergleichsbeispiel materialized vs delta vorhanden.
+
+### Nächster Schritt
+Cycle 027: Fan-in- und Nested-Delta-Beispiele inkl. Metrikvergleich ergänzen.
+
+## Cycle 027 — 2026-03-06T22:18:00Z
+### Fokus
+Replay-Metriken in größeren Fan-in-Szenarien konkret vergleichen und Nested-Delta-Verhalten testbar dokumentieren.
+
+### Geliefert
+- Unit-Tests erweitert (1 neuer Vergleichstest):
+  - 2-stufiges Fan-in-Szenario mit Snapshot-Seed für `materialized/materialized` vs `delta/delta`
+  - identischer Endzustand (`ops`) zwischen beiden Varianten abgesichert
+  - kompakter Metrikvergleich validiert (`events_from_snapshot_seed=6` in beiden Fällen, `events_total` materialized=`7` vs nested-delta=`3`)
+- Runtime-Doku ergänzt:
+  - neues Fan-in-Vergleichsbeispiel mit klarer Interpretation von Seed-Pfad vs Gesamtaufwand
+- Next-Steps auf Cycle-028 fortgeschrieben.
+
+### Offene Lücken
+- Gemischte Merge-Modi (`materialized -> delta`, `delta -> materialized`) sind noch nicht systematisch gegenübergestellt.
+- Es fehlt ein kurzes Entscheidungsraster, wann welcher Merge-Modus bevorzugt werden sollte.
+- Keine Aggregation/Historisierung von Replay-Metriken über mehrere Runs.
+
+### Nächster Schritt
+Cycle 028: Gemischte Merge-Modi vergleichen und Entscheidungsraster für die Moduswahl ergänzen.
+

@@ -58,3 +58,19 @@
 - Für Performance-Debugging beide Werte zusammen lesen:
   - hoher `snapshot_seed_distance` + hohe `events_replayed` → zusätzlicher Snapshot nahe am Merge-Head sinnvoll
   - niedriger `snapshot_seed_distance`, aber hohe `events_replayed` → Kosten kommen primär aus Branch-Replay/DAG-Fan-in
+
+## Fan-in Vergleich: materialized vs verschachteltes delta (Cycle 027)
+Ein kompaktes Vergleichsszenario mit identischem Endzustand zeigt die Metrik-Unterschiede klar:
+- Setup: Snapshot auf gemeinsamer Base, danach 2-stufiges Fan-in-Merge (erst links/rechts, dann Top/Side)
+- Variante A: beide Merges `mode="materialized"`
+- Variante B: beide Merges `mode="delta"`
+
+Beobachtung aus den Runtime-Tests:
+- `events_from_snapshot_seed` bleibt in beiden Varianten gleich (`6`), weil der gleiche DAG-Pfad ab Snapshot abgearbeitet wird.
+- `events_total` unterscheidet sich deutlich:
+  - materialized: `7`
+  - nested delta: `3`
+
+Interpretation:
+- `events_from_snapshot_seed` zeigt den sichtbaren Replay-Aufwand ab Seed.
+- `events_total` zeigt den tatsächlichen internen Apply-Aufwand (inkl. Delta-Base-Rekonstruktion) und eignet sich besser für Modusvergleiche bei Merge-heavy Historien.
