@@ -61,11 +61,15 @@ Constraints:
 - `E_ATTR_VALUE` – `set_attr.value` fehlt
 - `E_ATTR_RESERVED` – Versuch, reservierte Felder (`id`, `type`) zu überschreiben
 - `E_ATTR_CONTAINER` – bestehendes `attrs` Feld ist kein Objekt
+- `E_QUERY_SELECTOR` – Query-Selector ist leer oder syntaktisch ungültig
+- `E_QUERY_KEY` – Query-Filterfeld ist für Collection nicht erlaubt
+- `E_QUERY_GRAPH` – `modules`/`edges` im Graph haben ungültigen Typ
 
 ## Scope v0.1
 - Nur `program_graph`
 - Unterstützte Ops: `add_node`, `replace_node`, `remove_node`, `add_edge`, `remove_edge`, `set_attr`
-- Ziel: frühe Integritätschecks vor Commit
+- Read-only Query DSL: `modules`/`edges` mit optionalem Equality-Filter auf Kernfeldern
+- Ziel: frühe Integritätschecks vor Commit + deterministische Graph-Inspektion
 
 ## Nächster Ausbau
 - Typ-Registry (bekannte Modulklassen)

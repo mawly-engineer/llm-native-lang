@@ -92,3 +92,31 @@ Cycle 004: `set_attr` + minimale Attribut-Schema-Prüfung ergänzen und Edge-/No
 
 ### Nächster Schritt
 Cycle 005: Query DSL v0.1 (read-only) auf `modules`/`edges` einführen und als Runtime-API exponieren.
+
+## Cycle 005 — 2026-03-06T16:56:00Z
+### Fokus
+Read-only Query DSL v0.1 für Graph-Inspektion im Runtime-Stub einführen.
+
+### Geliefert
+- `query(graph, selector)` als Runtime-API ergänzt
+- Selektor-Parser für v0.1 implementiert:
+  - `modules`
+  - `edges`
+  - `modules[id=...]`, `modules[type=...]`
+  - `edges[from=...]`, `edges[to=...]`, `edges[contract=...]`
+- Fehlercodes für Query-Validierung ergänzt:
+  - `E_QUERY_SELECTOR` (Syntax/Format)
+  - `E_QUERY_KEY` (ungültiger Filter-Key)
+  - `E_QUERY_GRAPH` (ungültige Graph-Collection)
+- Unit-Tests erweitert (3 neue Tests):
+  - Modul-Selektion nach `type`
+  - Edge-Selektion nach `from`
+  - Fehlerfall bei ungültigem Query-Key
+
+### Offene Lücken
+- Keine Attribut-basierten Filter (`attrs.*`) im Selector
+- Query nur mit explizitem `graph`-Argument, kein Head-Shortcut
+- Noch keine Sortierungs-/Limit-Semantik
+
+### Nächster Schritt
+Cycle 006: UI Diff Protocol (deterministisch, conflict-safe) + Event-Sourcing-Skizze vorbereiten.

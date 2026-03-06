@@ -29,6 +29,7 @@ class PatchError(Exception):
 
 class KairoRuntime:
     ATTR_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
+    QUERY_PATTERN = re.compile(r"^(modules|edges)(?:\[([a-z_]+)=([^\]]+)\])?$")
 
     def __init__(self) -> None:
         self.state = RuntimeState()
@@ -81,6 +82,37 @@ class KairoRuntime:
             raise PatchError("E_ATTR_VALUE", "set_attr requires value field")
 
         return node_id, key, value["value"]
+
+    def _parse_selector(self, selector: str) -> Tuple[str, str | None, str | None]:
+        if not isinstance(selector, str) or not selector.strip():
+            raise PatchError("E_QUERY_SELECTOR", "selector must be a non-empty string")
+
+        match = self.QUERY_PATTERN.match(selector.strip())
+        if not match:
+            raise PatchError("E_QUERY_SELECTOR", f"invalid selector: {selector}")
+
+        collection, key, value = match.groups()
+        return collection, key, value
+
+    def query(self, graph: Dict[str, Any], selector: str) -> List[Dict[str, Any]]:
+        collection, key, value = self._parse_selector(selector)
+
+        items = graph.get(collection)
+        if not isinstance(items, list):
+            raise PatchError("E_QUERY_GRAPH", f"graph field '{collection}' must be a list")
+
+        objects = [item for item in items if isinstance(item, dict)]
+        if key is None:
+            return objects
+
+        allowed_keys = {
+            "modules": {"id", "type"},
+            "edges": {"from", "to", "contract"},
+        }
+        if key not in allowed_keys[collection]:
+            raise PatchError("E_QUERY_KEY", f"selector key '{key}' not allowed for {collection}")
+
+        return [obj for obj in objects if obj.get(key) == value]
 
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):

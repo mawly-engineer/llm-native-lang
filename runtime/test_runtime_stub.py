@@ -141,6 +141,54 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertIn("E_ATTR_RESERVED", str(ctx.exception))
 
+    def test_query_modules_by_type(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "ui.shared", "type": "UIEngine"}},
+                    {"op": "add_node", "value": {"id": "policy.main", "type": "PolicyEngine"}},
+                ],
+            }
+        )
+
+        graph = self.rt.state.revisions[self.rt.state.head].graph
+        result = self.rt.query(graph, "modules[type=UIEngine]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "ui.shared")
+
+    def test_query_edges_by_from(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "a", "type": "A"}},
+                    {"op": "add_node", "value": {"id": "b", "type": "B"}},
+                    {"op": "add_node", "value": {"id": "c", "type": "C"}},
+                    {"op": "add_edge", "value": {"from": "a", "to": "b", "contract": "x"}},
+                    {"op": "add_edge", "value": {"from": "c", "to": "b", "contract": "x"}},
+                ],
+            }
+        )
+
+        graph = self.rt.state.revisions[self.rt.state.head].graph
+        result = self.rt.query(graph, "edges[from=a]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["to"], "b")
+
+    def test_query_rejects_invalid_selector(self) -> None:
+        graph = self.rt.state.revisions[self.rt.state.head].graph
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.query(graph, "modules[foo=bar]")
+
+        self.assertIn("E_QUERY_KEY", str(ctx.exception))
+
 
 if __name__ == "__main__":
     unittest.main()
