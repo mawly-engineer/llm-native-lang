@@ -394,7 +394,11 @@ class KairoRuntime:
         self.ui_snapshot_index[head] = snapshot_id
         return snapshot_id
 
-    def replay_ui_timeline(self, head: str | None = None) -> List[Dict[str, Any]]:
+    def replay_ui_timeline(
+        self,
+        head: str | None = None,
+        include_metrics: bool = False,
+    ) -> List[Dict[str, Any]] | Dict[str, Any]:
         if head is None:
             head = self.ui_head
         if head is not None and head not in self.ui_timeline:
@@ -426,7 +430,21 @@ class KairoRuntime:
             event = self.ui_timeline[event_id]
             ops.extend(deepcopy(event.ops))
 
-        return self.normalize_ui_ops(ops)
+        normalized_ops = self.normalize_ui_ops(ops)
+        metrics = {
+            "events_replayed": len(replay_ids),
+            "snapshot_seed_distance": best_distance,
+        }
+
+        if include_metrics:
+            return {
+                "head": head,
+                "snapshot_head": snapshot_head,
+                "ops": normalized_ops,
+                "metrics": metrics,
+            }
+
+        return normalized_ops
 
     def rollback_ui(self, revision: str | None) -> None:
         if revision is not None and revision not in self.ui_timeline:

@@ -576,6 +576,33 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             ],
         )
 
+    def test_replay_ui_timeline_exposes_metrics_without_snapshot(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Live"}],
+            base_revision=u0,
+        )
+
+        replay = self.rt.replay_ui_timeline(include_metrics=True)
+
+        self.assertEqual(replay["head"], self.rt.ui_head)
+        self.assertIsNone(replay["snapshot_head"])
+        self.assertEqual(replay["metrics"]["events_replayed"], 2)
+        self.assertIsNone(replay["metrics"]["snapshot_seed_distance"])
+
+    def test_replay_ui_timeline_exposes_metrics_with_snapshot_seed(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        self.rt.create_ui_snapshot(head=u0)
+        self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Live"}],
+            base_revision=u0,
+        )
+
+        replay = self.rt.replay_ui_timeline(include_metrics=True)
+
+        self.assertEqual(replay["snapshot_head"], u0)
+        self.assertEqual(replay["metrics"]["events_replayed"], 1)
+        self.assertEqual(replay["metrics"]["snapshot_seed_distance"], 1)
 
     def test_validate_ui_merge_accepts_non_conflicting_branches(self) -> None:
         base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])

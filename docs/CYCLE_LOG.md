@@ -437,3 +437,27 @@ UI-Replay auf echte DAG-Semantik umstellen und Snapshot-Nutzung für Merge-Heads
 ### Nächster Schritt
 Cycle 020: Replay-Metriken API ergänzen + delta-basiertes Merge-Event evaluieren.
 
+## Cycle 020 — 2026-03-06T20:24:00Z
+### Fokus
+Replay-Kosten als explizite Runtime-Metriken sichtbar machen und den Contract dafür nachziehen.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - `replay_ui_timeline(..., include_metrics=True)` liefert jetzt zusätzlich strukturierte Replay-Metriken
+  - neue Metriken: `events_replayed` und `snapshot_seed_distance`
+  - Rückwärtskompatibilität bleibt erhalten (`include_metrics=False` liefert weiterhin nur `ops`)
+- Unit-Tests erweitert (2 neue Tests):
+  - Metrik-Ausgabe ohne Snapshot-Seed
+  - Metrik-Ausgabe mit Snapshot-Seed inkl. Distanzprüfung
+- Runtime-/Contract-Doku aktualisiert:
+  - Metrik-Signatur und Rückgabeformat dokumentiert
+  - Replay-Kostenmodell für Snapshot-seeded Replays ergänzt
+
+### Offene Lücken
+- Merge-Events sind weiterhin materialisierte Vollstände statt Delta-Events
+- Keine Metrik-Historie/Aggregation über mehrere Replays hinweg
+- Keine Retention-Policy für Snapshot-Index bei sehr langen Timelines
+
+### Nächster Schritt
+Cycle 021: Delta-basiertes Merge-Event-Modell skizzieren und Kostenvergleich materialisiert vs delta vorbereiten.
+

@@ -124,3 +124,14 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
 - Konfliktregel v0.1 (Policy `explicit_conflict`):
   - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
   - Kein implizites Last-Writer-Wins über Branches ohne explizite Resolver-Entscheidung.
+
+## UI Replay-Metriken (Cycle 020)
+- `replay_ui_timeline(head=None, include_metrics=False)`
+  - Default (`include_metrics=False`) bleibt rückwärtskompatibel und liefert nur normalisierte `ops[]`.
+  - Mit `include_metrics=True` liefert die API ein Objekt:
+    - `head`: aufgelöster Replay-Head
+    - `snapshot_head`: verwendeter Snapshot-Vorfahre oder `null`
+    - `ops`: normalisierte UI-Ops nach Replay
+    - `metrics.events_replayed`: Anzahl tatsächlich replayter Timeline-Events (nach Snapshot-Seeding)
+    - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
+- `events_replayed` misst Replay-Kosten direkt am Event-Pfad und ist damit als Hook für Snapshot/Compaction-Tuning nutzbar.

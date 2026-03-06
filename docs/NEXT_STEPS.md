@@ -71,7 +71,12 @@
 - Metriken ergänzen: Replay-Kosten vor/nach Merge-Snapshots vergleichen (vorbereitet via DAG-Replay-Basis)
 
 ## Cycle 020
-- Replay-Metriken als Runtime-API explizit exponieren (`events_replayed`, `snapshot_seed_distance`)
+- Replay-Metriken als Runtime-API explizit exponieren (`events_replayed`, `snapshot_seed_distance`) ✅
 - Delta-basiertes Merge-Event (statt materialisiertem Vollstand) evaluieren
-- Contract-Doku um Replay-Kostenmodell für Merge-lastige Timelines ergänzen
+- Contract-Doku um Replay-Kostenmodell für Merge-lastige Timelines ergänzen ✅
+
+## Cycle 021
+- Delta-basiertes Merge-Event-Modell als Alternative zu materialisierten Merge-Ops skizzieren
+- Vergleich im Contract festhalten: Merge-Replay-Kosten materialisiert vs delta-basiert
+- Erste Stub-Tests für Delta-Merge-Invariante vorbereiten (ohne vollständige Persistenzumstellung)
 
