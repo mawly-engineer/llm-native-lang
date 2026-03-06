@@ -135,3 +135,13 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `metrics.events_replayed`: Anzahl tatsächlich replayter Timeline-Events (nach Snapshot-Seeding)
     - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
 - `events_replayed` misst Replay-Kosten direkt am Event-Pfad und ist damit als Hook für Snapshot/Compaction-Tuning nutzbar.
+
+## Delta-Merge-Vorschau (Cycle 021)
+- `preview_ui_merge_delta(left_revision, right_revision, base_revision=None, policy="explicit_conflict", resolutions=None, resolution_notes=None)`
+  - baut auf `preview_ui_merge(...)` auf und mutiert keine Timeline
+  - liefert zusätzlich:
+    - `base_ops`: normalisierte Ops auf der Merge-Base
+    - `delta_ops`: nur die gegenüber `base_ops` geänderten Ops des Merge-Ergebnisses
+    - `delta_metrics.base_ops|merged_ops|delta_ops`: Größenvergleich materialisiert vs delta
+    - `delta_metrics.reconstructs_merged`: Invariante, ob `normalize(base_ops + delta_ops) == merged_ops`
+- Ziel in v0.1: Kosten- und Persistenzvergleich vorbereiten, ohne die bestehende materialisierte Merge-Persistenz zu brechen.

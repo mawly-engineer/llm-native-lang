@@ -608,6 +608,47 @@ class KairoRuntime:
             "merged_ops": merged_ops,
         }
 
+    def preview_ui_merge_delta(
+        self,
+        left_revision: str | None,
+        right_revision: str | None,
+        base_revision: str | None = None,
+        policy: str = "explicit_conflict",
+        resolutions: List[Dict[str, Any]] | None = None,
+        resolution_notes: str | None = None,
+    ) -> Dict[str, Any]:
+        merge_info = self.preview_ui_merge(
+            left_revision=left_revision,
+            right_revision=right_revision,
+            base_revision=base_revision,
+            policy=policy,
+            resolutions=resolutions,
+            resolution_notes=resolution_notes,
+        )
+
+        resolved_base = merge_info["base_revision"]
+        base_ops = self.replay_ui_timeline(resolved_base)
+        merged_ops = merge_info["merged_ops"]
+
+        def op_key(op: Dict[str, Any]) -> Tuple[str, str, str]:
+            return (op.get("op", ""), op.get("path", ""), op.get("key", ""))
+
+        base_map = {op_key(op): op for op in base_ops}
+        delta_ops = [op for op in merged_ops if base_map.get(op_key(op)) != op]
+        replay_with_delta = self.normalize_ui_ops(base_ops + delta_ops)
+
+        return {
+            **merge_info,
+            "base_ops": base_ops,
+            "delta_ops": delta_ops,
+            "delta_metrics": {
+                "base_ops": len(base_ops),
+                "merged_ops": len(merged_ops),
+                "delta_ops": len(delta_ops),
+                "reconstructs_merged": replay_with_delta == merged_ops,
+            },
+        }
+
     def validate_ui_merge(
         self,
         left_revision: str | None,

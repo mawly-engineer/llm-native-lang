@@ -789,6 +789,62 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             ],
         )
 
+    def test_preview_ui_merge_delta_reconstructs_materialized_merge(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        delta_preview = self.rt.preview_ui_merge_delta(left, right, base_revision=base)
+
+        self.assertEqual(len(delta_preview["conflicts"]), 0)
+        self.assertTrue(delta_preview["delta_metrics"]["reconstructs_merged"])
+        self.assertEqual(
+            self.rt.normalize_ui_ops(delta_preview["base_ops"] + delta_preview["delta_ops"]),
+            delta_preview["merged_ops"],
+        )
+
+    def test_preview_ui_merge_delta_tracks_resolution_choice(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+            base_revision=base,
+        )
+
+        delta_preview = self.rt.preview_ui_merge_delta(
+            left,
+            right,
+            base_revision=base,
+            resolutions=[
+                {
+                    "op": "set_prop",
+                    "path": "/root/a",
+                    "prop": "title",
+                    "decision": "accept_right",
+                }
+            ],
+        )
+
+        self.assertEqual(len(delta_preview["conflicts"]), 0)
+        self.assertEqual(delta_preview["delta_metrics"]["delta_ops"], 1)
+        self.assertEqual(
+            delta_preview["delta_ops"],
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+        )
+
     def test_merge_ui_branches_rejects_invalid_resolution_decision(self) -> None:
         base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         left = self.rt.apply_ui_patch(

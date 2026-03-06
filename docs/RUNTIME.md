@@ -47,3 +47,4 @@
   - Policy v0.1 = `explicit_conflict` (kein stilles Overwrite bei konkurrierenden Writes)
   - optionale manuelle Auflösung pro Op-Key via `resolutions[]` (`accept_left|accept_right`)
   - Merge-Events tragen explizite Dual-Parents (`parent`, `secondary_parent`) plus optionales `resolution_notes`-Decision-Log
+- `preview_ui_merge_delta(...)` ermöglicht einen nicht-destruktiven Vergleich zwischen materialisiertem Merge-Stand (`merged_ops`) und einem Delta-Set (`delta_ops`) relativ zur Base, inkl. Rekonstruktionsinvariante als Vorbereitung für mögliche Delta-Persistenz.

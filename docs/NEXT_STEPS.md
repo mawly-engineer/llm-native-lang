@@ -76,7 +76,12 @@
 - Contract-Doku um Replay-Kostenmodell für Merge-lastige Timelines ergänzen ✅
 
 ## Cycle 021
-- Delta-basiertes Merge-Event-Modell als Alternative zu materialisierten Merge-Ops skizzieren
-- Vergleich im Contract festhalten: Merge-Replay-Kosten materialisiert vs delta-basiert
-- Erste Stub-Tests für Delta-Merge-Invariante vorbereiten (ohne vollständige Persistenzumstellung)
+- Delta-basiertes Merge-Event-Modell als Alternative zu materialisierten Merge-Ops skizzieren ✅
+- Vergleich im Contract festhalten: Merge-Replay-Kosten materialisiert vs delta-basiert ✅
+- Erste Stub-Tests für Delta-Merge-Invariante vorbereiten (ohne vollständige Persistenzumstellung) ✅
+
+## Cycle 022
+- Delta-Merge-Vorschau in echte Merge-Persistenzvariante überführen (`mode=delta|materialized`)
+- Replay-Pfad für Delta-Merge-Events auf Korrektheit + Kostenmetrik testen
+- Contract um Kompatibilitätsregeln für gemischte Materialized/Delta-Historien ergänzen
 

@@ -461,3 +461,28 @@ Replay-Kosten als explizite Runtime-Metriken sichtbar machen und den Contract da
 ### Nächster Schritt
 Cycle 021: Delta-basiertes Merge-Event-Modell skizzieren und Kostenvergleich materialisiert vs delta vorbereiten.
 
+## Cycle 021 — 2026-03-06T20:40:00Z
+### Fokus
+Delta-orientierte Merge-Vorschau ergänzen, ohne bestehende materialisierte Merge-Persistenz umzubauen.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - neue API `preview_ui_merge_delta(...)` auf Basis der bestehenden Merge-Vorschau
+  - liefert `base_ops`, `delta_ops` und `delta_metrics` für Kostenvergleich
+  - prüft Invariante `normalize(base_ops + delta_ops) == merged_ops` als Sicherheitsanker für spätere Delta-Persistenz
+- Unit-Tests erweitert (2 neue Tests):
+  - konfliktfreier Merge lässt sich über `base_ops + delta_ops` deterministisch rekonstruieren
+  - konfliktbehafteter Merge mit Resolver-Entscheidung (`accept_right`) liefert erwartetes Delta-Set
+- Runtime-/Contract-Doku aktualisiert:
+  - neue Delta-Merge-Vorschau und ihre Metriken dokumentiert
+  - Vorbereitung für optionales Persistenzmodell `materialized` vs `delta` klargemacht
+- Next-Steps auf Cycle 022 fortgeschrieben
+
+### Offene Lücken
+- Delta-Vorschau ist noch nicht als persistenter Merge-Modus verdrahtet
+- Kein Replay-Pfad für echte Delta-Merge-Events im Timeline-Store
+- Kostenvergleich aktuell pro Merge-Preview, noch ohne Aggregation über längere Historien
+
+### Nächster Schritt
+Cycle 022: Optionalen Delta-Merge-Persistenzmodus einführen und Replay-/Kompatibilitätstests ergänzen.
+
