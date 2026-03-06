@@ -190,3 +190,28 @@ Runtime-Contract für Fehlercodes auslagern und Query API um Sortierung/Limit ve
 
 ### Nächster Schritt
 Cycle 009: UI Diff Protocol v0.1 mit deterministischer Reihenfolge und Konfliktregeln spezifizieren.
+
+## Cycle 009 — 2026-03-06T17:58:00Z
+### Fokus
+UI Diff Protocol v0.1 als klaren Normalisierungsvertrag festziehen und erste Golden-Tests im Runtime-Stub verankern.
+
+### Geliefert
+- Neues Dokument „UI Diff Protocol v0.1 (Draft)“ erstellt:
+  - Op-Format für `remove|replace|move|insert|set_prop`
+  - Konfliktregeln (Remove gewinnt, Last-Write-Wins für `set_prop`)
+  - deterministische Sortierung (Pfad + Priorität + Prop-Key)
+- Runtime-Stub um `normalize_ui_ops(...)` erweitert:
+  - Shape-/Kind-/Path-/Key-Validierung mit neuen UI-Fehlercodes
+  - Konfliktreduktion + deterministische Reihenfolge implementiert
+- Unit-Tests erweitert (2 neue Golden-/Konflikttests):
+  - gemischte Ops werden stabil in eine feste Reihenfolge normalisiert
+  - wiederholte `set_prop`-Writes auf gleicher Property behalten den letzten Wert
+- Runtime-Contract um UI-Diff-Fehlercodes ergänzt
+
+### Offene Lücken
+- Parent/Child-Pfadkonflikte sind noch nicht aufgelöst (`remove(/a)` vs `set_prop(/a/b)`)
+- UI-Diff ist noch nicht als `ui_patch` in `apply_patch` integriert
+- Kein Event-Sourcing-/Rollback-Replay für UI-Operationen
+
+### Nächster Schritt
+Cycle 010: Parent/Child-Konfliktregeln + Event-Sourcing-/Rollback-Skizze ergänzen.

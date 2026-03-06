@@ -47,6 +47,13 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 - `E_QUERY_SORT` – Sortierparameter (`sort_by`, `descending`) ungültig
 - `E_QUERY_LIMIT` – `limit` ist kein Integer >= 0
 
+### UI Diff Normalisierung
+- `E_UI_OPS_TYPE` – UI-Op-Liste ist kein Array
+- `E_UI_OP_SHAPE` – einzelner UI-Op ist kein Objekt
+- `E_UI_OP_KIND` – UI-Op-Typ nicht unterstützt
+- `E_UI_OP_PATH` – `path` fehlt oder ist leer
+- `E_UI_OP_KEY` – `set_prop.key` fehlt oder ist leer
+
 ## Query-Semantik (v0.1)
 
 ### Signatur

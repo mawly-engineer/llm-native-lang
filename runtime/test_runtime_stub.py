@@ -329,6 +329,37 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertIn("E_QUERY_KEY", str(ctx.exception))
 
+    def test_ui_ops_normalize_deterministic_order(self) -> None:
+        ops = [
+            {"op": "set_prop", "path": "/root/a", "key": "text", "value": "Hallo"},
+            {"op": "insert", "path": "/root/b", "value": {"kind": "label"}},
+            {"op": "remove", "path": "/root/a"},
+            {"op": "move", "path": "/root/c", "value": {"to": "/root/a"}},
+            {"op": "replace", "path": "/root/c", "value": {"kind": "button"}},
+        ]
+
+        result = self.rt.normalize_ui_ops(ops)
+
+        self.assertEqual(
+            result,
+            [
+                {"op": "remove", "path": "/root/a"},
+                {"op": "insert", "path": "/root/b", "value": {"kind": "label"}},
+                {"op": "replace", "path": "/root/c", "value": {"kind": "button"}},
+                {"op": "move", "path": "/root/c", "value": {"to": "/root/a"}},
+            ],
+        )
+
+    def test_ui_ops_normalize_last_write_wins_for_set_prop(self) -> None:
+        ops = [
+            {"op": "set_prop", "path": "/root/title", "key": "text", "value": "A"},
+            {"op": "set_prop", "path": "/root/title", "key": "text", "value": "B"},
+        ]
+
+        result = self.rt.normalize_ui_ops(ops)
+
+        self.assertEqual(result, [{"op": "set_prop", "path": "/root/title", "key": "text", "value": "B"}])
+
 
 if __name__ == "__main__":
     unittest.main()

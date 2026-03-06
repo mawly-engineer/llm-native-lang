@@ -195,6 +195,65 @@ class KairoRuntime:
             raise PatchError("E_QUERY_LIMIT", "limit must be an integer >= 0")
         return objects[:limit]
 
+    def normalize_ui_ops(self, ops: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        if not isinstance(ops, list):
+            raise PatchError("E_UI_OPS_TYPE", "ui ops must be a list")
+
+        precedence = {
+            "remove": 0,
+            "replace": 1,
+            "move": 2,
+            "insert": 3,
+            "set_prop": 4,
+        }
+
+        reduced: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+        removed_paths: Set[str] = set()
+
+        for idx, raw in enumerate(ops):
+            if not isinstance(raw, dict):
+                raise PatchError("E_UI_OP_SHAPE", f"ui op[{idx}] must be an object")
+
+            kind = raw.get("op")
+            path = raw.get("path")
+            if kind not in precedence:
+                raise PatchError("E_UI_OP_KIND", f"unsupported ui op: {kind}")
+            if not isinstance(path, str) or not path.strip():
+                raise PatchError("E_UI_OP_PATH", "ui op path must be a non-empty string")
+
+            path = path.strip()
+            if kind == "remove":
+                removed_paths.add(path)
+                reduced = {k: v for k, v in reduced.items() if k[1] != path}
+                reduced[(kind, path, "")] = {"op": kind, "path": path}
+                continue
+
+            if path in removed_paths:
+                continue
+
+            if kind == "set_prop":
+                key = raw.get("key")
+                if not isinstance(key, str) or not key.strip():
+                    raise PatchError("E_UI_OP_KEY", "set_prop requires non-empty key")
+                reduced[(kind, path, key)] = {
+                    "op": kind,
+                    "path": path,
+                    "key": key,
+                    "value": raw.get("value"),
+                }
+                continue
+
+            reduced[(kind, path, "")] = {"op": kind, "path": path, "value": raw.get("value")}
+
+        return sorted(
+            reduced.values(),
+            key=lambda op: (
+                op["path"],
+                precedence[op["op"]],
+                "" if op["op"] != "set_prop" else op["key"],
+            ),
+        )
+
     def query(
         self,
         *args: Any,
