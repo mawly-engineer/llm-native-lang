@@ -657,9 +657,13 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             base_revision=base,
         )
 
-        merged = self.rt.merge_ui_branches(left, right, base_revision=base)
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, resolution_notes="safe auto merge")
 
         self.assertEqual(merged["merged_revision"], self.rt.ui_head)
+        merged_event = self.rt.ui_timeline[merged["merged_revision"]]
+        self.assertEqual(merged_event.parent, left)
+        self.assertEqual(merged_event.secondary_parent, right)
+        self.assertEqual(merged_event.resolution_notes, "safe auto merge")
         self.assertEqual(
             self.rt.replay_ui_timeline(),
             [
@@ -668,6 +672,74 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
                 {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"},
             ],
         )
+
+    def test_merge_ui_branches_accepts_resolution_for_conflict(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(
+            left,
+            right,
+            base_revision=base,
+            resolutions=[
+                {
+                    "op": "set_prop",
+                    "path": "/root/a",
+                    "prop": "title",
+                    "decision": "accept_right",
+                }
+            ],
+            resolution_notes="manuell: right gewinnt für title",
+        )
+
+        self.assertEqual(len(merged["conflicts"]), 0)
+        self.assertEqual(len(merged["applied_resolutions"]), 1)
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"},
+            ],
+        )
+
+    def test_merge_ui_branches_rejects_invalid_resolution_decision(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+            base_revision=base,
+        )
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.preview_ui_merge(
+                left,
+                right,
+                base_revision=base,
+                resolutions=[
+                    {
+                        "op": "set_prop",
+                        "path": "/root/a",
+                        "prop": "title",
+                        "decision": "drop",
+                    }
+                ],
+            )
+
+        self.assertIn("E_UI_MERGE_RESOLUTION", str(ctx.exception))
 
 
 if __name__ == "__main__":

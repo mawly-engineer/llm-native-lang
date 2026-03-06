@@ -385,3 +385,30 @@ UI-Branch-Merge von reiner Validierung/Vorschau zu einer echten Runtime-Operatio
 ### Nächster Schritt
 Cycle 018: Merge-Commit-Struktur mit expliziten Parents + manuelle Konfliktauflösungs-API vorbereiten.
 
+## Cycle 018 — 2026-03-06T20:00:00Z
+### Fokus
+UI-Merge von squash-artiger Persistenz auf explizites Merge-Commit-Modell erweitern und manuelle Konfliktauflösung im Stub verankern.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - `UITimelineEvent` trägt jetzt `secondary_parent` und optional `resolution_notes`
+  - `merge_ui_branches(...)` persistiert explizite Dual-Parents (`parent=left`, `secondary_parent=right`)
+- Manuelle Konfliktauflösung implementiert:
+  - `preview_ui_merge(...)` / `validate_ui_merge(...)` / `merge_ui_branches(...)` akzeptieren optional `resolutions[]`
+  - unterstützte Entscheidungen pro Op-Key: `accept_left`, `accept_right`
+  - angewendete Entscheidungen werden als `applied_resolutions[]` zurückgegeben
+  - Resolver-Validierung inkl. neuem Fehlercode `E_UI_MERGE_RESOLUTION`
+- Unit-Tests erweitert (3 neue Tests):
+  - Merge-Event enthält explizite Branch-Parents + `resolution_notes`
+  - konfliktbehafteter Merge wird mit `accept_right` erfolgreich aufgelöst
+  - ungültige Resolver-Entscheidung wird korrekt abgewiesen
+- Runtime-/Contract-Doku auf Cycle-018-Stand aktualisiert (Resolver-Input + Decision-Log + Parent-Modell).
+
+### Offene Lücken
+- Replay traversiert weiterhin primär über `parent` und nutzt `secondary_parent` noch nicht für DAG-native Rekonstruktion
+- Merge-Event-Payload bleibt materialisiert; kein delta-basiertes Merge-Event
+- Keine Performance-Metriken für Merge-lastige Timeline-Replays
+
+### Nächster Schritt
+Cycle 019: DAG-natives Replay + Snapshot-Index für Merge-Heads + Replay-Metriken ergänzen.
+

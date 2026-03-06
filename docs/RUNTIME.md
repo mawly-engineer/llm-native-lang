@@ -41,7 +41,8 @@
 - `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein (auch mehrfach pro Patch) und schreibt atomar mit Graph-Änderungen
 - Jede Program-Revision trägt die gekoppelte `ui_revision` des resultierenden UI-Heads
 - Bei UI-Base-Mismatch schlägt der gesamte Program-Patch fehl (keine Teilanwendung)
-- UI-Branch-Merge-Validierung via `validate_ui_merge(...)`:
+- UI-Branch-Merge via `preview_ui_merge(...)` / `merge_ui_branches(...)`:
   - Base wird optional per LCA bestimmt
   - Policy v0.1 = `explicit_conflict` (kein stilles Overwrite bei konkurrierenden Writes)
-  - Konfliktfreie Branches liefern deterministische `merged_ops` als Merge-Vorschau
+  - optionale manuelle Auflösung pro Op-Key via `resolutions[]` (`accept_left|accept_right`)
+  - Merge-Events tragen explizite Dual-Parents (`parent`, `secondary_parent`) plus optionales `resolution_notes`-Decision-Log

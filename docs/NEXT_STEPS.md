@@ -61,7 +61,12 @@
 - Decision-Log für manuelle Konfliktauflösung im Runtime-Contract ergänzen ✅
 
 ## Cycle 018
-- UI-Merge-Commit mit expliziten Branch-Parents modellieren (statt squash-artigem Materialized Event)
-- Merge-Decision-Log als optionalen Input (`resolution_notes`) im Runtime-Contract definieren
-- Tests für manuelle Konfliktauflösung (accept-left/right per Op-Key) vorbereiten
+- UI-Merge-Commit mit expliziten Branch-Parents modellieren (statt squash-artigem Materialized Event) ✅
+- Merge-Decision-Log als optionalen Input (`resolution_notes`) im Runtime-Contract definieren ✅
+- Tests für manuelle Konfliktauflösung (accept-left/right per Op-Key) vorbereiten ✅
+
+## Cycle 019
+- Merge-Replay auf echte DAG-Semantik umstellen (nicht nur primären Parent traversieren)
+- Snapshot-Index für Merge-Heads (mehrere Vorfahren) erweitern
+- Metriken ergänzen: Replay-Kosten vor/nach Merge-Snapshots vergleichen
 

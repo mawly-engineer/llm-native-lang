@@ -28,6 +28,8 @@ class UITimelineEvent:
     id: str
     parent: str | None
     ops: List[Dict[str, Any]]
+    secondary_parent: str | None = None
+    resolution_notes: str | None = None
 
 
 @dataclass
@@ -408,12 +410,50 @@ class KairoRuntime:
                 raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
             cursor = event.parent
 
+    def _resolution_key(self, entry: Dict[str, Any]) -> Tuple[str, str, str]:
+        if not isinstance(entry, dict):
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolution entry must be an object")
+
+        op = entry.get("op")
+        path = entry.get("path")
+        prop = entry.get("prop")
+
+        if not isinstance(op, str) or not op.strip():
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolution.op must be a non-empty string")
+        if not isinstance(path, str) or not path.strip():
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolution.path must be a non-empty string")
+        if prop is not None and not isinstance(prop, str):
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolution.prop must be a string when set")
+
+        return (op, path, "" if prop is None else prop)
+
+    def _resolution_decisions(self, resolutions: List[Dict[str, Any]] | None) -> Dict[Tuple[str, str, str], str]:
+        if resolutions is None:
+            return {}
+        if not isinstance(resolutions, list):
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolutions must be a list")
+
+        decisions: Dict[Tuple[str, str, str], str] = {}
+        for entry in resolutions:
+            key = self._resolution_key(entry)
+            decision = entry.get("decision")
+            if decision not in {"accept_left", "accept_right"}:
+                raise PatchError(
+                    "E_UI_MERGE_RESOLUTION",
+                    "resolution.decision must be 'accept_left' or 'accept_right'",
+                )
+            decisions[key] = decision
+
+        return decisions
+
     def preview_ui_merge(
         self,
         left_revision: str | None,
         right_revision: str | None,
         base_revision: str | None = None,
         policy: str = "explicit_conflict",
+        resolutions: List[Dict[str, Any]] | None = None,
+        resolution_notes: str | None = None,
     ) -> Dict[str, Any]:
         if policy != "explicit_conflict":
             raise PatchError("E_UI_MERGE_POLICY", "unsupported ui merge policy")
@@ -422,6 +462,10 @@ class KairoRuntime:
             if revision is not None and revision not in self.ui_timeline:
                 raise PatchError("E_UI_REVISION", f"unknown {name} ui revision: {revision}")
 
+        if resolution_notes is not None and (not isinstance(resolution_notes, str) or not resolution_notes.strip()):
+            raise PatchError("E_UI_MERGE_RESOLUTION", "resolution_notes must be a non-empty string")
+
+        resolution_map = self._resolution_decisions(resolutions)
         resolved_base = self._ui_lca(left_revision, right_revision) if base_revision is None else base_revision
 
         left_ancestors = self._ui_ancestors(left_revision)
@@ -440,7 +484,12 @@ class KairoRuntime:
         left_map = {op_key(op): op for op in left_ops}
         right_map = {op_key(op): op for op in right_ops}
 
+        merged_by_key = {op_key(op): deepcopy(op) for op in base_ops}
+        merged_by_key.update({op_key(op): deepcopy(op) for op in left_ops})
+        merged_by_key.update({op_key(op): deepcopy(op) for op in right_ops})
+
         conflicts: List[Dict[str, Any]] = []
+        applied_resolutions: List[Dict[str, Any]] = []
         all_keys = set(left_map) | set(right_map)
         for key in sorted(all_keys):
             left_op = left_map.get(key)
@@ -453,18 +502,37 @@ class KairoRuntime:
             base_op = base_map.get(key)
             left_changed = left_op != base_op
             right_changed = right_op != base_op
-            if left_changed and right_changed:
-                conflicts.append(
+            if not (left_changed and right_changed):
+                continue
+
+            decision = resolution_map.get(key)
+            if decision == "accept_left":
+                merged_by_key[key] = deepcopy(left_op)
+                applied_resolutions.append(
                     {
                         "key": {"op": key[0], "path": key[1], "prop": key[2] or None},
-                        "left": deepcopy(left_op),
-                        "right": deepcopy(right_op),
+                        "decision": decision,
                     }
                 )
+                continue
+            if decision == "accept_right":
+                merged_by_key[key] = deepcopy(right_op)
+                applied_resolutions.append(
+                    {
+                        "key": {"op": key[0], "path": key[1], "prop": key[2] or None},
+                        "decision": decision,
+                    }
+                )
+                continue
 
-        merged_by_key = {op_key(op): deepcopy(op) for op in base_ops}
-        merged_by_key.update({op_key(op): deepcopy(op) for op in left_ops})
-        merged_by_key.update({op_key(op): deepcopy(op) for op in right_ops})
+            conflicts.append(
+                {
+                    "key": {"op": key[0], "path": key[1], "prop": key[2] or None},
+                    "left": deepcopy(left_op),
+                    "right": deepcopy(right_op),
+                }
+            )
+
         merged_ops = self.normalize_ui_ops(list(merged_by_key.values()))
 
         return {
@@ -473,6 +541,8 @@ class KairoRuntime:
             "right_revision": right_revision,
             "policy": policy,
             "conflicts": conflicts,
+            "applied_resolutions": applied_resolutions,
+            "resolution_notes": resolution_notes,
             "merged_ops": merged_ops,
         }
 
@@ -482,12 +552,16 @@ class KairoRuntime:
         right_revision: str | None,
         base_revision: str | None = None,
         policy: str = "explicit_conflict",
+        resolutions: List[Dict[str, Any]] | None = None,
+        resolution_notes: str | None = None,
     ) -> Dict[str, Any]:
         merge_info = self.preview_ui_merge(
             left_revision=left_revision,
             right_revision=right_revision,
             base_revision=base_revision,
             policy=policy,
+            resolutions=resolutions,
+            resolution_notes=resolution_notes,
         )
 
         conflicts = merge_info["conflicts"]
@@ -506,19 +580,25 @@ class KairoRuntime:
         right_revision: str | None,
         base_revision: str | None = None,
         policy: str = "explicit_conflict",
+        resolutions: List[Dict[str, Any]] | None = None,
+        resolution_notes: str | None = None,
     ) -> Dict[str, Any]:
         merge_info = self.validate_ui_merge(
             left_revision=left_revision,
             right_revision=right_revision,
             base_revision=base_revision,
             policy=policy,
+            resolutions=resolutions,
+            resolution_notes=resolution_notes,
         )
 
         merged_ops = merge_info["merged_ops"]
         new_id = f"u-{len(self.ui_timeline)}"
         self.ui_timeline[new_id] = UITimelineEvent(
             id=new_id,
-            parent=None,
+            parent=left_revision,
+            secondary_parent=right_revision,
+            resolution_notes=resolution_notes,
             ops=deepcopy(merged_ops),
         )
         self.ui_head = new_id
