@@ -4,7 +4,7 @@ mit einfachen Typ-/Constraint-Checks.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Set, Tuple
 
 
 @dataclass
@@ -53,6 +53,16 @@ class KairoRuntime:
         self._require_str(edge, "to", "E_EDGE_TO")
         self._require_str(edge, "contract", "E_EDGE_CONTRACT")
 
+    def _edge_tuple(self, edge: Dict[str, Any]) -> Tuple[str, str, str]:
+        return (edge["from"], edge["to"], edge["contract"])
+
+    def _node_id_from_value(self, value: Any) -> str:
+        if isinstance(value, str) and value.strip():
+            return value
+        if isinstance(value, dict):
+            return self._require_str(value, "id", "E_NODE_ID")
+        raise PatchError("E_NODE_ID", "node reference must be string or object with id")
+
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):
             raise PatchError("E_PATCH_TYPE", "patch must be an object")
@@ -76,10 +86,14 @@ class KairoRuntime:
             raise PatchError("E_OPS_EMPTY", "ops must be a non-empty list")
 
         current = self.state.revisions[self.state.head]  # type: ignore[index]
-        existing_nodes: Set[str] = {
-            n.get("id") for n in current.graph.get("modules", []) if isinstance(n, dict)
-        }
-        pending_add_nodes: Set[str] = set()
+        modules = [m for m in current.graph.get("modules", []) if isinstance(m, dict)]
+        edges = [e for e in current.graph.get("edges", []) if isinstance(e, dict)]
+
+        known_nodes: Set[str] = {self._require_str(m, "id", "E_NODE_ID") for m in modules}
+        known_edges: Set[Tuple[str, str, str]] = set()
+        for edge in edges:
+            self._validate_edge_shape(edge)
+            known_edges.add(self._edge_tuple(edge))
 
         for idx, op in enumerate(ops):
             if not isinstance(op, dict):
@@ -90,20 +104,49 @@ class KairoRuntime:
             if kind == "add_node":
                 self._validate_node_shape(value)
                 node_id = value["id"]
-                if node_id in existing_nodes or node_id in pending_add_nodes:
+                if node_id in known_nodes:
                     raise PatchError("E_NODE_DUPLICATE", f"duplicate node id: {node_id}")
-                pending_add_nodes.add(node_id)
+                known_nodes.add(node_id)
+
+            elif kind == "replace_node":
+                self._validate_node_shape(value)
+                node_id = value["id"]
+                if node_id not in known_nodes:
+                    raise PatchError("E_NODE_NOT_FOUND", f"cannot replace unknown node: {node_id}")
+
+            elif kind == "remove_node":
+                node_id = self._node_id_from_value(value)
+                if node_id not in known_nodes:
+                    raise PatchError("E_NODE_NOT_FOUND", f"cannot remove unknown node: {node_id}")
+
+                for source, target, _contract in known_edges:
+                    if source == node_id or target == node_id:
+                        raise PatchError(
+                            "E_NODE_IN_USE",
+                            f"cannot remove node with remaining edges: {node_id}",
+                        )
+                known_nodes.remove(node_id)
 
             elif kind == "add_edge":
                 self._validate_edge_shape(value)
-                source = value["from"]
-                target = value["to"]
-                known_nodes = existing_nodes | pending_add_nodes
+                source, target, contract = self._edge_tuple(value)
                 if source not in known_nodes or target not in known_nodes:
                     raise PatchError(
                         "E_EDGE_DANGLING",
                         f"edge references unknown node(s): from={source}, to={target}",
                     )
+                edge_key = (source, target, contract)
+                if edge_key in known_edges:
+                    raise PatchError("E_EDGE_DUPLICATE", f"duplicate edge: {edge_key}")
+                known_edges.add(edge_key)
+
+            elif kind == "remove_edge":
+                self._validate_edge_shape(value)
+                edge_key = self._edge_tuple(value)
+                if edge_key not in known_edges:
+                    raise PatchError("E_EDGE_NOT_FOUND", f"cannot remove unknown edge: {edge_key}")
+                known_edges.remove(edge_key)
+
             else:
                 raise PatchError("E_OP_UNSUPPORTED", f"unsupported op in stub: {kind}")
 
@@ -111,17 +154,41 @@ class KairoRuntime:
         self.validate_patch(patch)
         current = self.state.revisions[self.state.head]  # type: ignore[index]
         new_graph = {
-            "modules": list(current.graph.get("modules", [])),
-            "edges": list(current.graph.get("edges", [])),
+            "modules": [m.copy() if isinstance(m, dict) else m for m in current.graph.get("modules", [])],
+            "edges": [e.copy() if isinstance(e, dict) else e for e in current.graph.get("edges", [])],
         }
 
         for op in patch["ops"]:
             kind = op.get("op")
             value = op.get("value")
+
             if kind == "add_node":
                 new_graph["modules"].append(value)
+
+            elif kind == "replace_node":
+                node_id = value["id"]
+                for i, mod in enumerate(new_graph["modules"]):
+                    if isinstance(mod, dict) and mod.get("id") == node_id:
+                        new_graph["modules"][i] = value
+                        break
+
+            elif kind == "remove_node":
+                node_id = self._node_id_from_value(value)
+                new_graph["modules"] = [
+                    mod
+                    for mod in new_graph["modules"]
+                    if not (isinstance(mod, dict) and mod.get("id") == node_id)
+                ]
+
             elif kind == "add_edge":
                 new_graph["edges"].append(value)
+
+            elif kind == "remove_edge":
+                edge_key = self._edge_tuple(value)
+                for i, edge in enumerate(new_graph["edges"]):
+                    if isinstance(edge, dict) and self._edge_tuple(edge) == edge_key:
+                        del new_graph["edges"][i]
+                        break
 
         new_id = f"r-{len(self.state.revisions)}"
         rev = Revision(id=new_id, parent=self.state.head, graph=new_graph)

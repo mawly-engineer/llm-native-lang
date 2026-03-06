@@ -46,3 +46,25 @@ Type/Constraint-Validierung im Runtime-Stub konkretisieren und dokumentieren.
 
 ### Nächster Schritt
 Cycle 003: Query DSL v0.1 als read-only Selektion über `modules`/`edges` + erste Runtime-API dafür.
+
+## Cycle 003 — 2026-03-06T16:31:00Z
+### Fokus
+Patch-Op-Abdeckung im Runtime-Stub auf zentrale Graph-Mutationen ausweiten + testbar machen.
+
+### Geliefert
+- Runtime unterstützt jetzt zusätzlich `replace_node`, `remove_node`, `remove_edge`
+- Sequentielle Validierung über simulierten Zwischenzustand:
+  - verhindert Duplikate bei Nodes/Edges
+  - erkennt fehlende Ziele bei Replace/Remove
+  - blockiert Node-Entfernung solange Kanten auf den Node zeigen
+  - erlaubt `remove_edge` + `remove_node` im selben Patch in korrekter Reihenfolge
+- Apply-Logik für neue Ops ergänzt (inkl. Node-Replace per `id`)
+- Erste Unit-Tests für neue Invarianten und Revisionsfortschritt hinzugefügt (3 grüne Tests)
+
+### Offene Lücken
+- `set_attr`, `ui_patch`, `state_patch` noch nicht umgesetzt
+- Kein 3-way merge / Konfliktauflösung
+- Keine Policy-Gates im Stub
+
+### Nächster Schritt
+Cycle 004: `set_attr` + minimale Attribut-Schema-Prüfung ergänzen und Edge-/Node-Indexierung für schnellere Validierung vorbereiten.
