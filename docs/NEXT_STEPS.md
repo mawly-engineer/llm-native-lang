@@ -121,7 +121,12 @@
 - Contract-Notiz ergänzen, welche Merge-Invarianten dabei hart gelten müssen ✅
 
 ## Cycle 030
-- Randomisierte Merge-Tests auf explizite Base-Mismatch-Negativfälle erweitern
-- Delta-vs-Materialized in Random-Szenarien auf identische Endzustände vergleichen
-- Runtime-Doku um kurze Anleitung für reproduzierbare Seed-Debugs ergänzen
+- Randomisierte Merge-Tests auf explizite Base-Mismatch-Negativfälle erweitern ✅
+- Delta-vs-Materialized in Random-Szenarien auf identische Endzustände vergleichen ✅
+- Runtime-Doku um kurze Anleitung für reproduzierbare Seed-Debugs ergänzen ✅
+
+## Cycle 031
+- Random-Testhülle um gezielte Remove/Insert-UI-Op-Mischungen erweitern
+- Merge-Resolver-Strategien (`accept_left` vs `accept_right`) im Seed-Vergleich gegeneinander profilieren
+- Contract-Beispiel ergänzen: reproduzierbarer Bugreport mit Seed + minimalem Merge-Case
 

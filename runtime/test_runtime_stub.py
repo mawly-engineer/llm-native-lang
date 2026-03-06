@@ -1,5 +1,6 @@
 import random
 import unittest
+from copy import deepcopy
 from typing import Any, Dict, List
 
 from runtime.runtime_stub import KairoRuntime, PatchError
@@ -1180,6 +1181,46 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
                 mode="delta" if seed % 2 else "materialized",
             )
             self.assertEqual(rt.replay_ui_timeline(merged["merged_revision"]), merged["merged_ops"])
+
+    def test_randomized_merge_rejects_explicit_base_mismatch(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(200 + seed)
+            rt = case["runtime"]
+            left = case["left"]
+            right = case["right"]
+
+            with self.assertRaises(PatchError) as ctx:
+                rt.preview_ui_merge(left, right, base_revision=left)
+
+            self.assertIn("E_UI_MERGE_BASE", str(ctx.exception))
+
+    def test_randomized_merge_materialized_vs_delta_end_state_equivalence(self) -> None:
+        for seed in range(25):
+            case = self._random_merge_case(300 + seed)
+            rt_materialized = deepcopy(case["runtime"])
+            rt_delta = deepcopy(case["runtime"])
+            left = case["left"]
+            right = case["right"]
+            resolutions = case["resolutions"]
+
+            merged_materialized = rt_materialized.merge_ui_branches(
+                left,
+                right,
+                resolutions=resolutions,
+                mode="materialized",
+            )
+            merged_delta = rt_delta.merge_ui_branches(
+                left,
+                right,
+                resolutions=resolutions,
+                mode="delta",
+            )
+
+            self.assertEqual(merged_materialized["merged_ops"], merged_delta["merged_ops"])
+            self.assertEqual(
+                rt_materialized.replay_ui_timeline(merged_materialized["merged_revision"]),
+                rt_delta.replay_ui_timeline(merged_delta["merged_revision"]),
+            )
 
 
 if __name__ == "__main__":

@@ -101,3 +101,12 @@ Kurzfazit:
 - **Pragmatischer Mix**
   - frühe Merges materialisiert halten, später Fan-in-Merges als Delta persistieren (`materialized -> delta`)
   - Ergebnis regelmäßig mit `replay_ui_timeline(..., include_metrics=True)` verifizieren
+
+## Reproduzierbare Seed-Debugs für Random-Merge-Tests (Cycle 030)
+- Random-Tests sind vollständig seed-basiert; jeder Fail ist mit demselben Seed reproduzierbar.
+- Vorgehen bei einem Fehlfall:
+  1. Seed aus der Fehlermeldung notieren (oder testweise lokal fix setzen).
+  2. Nur den betroffenen Test laufen lassen (schneller Feedback-Loop).
+  3. Falls nötig, temporär Logging für `preview["conflicts"]`, `resolutions` und `merged_ops` aktivieren.
+- Praxisregel für Bugreports:
+  - immer Seed + betroffener Testname + erwartetes vs. tatsächliches `merged_ops`-Delta mitschicken.

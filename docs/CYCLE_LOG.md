@@ -668,3 +668,25 @@ Property-nahe Random-Tests für LCA/Base-Validierung aufsetzen und harte Merge-I
 ### Nächster Schritt
 Cycle 030: Random-Merge-Negativfälle + Delta/Materialized-Äquivalenz über Seeds systematisch ausbauen.
 
+## Cycle 030 — 2026-03-06T22:58:00Z
+### Fokus
+Randomisierte Merge-Tests um harte Negativfälle und Modus-Äquivalenz erweitern; Seed-Debugging dokumentieren.
+
+### Geliefert
+- Unit-Tests erweitert (2 neue Random-Tests):
+  - expliziter Base-Mismatch (`base_revision=left`) wird in zufälligen Branch-Konstellationen zuverlässig mit `E_UI_MERGE_BASE` abgewiesen
+  - Endzustands-Äquivalenz zwischen `mode="materialized"` und `mode="delta"` über identische Seeds abgesichert (inkl. Replay-Vergleich)
+- Test-Infrastruktur angepasst:
+  - `deepcopy`-basierter Vergleich zweier Merge-Modi auf identischem Ausgangs-Case ohne Doppel-Generatorlogik
+- Runtime-Doku ergänzt:
+  - kurze, reproduzierbare Seed-Debug-Anleitung für Random-Merge-Fehlerfälle
+- Next-Steps auf Cycle-031 fortgeschrieben.
+
+### Offene Lücken
+- Random-Szenarien variieren aktuell vor allem `set_prop`; Mischungen mit `remove`/`insert` könnten Konfliktmuster realistischer machen.
+- Resolver-Entscheidungen (`accept_left` vs `accept_right`) werden noch nicht systematisch gegeneinander ausgewertet.
+- Für externe Bugreports fehlt noch ein kompaktes Contract-Beispiel mit Seed + Minimalfall.
+
+### Nächster Schritt
+Cycle 031: Random-Op-Mix erweitern + Resolver-Profile vergleichen + Seed-basiertes Bugreport-Beispiel ergänzen.
+
