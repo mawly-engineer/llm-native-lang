@@ -279,6 +279,49 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["id"], "n1")
 
+    def test_query_supports_sorting_and_limit(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "n3", "type": "Node"}},
+                    {"op": "add_node", "value": {"id": "n1", "type": "Node"}},
+                    {"op": "add_node", "value": {"id": "n2", "type": "Node"}},
+                ],
+            }
+        )
+
+        result = self.rt.query("modules", sort_by="id", limit=2)
+
+        self.assertEqual([node["id"] for node in result], ["n1", "n2"])
+
+    def test_query_supports_descending_sort_for_attrs(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "n1", "type": "Node"}},
+                    {"op": "add_node", "value": {"id": "n2", "type": "Node"}},
+                    {"op": "set_attr", "value": {"node_id": "n1", "key": "display.order", "value": 1}},
+                    {"op": "set_attr", "value": {"node_id": "n2", "key": "display.order", "value": 9}},
+                ],
+            }
+        )
+
+        result = self.rt.query("modules", sort_by="attr.display.order", descending=True)
+
+        self.assertEqual([node["id"] for node in result], ["n2", "n1"])
+
+    def test_query_rejects_invalid_limit(self) -> None:
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.query("modules", limit=-1)
+
+        self.assertIn("E_QUERY_LIMIT", str(ctx.exception))
+
     def test_query_rejects_invalid_selector(self) -> None:
         graph = self.rt.state.revisions[self.rt.state.head].graph
         with self.assertRaises(PatchError) as ctx:

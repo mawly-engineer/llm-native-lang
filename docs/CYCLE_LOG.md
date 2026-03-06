@@ -163,3 +163,30 @@ Query DSL v0.1 um Vergleichsoperatoren erweitern und über Tests absichern.
 
 ### Nächster Schritt
 Cycle 008: Runtime-Contract-Dokument für Fehlercodes auslagern und Query um Sortierung/Limit ergänzen.
+
+## Cycle 008 — 2026-03-06T17:45:00Z
+### Fokus
+Runtime-Contract für Fehlercodes auslagern und Query API um Sortierung/Limit vervollständigen.
+
+### Geliefert
+- Neues Runtime-Contract-Dokument erstellt:
+  - zentrale Fehlercode-Liste für Patch-, Op-, Attr- und Query-Validierung
+  - Query-Signatur + Ausführungsreihenfolge formalisiert
+  - Sortierungs- und Limit-Semantik dokumentiert
+- Runtime-Stub Query erweitert:
+  - optionale Parameter `sort_by`, `descending`, `limit`
+  - Sortierung auf Kernfelder sowie `modules[attr.<key>]`
+  - neue Validierungsfehler für Sortier-/Limit-Fehleingaben
+- Unit-Tests erweitert (3 neue Tests):
+  - sortierte + limitierte Modulabfrage
+  - absteigende Attribut-Sortierung
+  - Fehlerfall bei ungültigem Limit
+- Type-System-Dokument entschlackt und auf Runtime-Contract als zentrale Fehlercode-Referenz umgestellt
+
+### Offene Lücken
+- UI Diff Protocol weiterhin nur als To-do, noch kein v0.1 Dokument
+- Keine Golden-Tests für deterministische Diff-Reihenfolge
+- Kein Event-Sourcing-/Rollback-Modell im Runtime-Stub
+
+### Nächster Schritt
+Cycle 009: UI Diff Protocol v0.1 mit deterministischer Reihenfolge und Konfliktregeln spezifizieren.

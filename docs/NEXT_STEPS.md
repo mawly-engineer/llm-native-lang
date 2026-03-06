@@ -11,6 +11,11 @@
 - Type-System-Doku auf neuen Query-Stand bringen
 
 ## Cycle 008
-- Fehlercodes in eigenes Runtime-Contract-Dokument extrahieren
-- Sortierungs-/Limit-Semantik für Query API definieren
+- Fehlercodes in eigenes Runtime-Contract-Dokument extrahieren ✅
+- Sortierungs-/Limit-Semantik für Query API definieren ✅
 - UI Diff Protocol (deterministische Reihenfolge, conflict-safe) vorbereiten
+
+## Cycle 009
+- UI Diff Protocol v0.1 als separates Dokument konkretisieren
+- Deterministische Op-Reihenfolge + Konfliktregeln definieren
+- Erste Golden-Tests für Diff-Reihenfolge im Runtime-Stub skizzieren

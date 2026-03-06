@@ -155,7 +155,53 @@ class KairoRuntime:
 
         raise PatchError("E_QUERY_SELECTOR", f"unsupported operator: {operator}")
 
-    def query(self, *args: Any) -> List[Dict[str, Any]]:
+    def _resolve_sort_value(self, collection: str, obj: Dict[str, Any], sort_key: str) -> str:
+        if collection == "modules" and sort_key.startswith("attr."):
+            attrs = obj.get("attrs")
+            if not isinstance(attrs, dict):
+                return ""
+            attr_key = sort_key[len("attr.") :]
+            value = attrs.get(attr_key)
+            return "" if value is None else str(value)
+
+        value = obj.get(sort_key)
+        return "" if value is None else str(value)
+
+    def _apply_query_sort(
+        self,
+        collection: str,
+        objects: List[Dict[str, Any]],
+        sort_by: str | None,
+        descending: bool,
+    ) -> List[Dict[str, Any]]:
+        if sort_by is None:
+            return objects
+        if not isinstance(sort_by, str) or not sort_by.strip():
+            raise PatchError("E_QUERY_SORT", "sort_by must be a non-empty string")
+        if not isinstance(descending, bool):
+            raise PatchError("E_QUERY_SORT", "descending must be a boolean")
+
+        self._validate_query_key(collection, sort_by)
+        return sorted(
+            objects,
+            key=lambda obj: self._resolve_sort_value(collection, obj, sort_by),
+            reverse=descending,
+        )
+
+    def _apply_query_limit(self, objects: List[Dict[str, Any]], limit: int | None) -> List[Dict[str, Any]]:
+        if limit is None:
+            return objects
+        if not isinstance(limit, int) or limit < 0:
+            raise PatchError("E_QUERY_LIMIT", "limit must be an integer >= 0")
+        return objects[:limit]
+
+    def query(
+        self,
+        *args: Any,
+        sort_by: str | None = None,
+        descending: bool = False,
+        limit: int | None = None,
+    ) -> List[Dict[str, Any]]:
         graph, selector = self._query_arg_pair(*args)
         collection, key, operator, value = self._parse_selector(selector)
 
@@ -167,11 +213,14 @@ class KairoRuntime:
             raise PatchError("E_QUERY_GRAPH", f"graph field '{collection}' must be a list")
 
         objects = [item for item in items if isinstance(item, dict)]
-        if key is None:
-            return objects
+        if key is not None:
+            self._validate_query_key(collection, key)
+            objects = [
+                obj for obj in objects if self._query_obj_matches(collection, obj, key, operator, value)
+            ]
 
-        self._validate_query_key(collection, key)
-        return [obj for obj in objects if self._query_obj_matches(collection, obj, key, operator, value)]
+        objects = self._apply_query_sort(collection, objects, sort_by, descending)
+        return self._apply_query_limit(objects, limit)
 
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):
