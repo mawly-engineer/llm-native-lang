@@ -29,7 +29,7 @@ class PatchError(Exception):
 
 class KairoRuntime:
     ATTR_KEY_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*$")
-    QUERY_PATTERN = re.compile(r"^(modules|edges)(?:\[([a-z_]+)=([^\]]+)\])?$")
+    QUERY_PATTERN = re.compile(r"^(modules|edges)(?:\[([a-z_][a-z0-9_.-]*)=([^\]]+)\])?$")
 
     def __init__(self) -> None:
         self.state = RuntimeState()
@@ -94,8 +94,50 @@ class KairoRuntime:
         collection, key, value = match.groups()
         return collection, key, value
 
-    def query(self, graph: Dict[str, Any], selector: str) -> List[Dict[str, Any]]:
+    def _query_arg_pair(self, *args: Any) -> Tuple[Dict[str, Any], str]:
+        if len(args) == 1:
+            selector = args[0]
+            if self.state.head is None:
+                raise PatchError("E_QUERY_GRAPH", "no head revision available")
+            graph = self.state.revisions[self.state.head].graph
+            return graph, selector
+
+        if len(args) == 2:
+            graph, selector = args
+            return graph, selector
+
+        raise PatchError("E_QUERY_SELECTOR", "query expects (selector) or (graph, selector)")
+
+    def _validate_query_key(self, collection: str, key: str) -> None:
+        allowed_keys = {
+            "modules": {"id", "type"},
+            "edges": {"from", "to", "contract"},
+        }
+
+        if key in allowed_keys[collection]:
+            return
+
+        if collection == "modules" and key.startswith("attr.") and len(key) > len("attr."):
+            return
+
+        raise PatchError("E_QUERY_KEY", f"selector key '{key}' not allowed for {collection}")
+
+    def _query_obj_matches(self, collection: str, obj: Dict[str, Any], key: str, value: str) -> bool:
+        if collection == "modules" and key.startswith("attr."):
+            attrs = obj.get("attrs")
+            if not isinstance(attrs, dict):
+                return False
+            attr_key = key[len("attr.") :]
+            return attrs.get(attr_key) == value
+
+        return obj.get(key) == value
+
+    def query(self, *args: Any) -> List[Dict[str, Any]]:
+        graph, selector = self._query_arg_pair(*args)
         collection, key, value = self._parse_selector(selector)
+
+        if not isinstance(graph, dict):
+            raise PatchError("E_QUERY_GRAPH", "graph must be an object")
 
         items = graph.get(collection)
         if not isinstance(items, list):
@@ -105,14 +147,8 @@ class KairoRuntime:
         if key is None:
             return objects
 
-        allowed_keys = {
-            "modules": {"id", "type"},
-            "edges": {"from", "to", "contract"},
-        }
-        if key not in allowed_keys[collection]:
-            raise PatchError("E_QUERY_KEY", f"selector key '{key}' not allowed for {collection}")
-
-        return [obj for obj in objects if obj.get(key) == value]
+        self._validate_query_key(collection, key)
+        return [obj for obj in objects if self._query_obj_matches(collection, obj, key, value)]
 
     def validate_patch(self, patch: Dict[str, Any]) -> None:
         if not isinstance(patch, dict):

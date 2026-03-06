@@ -11,6 +11,6 @@
 - Approval Gates für sensitive operations
 
 ## Cycle 008
-- Query DSL um Attribut-Selektoren erweitern (`modules[attr.render.mode=incremental]`)
-- Optionales `head`-Default für `query` (ohne explizites Graph-Argument)
 - Fehlercodes in eigenes Runtime-Contract-Dokument extrahieren
+- Query DSL um Operatoren erweitern (`!=`, Prefix/Contains)
+- Sortierungs-/Limit-Semantik für Query API definieren

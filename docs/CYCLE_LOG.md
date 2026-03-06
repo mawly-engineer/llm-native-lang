@@ -120,3 +120,24 @@ Read-only Query DSL v0.1 für Graph-Inspektion im Runtime-Stub einführen.
 
 ### Nächster Schritt
 Cycle 006: UI Diff Protocol (deterministisch, conflict-safe) + Event-Sourcing-Skizze vorbereiten.
+
+## Cycle 006 — 2026-03-06T17:18:00Z
+### Fokus
+Query DSL um Attribut-Selektoren erweitern und Query-API ergonomischer machen.
+
+### Geliefert
+- Query-Selektor akzeptiert jetzt auch Attribut-Keys mit Punktnotation
+- Neuer Selektor-Pfad für Module-Attribute: `modules[attr.<key>=<value>]`
+- Query kann ohne Graph-Argument direkt gegen die aktuelle Head-Revision laufen (`query(selector)`)
+- Query-Validierung für falsche Argumentanzahl und ungültigen Graph-Typ ergänzt
+- Unit-Tests erweitert (2 neue Tests):
+  - Attribut-Selektion (`attr.render.mode`)
+  - Head-Default ohne explizites Graph-Argument
+
+### Offene Lücken
+- Keine Operatoren wie `!=`, `contains`, Prefix-Match
+- Keine Sortierungs-/Limit-Semantik
+- Fehlercodes noch nicht in separates Runtime-Contract-Dokument extrahiert
+
+### Nächster Schritt
+Cycle 007: Query DSL um Vergleichsoperatoren erweitern und Runtime-Contract-Dokument für Fehlercodes auslagern.

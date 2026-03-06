@@ -182,6 +182,47 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["to"], "b")
 
+    def test_query_modules_by_attr_selector(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "ui.shared", "type": "UIEngine"}},
+                    {
+                        "op": "set_attr",
+                        "value": {
+                            "node_id": "ui.shared",
+                            "key": "render.mode",
+                            "value": "incremental",
+                        },
+                    },
+                ],
+            }
+        )
+
+        graph = self.rt.state.revisions[self.rt.state.head].graph
+        result = self.rt.query(graph, "modules[attr.render.mode=incremental]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "ui.shared")
+
+    def test_query_uses_head_by_default(self) -> None:
+        self.rt.apply_patch(
+            {
+                "patch_id": "p-1",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+            }
+        )
+
+        result = self.rt.query("modules[id=n1]")
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["type"], "Node")
+
     def test_query_rejects_invalid_selector(self) -> None:
         graph = self.rt.state.revisions[self.rt.state.head].graph
         with self.assertRaises(PatchError) as ctx:
