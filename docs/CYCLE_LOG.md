@@ -534,3 +534,24 @@ Replay-Metriken für Delta-Merge-Pfade präzisieren und Merge-/Auto-LCA-Randfäl
 ### Nächster Schritt
 Cycle 024: Delta+Snapshot-Metriktests + Fehlercode-Doku schärfen + Replay-Metrik-Troubleshooting ergänzen.
 
+## Cycle 024 — 2026-03-06T21:30:00Z
+### Fokus
+Delta-Replay-Metriken mit aktivem Snapshot-Seed absichern und Replay-/Merge-Fehlerdoku praxisnäher machen.
+
+### Geliefert
+- Unit-Tests erweitert (1 neuer Test):
+  - Delta-Merge-Replay mit Snapshot-Seed validiert stabile Metriken (`snapshot_head`, `events_replayed`, `snapshot_seed_distance`) am Merge-Head.
+- Runtime-Doku ergänzt:
+  - Troubleshooting-Hinweise für die Interpretation von `events_replayed` und `snapshot_seed_distance` in Delta+Snapshot-Szenarien.
+- Runtime-Contract geschärft:
+  - klare Abgrenzung inkl. Beispiele für `E_UI_MERGE_POLICY` (Konfliktregel) vs `E_UI_MERGE_MODE` (Persistenzmodus).
+- Next-Steps auf Cycle-025 fortgeschrieben.
+
+### Offene Lücken
+- Metrik-Zählweise bei Delta+Snapshot auf Merge-Heads bleibt erklärungsbedürftig und sollte gegen einen expliziten Apply-Pfad abgeglichen werden.
+- Kein separater Metrik-Split zwischen Snapshot-seeded Replay-Anteil und Gesamt-Replay-Kosten.
+- Es fehlen größere DAG-Fan-in-Beispiele für reproduzierbare Performance-Analysen.
+
+### Nächster Schritt
+Cycle 025: Metrik-Zählweise bei Delta+Snapshot weiter präzisieren und Replay-Beispiele für komplexere Merge-DAGs ergänzen.
+

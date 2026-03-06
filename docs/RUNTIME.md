@@ -48,3 +48,11 @@
   - optionale manuelle Auflösung pro Op-Key via `resolutions[]` (`accept_left|accept_right`)
   - Merge-Events tragen explizite Dual-Parents (`parent`, `secondary_parent`) plus optionales `resolution_notes`-Decision-Log
 - `preview_ui_merge_delta(...)` ermöglicht einen nicht-destruktiven Vergleich zwischen materialisiertem Merge-Stand (`merged_ops`) und einem Delta-Set (`delta_ops`) relativ zur Base, inkl. Rekonstruktionsinvariante als Vorbereitung für mögliche Delta-Persistenz.
+
+## Replay-Metrik Troubleshooting (Cycle 024)
+- `events_replayed` misst den effektiven Replay-Pfad nach Snapshot-Seeding; bei Merge-Heads können trotz Snapshot weiterhin mehrere Branch-Events gezählt werden.
+- Bei `mode="delta"` wird die Delta-Base zuerst rekonstruiert, danach das Delta-Event angewendet; damit kann `events_replayed` höher ausfallen als `len(delta_ops)`.
+- `snapshot_seed_distance` ist die Distanz vom Replay-Head zum gewählten Snapshot-Vorfahren, nicht zur Delta-Base.
+- Für Performance-Debugging beide Werte zusammen lesen:
+  - hoher `snapshot_seed_distance` + hohe `events_replayed` → zusätzlicher Snapshot nahe am Merge-Head sinnvoll
+  - niedriger `snapshot_seed_distance`, aber hohe `events_replayed` → Kosten kommen primär aus Branch-Replay/DAG-Fan-in

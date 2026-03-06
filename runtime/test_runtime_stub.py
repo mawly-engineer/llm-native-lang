@@ -943,6 +943,27 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertEqual(replay["metrics"]["events_replayed"], 2)
 
+    def test_replay_metrics_for_delta_merge_with_snapshot_seed(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        self.rt.create_ui_snapshot(head=base)
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, mode="delta")
+        replay = self.rt.replay_ui_timeline(head=merged["merged_revision"], include_metrics=True)
+
+        self.assertEqual(replay["snapshot_head"], base)
+        self.assertEqual(replay["metrics"]["events_replayed"], 3)
+        self.assertEqual(replay["metrics"]["snapshot_seed_distance"], 2)
+
     def test_merge_ui_branches_rejects_unknown_mode_with_dedicated_error(self) -> None:
         base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         left = self.rt.apply_ui_patch(

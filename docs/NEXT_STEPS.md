@@ -91,7 +91,12 @@
 - Auto-LCA-Verhalten mit implizitem Root (`None`) in separaten Tests absichern ✅
 
 ## Cycle 024
-- Delta-Replay-Metriken mit Snapshot-Seed-Kombination absichern
-- Merge-API-Fehlercodes zwischen Policy/Mode noch klarer trennen (Doku-Beispiele)
-- Replay-Metriken im Runtime-Guide um Troubleshooting-Hinweise ergänzen
+- Delta-Replay-Metriken mit Snapshot-Seed-Kombination absichern ✅
+- Merge-API-Fehlercodes zwischen Policy/Mode noch klarer trennen (Doku-Beispiele) ✅
+- Replay-Metriken im Runtime-Guide um Troubleshooting-Hinweise ergänzen ✅
+
+## Cycle 025
+- Replay-Metrik-Zählweise für Delta+Snapshot bei Merge-Heads gegen tatsächlichen Apply-Pfad validieren
+- Optionalen Metrik-Split diskutieren (`events_from_snapshot_seed` vs `events_total`)
+- Merge-Replay-Beispiele für größere DAG-Fan-in-Szenarien ergänzen
 

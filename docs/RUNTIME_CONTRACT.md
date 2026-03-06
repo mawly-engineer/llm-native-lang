@@ -67,6 +67,14 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 - `E_UI_MERGE_CONFLICT` – expliziter Konflikt erkannt (beide Branches ändern denselben Op-Key unterschiedlich)
 - `E_UI_MERGE_RESOLUTION` – Resolver-Einträge (`resolutions`/`resolution_notes`) haben ungültiges Format oder ungültige Entscheidung
 
+#### Fehlerabgrenzung: Policy vs Mode
+- `E_UI_MERGE_POLICY`
+  - tritt auf, wenn die Konfliktregel unbekannt ist (z. B. `policy="last_writer_wins"`)
+  - betrifft *fachliche Merge-Entscheidung* (Konfliktverhalten)
+- `E_UI_MERGE_MODE`
+  - tritt auf, wenn der Persistenzmodus unbekannt ist (z. B. `mode="fast-forward"`)
+  - betrifft *technische Persistenzform* des Merge-Events (`materialized` vs `delta`)
+
 ## Query-Semantik (v0.1)
 
 ### Signatur
