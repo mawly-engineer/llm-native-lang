@@ -412,3 +412,28 @@ UI-Merge von squash-artiger Persistenz auf explizites Merge-Commit-Modell erweit
 ### Nächster Schritt
 Cycle 019: DAG-natives Replay + Snapshot-Index für Merge-Heads + Replay-Metriken ergänzen.
 
+## Cycle 019 — 2026-03-06T20:11:00Z
+### Fokus
+UI-Replay auf echte DAG-Semantik umstellen und Snapshot-Nutzung für Merge-Heads robust machen.
+
+### Geliefert
+- Runtime-Stub für UI-Replay erweitert:
+  - DAG-Parents (`parent`, `secondary_parent`) werden jetzt rekursiv traversiert
+  - deterministisches Postorder-Replay mit Zyklus-Erkennung für UI-Graphen
+  - LCA-/Ancestor-Helfer auf DAG-Distanzmodell umgestellt
+- Snapshot-Seeding verbessert:
+  - Snapshot-Auswahl basiert auf nächstem Vorfahren im DAG (distanzbasiert)
+  - funktioniert auch, wenn der beste Snapshot nur über `secondary_parent` erreichbar ist
+- Unit-Tests erweitert (2 neue Tests):
+  - Replay berücksichtigt sekundären Merge-Parent auch ohne materialisierte Merge-Ops
+  - Snapshot auf rechter Merge-Seite wird für Merge-Head-Replay korrekt genutzt
+- Runtime-/Contract-/Next-Steps-Doku auf DAG-Replay-Stand aktualisiert
+
+### Offene Lücken
+- Replay-Kosten werden noch nicht als explizite Runtime-Metriken ausgegeben
+- Merge-Events bleiben materialisiert (kein delta-basiertes Eventmodell)
+- Keine Retention-/GC-Strategie für Snapshot-Index bei langen Timelines
+
+### Nächster Schritt
+Cycle 020: Replay-Metriken API ergänzen + delta-basiertes Merge-Event evaluieren.
+

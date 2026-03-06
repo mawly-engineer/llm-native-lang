@@ -66,7 +66,12 @@
 - Tests für manuelle Konfliktauflösung (accept-left/right per Op-Key) vorbereiten ✅
 
 ## Cycle 019
-- Merge-Replay auf echte DAG-Semantik umstellen (nicht nur primären Parent traversieren)
-- Snapshot-Index für Merge-Heads (mehrere Vorfahren) erweitern
-- Metriken ergänzen: Replay-Kosten vor/nach Merge-Snapshots vergleichen
+- Merge-Replay auf echte DAG-Semantik umstellen (nicht nur primären Parent traversieren) ✅
+- Snapshot-Index für Merge-Heads (mehrere Vorfahren) erweitern ✅
+- Metriken ergänzen: Replay-Kosten vor/nach Merge-Snapshots vergleichen (vorbereitet via DAG-Replay-Basis)
+
+## Cycle 020
+- Replay-Metriken als Runtime-API explizit exponieren (`events_replayed`, `snapshot_seed_distance`)
+- Delta-basiertes Merge-Event (statt materialisiertem Vollstand) evaluieren
+- Contract-Doku um Replay-Kostenmodell für Merge-lastige Timelines ergänzen
 

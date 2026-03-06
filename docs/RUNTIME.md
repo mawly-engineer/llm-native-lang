@@ -34,9 +34,9 @@
 - UI-Änderungen werden als append-only Timeline gespeichert (`u-0`, `u-1`, ...)
 - Jede UI-Revision referenziert ihren Parent (Head-basierte Fortschreibung)
 - `apply_ui_patch` normalisiert Ops vor Persistenz (deterministisch + konfliktreduziert)
-- `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand aus der Event-Kette
+- `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand DAG-nativ über `parent` + `secondary_parent`
 - `create_ui_snapshot(head)` speichert einen kompaktisierten UI-Stand (`s-*`) für einen Timeline-Head
-- Replay kann bei vorhandenen Snapshots vom nächsten Vorfahren-Snapshot starten und nur Rest-Events anwenden
+- Replay kann bei vorhandenen Snapshots vom nächsten (distanzbasierten) Snapshot-Vorfahren starten, auch wenn dieser über den sekundären Merge-Parent erreichbar ist
 - `rollback_ui(revision)` verschiebt nur den Head; Historie bleibt unverändert erhalten
 - `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein (auch mehrfach pro Patch) und schreibt atomar mit Graph-Änderungen
 - Jede Program-Revision trägt die gekoppelte `ui_revision` des resultierenden UI-Heads

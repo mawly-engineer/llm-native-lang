@@ -325,16 +325,58 @@ class KairoRuntime:
         self.ui_head = new_id
         return new_id
 
-    def _ui_path_to_root(self, head: str | None) -> List[str]:
-        path: List[str] = []
-        cursor = head
-        while cursor is not None:
-            event = self.ui_timeline.get(cursor)
-            if event is None:
-                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
-            path.append(cursor)
-            cursor = event.parent
-        return path
+    def _ui_parent_ids(self, event_id: str | None) -> List[str | None]:
+        if event_id is None:
+            return []
+        event = self.ui_timeline.get(event_id)
+        if event is None:
+            raise PatchError("E_UI_REVISION", f"broken ui timeline at: {event_id}")
+
+        parents: List[str | None] = []
+        if event.parent is not None:
+            parents.append(event.parent)
+        if event.secondary_parent is not None:
+            parents.append(event.secondary_parent)
+        return parents
+
+    def _ui_collect_distances(self, head: str | None) -> Dict[str | None, int]:
+        distances: Dict[str | None, int] = {None: 0}
+        if head is None:
+            return distances
+        if head not in self.ui_timeline:
+            raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
+
+        queue: List[Tuple[str | None, int]] = [(head, 0)]
+        while queue:
+            node, dist = queue.pop(0)
+            if node in distances and dist >= distances[node]:
+                continue
+            distances[node] = dist
+            for parent in self._ui_parent_ids(node):
+                queue.append((parent, dist + 1))
+
+        return distances
+
+    def _ui_replay_postorder(self, head: str | None) -> List[str]:
+        ordered: List[str] = []
+        seen: Set[str] = set()
+        visiting: Set[str] = set()
+
+        def visit(node: str | None) -> None:
+            if node is None or node in seen:
+                return
+            if node in visiting:
+                raise PatchError("E_UI_REVISION", f"cycle detected in ui timeline at: {node}")
+
+            visiting.add(node)
+            for parent in self._ui_parent_ids(node):
+                visit(parent)
+            visiting.remove(node)
+            seen.add(node)
+            ordered.append(node)
+
+        visit(head)
+        return ordered
 
     def create_ui_snapshot(self, head: str | None = None) -> str:
         if head is None:
@@ -358,22 +400,29 @@ class KairoRuntime:
         if head is not None and head not in self.ui_timeline:
             raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
 
-        ordered_event_ids = self._ui_path_to_root(head)
+        postorder = self._ui_replay_postorder(head)
+        distances = self._ui_collect_distances(head)
 
         seed_ops: List[Dict[str, Any]] = []
-        replay_ids = ordered_event_ids
-
-        for idx, event_id in enumerate(ordered_event_ids):
+        snapshot_head: str | None = None
+        best_distance: int | None = None
+        for event_id in distances:
             snapshot_id = self.ui_snapshot_index.get(event_id)
             if snapshot_id is None:
                 continue
-            snapshot = self.ui_snapshots[snapshot_id]
-            seed_ops = deepcopy(snapshot.ops)
-            replay_ids = ordered_event_ids[:idx]
-            break
+            distance = distances[event_id]
+            if best_distance is None or distance < best_distance:
+                best_distance = distance
+                snapshot_head = event_id
+                seed_ops = deepcopy(self.ui_snapshots[snapshot_id].ops)
+
+        replay_ids = postorder
+        if snapshot_head in distances:
+            snapshot_ancestors = self._ui_ancestors(snapshot_head)
+            replay_ids = [event_id for event_id in postorder if event_id not in snapshot_ancestors]
 
         ops: List[Dict[str, Any]] = seed_ops
-        for event_id in reversed(replay_ids):
+        for event_id in replay_ids:
             event = self.ui_timeline[event_id]
             ops.extend(deepcopy(event.ops))
 
@@ -385,30 +434,25 @@ class KairoRuntime:
         self.ui_head = revision
 
     def _ui_ancestors(self, head: str | None) -> Set[str | None]:
-        ancestors: Set[str | None] = {None}
-        cursor = head
-        while cursor is not None:
-            if cursor in ancestors:
-                raise PatchError("E_UI_REVISION", f"cycle detected in ui timeline at: {cursor}")
-            ancestors.add(cursor)
-            event = self.ui_timeline.get(cursor)
-            if event is None:
-                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
-            cursor = event.parent
-        return ancestors
+        return set(self._ui_collect_distances(head).keys())
 
     def _ui_lca(self, left: str | None, right: str | None) -> str | None:
-        right_ancestors = self._ui_ancestors(right)
-        cursor = left
-        while True:
-            if cursor in right_ancestors:
-                return cursor
-            if cursor is None:
-                return None
-            event = self.ui_timeline.get(cursor)
-            if event is None:
-                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
-            cursor = event.parent
+        left_distances = self._ui_collect_distances(left)
+        right_distances = self._ui_collect_distances(right)
+
+        common = set(left_distances.keys()) & set(right_distances.keys())
+        if not common:
+            return None
+
+        ranked = sorted(
+            common,
+            key=lambda node: (
+                left_distances[node] + right_distances[node],
+                max(left_distances[node], right_distances[node]),
+                "" if node is None else node,
+            ),
+        )
+        return ranked[0]
 
     def _resolution_key(self, entry: Dict[str, Any]) -> Tuple[str, str, str]:
         if not isinstance(entry, dict):

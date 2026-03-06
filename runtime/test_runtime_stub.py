@@ -673,6 +673,57 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             ],
         )
 
+    def test_replay_ui_timeline_reads_secondary_parent_branch(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base)
+        self.rt.ui_timeline[merged["merged_revision"]].ops = []
+
+        self.assertEqual(
+            self.rt.replay_ui_timeline(merged["merged_revision"]),
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"},
+            ],
+        )
+
+    def test_snapshot_index_can_seed_from_secondary_parent_ancestor(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        self.rt.create_ui_snapshot(head=right)
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base)
+        self.rt.ui_timeline[merged["merged_revision"]].ops = []
+
+        self.assertEqual(
+            self.rt.replay_ui_timeline(merged["merged_revision"]),
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"},
+            ],
+        )
+
     def test_merge_ui_branches_accepts_resolution_for_conflict(self) -> None:
         base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         left = self.rt.apply_ui_patch(

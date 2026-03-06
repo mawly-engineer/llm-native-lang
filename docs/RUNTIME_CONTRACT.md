@@ -118,8 +118,9 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `secondary_parent` = rechter Branch-Head
   - `resolution_notes` wird im Merge-Event persistiert (Audit-/Decision-Log)
   - setzt `ui_head` auf die neue Merge-Revision
-- Ohne `base_revision` wird automatisch der nächste gemeinsame Vorfahre (LCA) verwendet.
-- `base_revision` muss Vorfahre von beiden Branch-Heads sein (`E_UI_MERGE_BASE`).
+- Ohne `base_revision` wird automatisch der nächste gemeinsame Vorfahre (LCA) im UI-DAG verwendet.
+- `base_revision` muss Vorfahre von beiden Branch-Heads sein (`E_UI_MERGE_BASE`) – berücksichtigt `parent` und `secondary_parent`.
+- Replay/Snapshot-Auflösung für Merge-Heads erfolgt vorfahrbasiert über den UI-DAG (nicht nur entlang des primären Parents).
 - Konfliktregel v0.1 (Policy `explicit_conflict`):
   - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
   - Kein implizites Last-Writer-Wins über Branches ohne explizite Resolver-Entscheidung.
