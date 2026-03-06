@@ -36,6 +36,6 @@
 - `apply_ui_patch` normalisiert Ops vor Persistenz (deterministisch + konfliktreduziert)
 - `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand aus der Event-Kette
 - `rollback_ui(revision)` verschiebt nur den Head; Historie bleibt unverändert erhalten
-- `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein und schreibt atomar mit Graph-Änderungen
+- `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein (auch mehrfach pro Patch) und schreibt atomar mit Graph-Änderungen
 - Jede Program-Revision trägt die gekoppelte `ui_revision` des resultierenden UI-Heads
 - Bei UI-Base-Mismatch schlägt der gesamte Program-Patch fehl (keine Teilanwendung)

@@ -398,7 +398,8 @@ class KairoRuntime:
             self._validate_edge_shape(edge)
             known_edges.add(self._edge_tuple(edge))
 
-        ui_patch_seen = False
+        simulated_ui_head = self.ui_head
+        simulated_ui_len = len(self.ui_timeline)
 
         for idx, op in enumerate(ops):
             if not isinstance(op, dict):
@@ -465,15 +466,13 @@ class KairoRuntime:
                 known_edges.remove(edge_key)
 
             elif kind == "ui_patch":
-                if ui_patch_seen:
-                    raise PatchError("E_UI_PATCH_MULTI", "only one ui_patch op per patch is supported")
-                ui_patch_seen = True
-
                 ui_ops, ui_base_revision = self._validate_ui_patch_shape(value)
-                resolved_base = self.ui_head if ui_base_revision is None else ui_base_revision
-                if resolved_base != self.ui_head:
+                resolved_base = simulated_ui_head if ui_base_revision is None else ui_base_revision
+                if resolved_base != simulated_ui_head:
                     raise PatchError("E_UI_BASE_MISMATCH", "ui base_revision mismatch")
                 self.normalize_ui_ops(ui_ops)
+                simulated_ui_head = f"u-{simulated_ui_len}"
+                simulated_ui_len += 1
 
             else:
                 raise PatchError("E_OP_UNSUPPORTED", f"unsupported op in stub: {kind}")

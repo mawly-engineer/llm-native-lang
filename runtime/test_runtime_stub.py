@@ -459,6 +459,51 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             ],
         )
 
+    def test_apply_patch_supports_multiple_ui_patch_ops(self) -> None:
+        revision = self.rt.apply_patch(
+            {
+                "patch_id": "p-ui-multi",
+                "base_revision": "r-0",
+                "target": "program_graph",
+                "ops": [
+                    {"op": "add_node", "value": {"id": "ui.shared", "type": "UIEngine"}},
+                    {
+                        "op": "ui_patch",
+                        "value": {
+                            "ops": [
+                                {"op": "insert", "path": "/root/title", "value": {"kind": "label"}},
+                            ]
+                        },
+                    },
+                    {
+                        "op": "ui_patch",
+                        "value": {
+                            "ops": [
+                                {
+                                    "op": "set_prop",
+                                    "path": "/root/title",
+                                    "key": "text",
+                                    "value": "Hallo 2",
+                                },
+                            ]
+                        },
+                    },
+                ],
+            }
+        )
+
+        self.assertEqual(revision, "r-1")
+        self.assertEqual(self.rt.state.revisions[revision].ui_revision, "u-1")
+        self.assertEqual(self.rt.ui_head, "u-1")
+        self.assertEqual(len(self.rt.ui_timeline), 2)
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {"op": "insert", "path": "/root/title", "value": {"kind": "label"}},
+                {"op": "set_prop", "path": "/root/title", "key": "text", "value": "Hallo 2"},
+            ],
+        )
+
     def test_apply_patch_rejects_ui_base_mismatch_transactionally(self) -> None:
         self.rt.apply_patch(
             {

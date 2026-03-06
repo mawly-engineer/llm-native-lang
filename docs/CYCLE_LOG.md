@@ -287,3 +287,26 @@ Cycle 012: `ui_patch` in den Patch-Pfad integrieren und Program/UI-Revisionen tr
 
 ### Nächster Schritt
 Cycle 013: Mehrfach-`ui_patch`-Strategie + UI-Branch/Merge-Skizze + Compaction-Ansatz vorbereiten.
+
+## Cycle 013 — 2026-03-06T19:00:00Z
+### Fokus
+Mehrere `ui_patch`-Ops pro Program-Patch erlauben und sequenzielle UI-Head-Validierung absichern.
+
+### Geliefert
+- Runtime-Validierung für `ui_patch` umgestellt:
+  - keine Einmal-Beschränkung mehr pro Program-Patch
+  - UI-Base-Checks laufen jetzt gegen einen simulierten, pro Op fortgeschriebenen UI-Head
+  - simulierte UI-Revisions-IDs folgen derselben Laufzeitlogik (`u-N`) wie beim Apply
+- Unit-Tests erweitert (1 neuer Test):
+  - erfolgreicher Patch mit zwei `ui_patch`-Ops schreibt `u-0` + `u-1` und koppelt Program-Head auf `u-1`
+- Runtime-/Contract-Doku aktualisiert:
+  - Multi-`ui_patch`-Semantik dokumentiert
+  - veraltete Einmal-Restriktion entfernt
+
+### Offene Lücken
+- Kein Branch-/Merge-Modell für divergente UI-Timelines
+- Keine Snapshot-/Compaction-Strategie für lange Replay-Ketten
+- Keine explizite Regel, ob spätere `ui_patch`-Ops im selben Patch eigene `base_revision` setzen sollten
+
+### Nächster Schritt
+Cycle 014: UI-Branch/Merge-Konfliktmodell skizzieren und Compaction/Snapshot-Ansatz konkretisieren.

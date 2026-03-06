@@ -36,6 +36,11 @@
 - Fehler-/Rollback-Semantik für gemischte Graph+UI-Patches definieren ✅
 
 ## Cycle 013
-- Mehrere `ui_patch` Ops pro Patch unterstützen (oder bewusst verbieten + begründen)
+- Mehrere `ui_patch` Ops pro Patch unterstützen ✅
+- Validierung für sequenzielle UI-Head-Fortschreibung pro Program-Patch ergänzen ✅
+- Tests für mehrstufige UI-Patch-Ketten im selben Commit ergänzen ✅
+
+## Cycle 014
 - `ui_patch`-Konfliktmodell für Branch/Merge skizzieren
 - Replay-Performance mit Event-Compaction/Snapshot-Idee vorbereiten
+- Contract-/Runtime-Doku um Multi-`ui_patch`-Semantik präzisieren
