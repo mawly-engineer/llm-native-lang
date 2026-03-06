@@ -111,7 +111,12 @@
 - Replay-Metriken in einem kompakten Vergleichsbeispiel zusammenfassen ✅
 
 ## Cycle 028
-- Replay-Metriken für gemischte Merge-Modi (`materialized -> delta`, `delta -> materialized`) systematisch vergleichen
-- Runtime-Doku um ein kurzes Entscheidungsraster für die Wahl des Merge-Modus ergänzen
+- Replay-Metriken für gemischte Merge-Modi (`materialized -> delta`, `delta -> materialized`) systematisch vergleichen ✅
+- Runtime-Doku um ein kurzes Entscheidungsraster für die Wahl des Merge-Modus ergänzen ✅
 - Optional: Property-basierte Tests für LCA/Base-Validierung in kleinen Zufalls-DAGs vorbereiten
+
+## Cycle 029
+- Property-basierte Teststrategie für LCA/Base-Validierung konkretisieren (Generator + Invarianten)
+- Erste kleine Zufalls-DAG-Testhülle vorbereiten (noch ohne neue Test-Dependency)
+- Contract-Notiz ergänzen, welche Merge-Invarianten dabei hart gelten müssen
 

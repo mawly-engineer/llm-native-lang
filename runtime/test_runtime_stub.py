@@ -1042,40 +1042,40 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertIn("E_UI_DELTA_BASE", str(ctx.exception))
 
+    def _build_fanin_replay_metrics(self, first_mode: str, second_mode: str) -> Dict[str, Any]:
+        rt = KairoRuntime()
+        base = rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        rt.create_ui_snapshot(head=base)
+
+        left = rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "L"}],
+            base_revision=base,
+        )
+        rt.rollback_ui(base)
+        right = rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "R"}],
+            base_revision=base,
+        )
+
+        first_merge = rt.merge_ui_branches(left, right, base_revision=base, mode=first_mode)["merged_revision"]
+
+        rt.rollback_ui(first_merge)
+        top = rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "badge", "value": "TOP"}],
+            base_revision=first_merge,
+        )
+        rt.rollback_ui(right)
+        side = rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "footer", "value": "SIDE"}],
+            base_revision=right,
+        )
+
+        second_merge = rt.merge_ui_branches(top, side, base_revision=right, mode=second_mode)
+        return rt.replay_ui_timeline(head=second_merge["merged_revision"], include_metrics=True)
+
     def test_replay_metrics_compare_fanin_materialized_vs_nested_delta(self) -> None:
-        def build_merge_history(first_mode: str, second_mode: str) -> Dict[str, Any]:
-            rt = KairoRuntime()
-            base = rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
-            rt.create_ui_snapshot(head=base)
-
-            left = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "L"}],
-                base_revision=base,
-            )
-            rt.rollback_ui(base)
-            right = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "R"}],
-                base_revision=base,
-            )
-
-            first_merge = rt.merge_ui_branches(left, right, base_revision=base, mode=first_mode)["merged_revision"]
-
-            rt.rollback_ui(first_merge)
-            top = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": "badge", "value": "TOP"}],
-                base_revision=first_merge,
-            )
-            rt.rollback_ui(right)
-            side = rt.apply_ui_patch(
-                [{"op": "set_prop", "path": "/root/a", "key": "footer", "value": "SIDE"}],
-                base_revision=right,
-            )
-
-            second_merge = rt.merge_ui_branches(top, side, base_revision=right, mode=second_mode)
-            return rt.replay_ui_timeline(head=second_merge["merged_revision"], include_metrics=True)
-
-        materialized = build_merge_history("materialized", "materialized")
-        nested_delta = build_merge_history("delta", "delta")
+        materialized = self._build_fanin_replay_metrics("materialized", "materialized")
+        nested_delta = self._build_fanin_replay_metrics("delta", "delta")
 
         self.assertEqual(materialized["ops"], nested_delta["ops"])
         self.assertEqual(materialized["snapshot_head"], "u-0")
@@ -1084,6 +1084,26 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(nested_delta["metrics"]["events_from_snapshot_seed"], 6)
         self.assertEqual(materialized["metrics"]["events_total"], 7)
         self.assertEqual(nested_delta["metrics"]["events_total"], 3)
+
+    def test_replay_metrics_compare_fanin_mixed_merge_modes(self) -> None:
+        materialized_materialized = self._build_fanin_replay_metrics("materialized", "materialized")
+        materialized_delta = self._build_fanin_replay_metrics("materialized", "delta")
+        delta_materialized = self._build_fanin_replay_metrics("delta", "materialized")
+        delta_delta = self._build_fanin_replay_metrics("delta", "delta")
+
+        self.assertEqual(materialized_materialized["ops"], materialized_delta["ops"])
+        self.assertEqual(materialized_materialized["ops"], delta_materialized["ops"])
+        self.assertEqual(materialized_materialized["ops"], delta_delta["ops"])
+
+        self.assertEqual(materialized_materialized["metrics"]["events_from_snapshot_seed"], 6)
+        self.assertEqual(materialized_delta["metrics"]["events_from_snapshot_seed"], 6)
+        self.assertEqual(delta_materialized["metrics"]["events_from_snapshot_seed"], 6)
+        self.assertEqual(delta_delta["metrics"]["events_from_snapshot_seed"], 6)
+
+        self.assertEqual(materialized_materialized["metrics"]["events_total"], 7)
+        self.assertEqual(materialized_delta["metrics"]["events_total"], 3)
+        self.assertEqual(delta_materialized["metrics"]["events_total"], 6)
+        self.assertEqual(delta_delta["metrics"]["events_total"], 3)
 
 
 if __name__ == "__main__":

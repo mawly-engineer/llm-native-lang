@@ -619,3 +619,29 @@ Replay-Metriken in größeren Fan-in-Szenarien konkret vergleichen und Nested-De
 ### Nächster Schritt
 Cycle 028: Gemischte Merge-Modi vergleichen und Entscheidungsraster für die Moduswahl ergänzen.
 
+## Cycle 028 — 2026-03-06T22:30:00Z
+### Fokus
+Gemischte Merge-Modi im Fan-in-Szenario messbar vergleichen und eine kurze Moduswahl-Hilfe dokumentieren.
+
+### Geliefert
+- Unit-Tests erweitert (1 neuer Vergleichstest):
+  - systematischer 4er-Vergleich für 2-stufiges Fan-in (`materialized->materialized`, `materialized->delta`, `delta->materialized`, `delta->delta`)
+  - identischer Endzustand (`ops`) über alle Varianten abgesichert
+  - Metrikvergleich präzisiert: `events_from_snapshot_seed` bleibt konstant, `events_total` differenziert klar nach Persistenzmodus
+- Test-Setup bereinigt:
+  - gemeinsamer Fan-in-Builder als Helper extrahiert, um Metriktests konsistent wiederzuverwenden
+- Runtime-Doku ergänzt:
+  - kompakter Vergleich der gemischten Merge-Modi mit konkreten `events_total`-Werten
+  - kurzes Entscheidungsraster für `materialized` vs `delta` inkl. pragmatischem Mischansatz
+- Runtime-Contract geschärft:
+  - Hinweis ergänzt, dass für Modusvergleiche primär `events_total` herangezogen werden soll
+- Next-Steps auf Cycle-029 fortgeschrieben.
+
+### Offene Lücken
+- Property-basierte LCA/Base-Validierung ist weiterhin nur als Idee vorhanden.
+- Es gibt noch keine Zufalls-DAG-Testhülle für Merge-Invarianten.
+- Keine Metrik-Historisierung über mehrere Replays hinweg.
+
+### Nächster Schritt
+Cycle 029: Property-basierte LCA/Base-Tests vorbereiten und Merge-Invarianten dafür festziehen.
+

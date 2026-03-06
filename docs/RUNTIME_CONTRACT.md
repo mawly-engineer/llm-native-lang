@@ -149,6 +149,7 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `metrics.events_total`: Anzahl Event-Anwendungen auf dem gesamten traversierten Apply-Pfad (inkl. Delta-Base-Rekonstruktion)
     - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
 - Damit sind zwei Sichtweisen explizit getrennt: Seed-nahe Kosten (`events_from_snapshot_seed`) vs. Gesamtaufwand (`events_total`).
+- Für systematische Modusvergleiche (`materialized|delta`) sollte primär `events_total` verwendet werden; `events_from_snapshot_seed` bleibt nützlich als stabile DAG-Pfad-Referenz.
 
 ## Delta-Merge-Vorschau (Cycle 021/022)
 - `preview_ui_merge_delta(left_revision, right_revision, base_revision=None, policy="explicit_conflict", resolutions=None, resolution_notes=None)`

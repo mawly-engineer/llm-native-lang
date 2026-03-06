@@ -74,3 +74,30 @@ Beobachtung aus den Runtime-Tests:
 Interpretation:
 - `events_from_snapshot_seed` zeigt den sichtbaren Replay-Aufwand ab Seed.
 - `events_total` zeigt den tatsächlichen internen Apply-Aufwand (inkl. Delta-Base-Rekonstruktion) und eignet sich besser für Modusvergleiche bei Merge-heavy Historien.
+
+## Gemischte Merge-Modi im 2-stufigen Fan-in (Cycle 028)
+Beim selben Fan-in-Szenario (gleicher Endzustand, Snapshot auf Base) ergeben sich für `events_total`:
+- `materialized -> materialized`: `7`
+- `materialized -> delta`: `3`
+- `delta -> materialized`: `6`
+- `delta -> delta`: `3`
+
+Konstante in allen vier Varianten:
+- `events_from_snapshot_seed = 6`
+
+Kurzfazit:
+- Der **zweite Merge im Delta-Modus** drückt in diesem Szenario `events_total` am stärksten.
+- Ein später materialisierter Merge auf Delta-Historie (`delta -> materialized`) liegt kostenmäßig zwischen den Extremen.
+
+## Entscheidungsraster: `materialized` vs `delta`
+- **Nimm `materialized`, wenn ...**
+  - du Merge-Events direkt als vollständigen Stand inspizieren möchtest
+  - Write-Kosten wichtiger sind als Replay-Kosten
+  - Debugging/Forensik eher auf Event-Payload statt Rekonstruktion basiert
+- **Nimm `delta`, wenn ...**
+  - du Merge-heavy DAGs erwartest und Replay-Kosten (`events_total`) senken willst
+  - du Base-gebundene Rekonstruktion explizit akzeptierst
+  - Snapshot-Strategien bereits etabliert sind
+- **Pragmatischer Mix**
+  - frühe Merges materialisiert halten, später Fan-in-Merges als Delta persistieren (`materialized -> delta`)
+  - Ergebnis regelmäßig mit `replay_ui_timeline(..., include_metrics=True)` verifizieren
