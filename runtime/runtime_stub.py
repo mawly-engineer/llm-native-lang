@@ -381,6 +381,103 @@ class KairoRuntime:
             raise PatchError("E_UI_REVISION", f"unknown ui revision: {revision}")
         self.ui_head = revision
 
+    def _ui_ancestors(self, head: str | None) -> Set[str | None]:
+        ancestors: Set[str | None] = {None}
+        cursor = head
+        while cursor is not None:
+            if cursor in ancestors:
+                raise PatchError("E_UI_REVISION", f"cycle detected in ui timeline at: {cursor}")
+            ancestors.add(cursor)
+            event = self.ui_timeline.get(cursor)
+            if event is None:
+                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
+            cursor = event.parent
+        return ancestors
+
+    def _ui_lca(self, left: str | None, right: str | None) -> str | None:
+        right_ancestors = self._ui_ancestors(right)
+        cursor = left
+        while True:
+            if cursor in right_ancestors:
+                return cursor
+            if cursor is None:
+                return None
+            event = self.ui_timeline.get(cursor)
+            if event is None:
+                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
+            cursor = event.parent
+
+    def validate_ui_merge(
+        self,
+        left_revision: str | None,
+        right_revision: str | None,
+        base_revision: str | None = None,
+        policy: str = "explicit_conflict",
+    ) -> Dict[str, Any]:
+        if policy != "explicit_conflict":
+            raise PatchError("E_UI_MERGE_POLICY", "unsupported ui merge policy")
+
+        for name, revision in (("left", left_revision), ("right", right_revision), ("base", base_revision)):
+            if revision is not None and revision not in self.ui_timeline:
+                raise PatchError("E_UI_REVISION", f"unknown {name} ui revision: {revision}")
+
+        resolved_base = self._ui_lca(left_revision, right_revision) if base_revision is None else base_revision
+
+        left_ancestors = self._ui_ancestors(left_revision)
+        right_ancestors = self._ui_ancestors(right_revision)
+        if resolved_base not in left_ancestors or resolved_base not in right_ancestors:
+            raise PatchError("E_UI_MERGE_BASE", "base revision must be an ancestor of both branches")
+
+        base_ops = self.replay_ui_timeline(resolved_base)
+        left_ops = self.replay_ui_timeline(left_revision)
+        right_ops = self.replay_ui_timeline(right_revision)
+
+        def op_key(op: Dict[str, Any]) -> Tuple[str, str, str]:
+            return (op.get("op", ""), op.get("path", ""), op.get("key", ""))
+
+        base_map = {op_key(op): op for op in base_ops}
+        left_map = {op_key(op): op for op in left_ops}
+        right_map = {op_key(op): op for op in right_ops}
+
+        conflicts: List[Dict[str, Any]] = []
+        all_keys = set(left_map) | set(right_map)
+        for key in sorted(all_keys):
+            left_op = left_map.get(key)
+            right_op = right_map.get(key)
+            if left_op is None or right_op is None:
+                continue
+            if left_op == right_op:
+                continue
+
+            base_op = base_map.get(key)
+            left_changed = left_op != base_op
+            right_changed = right_op != base_op
+            if left_changed and right_changed:
+                conflicts.append(
+                    {
+                        "key": {"op": key[0], "path": key[1], "prop": key[2] or None},
+                        "left": deepcopy(left_op),
+                        "right": deepcopy(right_op),
+                    }
+                )
+
+        if conflicts:
+            raise PatchError("E_UI_MERGE_CONFLICT", f"ui merge conflict count: {len(conflicts)}")
+
+        merged_by_key = {op_key(op): deepcopy(op) for op in base_ops}
+        merged_by_key.update({op_key(op): deepcopy(op) for op in left_ops})
+        merged_by_key.update({op_key(op): deepcopy(op) for op in right_ops})
+        merged_ops = self.normalize_ui_ops(list(merged_by_key.values()))
+
+        return {
+            "base_revision": resolved_base,
+            "left_revision": left_revision,
+            "right_revision": right_revision,
+            "policy": policy,
+            "conflicts": [],
+            "merged_ops": merged_ops,
+        }
+
     def query(
         self,
         *args: Any,

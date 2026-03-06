@@ -48,3 +48,4 @@ v0.1 erwartet mindestens:
 ## Ausblick v0.2+
 - Move-Zyklen und Referenzvalidierung
 - Event-Sourcing-Einbindung mit Replay/Rollback
+- Branch-Merge-Anbindung: `explicit_conflict` als Default-Policy für divergente Timeline-Heads

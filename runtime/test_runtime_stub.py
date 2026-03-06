@@ -577,5 +577,51 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         )
 
 
+    def test_validate_ui_merge_accepts_non_conflicting_branches(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merge_info = self.rt.validate_ui_merge(left, right, base_revision=base)
+
+        self.assertEqual(merge_info["base_revision"], base)
+        self.assertEqual(merge_info["left_revision"], left)
+        self.assertEqual(merge_info["right_revision"], right)
+        self.assertEqual(
+            merge_info["merged_ops"],
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"},
+            ],
+        )
+
+    def test_validate_ui_merge_detects_conflicting_writes(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Right"}],
+            base_revision=base,
+        )
+
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.validate_ui_merge(left, right, base_revision=base)
+
+        self.assertIn("E_UI_MERGE_CONFLICT", str(ctx.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

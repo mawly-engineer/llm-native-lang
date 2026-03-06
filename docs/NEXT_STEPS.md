@@ -51,7 +51,12 @@
 - Snapshot-Verhalten mit Unit-Tests und Runtime-Doku absichern ✅
 
 ## Cycle 016
-- UI-Branch/Merge-Konfliktmodell für divergente UI-Timelines konkretisieren
-- Merge-Policy-Entscheidung dokumentieren (Last-Writer vs explicit conflict)
-- Erste Merge-Validierungstests im Runtime-Stub vorbereiten
+- UI-Branch/Merge-Konfliktmodell für divergente UI-Timelines konkretisieren ✅
+- Merge-Policy-Entscheidung dokumentieren (Last-Writer vs explicit conflict) ✅ (`explicit_conflict`)
+- Erste Merge-Validierungstests im Runtime-Stub vorbereiten ✅
+
+## Cycle 017
+- Merge-Vorschau in echte `merge_ui_branches(...)`-Operation überführen
+- Konfliktdetails strukturiert zurückgeben (nicht nur Error-Code)
+- Decision-Log für manuelle Konfliktauflösung im Runtime-Contract ergänzen
 

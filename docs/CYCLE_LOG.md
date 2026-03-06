@@ -335,3 +335,28 @@ UI-Replay für längere Eventketten per Snapshot-Compaction vorbereiten.
 ### Nächster Schritt
 Cycle 016: UI-Branch/Merge-Konfliktmodell konkretisieren und erste Merge-Validierungstests vorbereiten.
 
+## Cycle 016 — 2026-03-06T19:28:40Z
+### Fokus
+UI-Branch/Merge-Konfliktmodell für divergente UI-Timelines spezifizieren und als Runtime-Validierung abbilden.
+
+### Geliefert
+- Runtime-Stub um Merge-Validierung erweitert:
+  - neue Hilfen für Timeline-Ahnenmenge und LCA-Bestimmung
+  - `validate_ui_merge(left_revision, right_revision, base_revision=None, policy="explicit_conflict")`
+  - Base-Validierung gegen beide Branches (Fehler bei nicht gemeinsamem Vorfahren)
+- Merge-Policy v0.1 festgelegt: `explicit_conflict`
+  - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern
+  - bei Konflikt harter Abbruch statt implizitem Last-Writer-Wins
+- Unit-Tests erweitert (2 neue Tests):
+  - konfliktfreier Branch-Merge liefert deterministische `merged_ops`
+  - konkurrierende Writes auf identischem Key erzeugen `E_UI_MERGE_CONFLICT`
+- Runtime-/Contract-Doku auf Merge-Semantik + neue Fehlercodes aktualisiert
+
+### Offene Lücken
+- Noch keine echte Merge-Commit-Operation, nur Validierung/Vorschau
+- Konfliktdetails werden noch nicht strukturiert an den Caller zurückgegeben
+- Kein Entscheidungslog für manuelle Konfliktauflösung
+
+### Nächster Schritt
+Cycle 017: Merge-Vorschau in echte `merge_ui_branches(...)`-Operation überführen und Konfliktdetails als strukturiertes Ergebnis ausgeben.
+

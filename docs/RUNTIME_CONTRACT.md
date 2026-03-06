@@ -60,6 +60,11 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 - `E_UI_BASE_MISMATCH` – UI-Patch basiert nicht auf aktuellem UI-Head
 - `E_UI_REVISION` – referenzierte UI-Revision unbekannt oder Timeline inkonsistent
 
+### UI Merge
+- `E_UI_MERGE_POLICY` – nicht unterstützte Merge-Policy angefordert
+- `E_UI_MERGE_BASE` – angegebene Base ist kein gemeinsamer Vorfahre beider Branches
+- `E_UI_MERGE_CONFLICT` – expliziter Konflikt erkannt (beide Branches ändern denselben Op-Key unterschiedlich)
+
 ## Query-Semantik (v0.1)
 
 ### Signatur
@@ -96,3 +101,12 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
 - Mehrere `ui_patch`-Ops werden sequenziell validiert und aufeinander fortgeschrieben.
 - Validierung ist transaktional: Jeder Fehler (inkl. UI-Base-Mismatch) verwirft den gesamten Patch.
 - Erfolgreiche Program-Revisionen persistieren die resultierende `ui_revision` für deterministisches Replay/Debugging.
+
+## UI Merge-Validierung (Cycle 016)
+- `validate_ui_merge(left_revision, right_revision, base_revision=None, policy="explicit_conflict")` prüft Branch-Merges ohne Timeline-Mutation.
+- Ohne `base_revision` wird automatisch der nächste gemeinsame Vorfahre (LCA) verwendet.
+- `base_revision` muss Vorfahre von beiden Branch-Heads sein (`E_UI_MERGE_BASE`).
+- Konfliktregel v0.1 (Policy `explicit_conflict`):
+  - Konflikt, wenn beide Branches denselben Op-Key (`op`,`path`,`key`) relativ zur Base unterschiedlich ändern.
+  - Bei Konflikt wird abgebrochen (`E_UI_MERGE_CONFLICT`), kein implizites Last-Writer-Wins über Branches.
+- Bei konfliktfreiem Merge liefert die API deterministisch normalisierte `merged_ops` als Merge-Vorschau.
