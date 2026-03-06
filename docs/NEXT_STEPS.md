@@ -136,7 +136,12 @@
 - Runtime-Doku um kurzes Diagnose-Rezept für divergente `merged_ops` zwischen Profilen ergänzen ✅
 
 ## Cycle 033
-- Resolver-Profil-Vergleich um explizite Snapshot-Seeding-Fälle erweitern
-- Profilübergreifende Metrik-Deltas (`events_total`) als kurze Testmatrix dokumentieren
-- Runtime-Contract um Diagnose-Hinweis für Profil-Metriken ergänzen
+- Resolver-Profil-Vergleich um explizite Snapshot-Seeding-Fälle erweitern ✅
+- Profilübergreifende Metrik-Deltas (`events_total`) als kurze Testmatrix dokumentieren ✅
+- Runtime-Contract um Diagnose-Hinweis für Profil-Metriken ergänzen ✅
+
+## Cycle 034
+- Snapshot-seeded Profilmatrix um explizite `events_total`-Delta-Assertions schärfen
+- Contract-Beispiele für Profildiagnose um Mini-Input/Output-Snippets erweitern
+- Runtime-Guide um kurzes "Wann Snapshot neu setzen?"-Heuristikblatt ergänzen
 

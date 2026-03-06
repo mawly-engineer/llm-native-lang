@@ -147,6 +147,9 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
   - `accept_left` und `accept_right` müssen jeweils einen replaybaren Merge liefern.
   - Bei identischem Konflikt-Set dürfen sich die resultierenden `merged_ops` zwischen Profilen unterscheiden.
 - Diese Invarianten gelten unabhängig vom Merge-Modus (`materialized` oder `delta`).
+- Diagnosehinweis für Profil-Metriken (Cycle 033):
+  - Für faire Profilvergleiche (`accept_left` vs `accept_right`) Snapshot explizit auf derselben `base_revision` setzen.
+  - Danach `events_total` zwischen Profilen vergleichen; Unterschiede ohne Snapshot-Gleichstand sind diagnostisch wenig belastbar.
 
 ### Reproduzierbarer Bugreport-Minimalfall (Seed-basiert)
 Für externe Reports sollte immer ein minimales, reproduzierbares Paket angegeben werden:

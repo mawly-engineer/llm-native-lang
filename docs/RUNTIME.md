@@ -128,3 +128,20 @@ Wenn `accept_left` und `accept_right` bei gleichem Seed unterschiedliche Endstä
 3. **Beide Profile explizit mergen** (`resolutions_left` vs `resolutions_right`) und `merged_ops` direkt diffen.
 4. **Replay-Metriken je Profil vergleichen** (`events_from_snapshot_seed`, `events_total`, `snapshot_seed_distance`) statt nur auf Payload zu schauen.
 5. **Bugreport kompakt halten**: Testname, Seed, Modus, Profil, Konflikt-Key(s), `merged_ops`-Delta, Metrik-Diff.
+
+## Snapshot-seeded Profilmatrix für Konfliktfälle (Cycle 033)
+Ergänzend zum Rezept oben wird der Profilvergleich jetzt explizit mit Snapshot-Seed auf gemeinsamer Base getestet.
+
+Kurzmatrix (gleicher Seed, gleiche Konfliktmenge, unterschiedliche Resolver-Profile):
+- Merge-Modi: `materialized`, `delta`
+- Profile: `accept_left`, `accept_right`
+- Snapshot: explizit auf `base_revision`
+
+Erwartung in beiden Modi:
+- `snapshot_head == base_revision` für beide Profile
+- `merged_ops` unterscheiden sich bei echten Konflikten weiterhin profilabhängig
+- Metrikfelder (`events_total`, `events_from_snapshot_seed`, `events_replayed`) sind vorhanden und nicht-negativ
+
+Nutzen:
+- Snapshot-Seeding als zusätzliche Kontrollvariable ist fixiert
+- Profilunterschiede lassen sich sauber auf Resolver-Entscheidungen zurückführen statt auf fehlende Seed-Basis

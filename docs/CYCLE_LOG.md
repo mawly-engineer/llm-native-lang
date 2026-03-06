@@ -735,3 +735,26 @@ Resolver-Profile (`accept_left`/`accept_right`) im Konfliktfall mit Replay-Metri
 ### Nächster Schritt
 Cycle 033: Snapshot-seeded Profilvergleich + kleine Metrikmatrix + Contract-Hinweis ergänzen.
 
+## Cycle 033 — 2026-03-06T23:48:00Z
+### Fokus
+Resolver-Profilvergleich (`accept_left`/`accept_right`) um explizites Snapshot-Seeding erweitern und Diagnostikvertrag nachziehen.
+
+### Geliefert
+- Unit-Tests erweitert (1 neuer Random-Test):
+  - konfliktbehaftete Seeds werden in beiden Merge-Modi (`materialized`, `delta`) mit fixem Snapshot auf der gemeinsamen Base durchlaufen
+  - Profilvergleich prüft explizit `snapshot_head == base` für beide Resolver-Profile
+  - Metrikmatrix für Profilvergleiche abgesichert (`events_total`, `events_from_snapshot_seed`, `events_replayed` vorhanden und nicht-negativ)
+- Runtime-Doku ergänzt:
+  - kompakte Snapshot-seeded Profilmatrix für Konfliktfälle inkl. erwarteter Metrik-/Replay-Eigenschaften
+- Runtime-Contract ergänzt:
+  - Diagnosehinweis für faire Profil-Metrikvergleiche (gemeinsamer Snapshot-Seed auf identischer Base)
+- Next-Steps auf Cycle-034 fortgeschrieben.
+
+### Offene Lücken
+- Snapshot-seeded Profiltest prüft aktuell Feldpräsenz/Bounds, aber noch keine expliziten `events_total`-Delta-Assertions zwischen Profilen.
+- Contract-Beispiele könnten um ein kleines Input/Output-Muster für Profil-Diagnosen konkreter werden.
+- Runtime-Guidance zur praktischen Snapshot-Platzierung in längeren Verläufen bleibt knapp.
+
+### Nächster Schritt
+Cycle 034: Profil-Delta-Assertions schärfen + Contract-Minibeispiele + Snapshot-Heuristik ergänzen.
+
