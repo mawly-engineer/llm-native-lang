@@ -758,3 +758,21 @@ Resolver-Profilvergleich (`accept_left`/`accept_right`) um explizites Snapshot-S
 ### Nächster Schritt
 Cycle 034: Profil-Delta-Assertions schärfen + Contract-Minibeispiele + Snapshot-Heuristik ergänzen.
 
+## Cycle 034 — 2026-03-06T23:49:00Z
+### Fokus
+Coordinator-Routing auf Basis der aktuellen Cycle-033-Ergebnisse nachgeschärft.
+
+### Geliefert
+- `docs/AGENT_ROUTER.md` umgestellt auf:
+  - `active_primary: interpreter-runtime`
+  - `active_secondary: validation`
+- Begründung: Aktuelle Lücken liegen primär in Runtime-Metrik-/Snapshot-Heuristik und zugehöriger Diagnostik; keine roten E2E-Signale.
+
+### Offene Lücken
+- Explizite Profil-Delta-Assertions (`events_total`) zwischen Resolver-Profilen fehlen weiter.
+- Contract-Minibeispiele für Profil-Diagnosen stehen noch aus.
+- Snapshot-Heuristik für längere Verläufe bleibt knapp dokumentiert.
+
+### Nächster Schritt
+Cycle 034 Ausführung durch Interpreter-Runtime (primär) mit Validation-Unterstützung für asserts/contracts.
+

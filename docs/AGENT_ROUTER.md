@@ -3,8 +3,8 @@
 Coordinator-controlled routing file.
 
 ## Active Agent Slots
-- active_primary: language-core
-- active_secondary: interpreter-runtime
+- active_primary: interpreter-runtime
+- active_secondary: validation
 
 ## Priority Order
 1. integration (if red/discrepancy in E2E)
