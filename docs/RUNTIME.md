@@ -29,3 +29,10 @@
 - Recoverable Error: Retry / Degrade
 - Policy Error: Hard deny + audit event
 - Integrity Error: Rollback auf letzte konsistente Revision
+
+## UI Event-Sourcing Skizze (Cycle 011)
+- UI-Änderungen werden als append-only Timeline gespeichert (`u-0`, `u-1`, ...)
+- Jede UI-Revision referenziert ihren Parent (Head-basierte Fortschreibung)
+- `apply_ui_patch` normalisiert Ops vor Persistenz (deterministisch + konfliktreduziert)
+- `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand aus der Event-Kette
+- `rollback_ui(revision)` verschiebt nur den Head; Historie bleibt unverändert erhalten

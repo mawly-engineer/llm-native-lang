@@ -4,6 +4,7 @@ mit einfachen Typ-/Constraint-Checks.
 """
 
 from dataclasses import dataclass, field
+from copy import deepcopy
 import re
 from typing import Any, Dict, List, Set, Tuple
 
@@ -19,6 +20,13 @@ class Revision:
 class RuntimeState:
     revisions: Dict[str, Revision] = field(default_factory=dict)
     head: str | None = None
+
+
+@dataclass
+class UITimelineEvent:
+    id: str
+    parent: str | None
+    ops: List[Dict[str, Any]]
 
 
 class PatchError(Exception):
@@ -39,6 +47,9 @@ class KairoRuntime:
         base = Revision(id="r-0", parent=None, graph=base_graph)
         self.state.revisions[base.id] = base
         self.state.head = base.id
+
+        self.ui_timeline: Dict[str, UITimelineEvent] = {}
+        self.ui_head: str | None = None
 
     def _require_str(self, obj: Dict[str, Any], key: str, code: str) -> str:
         value = obj.get(key)
@@ -270,6 +281,48 @@ class KairoRuntime:
                 "" if op["op"] != "set_prop" else op["key"],
             ),
         )
+
+    def apply_ui_patch(self, ops: List[Dict[str, Any]], base_revision: str | None = None) -> str:
+        if base_revision is None:
+            base_revision = self.ui_head
+        if base_revision != self.ui_head:
+            raise PatchError("E_UI_BASE_MISMATCH", "ui base_revision mismatch")
+
+        normalized = self.normalize_ui_ops(ops)
+        new_id = f"u-{len(self.ui_timeline)}"
+        self.ui_timeline[new_id] = UITimelineEvent(
+            id=new_id,
+            parent=self.ui_head,
+            ops=deepcopy(normalized),
+        )
+        self.ui_head = new_id
+        return new_id
+
+    def replay_ui_timeline(self, head: str | None = None) -> List[Dict[str, Any]]:
+        if head is None:
+            head = self.ui_head
+        if head is not None and head not in self.ui_timeline:
+            raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
+
+        ordered_events: List[UITimelineEvent] = []
+        cursor = head
+        while cursor is not None:
+            event = self.ui_timeline.get(cursor)
+            if event is None:
+                raise PatchError("E_UI_REVISION", f"broken ui timeline at: {cursor}")
+            ordered_events.append(event)
+            cursor = event.parent
+
+        ops: List[Dict[str, Any]] = []
+        for event in reversed(ordered_events):
+            ops.extend(deepcopy(event.ops))
+
+        return self.normalize_ui_ops(ops)
+
+    def rollback_ui(self, revision: str | None) -> None:
+        if revision is not None and revision not in self.ui_timeline:
+            raise PatchError("E_UI_REVISION", f"unknown ui revision: {revision}")
+        self.ui_head = revision
 
     def query(
         self,

@@ -390,6 +390,38 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
             ],
         )
 
+    def test_ui_timeline_replay_uses_append_only_events(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        u1 = self.rt.apply_ui_patch(
+            [
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "A"},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "B"},
+            ],
+            base_revision=u0,
+        )
+
+        replayed = self.rt.replay_ui_timeline(u1)
+
+        self.assertEqual(
+            replayed,
+            [
+                {"op": "insert", "path": "/root/a", "value": {"kind": "card"}},
+                {"op": "set_prop", "path": "/root/a", "key": "title", "value": "B"},
+            ],
+        )
+
+    def test_ui_rollback_changes_replay_head(self) -> None:
+        u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Live"}],
+            base_revision=u0,
+        )
+
+        self.rt.rollback_ui(u0)
+
+        replayed = self.rt.replay_ui_timeline()
+        self.assertEqual(replayed, [{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -54,6 +54,10 @@ Zentraler Vertrag für Runtime-Fehlercodes und Query-Semantik.
 - `E_UI_OP_PATH` – `path` fehlt oder ist leer
 - `E_UI_OP_KEY` – `set_prop.key` fehlt oder ist leer
 
+### UI Timeline / Replay
+- `E_UI_BASE_MISMATCH` – UI-Patch basiert nicht auf aktuellem UI-Head
+- `E_UI_REVISION` – referenzierte UI-Revision unbekannt oder Timeline inkonsistent
+
 ## Query-Semantik (v0.1)
 
 ### Signatur

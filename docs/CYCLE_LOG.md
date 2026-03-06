@@ -237,3 +237,28 @@ UI-Diff-Konfliktauflösung für Parent/Child-Pfade robust machen und per Tests a
 
 ### Nächster Schritt
 Cycle 011: Event-Sourcing-Skizze (append-only UI Timeline) + erste Rollback-Replay-Testfälle ergänzen.
+
+## Cycle 011 — 2026-03-06T18:31:00Z
+### Fokus
+UI-Event-Sourcing im Runtime-Stub konkretisieren (append-only Timeline + Replay/Rollback).
+
+### Geliefert
+- Runtime-Stub um UI-Timeline-API erweitert:
+  - `apply_ui_patch(ops, base_revision=None)` erzeugt append-only UI-Revisionen (`u-*`)
+  - `replay_ui_timeline(head=None)` rekonstruiert den UI-Stand deterministisch über die Event-Kette
+  - `rollback_ui(revision)` verschiebt den UI-Head ohne Historie zu löschen
+- Fehlercodes für UI-Revisioning ergänzt:
+  - Base-Mismatch bei konkurrierenden UI-Schreibvorgängen
+  - ungültige/inkonsistente UI-Revisionen beim Replay
+- Unit-Tests erweitert (2 neue Tests):
+  - Replay aus append-only Events mit Last-Write-Wins
+  - Rollback auf ältere UI-Revision verändert den rekonstruierten Head-Stand
+- Runtime- und Contract-Doku auf Event-Sourcing-/Fehlercode-Stand aktualisiert
+
+### Offene Lücken
+- `ui_patch` ist noch nicht als reguläre Op in `apply_patch` integriert
+- Keine transaktionale Kopplung von Program-Revision und UI-Revision
+- Kein Merge-/Konfliktmodell für konkurrierende UI-Branches
+
+### Nächster Schritt
+Cycle 012: `ui_patch` in den Patch-Pfad integrieren und Program/UI-Revisionen transaktional koppeln.

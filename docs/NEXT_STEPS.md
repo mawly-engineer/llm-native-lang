@@ -22,5 +22,15 @@
 
 ## Cycle 010
 - Parent/Child-Konflikte im UI Diff behandeln (`/a` vs `/a/b`) ✅
-- Event-Sourcing-Skizze (append-only UI Timeline) dokumentieren
-- Rollback-Replay-Testfälle im Runtime-Stub vorbereiten
+- Event-Sourcing-Skizze (append-only UI Timeline) dokumentieren ✅
+- Rollback-Replay-Testfälle im Runtime-Stub vorbereiten ✅
+
+## Cycle 011
+- UI Timeline als append-only Runtime-API implementieren ✅
+- Replay über frei wählbaren UI-Head ermöglichen ✅
+- Rollback-Verhalten mit Tests absichern ✅
+
+## Cycle 012
+- `ui_patch` als reguläre Patch-Op in `apply_patch` integrieren
+- Program-Revision und UI-Revision transaktional koppeln
+- Fehler-/Rollback-Semantik für gemischte Graph+UI-Patches definieren
