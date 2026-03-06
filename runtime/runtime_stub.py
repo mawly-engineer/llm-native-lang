@@ -195,6 +195,16 @@ class KairoRuntime:
             raise PatchError("E_QUERY_LIMIT", "limit must be an integer >= 0")
         return objects[:limit]
 
+    def _is_same_or_descendant_path(self, path: str, anchor: str) -> bool:
+        if path == anchor:
+            return True
+        if anchor == "/":
+            return path.startswith("/")
+        return path.startswith(anchor + "/")
+
+    def _is_removed_path(self, path: str, removed_paths: Set[str]) -> bool:
+        return any(self._is_same_or_descendant_path(path, removed) for removed in removed_paths)
+
     def normalize_ui_ops(self, ops: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         if not isinstance(ops, list):
             raise PatchError("E_UI_OPS_TYPE", "ui ops must be a list")
@@ -223,12 +233,19 @@ class KairoRuntime:
 
             path = path.strip()
             if kind == "remove":
+                if self._is_removed_path(path, removed_paths):
+                    continue
+
                 removed_paths.add(path)
-                reduced = {k: v for k, v in reduced.items() if k[1] != path}
+                reduced = {
+                    k: v
+                    for k, v in reduced.items()
+                    if not self._is_same_or_descendant_path(k[1], path)
+                }
                 reduced[(kind, path, "")] = {"op": kind, "path": path}
                 continue
 
-            if path in removed_paths:
+            if self._is_removed_path(path, removed_paths):
                 continue
 
             if kind == "set_prop":

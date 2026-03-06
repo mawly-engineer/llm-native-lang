@@ -15,8 +15,9 @@ Jede Op ist ein Objekt mit:
 - bei `set_prop` zusätzlich `key` + `value`
 
 ## Konfliktregeln
-1. **Remove gewinnt am selben Pfad**
-   - Wenn `remove(path)` existiert, werden andere Ops auf diesem Pfad verworfen.
+1. **Remove gewinnt auf Pfad + Subtree**
+   - Wenn `remove(path)` existiert, werden andere Ops auf diesem Pfad **und allen Kindpfaden** verworfen.
+   - Redundante Child-Removes (z. B. `remove(/a/b)` nach `remove(/a)`) werden verworfen.
 2. **Last write wins für `set_prop(path,key)`**
    - Bei mehrfachen Writes auf denselben Prop bleibt nur der letzte Wert.
 3. **Nicht unterstützte Op-Typen sind Fehler**
@@ -41,10 +42,9 @@ Nach Konfliktreduktion wird stabil sortiert nach:
 ## Testbarkeit
 v0.1 erwartet mindestens:
 - Golden-Test für gemischte Op-Liste mit identischem Endergebnis nach Normalisierung
-- Test für Remove-Übersteuerung am gleichen Pfad
+- Test für Remove-Übersteuerung auf gleichem Pfad und im Subtree
 - Test für Last-Write-Wins bei `set_prop`
 
 ## Ausblick v0.2+
-- Parent/Child-Konflikte (`remove(/a)` vs `set_prop(/a/b)`)
 - Move-Zyklen und Referenzvalidierung
 - Event-Sourcing-Einbindung mit Replay/Rollback

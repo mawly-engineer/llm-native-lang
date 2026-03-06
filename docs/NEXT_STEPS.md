@@ -21,6 +21,6 @@
 - Erste Golden-Tests für Diff-Reihenfolge im Runtime-Stub skizzieren ✅
 
 ## Cycle 010
-- Parent/Child-Konflikte im UI Diff behandeln (`/a` vs `/a/b`)
+- Parent/Child-Konflikte im UI Diff behandeln (`/a` vs `/a/b`) ✅
 - Event-Sourcing-Skizze (append-only UI Timeline) dokumentieren
 - Rollback-Replay-Testfälle im Runtime-Stub vorbereiten

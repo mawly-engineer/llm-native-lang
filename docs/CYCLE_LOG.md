@@ -215,3 +215,25 @@ UI Diff Protocol v0.1 als klaren Normalisierungsvertrag festziehen und erste Gol
 
 ### Nächster Schritt
 Cycle 010: Parent/Child-Konfliktregeln + Event-Sourcing-/Rollback-Skizze ergänzen.
+
+## Cycle 010 — 2026-03-06T18:16:00Z
+### Fokus
+UI-Diff-Konfliktauflösung für Parent/Child-Pfade robust machen und per Tests absichern.
+
+### Geliefert
+- `normalize_ui_ops(...)` erweitert:
+  - `remove(path)` wirkt jetzt auf gesamten Subtree (`path` + Kindpfade)
+  - vorhandene Ops auf Kindpfaden werden bei Parent-Remove entfernt
+  - redundante Child-Removes nach Parent-Remove werden ignoriert
+- Unit-Tests erweitert (2 neue Tests):
+  - Parent-Remove verwirft Child-`set_prop`/`insert`/`replace`
+  - Child-Remove nach Parent-Remove bleibt unterdrückt, unabhängige Pfade bleiben erhalten
+- UI-Diff-Dokumentation auf Subtree-Konfliktregel aktualisiert
+
+### Offene Lücken
+- Kein Event-Sourcing-Modell für UI-Op-Timeline dokumentiert
+- Kein Rollback-/Replay-Mechanismus für UI-Patches im Runtime-Stub
+- `ui_patch` weiterhin nicht in `apply_patch` integriert
+
+### Nächster Schritt
+Cycle 011: Event-Sourcing-Skizze (append-only UI Timeline) + erste Rollback-Replay-Testfälle ergänzen.

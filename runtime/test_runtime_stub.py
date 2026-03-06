@@ -360,6 +360,36 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertEqual(result, [{"op": "set_prop", "path": "/root/title", "key": "text", "value": "B"}])
 
+    def test_ui_ops_parent_remove_drops_child_ops(self) -> None:
+        ops = [
+            {"op": "set_prop", "path": "/root/a/b", "key": "text", "value": "X"},
+            {"op": "insert", "path": "/root/a/b", "value": {"kind": "label"}},
+            {"op": "remove", "path": "/root/a"},
+            {"op": "replace", "path": "/root/a/c", "value": {"kind": "button"}},
+        ]
+
+        result = self.rt.normalize_ui_ops(ops)
+
+        self.assertEqual(result, [{"op": "remove", "path": "/root/a"}])
+
+    def test_ui_ops_child_remove_ignored_after_parent_remove(self) -> None:
+        ops = [
+            {"op": "remove", "path": "/root/a"},
+            {"op": "remove", "path": "/root/a/b"},
+            {"op": "set_prop", "path": "/root/a/b", "key": "text", "value": "ignored"},
+            {"op": "insert", "path": "/root/x", "value": {"kind": "label"}},
+        ]
+
+        result = self.rt.normalize_ui_ops(ops)
+
+        self.assertEqual(
+            result,
+            [
+                {"op": "remove", "path": "/root/a"},
+                {"op": "insert", "path": "/root/x", "value": {"kind": "label"}},
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
