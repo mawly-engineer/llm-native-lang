@@ -30,6 +30,8 @@ class UITimelineEvent:
     ops: List[Dict[str, Any]]
     secondary_parent: str | None = None
     resolution_notes: str | None = None
+    merge_mode: str = "materialized"
+    delta_base_revision: str | None = None
 
 
 @dataclass
@@ -340,9 +342,9 @@ class KairoRuntime:
         return parents
 
     def _ui_collect_distances(self, head: str | None) -> Dict[str | None, int]:
-        distances: Dict[str | None, int] = {None: 0}
+        distances: Dict[str | None, int] = {}
         if head is None:
-            return distances
+            return {None: 0}
         if head not in self.ui_timeline:
             raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
 
@@ -394,6 +396,81 @@ class KairoRuntime:
         self.ui_snapshot_index[head] = snapshot_id
         return snapshot_id
 
+    def _ui_event_apply_sequence(
+        self,
+        head: str | None,
+        seen: Set[str],
+        visiting: Set[str],
+        use_snapshot_seed: bool,
+    ) -> Tuple[List[Dict[str, Any]], int, str | None, int | None]:
+        if head is None:
+            return [], 0, None, None
+        if head in seen:
+            return [], 0, None, None
+        if head in visiting:
+            raise PatchError("E_UI_REVISION", f"cycle detected in ui timeline at: {head}")
+        if head not in self.ui_timeline:
+            raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
+
+        visiting.add(head)
+        event = self.ui_timeline[head]
+
+        seed_snapshot_head: str | None = None
+        seed_snapshot_distance: int | None = None
+        seed_ops: List[Dict[str, Any]] = []
+        events_replayed = 0
+
+        if event.merge_mode == "delta":
+            base_ops, base_count, _snap_head, _snap_distance = self._ui_event_apply_sequence(
+                event.delta_base_revision,
+                seen,
+                visiting,
+                use_snapshot_seed,
+            )
+            ops = base_ops + deepcopy(event.ops)
+            events_replayed = base_count + 1
+        else:
+            if use_snapshot_seed:
+                distances = self._ui_collect_distances(head)
+                for event_id in distances:
+                    snapshot_id = self.ui_snapshot_index.get(event_id)
+                    if snapshot_id is None:
+                        continue
+                    distance = distances[event_id]
+                    if seed_snapshot_distance is None or distance < seed_snapshot_distance:
+                        seed_snapshot_distance = distance
+                        seed_snapshot_head = event_id
+                        seed_ops = deepcopy(self.ui_snapshots[snapshot_id].ops)
+
+            parent_ops: List[Dict[str, Any]] = []
+            if event.parent is not None:
+                left_ops, left_count, _left_snap, _left_dist = self._ui_event_apply_sequence(
+                    event.parent,
+                    seen,
+                    visiting,
+                    False,
+                )
+                parent_ops.extend(left_ops)
+                events_replayed += left_count
+
+            if event.secondary_parent is not None:
+                right_ops, right_count, _right_snap, _right_dist = self._ui_event_apply_sequence(
+                    event.secondary_parent,
+                    seen,
+                    visiting,
+                    False,
+                )
+                parent_ops.extend(right_ops)
+                events_replayed += right_count
+
+            ops = seed_ops + parent_ops + deepcopy(event.ops)
+            events_replayed += 1
+
+        visiting.remove(head)
+        seen.add(head)
+
+        return ops, events_replayed, seed_snapshot_head, seed_snapshot_distance
+
     def replay_ui_timeline(
         self,
         head: str | None = None,
@@ -404,12 +481,17 @@ class KairoRuntime:
         if head is not None and head not in self.ui_timeline:
             raise PatchError("E_UI_REVISION", f"unknown ui revision: {head}")
 
+        ops, events_replayed, snapshot_head, snapshot_distance = self._ui_event_apply_sequence(
+            head,
+            seen=set(),
+            visiting=set(),
+            use_snapshot_seed=True,
+        )
+
         postorder = self._ui_replay_postorder(head)
         distances = self._ui_collect_distances(head)
-
-        seed_ops: List[Dict[str, Any]] = []
-        snapshot_head: str | None = None
         best_distance: int | None = None
+        best_snapshot_head: str | None = None
         for event_id in distances:
             snapshot_id = self.ui_snapshot_index.get(event_id)
             if snapshot_id is None:
@@ -417,24 +499,22 @@ class KairoRuntime:
             distance = distances[event_id]
             if best_distance is None or distance < best_distance:
                 best_distance = distance
-                snapshot_head = event_id
-                seed_ops = deepcopy(self.ui_snapshots[snapshot_id].ops)
+                best_snapshot_head = event_id
 
         replay_ids = postorder
-        if snapshot_head in distances:
-            snapshot_ancestors = self._ui_ancestors(snapshot_head)
+        if best_snapshot_head in distances:
+            snapshot_ancestors = self._ui_ancestors(best_snapshot_head)
             replay_ids = [event_id for event_id in postorder if event_id not in snapshot_ancestors]
-
-        ops: List[Dict[str, Any]] = seed_ops
-        for event_id in replay_ids:
-            event = self.ui_timeline[event_id]
-            ops.extend(deepcopy(event.ops))
 
         normalized_ops = self.normalize_ui_ops(ops)
         metrics = {
             "events_replayed": len(replay_ids),
             "snapshot_seed_distance": best_distance,
         }
+        if snapshot_head is None:
+            snapshot_head = best_snapshot_head
+        if snapshot_distance is None:
+            snapshot_distance = best_distance
 
         if include_metrics:
             return {
@@ -685,30 +765,56 @@ class KairoRuntime:
         policy: str = "explicit_conflict",
         resolutions: List[Dict[str, Any]] | None = None,
         resolution_notes: str | None = None,
+        mode: str = "materialized",
     ) -> Dict[str, Any]:
-        merge_info = self.validate_ui_merge(
-            left_revision=left_revision,
-            right_revision=right_revision,
-            base_revision=base_revision,
-            policy=policy,
-            resolutions=resolutions,
-            resolution_notes=resolution_notes,
-        )
+        if mode not in {"materialized", "delta"}:
+            raise PatchError("E_UI_MERGE_POLICY", "merge mode must be 'materialized' or 'delta'")
 
-        merged_ops = merge_info["merged_ops"]
+        if mode == "delta":
+            merge_info = self.preview_ui_merge_delta(
+                left_revision=left_revision,
+                right_revision=right_revision,
+                base_revision=base_revision,
+                policy=policy,
+                resolutions=resolutions,
+                resolution_notes=resolution_notes,
+            )
+            if merge_info["conflicts"]:
+                raise PatchError(
+                    "E_UI_MERGE_CONFLICT",
+                    f"ui merge conflict count: {len(merge_info['conflicts'])}",
+                    details={"conflicts": deepcopy(merge_info["conflicts"])} ,
+                )
+            event_ops = merge_info["delta_ops"]
+            delta_base_revision = merge_info["base_revision"]
+        else:
+            merge_info = self.validate_ui_merge(
+                left_revision=left_revision,
+                right_revision=right_revision,
+                base_revision=base_revision,
+                policy=policy,
+                resolutions=resolutions,
+                resolution_notes=resolution_notes,
+            )
+            event_ops = merge_info["merged_ops"]
+            delta_base_revision = None
+
         new_id = f"u-{len(self.ui_timeline)}"
         self.ui_timeline[new_id] = UITimelineEvent(
             id=new_id,
             parent=left_revision,
             secondary_parent=right_revision,
             resolution_notes=resolution_notes,
-            ops=deepcopy(merged_ops),
+            merge_mode=mode,
+            delta_base_revision=delta_base_revision,
+            ops=deepcopy(event_ops),
         )
         self.ui_head = new_id
 
         return {
             **merge_info,
             "merged_revision": new_id,
+            "merge_mode": mode,
         }
 
     def query(

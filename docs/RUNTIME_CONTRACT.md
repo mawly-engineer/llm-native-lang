@@ -111,8 +111,11 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
 - `validate_ui_merge(...)`
   - nutzt dieselbe Logik, bricht aber bei verbleibenden Konflikten mit `E_UI_MERGE_CONFLICT` ab
   - `PatchError.details` enthält `{ "conflicts": [...] }` für maschinenlesbare Fehleranalyse
-- `merge_ui_branches(...)`
+- `merge_ui_branches(..., mode="materialized")`
   - akzeptiert denselben optionalen Resolver-Input wie `preview_ui_merge(...)`
+  - `mode` unterstützt:
+    - `materialized` (Default): Merge-Event speichert vollständige `merged_ops`
+    - `delta`: Merge-Event speichert nur `delta_ops` relativ zu `base_revision`
   - erzeugt eine neue UI-Revision `merged_revision` mit expliziten Branch-Parents:
     - `parent` = linker Branch-Head
     - `secondary_parent` = rechter Branch-Head
@@ -136,7 +139,7 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `metrics.snapshot_seed_distance`: Distanz vom Replay-Head zum Snapshot-Seed (`null`, wenn kein Snapshot verwendet wurde)
 - `events_replayed` misst Replay-Kosten direkt am Event-Pfad und ist damit als Hook für Snapshot/Compaction-Tuning nutzbar.
 
-## Delta-Merge-Vorschau (Cycle 021)
+## Delta-Merge-Vorschau (Cycle 021/022)
 - `preview_ui_merge_delta(left_revision, right_revision, base_revision=None, policy="explicit_conflict", resolutions=None, resolution_notes=None)`
   - baut auf `preview_ui_merge(...)` auf und mutiert keine Timeline
   - liefert zusätzlich:
@@ -144,4 +147,5 @@ Wenn `graph` fehlt, wird die aktuelle Head-Revision verwendet.
     - `delta_ops`: nur die gegenüber `base_ops` geänderten Ops des Merge-Ergebnisses
     - `delta_metrics.base_ops|merged_ops|delta_ops`: Größenvergleich materialisiert vs delta
     - `delta_metrics.reconstructs_merged`: Invariante, ob `normalize(base_ops + delta_ops) == merged_ops`
-- Ziel in v0.1: Kosten- und Persistenzvergleich vorbereiten, ohne die bestehende materialisierte Merge-Persistenz zu brechen.
+- Ab Cycle 022 kann `merge_ui_branches(..., mode="delta")` diese Delta-Repräsentation direkt persistieren.
+- Kompatibilität: Replays bleiben für gemischte Historien (`materialized` + `delta`) deterministisch; Delta-Merge-Events verwenden ihre `base_revision` als Rekonstruktionsanker.

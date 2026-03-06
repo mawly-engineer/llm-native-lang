@@ -486,3 +486,28 @@ Delta-orientierte Merge-Vorschau ergänzen, ohne bestehende materialisierte Merg
 ### Nächster Schritt
 Cycle 022: Optionalen Delta-Merge-Persistenzmodus einführen und Replay-/Kompatibilitätstests ergänzen.
 
+## Cycle 022 — 2026-03-06T20:55:00Z
+### Fokus
+Delta-Merge als echten Persistenzmodus aktivieren und gemischte Replay-Historien absichern.
+
+### Geliefert
+- Runtime-Stub erweitert:
+  - `merge_ui_branches(...)` unterstützt jetzt `mode="materialized"|"delta"`
+  - Delta-Modus persistiert nur `delta_ops` plus `delta_base_revision` im Merge-Event
+  - Replay wurde um delta-base-seeded Rekonstruktion ergänzt, damit Delta-Merge-Events korrekt aufgelöst werden
+- Stabilitätsfix im DAG-Basisfinder:
+  - Distanzsammlung behandelt impliziten Root (`None`) nicht mehr als künstlich besten Vorfahren
+  - Auto-LCA liefert damit bei gemeinsamen echten Vorfahren konsistentere Ergebnisse
+- Unit-Tests erweitert (2 neue Tests):
+  - Delta-Mode-Merge persistiert korrekte Metadaten und replayt identisch zu `merged_ops`
+  - gemischte Materialized/Delta-Historie bleibt deterministisch replaybar
+- Runtime-/Contract-/Next-Steps-Doku auf Cycle-022-Stand aktualisiert
+
+### Offene Lücken
+- `events_replayed` ist für Delta-Pfade aktuell näherungsbasiert (Postorder-orientiert)
+- Merge-Mode-Fehler nutzt noch keinen eigenen Fehlercode
+- Auto-LCA ohne explizite Base kann noch mehr Randfalltests gebrauchen
+
+### Nächster Schritt
+Cycle 023: Delta-Metrikpräzision + dedizierter Merge-Mode-Fehlercode + zusätzliche Auto-LCA-Tests.
+

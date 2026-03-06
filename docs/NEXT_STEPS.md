@@ -81,7 +81,12 @@
 - Erste Stub-Tests für Delta-Merge-Invariante vorbereiten (ohne vollständige Persistenzumstellung) ✅
 
 ## Cycle 022
-- Delta-Merge-Vorschau in echte Merge-Persistenzvariante überführen (`mode=delta|materialized`)
-- Replay-Pfad für Delta-Merge-Events auf Korrektheit + Kostenmetrik testen
-- Contract um Kompatibilitätsregeln für gemischte Materialized/Delta-Historien ergänzen
+- Delta-Merge-Vorschau in echte Merge-Persistenzvariante überführen (`mode=delta|materialized`) ✅
+- Replay-Pfad für Delta-Merge-Events auf Korrektheit + Kostenmetrik testen ✅
+- Contract um Kompatibilitätsregeln für gemischte Materialized/Delta-Historien ergänzen ✅
+
+## Cycle 023
+- Replay-Metrik `events_replayed` für Delta-Merge-Pfade präzisieren (base-seeded statt Postorder-Näherung)
+- Merge-Mode-Validierungsfehler in eigenen Fehlercode auslagern (`E_UI_MERGE_MODE`)
+- Auto-LCA-Verhalten mit implizitem Root (`None`) in separaten Tests absichern
 

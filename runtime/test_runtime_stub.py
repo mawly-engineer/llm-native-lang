@@ -875,6 +875,56 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
 
         self.assertIn("E_UI_MERGE_RESOLUTION", str(ctx.exception))
 
+    def test_merge_ui_branches_supports_delta_mode(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        merged = self.rt.merge_ui_branches(left, right, base_revision=base, mode="delta")
+
+        merged_event = self.rt.ui_timeline[merged["merged_revision"]]
+        self.assertEqual(merged["merge_mode"], "delta")
+        self.assertEqual(merged_event.merge_mode, "delta")
+        self.assertEqual(merged_event.delta_base_revision, base)
+        self.assertEqual(
+            self.rt.replay_ui_timeline(merged["merged_revision"]),
+            merged["merged_ops"],
+        )
+
+    def test_replay_ui_timeline_supports_mixed_materialized_and_delta_history(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "Left"}],
+            base_revision=base,
+        )
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "Right"}],
+            base_revision=base,
+        )
+
+        materialized = self.rt.merge_ui_branches(left, right, base_revision=base, mode="materialized")
+        self.rt.rollback_ui(materialized["merged_revision"])
+        delta_merge = self.rt.merge_ui_branches(
+            materialized["merged_revision"],
+            right,
+            base_revision=right,
+            mode="delta",
+        )
+
+        self.assertEqual(
+            self.rt.replay_ui_timeline(delta_merge["merged_revision"]),
+            delta_merge["merged_ops"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
