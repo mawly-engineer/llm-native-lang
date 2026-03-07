@@ -1,78 +1,274 @@
-@lnd 0.1
+@lnd 0.2
 kind: format_spec
 id: LND-FORMAT-001
 status: draft
-updated_at_utc: 2026-03-07T12:15:00Z
-purpose: Extension split contract for docs (.lnd) and code (.lnc).
+updated_at_utc: 2026-03-07T12:21:00Z
+purpose: Deterministic documentation format for project/process definitions.
 
-scope:
+# -----------------------------------------------------------------------------
+# 1) GLOBAL SPLIT CONTRACT
+# -----------------------------------------------------------------------------
+scope_split_contract:
   docs_extension: .lnd
   code_extension: .lnc
-  rule: "All human/project documentation MUST use .lnd. All executable/code artifacts MUST use .lnc."
+  rule: "Documentation and process definitions MUST use .lnd; executable/code artifacts MUST use .lnc."
+  enforced_by:
+    - header_extension_match
+    - shape_profile_validation
 
-profiles:
-  lnd_doc:
-    header: "@lnd <version>"
-    extension: .lnd
-    intent:
-      - project_docs
-      - task_definitions
-      - decision_records
-      - process_contracts
-  lnc_code:
-    header: "@lnc <version>"
-    extension: .lnc
-    intent:
-      - executable_language_units
-      - intermediate_representation
-      - machine_executable_artifacts
+profile:
+  name: lnd_doc
+  header: "@lnd <version>"
+  extension: .lnd
+  applies_to:
+    - project_docs
+    - task_definitions
+    - decision_records
+    - process_contracts
+  does_not_apply_to:
+    - runtime_state_payloads
+    - executable_ir
+    - ui_patch_transport
 
-naming_rules:
-  case_policy: lowercase_recommended
-  accepted_by_contract:
-    - .lnd
-    - .Lnd
-    - .LND
-    - .lnc
-    - .Lnc
-    - .LNC
-  canonical_output_extensions:
-    - .lnd
-    - .lnc
+# -----------------------------------------------------------------------------
+# 2) DESIGN GOALS
+# -----------------------------------------------------------------------------
+goals:
+  - deterministic_parse
+  - deterministic_normalization
+  - minimal_tokens
+  - strict_key_order
+  - stable_error_codes
+  - no_filler_text
 
-hard_constraints:
-  - "Do not store documentation records in .lnc files."
-  - "Do not store executable code artifacts in .lnd files."
-  - "A file header MUST match its extension family (@lnd for .lnd, @lnc for .lnc)."
+non_goals:
+  - markdown_rendering
+  - rich_text
+  - ambiguous_natural_language
 
-migration_from_previous_layout:
-  from: single_lnc_doc_style
-  to: split_lnd_docs_lnc_code
-  required_actions:
-    - "Rename documentation spec files from *.lnc to *.lnd."
-    - "Keep executable/code artifacts on *.lnc."
-    - "Update references in docs and tests to new *.lnd paths."
+# -----------------------------------------------------------------------------
+# 3) CORE SYNTAX
+# -----------------------------------------------------------------------------
+syntax_rules:
+  encoding: utf-8
+  newline: "\n"
+  indentation: "2_spaces_only"
+  tabs_allowed: false
+  key_regex: "^[a-z0-9_]+$"
+  duplicate_keys: forbidden
+  comments: "# comment"
+  key_value_delimiter: ":"
+  list_item_prefix: "- "
+  max_file_bytes: 131072
+  max_nesting_depth: 8
+  hidden_unicode_controls: forbidden
 
-interpreter_contract:
-  - "If extension is .lnd -> parse as documentation profile."
-  - "If extension is .lnc -> parse as code profile."
-  - "Reject extension/header mismatch with ERR_PROFILE_MISMATCH."
+scalar_types:
+  - string
+  - int
+  - float
+  - bool
+  - enum
+  - null
 
+string_rules:
+  multiline_strings: forbidden
+  max_length_default: 240
+  quote_style: optional
+
+# -----------------------------------------------------------------------------
+# 4) FORMAL GRAMMAR (EBNF)
+# -----------------------------------------------------------------------------
+formal_grammar_ebnf:
+  - "document      = header, nl, { line } ;"
+  - "header        = '@lnd', ws, version ;"
+  - "line          = empty | comment | kv_line | list_item | indented_kv ;"
+  - "kv_line       = key, ':', ws_opt, scalar_or_empty ;"
+  - "indented_kv   = indent, key, ':', ws_opt, scalar_or_empty ;"
+  - "list_item     = indent, '- ', scalar ;"
+  - "key           = snake ;"
+  - "snake         = ( 'a'..'z' | '0'..'9' | '_' ) , { 'a'..'z' | '0'..'9' | '_' } ;"
+  - "scalar_or_empty = scalar | '' ;"
+  - "scalar        = bool | null | number | text ;"
+  - "bool          = 'true' | 'false' ;"
+  - "null          = 'null' ;"
+  - "number        = int | float ;"
+  - "indent        = '  ', { '  ' } ;"
+
+# -----------------------------------------------------------------------------
+# 5) CANONICAL NORMALIZATION
+# -----------------------------------------------------------------------------
+canonicalization:
+  newline: "\n"
+  trim_trailing_spaces: true
+  terminal_newline_required: true
+  key_order: required
+  enum_case: lower_snake
+  booleans: [true, false]
+  null_literal: null
+  indentation: "2_spaces_only"
+  preserve_comments: false
+  sort_rules:
+    root_keys: "follow_shape_required_keys_then_optional_lexicographic"
+    object_optional_keys: "lexicographic"
+    list_items: "preserve_original_order"
+
+# -----------------------------------------------------------------------------
+# 6) VERSIONING + COMPATIBILITY
+# -----------------------------------------------------------------------------
+versioning:
+  current: 0.2
+  compatibility_rules:
+    - "Patch changes MAY add optional keys only."
+    - "Minor changes MAY add new shapes/enums with backward compatibility."
+    - "Breaking changes MUST bump major and provide migration map."
+  migration_required_sections:
+    - from_version
+    - to_version
+    - breaking_changes
+    - automated_rewrite_rules
+
+# -----------------------------------------------------------------------------
+# 7) SHAPES (DOC PROFILE)
+# -----------------------------------------------------------------------------
+shape_task_doc:
+  required_keys_in_order:
+    - lnd_version
+    - kind
+    - id
+    - title
+    - priority
+    - owner_focus
+    - status
+    - updated_at_utc
+    - goal
+    - inputs
+    - constraints
+    - steps
+    - tests
+    - done_when
+  optional_keys:
+    - refs
+    - checksum
+  key_contract:
+    lnd_version: "enum[0.2]"
+    kind: "enum[task]"
+    id: "string(regex=^[A-Z0-9-]+$)"
+    title: "string(max=120)"
+    priority: "enum[P0|P1|P2]"
+    owner_focus: "enum[language-core|ecosystem|practical-value|validation|interpreter-runtime|integration]"
+    status: "enum[open|in_progress|blocked|done]"
+    updated_at_utc: "string(regex=^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$)"
+    goal: "string(max=240)"
+    inputs: "list[string(max=160)]"
+    constraints: "list[string(max=120)]"
+    steps: "list[string(max=180)]"
+    tests: "list[string(max=220)]"
+    done_when: "list[string(max=180)]"
+    refs: "list[string(regex=^[A-Z0-9-]+$)]"
+    checksum: "string(regex=^[a-f0-9]{64}$)"
+
+shape_decision_doc:
+  required_keys_in_order:
+    - lnd_version
+    - kind
+    - id
+    - topic
+    - decision
+    - updated_at_utc
+    - rationale
+    - tradeoffs
+    - followups
+  key_contract:
+    lnd_version: "enum[0.2]"
+    kind: "enum[decision]"
+    id: "string(regex=^[A-Z0-9-]+$)"
+    topic: "string(max=120)"
+    decision: "string(max=240)"
+    updated_at_utc: "string(regex=^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$)"
+    rationale: "list[string(max=180)]"
+    tradeoffs: "list[string(max=180)]"
+    followups: "list[string(max=180)]"
+
+# -----------------------------------------------------------------------------
+# 8) ERROR CODES
+# -----------------------------------------------------------------------------
 error_codes:
+  LND_PARSE_001:
+    reason: invalid_header
+    example: "missing '@lnd <version>' header"
+  LND_PARSE_002:
+    reason: invalid_indentation
+    example: "tab character detected"
+  LND_PARSE_003:
+    reason: duplicate_key
+    example: "key 'kind' repeated"
+  LND_PARSE_004:
+    reason: invalid_key_name
+    example: "key contains uppercase character"
+  LND_PARSE_005:
+    reason: hidden_unicode_control
+    example: "zero-width control character detected"
+  LND_SCHEMA_001:
+    reason: missing_required_key
+    example: "task missing 'goal'"
+  LND_SCHEMA_002:
+    reason: required_key_order_violation
+    example: "'status' appears before 'owner_focus'"
+  LND_SCHEMA_003:
+    reason: invalid_enum_value
+    example: "priority=P3"
+  LND_SCHEMA_004:
+    reason: regex_mismatch
+    example: "id 'eco-01' not matching ^[A-Z0-9-]+$"
+  LND_SCHEMA_005:
+    reason: string_too_long
+    example: "title length exceeds max=120"
+  LND_SCHEMA_006:
+    reason: unknown_shape
+    example: "kind='note' not defined"
+  LND_CANON_001:
+    reason: non_canonical_newline
+    example: "CRLF detected; expected LF"
   ERR_PROFILE_MISMATCH:
     reason: header_extension_family_mismatch
-    example: "file=.lnd but header=@lnc 0.2"
-  ERR_DOC_IN_CODE_FILE:
-    reason: doc_shape_detected_in_lnc
-    example: "task/decision doc fields in .lnc file"
-  ERR_CODE_IN_DOC_FILE:
-    reason: executable_shape_detected_in_lnd
-    example: "code IR payload in .lnd file"
+    example: "file=.lnd but header=@lnc 0.1"
 
+# -----------------------------------------------------------------------------
+# 9) INTERPRETER + LINT CONTRACT
+# -----------------------------------------------------------------------------
+interpreter_contract:
+  - Parse as strict key/value tree.
+  - Reject parse violations with LND_PARSE_* only.
+  - Validate known shapes with LND_SCHEMA_* only.
+  - Enforce required key order for known shapes.
+  - Never infer missing required fields.
+  - Ignore comments semantically.
+  - Optional absent fields evaluate to null.
+  - Canonical formatter MUST produce byte-stable output for same input tree.
+
+lint_rules:
+  forbidden_phrases:
+    - "it would be great"
+    - "please note that"
+    - "in order to"
+  max_words_per_line_default: 24
+  require_imperative_steps: true
+  require_ids_for_cross_refs: true
+
+# -----------------------------------------------------------------------------
+# 10) CONFORMANCE SUITE
+# -----------------------------------------------------------------------------
+conformance_suite:
+  valid_dir: docs/lnc-fixtures/valid
+  invalid_dir: docs/lnc-fixtures/invalid
+  required_fixture_minimum:
+    valid: 5
+    invalid: 5
+
+# -----------------------------------------------------------------------------
+# 11) EXAMPLES
+# -----------------------------------------------------------------------------
 example_doc_file:
   filename: docs/WORKFLOW_RULES.lnd
-  header: "@lnd 0.1"
-
-example_code_file:
-  filename: runtime/sample_program.lnc
-  header: "@lnc 0.1"
+  header: "@lnd 0.2"

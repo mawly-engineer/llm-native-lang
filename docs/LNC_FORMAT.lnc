@@ -1,0 +1,104 @@
+@lnc 0.1
+kind: format_spec
+id: LNC-FORMAT-001
+status: draft
+updated_at_utc: 2026-03-07T12:21:30Z
+purpose: Deterministic code/executable artifact container format.
+
+profile:
+  name: lnc_code
+  extension: .lnc
+  header: "@lnc <version>"
+  applies_to:
+    - executable_language_units
+    - intermediate_representation
+    - machine_executable_artifacts
+  does_not_apply_to:
+    - project_docs
+    - decision_records
+    - process_contracts
+
+syntax_rules:
+  encoding: utf-8
+  newline: "\n"
+  indentation: "2_spaces_only"
+  tabs_allowed: false
+  key_regex: "^[a-z0-9_]+$"
+  duplicate_keys: forbidden
+  comments: "# comment"
+  key_value_delimiter: ":"
+  list_item_prefix: "- "
+
+canonicalization:
+  newline: "\n"
+  trim_trailing_spaces: true
+  terminal_newline_required: true
+  key_order: required
+  preserve_comments: false
+
+shape_code_unit:
+  required_keys_in_order:
+    - lnc_version
+    - kind
+    - id
+    - module
+    - entry
+    - source_lang
+    - source
+    - ir_version
+    - deterministic_flags
+    - tests
+  optional_keys:
+    - refs
+    - checksum
+  key_contract:
+    lnc_version: "enum[0.1]"
+    kind: "enum[code_unit]"
+    id: "string(regex=^[A-Z0-9-]+$)"
+    module: "string(regex=^[a-z0-9_./-]+$)"
+    entry: "string(regex=^[a-zA-Z_][a-zA-Z0-9_]*$)"
+    source_lang: "enum[minilang|ir]"
+    source: "string(max=24000)"
+    ir_version: "string(regex=^v[0-9]+(\\.[0-9]+)?$)"
+    deterministic_flags: "list[enum[stable_parse|stable_eval|stable_replay|stable_patch_order]]"
+    tests: "list[string(max=220)]"
+    refs: "list[string(regex=^[A-Z0-9-]+$)]"
+    checksum: "string(regex=^[a-f0-9]{64}$)"
+
+error_codes:
+  LNC_PARSE_001:
+    reason: invalid_header
+    example: "missing '@lnc <version>' header"
+  LNC_PARSE_002:
+    reason: invalid_indentation
+    example: "tab character detected"
+  LNC_PARSE_003:
+    reason: duplicate_key
+    example: "key repeated"
+  LNC_SCHEMA_001:
+    reason: missing_required_key
+    example: "code unit missing source"
+  LNC_SCHEMA_002:
+    reason: required_key_order_violation
+    example: "entry appears before module"
+  LNC_SCHEMA_003:
+    reason: invalid_enum_value
+    example: "source_lang=python"
+  ERR_PROFILE_MISMATCH:
+    reason: header_extension_family_mismatch
+    example: "file=.lnc but header=@lnd 0.2"
+  ERR_DOC_IN_CODE_FILE:
+    reason: doc_shape_detected_in_lnc
+    example: "task/decision fields in .lnc"
+
+interpreter_contract:
+  - Parse as strict key/value tree.
+  - Validate only code profile shapes in this spec.
+  - Reject doc-profile shapes in .lnc with ERR_DOC_IN_CODE_FILE.
+  - Never infer missing required fields.
+  - Canonical formatter MUST produce byte-stable output for same input tree.
+
+example_code_file:
+  filename: runtime/sample_program.lnc
+  header: "@lnc 0.1"
+  shape: code_unit
