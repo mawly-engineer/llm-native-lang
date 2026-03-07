@@ -4,6 +4,7 @@ id: LNC-FORMAT-001
 status: draft
 updated_at_utc: 2026-03-07T12:08:00Z
 purpose: Deterministic, low-noise, LLM-first document format.
+scope_profile: lnc_doc
 
 # -----------------------------------------------------------------------------
 # 1) DESIGN GOALS (normative)
@@ -20,6 +21,30 @@ non_goals:
   - markdown_rendering
   - rich_text
   - ambiguous_natural_language
+
+# -----------------------------------------------------------------------------
+# 1.1) SCOPE BOUNDARY (normative)
+# -----------------------------------------------------------------------------
+scope_boundary:
+  this_spec_applies_to:
+    - project_docs
+    - task_definitions
+    - decision_records
+    - process_contracts
+  this_spec_does_not_apply_to:
+    - runtime_state_payloads
+    - executable_language_ir
+    - ui_patch_transport
+
+profile_naming:
+  active_profile:
+    name: lnc_doc
+    file_extension: ".lnc"
+    intent: "Documentation and project definition contracts only."
+  reserved_future_profiles:
+    - name: lnc_ir
+      file_extension: ".lnci"
+      intent: "Executable/intermediate-representation artifacts (not part of this spec)."
 
 # -----------------------------------------------------------------------------
 # 2) CORE SYNTAX (normative)
@@ -229,6 +254,7 @@ interpreter_contract:
   - Ignore comments semantically.
   - Optional absent fields evaluate to null.
   - Canonical formatter MUST produce byte-stable output for same input tree.
+  - Treat this spec as lnc_doc only; do not interpret as runtime IR contract.
 
 # -----------------------------------------------------------------------------
 # 9) LINT RULES (token-efficiency + clarity)
