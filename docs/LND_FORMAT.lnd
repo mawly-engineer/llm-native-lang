@@ -76,6 +76,16 @@ string_rules:
   max_length_default: 240
   quote_style: optional
 
+code_example_representation:
+  default_mode: reference
+  allowed_modes:
+    - reference
+    - inline_lines
+  constraints:
+    - "Use reference mode for examples longer than 20 lines."
+    - "Inline examples MUST use line arrays, not multiline strings."
+    - "Reference targets for executable examples SHOULD be .lnc files."
+
 # -----------------------------------------------------------------------------
 # 4) FORMAL GRAMMAR (EBNF)
 # -----------------------------------------------------------------------------
@@ -150,6 +160,7 @@ shape_task_doc:
   optional_keys:
     - refs
     - checksum
+    - code_examples
   key_contract:
     lnd_version: "enum[0.2]"
     kind: "enum[task]"
@@ -167,6 +178,27 @@ shape_task_doc:
     done_when: "list[string(max=180)]"
     refs: "list[string(regex=^[A-Z0-9-]+$)]"
     checksum: "string(regex=^[a-f0-9]{64}$)"
+    code_examples: "list[code_example_object]"
+
+code_example_object_contract:
+  required_keys_in_order:
+    - id
+    - mode
+    - language
+  optional_keys:
+    - ref
+    - lines
+    - caption
+  key_contract:
+    id: "string(regex=^[A-Z0-9-]+$)"
+    mode: "enum[reference|inline_lines]"
+    language: "enum[lnc|minilang|python|bash|json|yaml|text]"
+    ref: "string(regex=^[a-zA-Z0-9_./-]+$)"
+    lines: "list[string(max=240)]"
+    caption: "string(max=160)"
+  mode_rules:
+    - "mode=reference requires ref and forbids lines"
+    - "mode=inline_lines requires lines and forbids ref"
 
 shape_decision_doc:
   required_keys_in_order:
@@ -227,6 +259,12 @@ error_codes:
   LND_SCHEMA_006:
     reason: unknown_shape
     example: "kind='note' not defined"
+  LND_SCHEMA_007:
+    reason: code_example_mode_violation
+    example: "mode=reference without ref"
+  LND_SCHEMA_008:
+    reason: inline_code_uses_multiline_string
+    example: "inline example provided as single multiline scalar"
   LND_CANON_001:
     reason: non_canonical_newline
     example: "CRLF detected; expected LF"
@@ -245,6 +283,7 @@ interpreter_contract:
   - Never infer missing required fields.
   - Ignore comments semantically.
   - Optional absent fields evaluate to null.
+  - Validate code_examples by mode rules (reference vs inline_lines).
   - Canonical formatter MUST produce byte-stable output for same input tree.
 
 lint_rules:
@@ -260,8 +299,8 @@ lint_rules:
 # 10) CONFORMANCE SUITE
 # -----------------------------------------------------------------------------
 conformance_suite:
-  valid_dir: docs/lnc-fixtures/valid
-  invalid_dir: docs/lnc-fixtures/invalid
+  valid_dir: docs/lnd-fixtures/valid
+  invalid_dir: docs/lnd-fixtures/invalid
   required_fixture_minimum:
     valid: 5
     invalid: 5
