@@ -9,7 +9,7 @@ operating_mode:
   one_backlog_item_per_cycle: true
 
 active_selection:
-  active_primary: language-core
+  active_primary: interpreter-runtime
   active_secondary: validation
 
 routing_rules_in_priority_order:

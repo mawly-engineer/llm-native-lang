@@ -42,7 +42,7 @@ buckets:
       - id: LNG-RT-02
         title: Environment/scope model with lexical bindings
         priority: P1
-        status: open
+        status: done
       - id: LNG-RT-03
         title: Structured runtime errors (code/message/location)
         priority: P1
