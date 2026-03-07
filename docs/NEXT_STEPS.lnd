@@ -112,3 +112,9 @@ queue:
     goal: Create docs/SPEC.lnd from docs/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
+  - step_id: STEP-054
+    backlog_reference: LNG-ECO-08
+    owner_focus: ecosystem
+    goal: Create docs/RUNTIME.lnd from docs/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
+    status: open
+
