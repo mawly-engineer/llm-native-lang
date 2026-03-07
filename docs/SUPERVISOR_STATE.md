@@ -8,14 +8,14 @@ state:
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-05
   active_next_step_id: STEP-051
-  current_stage: validate
+  current_stage: execute
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: staged_create_success
+  last_stage_status: staged_validate_approved
   last_error: null
 
 stage_transition_rules:
