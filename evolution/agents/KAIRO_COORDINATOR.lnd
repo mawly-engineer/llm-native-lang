@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-07T14:36:00Z
+updated_at_utc: 2026-03-07T14:43:00Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -16,6 +16,14 @@ hard_rules:
   - one_meaningful_unit_per_cycle
   - preserve_staged_order
   - append_cycle_log_every_cycle
+  - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
+
+sot_change_execution_rule:
+  separate_commit_preferred: true
+  required_when_sot_changes_detected:
+    - update_sot_file_timestamp_or_revision
+    - append_governance_note_to_cycle_log
+    - run_lnd_and_lnc_validators
 
 staged_order:
   - create

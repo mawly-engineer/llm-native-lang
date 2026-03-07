@@ -2,7 +2,8 @@
 kind: project_entry
 id: LNG-ENTRY-001
 status: active
-updated_at_utc: 2026-03-07T14:13:00Z
+revision: 2
+updated_at_utc: 2026-03-07T14:43:00Z
 purpose: Single entry file for project control with bounded file topology.
 
 entry_policy:
@@ -69,6 +70,20 @@ change_workflow:
   - update target domain file (broad first, split only if required)
   - run lnd/lnc validators
   - append cycle/state changes only in existing control files
+
+source_of_truth_governance:
+  mutable_during_project: true
+  policy:
+    - "Source-of-truth files MAY be changed when resolving contradictions, improving determinism, or reducing process risk."
+    - "Do not change source-of-truth semantics silently inside unrelated implementation runs."
+    - "Apply source-of-truth changes as explicit governance changes (separate commit preferred)."
+  required_on_each_sot_change:
+    - update_updated_at_utc
+    - increment_local_version_or_revision_field
+    - add_changelog_entry_in_evolution/CYCLE_LOG.lnd
+    - verify_backward_compatibility_or_add_migration_note
+  run_safety_rule:
+    - "If a staged flow is active, avoid breaking key/schema changes to files used by that active flow unless migration steps are included in the same cycle."
 
 validator_targets:
   lnd:
