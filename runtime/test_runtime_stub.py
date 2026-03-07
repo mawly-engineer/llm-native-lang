@@ -563,6 +563,45 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(len(modules), 1)
         self.assertEqual(modules[0]["attrs"]["language.result"], "2")
 
+    def test_execute_program_source_emits_ui_timeline_artifact_hooks(self) -> None:
+        self.rt.execute_program_source("let x = 7 in x")
+
+        self.assertEqual(self.rt.ui_head, "u-0")
+        self.assertEqual(
+            self.rt.replay_ui_timeline(),
+            [
+                {
+                    "op": "insert",
+                    "path": "/artifacts/language-runs/language.run",
+                    "value": {"kind": "language-run", "node_id": "language.run"},
+                },
+                {
+                    "op": "set_prop",
+                    "path": "/artifacts/language-runs/language.run",
+                    "key": "result",
+                    "value": "7",
+                },
+                {
+                    "op": "set_prop",
+                    "path": "/artifacts/language-runs/language.run",
+                    "key": "result_type",
+                    "value": "int",
+                },
+                {
+                    "op": "set_prop",
+                    "path": "/artifacts/language-runs/language.run",
+                    "key": "source",
+                    "value": "let x = 7 in x",
+                },
+                {
+                    "op": "set_prop",
+                    "path": "/artifacts/language-runs/language.run",
+                    "key": "status",
+                    "value": "ok",
+                },
+            ],
+        )
+
     def test_execute_program_source_parse_errors_are_structured_and_atomic(self) -> None:
         with self.assertRaises(PatchError) as ctx:
             self.rt.execute_program_source("let x =")

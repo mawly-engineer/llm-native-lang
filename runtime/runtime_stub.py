@@ -1062,6 +1062,22 @@ class KairoRuntime:
             return str(value)
         return repr(value)
 
+    def _build_language_run_ui_ops(
+        self,
+        run_node_id: str,
+        source: str,
+        result: Any,
+        result_type: str,
+    ) -> List[Dict[str, Any]]:
+        run_path = f"/artifacts/language-runs/{run_node_id}"
+        return [
+            {"op": "insert", "path": run_path, "value": {"kind": "language-run", "node_id": run_node_id}},
+            {"op": "set_prop", "path": run_path, "key": "source", "value": source},
+            {"op": "set_prop", "path": run_path, "key": "result", "value": self._serialize_runtime_value(result)},
+            {"op": "set_prop", "path": run_path, "key": "result_type", "value": result_type},
+            {"op": "set_prop", "path": run_path, "key": "status", "value": "ok"},
+        ]
+
     def build_program_run_patch(
         self,
         source: str,
@@ -1084,12 +1100,14 @@ class KairoRuntime:
 
         node_payload = {"id": run_node_id, "type": "LanguageRun"}
         op_kind = "replace_node" if self._node_exists(run_node_id) else "add_node"
+        result_type = type(result).__name__
+        serialized_result = self._serialize_runtime_value(result)
 
         attrs = {
             "language.source": source,
             "language.ast_kind": ast["kind"],
-            "language.result": self._serialize_runtime_value(result),
-            "language.result_type": type(result).__name__,
+            "language.result": serialized_result,
+            "language.result_type": result_type,
             "language.status": "ok",
         }
 
@@ -1101,6 +1119,20 @@ class KairoRuntime:
                     "value": {"node_id": run_node_id, "key": key, "value": attrs[key]},
                 }
             )
+
+        ops.append(
+            {
+                "op": "ui_patch",
+                "value": {
+                    "ops": self._build_language_run_ui_ops(
+                        run_node_id=run_node_id,
+                        source=source,
+                        result=result,
+                        result_type=result_type,
+                    )
+                },
+            }
+        )
 
         return {
             "patch_id": patch_id,

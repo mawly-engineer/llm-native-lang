@@ -74,7 +74,7 @@ buckets:
       - id: LNG-INT-02
         title: UI/timeline hooks for language-run artifacts
         priority: P1
-        status: open
+        status: done
       - id: LNG-INT-03
         title: End-to-end deterministic replay tests
         priority: P1
