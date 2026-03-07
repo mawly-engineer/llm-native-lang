@@ -1,7 +1,7 @@
 version: 1
 document: AGENT_ROUTER
 purpose: Route the single coordinator to the correct specialist focus each cycle.
-updated_at_utc: "2026-03-07T00:15:00Z"
+updated_at_utc: "2026-03-07T02:05:30Z"
 
 operating_mode:
   scheduler_model: single_coordinator
@@ -9,8 +9,8 @@ operating_mode:
   one_backlog_item_per_cycle: true
 
 active_selection:
-  active_primary: language-core
-  active_secondary: validation
+  active_primary: validation
+  active_secondary: language-core
 
 routing_rules_in_priority_order:
   - id: route_integration_on_e2e_red
