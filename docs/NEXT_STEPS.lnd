@@ -130,3 +130,9 @@ queue:
     goal: Create docs/PATCH_FORMAT.lnd from docs/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
+  - step_id: STEP-057
+    backlog_reference: LNG-ECO-11
+    owner_focus: ecosystem
+    goal: Create docs/UI_DIFF_PROTOCOL.lnd from docs/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
+    status: open
+
