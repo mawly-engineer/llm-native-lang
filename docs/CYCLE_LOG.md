@@ -450,3 +450,138 @@ entries:
     tests: []
     commit: null
     blockers: []
+
+  - cycle_id: 74
+    timestamp_utc: "2026-03-07T09:42:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-05
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
+    commit: null
+    blockers: []
+
+  - cycle_id: 75
+    timestamp_utc: "2026-03-07T09:57:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-06
+    status: staged_create_success
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 76
+    timestamp_utc: "2026-03-07T10:12:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-06
+    status: staged_validate_approved
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 77
+    timestamp_utc: "2026-03-07T10:27:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-06
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
+    commit: null
+    blockers: []
+
+  - cycle_id: 78
+    timestamp_utc: "2026-03-07T10:42:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-07
+    status: staged_create_success
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 79
+    timestamp_utc: "2026-03-07T10:57:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-07
+    status: staged_validate_approved
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 80
+    timestamp_utc: "2026-03-07T11:03:32Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-07
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
+    commit: null
+    blockers: []
+
+  - cycle_id: 81
+    timestamp_utc: "2026-03-07T11:07:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-08
+    status: staged_create_success
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 82
+    timestamp_utc: "2026-03-07T11:12:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-08
+    status: staged_validate_approved
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 83
+    timestamp_utc: "2026-03-07T11:17:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-08
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (41 tests, OK)"
+    commit: null
+    blockers: []
+
+  - cycle_id: 84
+    timestamp_utc: "2026-03-07T11:24:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-09
+    status: staged_create_success
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 85
+    timestamp_utc: "2026-03-07T11:29:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-09
+    status: staged_validate_approved
+    tests: []
+    commit: null
+    blockers: []
+
+  - cycle_id: 86
+    timestamp_utc: "2026-03-07T11:34:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-09
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_grammar_contract (10 tests, OK)"
+    commit: null
+    blockers: []

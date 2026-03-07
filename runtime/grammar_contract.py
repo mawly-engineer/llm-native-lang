@@ -1,6 +1,6 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call.
+Scope: expr, let, if, fn, call, unary negation, logical and/or.
 """
 
 from __future__ import annotations
@@ -15,13 +15,16 @@ GRAMMAR_VERSION = "1.0.0"
 GRAMMAR_CONTRACT = {
     "version": GRAMMAR_VERSION,
     "start": "expr",
-    "nonterminals": ["expr", "let", "if", "fn", "call", "atom"],
+    "nonterminals": ["expr", "let", "if", "fn", "logical_or", "logical_and", "call", "unary", "atom"],
     "productions": [
-        "expr -> let | if | fn | call | atom",
+        "expr -> let | if | fn | logical_or",
         "let -> 'let' IDENT '=' expr 'in' expr",
         "if -> 'if' expr 'then' expr 'else' expr",
         "fn -> 'fn' '(' params? ')' '=>' expr",
+        "logical_or -> logical_and ('or' logical_and)*",
+        "logical_and -> unary ('and' unary)*",
         "call -> IDENT '(' args? ')'",
+        "unary -> '-' unary | call | atom",
         "atom -> IDENT | NUMBER | '(' expr ')'",
         "params -> IDENT (',' IDENT)*",
         "args -> expr (',' expr)*",
@@ -57,7 +60,7 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token("ARROW", "=>", i, i + 2))
             i += 2
             continue
-        if ch in "(),=":
+        if ch in "(),=-":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -73,7 +76,7 @@ def _tokenize(source: str) -> List[Token]:
             while j < len(source) and (source[j].isalnum() or source[j] == "_"):
                 j += 1
             ident = source[i:j]
-            if ident in {"let", "in", "if", "then", "else", "fn"}:
+            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or"}:
                 tokens.append(Token("KW", ident, i, j))
             else:
                 tokens.append(Token("IDENT", ident, i, j))
@@ -123,7 +126,7 @@ class _Parser:
             return self._if()
         if tok.kind == "KW" and tok.value == "fn":
             return self._fn()
-        return self._call_or_atom()
+        return self._logical_or()
 
     def _let(self) -> dict[str, Any]:
         start = self._eat("KW", "let").start
@@ -163,6 +166,49 @@ class _Parser:
         self._eat("ARROW", "=>")
         body = self._expr()
         return self._with_span("fn", start, body["span"]["end"], params=params, body=body)
+
+    def _logical_or(self) -> dict[str, Any]:
+        node = self._logical_and()
+        while self._peek().kind == "KW" and self._peek().value == "or":
+            self._eat("KW", "or")
+            right = self._logical_and()
+            node = self._with_span(
+                "logical_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                op="or",
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _logical_and(self) -> dict[str, Any]:
+        node = self._unary()
+        while self._peek().kind == "KW" and self._peek().value == "and":
+            self._eat("KW", "and")
+            right = self._unary()
+            node = self._with_span(
+                "logical_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                op="and",
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _unary(self) -> dict[str, Any]:
+        tok = self._peek()
+        if tok.kind == "-":
+            minus = self._eat("-", "-")
+            operand = self._unary()
+            return self._with_span(
+                "unary_neg",
+                minus.start,
+                operand["span"]["end"],
+                operand=operand,
+            )
+        return self._call_or_atom()
 
     def _call_or_atom(self) -> dict[str, Any]:
         atom = self._atom()

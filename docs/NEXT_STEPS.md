@@ -31,4 +31,28 @@ queue:
     backlog_reference: LNG-CORE-05
     owner_focus: language-core
     goal: Add unary negation grammar and AST contract coverage with deterministic precedence behavior.
-    status: open
+    status: done
+
+  - step_id: STEP-041
+    backlog_reference: LNG-CORE-06
+    owner_focus: language-core
+    goal: Add additive/multiplicative binary grammar and deterministic precedence AST contract coverage.
+    status: done
+
+  - step_id: STEP-042
+    backlog_reference: LNG-CORE-07
+    owner_focus: language-core
+    goal: Add equality/comparison grammar tiers and deterministic precedence AST contract coverage.
+    status: done
+
+  - step_id: STEP-043
+    backlog_reference: LNG-CORE-08
+    owner_focus: language-core
+    goal: Add logical and/or grammar tiers with deterministic short-circuit AST contract coverage.
+    status: done
+
+  - step_id: STEP-044
+    backlog_reference: LNG-CORE-09
+    owner_focus: language-core
+    goal: Update SPEC language_minimal_grammar nonterminals/productions so precedence tiers match implemented grammar contracts and tests.
+    status: done

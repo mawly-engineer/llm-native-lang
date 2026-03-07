@@ -44,6 +44,17 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("sum(1)"), env=env)
 
+    def test_unary_negation_requires_number_operand(self) -> None:
+        self.assertEqual(check_expr(parse_expr("-42")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("-true"))
+
+    def test_logical_and_or_require_bool_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr("true and false")), TYPE_BOOL)
+        self.assertEqual(check_expr(parse_expr("true or false")), TYPE_BOOL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1 and true"))
+
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x"))

@@ -22,6 +22,18 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("let x = 7 in let f = fn(x)=>x in f(3)")
         self.assertEqual(eval_expr(expr), 3)
 
+    def test_unary_negation_evaluates_operand(self) -> None:
+        expr = parse_expr("-inc(1)")
+        self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), -2)
+
+    def test_logical_short_circuit_and_skips_rhs_when_left_false(self) -> None:
+        expr = parse_expr("false and boom()")
+        self.assertFalse(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}))
+
+    def test_logical_short_circuit_or_skips_rhs_when_left_true(self) -> None:
+        expr = parse_expr("true or boom()")
+        self.assertTrue(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}))
+
     def test_function_arity_mismatch_raises_structured_error(self) -> None:
         expr = parse_expr("let f = fn(a,b)=>a in f(1)")
         with self.assertRaises(EvalError) as ctx:

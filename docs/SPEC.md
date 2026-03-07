@@ -22,15 +22,25 @@ language_minimal_grammar:
     - let
     - if
     - fn
+    - logical_or
+    - logical_and
     - call
+    - unary
     - atom
+    - params
+    - args
   productions:
-    - "expr -> let | if | fn | call | atom"
+    - "expr -> let | if | fn | logical_or"
     - "let -> 'let' IDENT '=' expr 'in' expr"
     - "if -> 'if' expr 'then' expr 'else' expr"
     - "fn -> 'fn' '(' params? ')' '=>' expr"
+    - "logical_or -> logical_and ('or' logical_and)*"
+    - "logical_and -> unary ('and' unary)*"
     - "call -> IDENT '(' args? ')'"
+    - "unary -> '-' unary | call | atom"
     - "atom -> IDENT | NUMBER | '(' expr ')'"
+    - "params -> IDENT (',' IDENT)*"
+    - "args -> expr (',' expr)*"
 
 non_goals:
   - human_first_prose_as_primary_system_interface

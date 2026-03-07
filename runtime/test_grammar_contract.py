@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "call", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "call", "unary", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "ea392c6090422de38b5940948962ccd092368a576bacd2dfa4d4369d9523199d",
+            "29a2ce742ba3d2d5a8b3bc21346264b90e03ee64d0bc6076386ba03a607a4222",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -39,6 +39,25 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "call")
         self.assertEqual(ast["callee"], "sum")
         self.assertEqual(len(ast["args"]), 2)
+
+    def test_parse_unary_negation_expression(self) -> None:
+        ast = parse_expr("-1")
+        self.assertEqual(ast["kind"], "unary_neg")
+        self.assertEqual(ast["operand"]["kind"], "number")
+
+    def test_unary_negation_wraps_call_for_precedence_safety(self) -> None:
+        ast = parse_expr("-sum(1)")
+        self.assertEqual(ast["kind"], "unary_neg")
+        self.assertEqual(ast["operand"]["kind"], "call")
+        self.assertEqual(ast["operand"]["callee"], "sum")
+
+    def test_parse_logical_and_or_with_precedence(self) -> None:
+        ast = parse_expr("true or false and true")
+        self.assertEqual(ast["kind"], "logical_bin")
+        self.assertEqual(ast["op"], "or")
+        self.assertEqual(ast["left"]["kind"], "ident")
+        self.assertEqual(ast["right"]["kind"], "logical_bin")
+        self.assertEqual(ast["right"]["op"], "and")
 
     def test_parser_emits_deterministic_source_spans(self) -> None:
         ast = parse_expr("let x = 1 in x")

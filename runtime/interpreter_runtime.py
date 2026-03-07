@@ -63,6 +63,8 @@ def eval_expr(node: dict[str, Any], env: Mapping[str, Any] | None = None) -> Any
         ) from exc
 
     root = Env()
+    root.set("false", False)
+    root.set("true", True)
     if env:
         for key in sorted(env.keys()):
             root.set(key, env[key])
@@ -78,6 +80,54 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
 
     if kind == "ident":
         return env.get(node["name"])
+
+    if kind == "unary_neg":
+        value = _eval(node["operand"], env)
+        if not isinstance(value, int):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"unary negation expects int, got {type(value).__name__}",
+                location={"node_kind": "unary_neg"},
+            )
+        return -value
+
+    if kind == "logical_bin":
+        op = node["op"]
+        if op not in {"and", "or"}:
+            raise EvalError(
+                code="E_RT_UNSUPPORTED_KIND",
+                message=f"unsupported logical op '{op}'",
+                location={"node_kind": "logical_bin", "op": op},
+            )
+        left = _eval(node["left"], env)
+        if not isinstance(left, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"logical {op} expects bool left operand, got {type(left).__name__}",
+                location={"node_kind": "logical_bin", "op": op, "side": "left"},
+            )
+        if op == "and":
+            if not left:
+                return False
+            right = _eval(node["right"], env)
+            if not isinstance(right, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"logical and expects bool right operand, got {type(right).__name__}",
+                    location={"node_kind": "logical_bin", "op": op, "side": "right"},
+                )
+            return right
+
+        if left:
+            return True
+        right = _eval(node["right"], env)
+        if not isinstance(right, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"logical or expects bool right operand, got {type(right).__name__}",
+                location={"node_kind": "logical_bin", "op": op, "side": "right"},
+            )
+        return right
 
     if kind == "let":
         value = _eval(node["value"], env)

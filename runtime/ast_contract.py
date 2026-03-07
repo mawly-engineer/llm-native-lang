@@ -49,6 +49,24 @@ AST_SCHEMA = {
                 "args": "expr[]",
             },
         },
+        "unary_neg": {
+            "required": ["kind", "span", "operand"],
+            "fields": {
+                "kind": "literal:unary_neg",
+                "span": "span",
+                "operand": "expr",
+            },
+        },
+        "logical_bin": {
+            "required": ["kind", "span", "op", "left", "right"],
+            "fields": {
+                "kind": "literal:logical_bin",
+                "span": "span",
+                "op": "literal:and|or",
+                "left": "expr",
+                "right": "expr",
+            },
+        },
         "ident": {
             "required": ["kind", "span", "name"],
             "fields": {
@@ -74,6 +92,8 @@ _AST_FINGERPRINT_SOURCE = [
     "if:kind,span,cond,then,else",
     "fn:kind,span,params,body",
     "call:kind,span,callee,args",
+    "unary_neg:kind,span,operand",
+    "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
     "number:kind,span,value",
 ]
@@ -160,6 +180,22 @@ def _validate_expr(node: Any) -> None:
             raise ASTValidationError("call.args must be a list")
         for arg in args:
             _validate_expr(arg)
+        return
+
+    if kind == "unary_neg":
+        _require_kind(node, "unary_neg")
+        _require_span(node, "unary_neg")
+        _validate_expr(node.get("operand"))
+        return
+
+    if kind == "logical_bin":
+        _require_kind(node, "logical_bin")
+        _require_span(node, "logical_bin")
+        op = node.get("op")
+        if op not in {"and", "or"}:
+            raise ASTValidationError("logical_bin.op must be 'and' or 'or'")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
         return
 
     if kind == "ident":

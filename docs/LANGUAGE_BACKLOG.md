@@ -38,7 +38,23 @@ buckets:
       - id: LNG-CORE-05
         title: Extend grammar contract with unary negation and precedence-safe AST node
         priority: P1
-        status: open
+        status: done
+      - id: LNG-CORE-06
+        title: Add additive/multiplicative binary expression grammar with deterministic precedence AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-07
+        title: Add equality/comparison binary expression grammar tiers with deterministic precedence AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-08
+        title: Add logical and/or grammar tiers with short-circuit AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-09
+        title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
+        priority: P1
+        status: done
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.

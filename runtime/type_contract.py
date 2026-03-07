@@ -69,6 +69,24 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.value: number literal must be int")
         return TYPE_NUMBER
 
+    if kind == "unary_neg":
+        operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
+        if operand_ty != TYPE_NUMBER:
+            raise TypeCheckError(f"{path}.operand: expected number, got {operand_ty}")
+        return TYPE_NUMBER
+
+    if kind == "logical_bin":
+        op = node.get("op")
+        if op not in {"and", "or"}:
+            raise TypeCheckError(f"{path}.op: expected 'and' or 'or', got {op}")
+        left_ty = _check(node.get("left"), ctx, f"{path}.left")
+        right_ty = _check(node.get("right"), ctx, f"{path}.right")
+        if left_ty != TYPE_BOOL:
+            raise TypeCheckError(f"{path}.left: expected bool, got {left_ty}")
+        if right_ty != TYPE_BOOL:
+            raise TypeCheckError(f"{path}.right: expected bool, got {right_ty}")
+        return TYPE_BOOL
+
     if kind == "ident":
         name = node.get("name")
         if not isinstance(name, str) or not name.strip():

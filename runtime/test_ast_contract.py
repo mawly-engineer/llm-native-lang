@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "ident", "number"],
+            ["let", "if", "fn", "call", "unary_neg", "logical_bin", "ident", "number"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "eea290ab19cb0fac65146079ae4592e03f71ea6e95af7f1a892cb103bb845afb",
+            "ba04f1a23d7762e427b7a42166f556cfa505fb77c1f4ac4175f943dfa42ba0dc",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -30,6 +30,8 @@ class ASTContractTests(unittest.TestCase):
             "sum(1,2)",
             "x",
             "42",
+            "-1",
+            "true and false",
         ]:
             validate_ast(parse_expr(source))
 
@@ -56,6 +58,11 @@ class ASTContractTests(unittest.TestCase):
             elif kind == "call":
                 for arg in node["args"]:
                     assert_spans(arg)
+            elif kind == "unary_neg":
+                assert_spans(node["operand"])
+            elif kind == "logical_bin":
+                assert_spans(node["left"])
+                assert_spans(node["right"])
 
         assert_spans(ast)
 
