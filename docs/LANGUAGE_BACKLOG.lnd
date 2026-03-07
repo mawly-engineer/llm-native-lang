@@ -87,7 +87,7 @@ buckets:
       - id: LNG-ECO-06
         title: Scaffold deterministic lnd_validate and lnc_validate tooling contracts with stable error codes
         priority: P0
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

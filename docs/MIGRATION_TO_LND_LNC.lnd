@@ -3,7 +3,7 @@ kind: migration_plan
 id: LNG-MIG-001
 title: Migrate repository to .lnd (docs) and .lnc (code)
 status: in_progress
-updated_at_utc: 2026-03-07T12:47:00Z
+updated_at_utc: 2026-03-07T12:48:00Z
 goal: Move project contracts and executable artifacts to split deterministic formats without breaking current delivery flow.
 
 principles:
@@ -107,6 +107,5 @@ minimal_source_of_truth_set:
     - "Legacy *.md files are compatibility mirrors only."
 
 next_actions:
-  - create LNG-ECO-06: validator tooling scaffold
   - wire CI gate after first validator pass
   - add explicit mirror/deprecation headers to legacy markdown docs
