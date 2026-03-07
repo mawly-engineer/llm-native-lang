@@ -103,8 +103,8 @@ minimal_source_of_truth_set:
     - docs/SUPERVISOR_PROFILES.lnd
     - docs/CYCLE_LOG.lnd
     - docs/MIGRATION_TO_LND_LNC.lnd
-    - docs/LND_FORMAT.lnd
-    - docs/LNC_PROFILE.lnd
+    - formats/lnd/LND_FORMAT.lnd
+    - formats/lnc/LNC_PROFILE.lnd
   rule:
     - "Coordinator MUST treat this set as authoritative."
     - "Legacy *.md files are compatibility mirrors only."

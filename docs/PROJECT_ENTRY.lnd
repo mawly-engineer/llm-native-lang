@@ -13,8 +13,8 @@ entry_policy:
 
 core_file_set:
   - docs/PROJECT_ENTRY.lnd
-  - docs/LND_FORMAT.lnd
-  - docs/LNC_PROFILE.lnd
+  - formats/lnd/LND_FORMAT.lnd
+  - formats/lnc/LNC_PROFILE.lnd
   - docs/MIGRATION_TO_LND_LNC.lnd
   - docs/AGENT_ROUTER.lnd
   - docs/LANGUAGE_BACKLOG.lnd

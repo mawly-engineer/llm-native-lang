@@ -9,7 +9,7 @@ status: open
 updated_at_utc: 2026-03-07T12:08:00Z
 goal: bad tab
 inputs:
-	- docs/LND_FORMAT.lnd
+	- formats/lnd/LND_FORMAT.lnd
 constraints:
   - deterministic_output
 steps:
