@@ -30,7 +30,7 @@ buckets:
       - id: LNG-CORE-03
         title: Type/check contracts for core nodes
         priority: P1
-        status: open
+        status: done
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
