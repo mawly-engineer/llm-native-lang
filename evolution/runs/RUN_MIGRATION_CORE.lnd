@@ -1,0 +1,28 @@
+@lnd 0.2
+kind: run_profile
+id: RUN-MIGRATION-CORE-001
+status: active
+updated_at_utc: 2026-03-07T14:36:00Z
+purpose: Execute migration-focused evolution cycles.
+
+mission:
+  - execute_migration_plan
+  - enforce_lnd_lnc_split
+  - minimize_file_sprawl
+
+primary_plan_file: evolution/MIGRATION_TO_LND_LNC.lnd
+
+execution_policy:
+  one_unit_per_cycle: true
+  prioritize_migration_items: true
+  use_legacy_markdown_as_source: false
+
+validator_commands:
+  - python3 scripts/lnd_validate.py evolution
+  - python3 scripts/lnc_validate.py runtime
+
+git_policy:
+  - git fetch --all --prune
+  - git checkout main
+  - git pull --ff-only origin main
+  - commit_and_push_if_changed

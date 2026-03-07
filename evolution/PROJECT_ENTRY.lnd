@@ -25,6 +25,11 @@ core_file_set:
   - evolution/SPEC.lnd
   - evolution/RUNTIME.lnd
 
+agent_and_cron_control_files:
+  - evolution/agents/KAIRO_COORDINATOR.lnd
+  - evolution/runs/RUN_MIGRATION_CORE.lnd
+  - evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
+
 broad_domain_files:
   contracts_domain:
     file: evolution/SPEC.lnd

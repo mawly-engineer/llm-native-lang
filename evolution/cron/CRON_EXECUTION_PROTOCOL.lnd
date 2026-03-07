@@ -1,0 +1,28 @@
+@lnd 0.2
+kind: cron_protocol
+id: CRON-PROTOCOL-001
+status: active
+updated_at_utc: 2026-03-07T14:37:00Z
+purpose: Define how cron-triggered agent runs are loaded from data files.
+
+protocol:
+  - cron_message_must_reference_agent_profile
+  - cron_message_must_reference_run_profile
+  - cron_message_must_reference_workspace_root
+  - agent_loads_files_and_executes_exact_profiles
+
+required_references:
+  agent_profile_file: evolution/agents/KAIRO_COORDINATOR.lnd
+  run_profile_file: evolution/runs/RUN_MIGRATION_CORE.lnd
+
+minimal_cron_prompt_template:
+  text: |
+    Load and execute profiles exactly:
+    - agent: evolution/agents/KAIRO_COORDINATOR.lnd
+    - run: evolution/runs/RUN_MIGRATION_CORE.lnd
+    Use workspace root: /home/node/.openclaw/workspace/llm-native-lang
+    Execute one cycle.
+
+ops_note:
+  - Later cron updates only need to change file paths in this template.
+  - Do not inline large rule blocks in cron payload once profile files exist.

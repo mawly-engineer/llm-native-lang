@@ -1,0 +1,57 @@
+@lnd 0.2
+kind: agent_profile
+id: AGENT-KAIRO-COORDINATOR-001
+status: active
+updated_at_utc: 2026-03-07T14:36:00Z
+purpose: Canonical rule set for the coordinator agent.
+
+workspace_root: /home/node/.openclaw/workspace/llm-native-lang
+
+hard_rules:
+  - use_absolute_paths_only
+  - no_tilde_or_relative_paths
+  - read_before_edit_or_write
+  - edit_retry_once_then_write_fallback
+  - verify_delta_after_write
+  - one_meaningful_unit_per_cycle
+  - preserve_staged_order
+  - append_cycle_log_every_cycle
+
+staged_order:
+  - create
+  - validate
+  - revise
+  - validate
+  - execute
+
+authoritative_inputs:
+  - evolution/PROJECT_ENTRY.lnd
+  - evolution/AGENT_ROUTER.lnd
+  - evolution/LANGUAGE_BACKLOG.lnd
+  - evolution/NEXT_STEPS.lnd
+  - evolution/SUPERVISOR_STATE.lnd
+  - evolution/SUPERVISOR_PROFILES.lnd
+  - evolution/CYCLE_LOG.lnd
+  - evolution/MIGRATION_TO_LND_LNC.lnd
+  - formats/lnd/LND_FORMAT.lnd
+  - formats/lnc/LNC_PROFILE.lnd
+
+output_schema_keys:
+  - selected_primary
+  - selected_secondary
+  - workflow_mode
+  - stage_before
+  - stage_after
+  - stage_result
+  - executed_backlog_item_id
+  - execution_status
+  - auto_expanded
+  - created_backlog_item_id
+  - created_next_step_id
+  - supervisor_validator_status
+  - supervisor_validator_score
+  - implementation_delta
+  - tests
+  - changed_files
+  - commit
+  - blockers
