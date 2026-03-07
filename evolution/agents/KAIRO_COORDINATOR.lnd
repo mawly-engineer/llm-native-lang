@@ -17,6 +17,12 @@ hard_rules:
   - preserve_staged_order
   - append_cycle_log_every_cycle
   - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
+  - keep_next_steps_compact
+
+next_steps_compaction_rule:
+  max_active_steps: 7
+  max_active_steps_per_stream: 1
+  done_step_retention: "keep only recent summary entries in NEXT_STEPS; full history in CYCLE_LOG"
 
 sot_change_execution_rule:
   separate_commit_preferred: true

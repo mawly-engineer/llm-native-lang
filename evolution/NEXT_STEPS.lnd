@@ -1,162 +1,30 @@
 @lnd 0.2
-version: 2
+version: 3
 document: NEXT_STEPS
-purpose: Ordered executable queue for upcoming coordinator cycles.
+purpose: Compact executable queue with low process overhead.
+updated_at_utc: 2026-03-07T14:50:00Z
 
-queue:
-  - step_id: STEP-036
-    backlog_reference: LNG-VAL-01
-    owner_focus: validation
-    goal: Add explicit profile-delta assertions for events_total.
-    status: done
+queue_policy:
+  max_active_steps: 7
+  max_active_steps_per_stream: 1
+  step_granularity: macro
+  micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
+  archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-  - step_id: STEP-037
-    backlog_reference: LNG-RT-02
-    owner_focus: interpreter-runtime
-    goal: Expand lexical scope model and deterministic tests.
-    status: done
-
-  - step_id: STEP-038
-    backlog_reference: LNG-INT-03
-    owner_focus: integration
-    goal: Add full end-to-end deterministic replay checks.
-    status: done
-
-  - step_id: STEP-039
-    backlog_reference: LNG-CORE-04
-    owner_focus: language-core
-    goal: Add deterministic AST source-span metadata for core nodes with contract tests.
-    status: done
-
-  - step_id: STEP-040
-    backlog_reference: LNG-CORE-05
-    owner_focus: language-core
-    goal: Add unary negation grammar and AST contract coverage with deterministic precedence behavior.
-    status: done
-
-  - step_id: STEP-041
-    backlog_reference: LNG-CORE-06
-    owner_focus: language-core
-    goal: Add additive/multiplicative binary grammar and deterministic precedence AST contract coverage.
-    status: done
-
-  - step_id: STEP-042
-    backlog_reference: LNG-CORE-07
-    owner_focus: language-core
-    goal: Add equality/comparison grammar tiers and deterministic precedence AST contract coverage.
-    status: done
-
-  - step_id: STEP-043
-    backlog_reference: LNG-CORE-08
-    owner_focus: language-core
-    goal: Add logical and/or grammar tiers with deterministic short-circuit AST contract coverage.
-    status: done
-
-  - step_id: STEP-044
-    backlog_reference: LNG-CORE-09
-    owner_focus: language-core
-    goal: Update SPEC language_minimal_grammar nonterminals/productions so precedence tiers match implemented grammar contracts and tests.
-    status: done
-
-  - step_id: STEP-045
-    backlog_reference: LNG-CORE-10
-    owner_focus: language-core
-    goal: Add true/false literal grammar + AST/type contract coverage with deterministic bool literal nodes.
-    status: done
-
-  - step_id: STEP-046
-    backlog_reference: LNG-ECO-01
-    owner_focus: ecosystem
-    goal: Publish README positioning + quickstart + deterministic guarantees summary with explicit scope boundaries.
-    status: done
-
-  - step_id: STEP-047
-    backlog_reference: LNG-PRX-01
-    owner_focus: practical-value
-    goal: Add one complete deterministic source->patch->replay example and verify reproducibility.
-    status: done
-
-  - step_id: STEP-048
-    backlog_reference: LNG-ECO-03
-    owner_focus: ecosystem
-    goal: Add contributor workflow templates including DoD gates for spec/tests/benchmarks.
-    status: done
-
-  - step_id: STEP-049
-    backlog_reference: LNG-ECO-02
-    owner_focus: ecosystem
-    goal: Add reproducible semver-tag release workflow with changelog contract and release-notes template.
-    status: done
-
-  - step_id: STEP-050
-    backlog_reference: LNG-ECO-04
-    owner_focus: ecosystem
-    goal: Add a deterministic onboarding verification script that checks quickstart commands and docs-link integrity in CI.
-    status: done
-
-  - step_id: STEP-051
-    backlog_reference: LNG-ECO-05
-    owner_focus: ecosystem
-    goal: Execute migration phase 1 by converting coordinator control docs to .lnd and leaving .md compatibility notes.
-    status: done
-
-  - step_id: STEP-052
-    backlog_reference: LNG-ECO-06
-    owner_focus: ecosystem
-    goal: Define validator toolchain scaffolding for .lnd/.lnc with deterministic commands, profiles, and stable error-code mapping.
-    status: done
-
-  - step_id: STEP-053
-    backlog_reference: LNG-ECO-07
-    owner_focus: ecosystem
-    goal: Create contracts/SPEC.lnd from evolution/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-054
-    backlog_reference: LNG-ECO-08
-    owner_focus: ecosystem
-    goal: Create contracts/RUNTIME.lnd from evolution/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-055
-    backlog_reference: LNG-ECO-09
-    owner_focus: ecosystem
-    goal: Create contracts/RUNTIME_CONTRACT.lnd from evolution/RUNTIME_CONTRACT.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-056
-    backlog_reference: LNG-ECO-10
-    owner_focus: ecosystem
-    goal: Create contracts/PATCH_FORMAT.lnd from evolution/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-057
-    backlog_reference: LNG-ECO-11
-    owner_focus: ecosystem
-    goal: Create contracts/UI_DIFF_PROTOCOL.lnd from evolution/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-058
-    backlog_reference: LNG-ECO-12
-    owner_focus: ecosystem
-    goal: Create contracts/TYPE_SYSTEM.lnd from evolution/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
-    status: done
-
-  - step_id: STEP-059
-    backlog_reference: LNG-ECO-13
-    owner_focus: ecosystem
-    goal: Create one runtime/examples .lnc code_unit artifact that passes scripts/lnc_validate.py and is referenced by migration phase-3 tracking.
-    status: done
-
-  - step_id: STEP-060
-    backlog_reference: LNG-ECO-14
-    owner_focus: ecosystem
-    goal: Add a second production-relevant runtime/examples .lnc code_unit artifact and reference it in an examples index so scripts/lnc_validate.py covers multiple canonical artifacts.
-    status: done
-
+active_queue:
   - step_id: STEP-061
     backlog_reference: LNG-ECO-15
     owner_focus: ecosystem
     goal: Add a third production-relevant .lnc code_unit artifact in runtime/examples and enforce a >=3 canonical-unit expectation in validator-covered tests.
     status: open
 
+recently_completed:
+  - step_id: STEP-060
+    backlog_reference: LNG-ECO-14
+    status: done
+  - step_id: STEP-059
+    backlog_reference: LNG-ECO-13
+    status: done
+  - step_id: STEP-058
+    backlog_reference: LNG-ECO-12
+    status: done
