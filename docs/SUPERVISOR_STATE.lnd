@@ -9,15 +9,15 @@ state:
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-14
   active_next_step_id: STEP-060
-  current_stage: validate
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: staged_create_success
-  last_error: null
+  last_stage_status: staged_validate_needs_revision
+  last_error: "runtime/examples contains only 1 validated .lnc artifact and no canonical examples index is present; LNG-ECO-14 requires a second production-relevant .lnc plus index wiring."
 
 stage_transition_rules:
   idle_to_create:
