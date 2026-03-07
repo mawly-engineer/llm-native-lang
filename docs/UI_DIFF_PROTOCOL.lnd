@@ -1,0 +1,43 @@
+@lnd 0.2
+kind: contract_spec
+id: UI-DIFF-PROTOCOL-001
+schema_id: llm_native_lang.ui_diff_protocol
+schema_version: 1.0.0
+status: active
+updated_at_utc: 2026-03-07T13:26:32Z
+project: llm-native-lang
+purpose: Deterministic UI diff operation schema, conflict handling, and ordering rules.
+
+allowed_ops:
+  - remove
+  - replace
+  - move
+  - insert
+  - set_prop
+
+op_schema:
+  remove:
+    required_fields:
+      - path
+  replace:
+    required_fields:
+      - path
+      - value
+  move:
+    required_fields:
+      - from
+      - path
+  insert:
+    required_fields:
+      - path
+      - value
+  set_prop:
+    required_fields:
+      - path
+      - key
+      - value
+
+conflict_and_order_rules:
+  - remove_path_masks_all_descendant_ops
+  - repeated_set_prop_same_path_and_key_uses_last_write_wins
+  - deterministic_sort_key_is_path_then_op_priority_then_optional_key
