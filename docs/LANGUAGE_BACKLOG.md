@@ -46,7 +46,7 @@ buckets:
       - id: LNG-RT-03
         title: Structured runtime errors (code/message/location)
         priority: P1
-        status: open
+        status: done
 
   validation:
     description: Tests, contracts, and property checks.

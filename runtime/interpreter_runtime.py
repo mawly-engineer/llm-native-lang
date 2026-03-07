@@ -5,11 +5,21 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping
 
-from runtime.ast_contract import validate_ast
+from runtime.ast_contract import ASTValidationError, validate_ast
 
 
 class EvalError(ValueError):
-    """Raised when evaluation fails."""
+    """Structured runtime error with machine-readable fields."""
+
+    def __init__(self, code: str, message: str, location: dict[str, Any] | None = None) -> None:
+        self.code = code
+        self.message = message
+        self.location = location or {}
+        super().__init__(self.__str__())
+
+    def __str__(self) -> str:
+        location_suffix = f" location={self.location}" if self.location else ""
+        return f"[{self.code}] {self.message}{location_suffix}"
 
 
 @dataclass(frozen=True)
@@ -35,11 +45,22 @@ class Env:
             return self.bindings[name]
         if self.parent is not None:
             return self.parent.get(name)
-        raise EvalError(f"unknown identifier '{name}'")
+        raise EvalError(
+            code="E_RT_UNKNOWN_IDENTIFIER",
+            message=f"unknown identifier '{name}'",
+            location={"phase": "env_lookup", "identifier": name},
+        )
 
 
 def eval_expr(node: dict[str, Any], env: Mapping[str, Any] | None = None) -> Any:
-    validate_ast(node)
+    try:
+        validate_ast(node)
+    except ASTValidationError as exc:
+        raise EvalError(
+            code="E_RT_AST_INVALID",
+            message=str(exc),
+            location={"phase": "ast_validation"},
+        ) from exc
 
     root = Env()
     if env:
@@ -73,13 +94,19 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
         return Closure(params=tuple(node["params"]), body=node["body"], env=env)
 
     if kind == "call":
-        callee = env.get(node["callee"])
+        callee_name = node["callee"]
+        callee = env.get(callee_name)
         args = [_eval(arg, env) for arg in node["args"]]
 
         if isinstance(callee, Closure):
             if len(args) != len(callee.params):
                 raise EvalError(
-                    f"arity mismatch for '{node['callee']}': expected {len(callee.params)}, got {len(args)}"
+                    code="E_RT_ARITY_MISMATCH",
+                    message=(
+                        f"arity mismatch for '{callee_name}': "
+                        f"expected {len(callee.params)}, got {len(args)}"
+                    ),
+                    location={"node_kind": "call", "callee": callee_name},
                 )
             call_env = callee.env.child()
             for param, value in zip(callee.params, args):
@@ -91,8 +118,20 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
             try:
                 return fn(*args)
             except TypeError as exc:
-                raise EvalError(str(exc)) from exc
+                raise EvalError(
+                    code="E_RT_HOST_CALL_ARITY",
+                    message=str(exc),
+                    location={"node_kind": "call", "callee": callee_name},
+                ) from exc
 
-        raise EvalError(f"'{node['callee']}' is not callable")
+        raise EvalError(
+            code="E_RT_NOT_CALLABLE",
+            message=f"'{callee_name}' is not callable",
+            location={"node_kind": "call", "callee": callee_name},
+        )
 
-    raise EvalError(f"unsupported kind '{kind}'")
+    raise EvalError(
+        code="E_RT_UNSUPPORTED_KIND",
+        message=f"unsupported kind '{kind}'",
+        location={"node_kind": kind},
+    )

@@ -21,19 +21,31 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("let x = 7 in let f = fn(x)=>x in f(3)")
         self.assertEqual(eval_expr(expr), 3)
 
-    def test_function_arity_mismatch_raises_error(self) -> None:
+    def test_function_arity_mismatch_raises_structured_error(self) -> None:
         expr = parse_expr("let f = fn(a,b)=>a in f(1)")
         with self.assertRaises(EvalError) as ctx:
             eval_expr(expr)
 
-        self.assertIn("arity mismatch", str(ctx.exception))
+        self.assertEqual(ctx.exception.code, "E_RT_ARITY_MISMATCH")
+        self.assertEqual(ctx.exception.location.get("node_kind"), "call")
+        self.assertIn("arity mismatch", ctx.exception.message)
 
-    def test_unknown_identifier_raises_error(self) -> None:
+    def test_unknown_identifier_raises_structured_error(self) -> None:
         expr = parse_expr("x")
         with self.assertRaises(EvalError) as ctx:
             eval_expr(expr)
 
-        self.assertIn("unknown identifier", str(ctx.exception))
+        self.assertEqual(ctx.exception.code, "E_RT_UNKNOWN_IDENTIFIER")
+        self.assertEqual(ctx.exception.location.get("identifier"), "x")
+        self.assertIn("unknown identifier", ctx.exception.message)
+
+    def test_invalid_ast_raises_structured_error(self) -> None:
+        invalid_expr = {"kind": "number", "value": "not-an-int"}
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(invalid_expr)
+
+        self.assertEqual(ctx.exception.code, "E_RT_AST_INVALID")
+        self.assertEqual(ctx.exception.location.get("phase"), "ast_validation")
 
 
 if __name__ == "__main__":
