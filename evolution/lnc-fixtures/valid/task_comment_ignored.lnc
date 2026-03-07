@@ -10,7 +10,7 @@ status: open
 updated_at_utc: 2026-03-07T12:08:00Z
 goal: Ensure parser ignores comments.
 inputs:
-  - docs/lnc-fixtures/valid/task_comment_ignored.lnc
+  - evolution/lnc-fixtures/valid/task_comment_ignored.lnc
 constraints:
   - deterministic_parse
 steps:

@@ -12,7 +12,7 @@ LNC_VALIDATE = REPO_ROOT / "scripts" / "lnc_validate.py"
 class FormatValidatorToolingTest(unittest.TestCase):
     def test_lnd_validator_passes_existing_docs(self) -> None:
         result = subprocess.run(
-            ["python3", str(LND_VALIDATE), str(REPO_ROOT / "docs")],
+            ["python3", str(LND_VALIDATE), str(REPO_ROOT / "evolution")],
             check=False,
             capture_output=True,
             text=True,
@@ -22,12 +22,13 @@ class FormatValidatorToolingTest(unittest.TestCase):
         self.assertIn("PASS validated", result.stdout)
 
     def test_lnc_validator_handles_empty_directory(self) -> None:
-        result = subprocess.run(
-            ["python3", str(LNC_VALIDATE), str(REPO_ROOT / "runtime")],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        with tempfile.TemporaryDirectory() as tmp:
+            result = subprocess.run(
+                ["python3", str(LNC_VALIDATE), tmp],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
 
         self.assertEqual(result.returncode, 0)
         self.assertIn("No .lnc files found.", result.stdout)

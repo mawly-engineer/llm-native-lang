@@ -89,27 +89,27 @@ buckets:
         priority: P0
         status: done
       - id: LNG-ECO-07
-        title: Migrate docs/SPEC.md to docs/SPEC.lnd with schema id/version and md mirror header
+        title: Migrate evolution/SPEC.md to evolution/SPEC.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-08
-        title: Migrate docs/RUNTIME.md to docs/RUNTIME.lnd with schema id/version and md mirror header
+        title: Migrate evolution/RUNTIME.md to evolution/RUNTIME.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-09
-        title: Migrate docs/RUNTIME_CONTRACT.md to docs/RUNTIME_CONTRACT.lnd with schema id/version and md mirror header
+        title: Migrate evolution/RUNTIME_CONTRACT.md to evolution/RUNTIME_CONTRACT.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-10
-        title: Migrate docs/PATCH_FORMAT.md to docs/PATCH_FORMAT.lnd with schema id/version and md mirror header
+        title: Migrate evolution/PATCH_FORMAT.md to evolution/PATCH_FORMAT.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-11
-        title: Migrate docs/UI_DIFF_PROTOCOL.md to docs/UI_DIFF_PROTOCOL.lnd with schema id/version and md mirror header
+        title: Migrate evolution/UI_DIFF_PROTOCOL.md to evolution/UI_DIFF_PROTOCOL.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-12
-        title: Migrate docs/TYPE_SYSTEM.md to docs/TYPE_SYSTEM.lnd with schema id/version and md mirror header
+        title: Migrate evolution/TYPE_SYSTEM.md to evolution/TYPE_SYSTEM.lnd with schema id/version and md mirror header
         priority: P0
         status: done
       - id: LNG-ECO-13

@@ -885,7 +885,7 @@ entries:
       - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
     commit: null
     blockers:
-      - "docs/PATCH_FORMAT.lnd is missing; migration target for LNG-ECO-10 is not yet created."
+      - "evolution/PATCH_FORMAT.lnd is missing; migration target for LNG-ECO-10 is not yet created."
 
   - cycle_id: 115
     timestamp_utc: "2026-03-07T13:16:00Z"
@@ -941,7 +941,7 @@ entries:
       - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
     commit: null
     blockers:
-      - "docs/UI_DIFF_PROTOCOL.lnd is missing; migration target for LNG-ECO-11 is not yet created."
+      - "evolution/UI_DIFF_PROTOCOL.lnd is missing; migration target for LNG-ECO-11 is not yet created."
 
   - cycle_id: 120
     timestamp_utc: "2026-03-07T13:26:32Z"
@@ -997,7 +997,7 @@ entries:
       - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
     commit: null
     blockers:
-      - "docs/TYPE_SYSTEM.lnd is missing; migration target for LNG-ECO-12 is not yet created."
+      - "evolution/TYPE_SYSTEM.lnd is missing; migration target for LNG-ECO-12 is not yet created."
 
   - cycle_id: 125
     timestamp_utc: "2026-03-07T13:36:00Z"

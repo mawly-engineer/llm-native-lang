@@ -299,8 +299,8 @@ lint_rules:
 # 10) CONFORMANCE SUITE
 # -----------------------------------------------------------------------------
 conformance_suite:
-  valid_dir: docs/lnd-fixtures/valid
-  invalid_dir: docs/lnd-fixtures/invalid
+  valid_dir: evolution/lnd-fixtures/valid
+  invalid_dir: evolution/lnd-fixtures/invalid
   required_fixture_minimum:
     valid: 5
     invalid: 5
@@ -309,5 +309,5 @@ conformance_suite:
 # 11) EXAMPLES
 # -----------------------------------------------------------------------------
 example_doc_file:
-  filename: docs/WORKFLOW_RULES.lnd
+  filename: evolution/WORKFLOW_RULES.lnd
   header: "@lnd 0.2"

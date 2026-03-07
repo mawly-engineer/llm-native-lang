@@ -40,7 +40,7 @@ def main() -> int:
     parser.add_argument(
         "target",
         nargs="?",
-        default="/home/node/.openclaw/workspace/llm-native-lang/docs",
+        default="/home/node/.openclaw/workspace/llm-native-lang/evolution",
         help="File or directory to validate.",
     )
     args = parser.parse_args()

@@ -15,7 +15,7 @@ examples:
       - LNG-ECO-14
 validator_commands:
   - python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime
-  - python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs
+  - python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution
 notes:
   - runtime/examples remains the canonical location for executable .lnc examples.
   - This index is documentation-only and must stay in .lnd.

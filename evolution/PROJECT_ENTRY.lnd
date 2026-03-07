@@ -12,22 +12,22 @@ entry_policy:
   split_threshold_rule: "Split only when one file contains multiple unrelated domains or exceeds maintainability constraints."
 
 core_file_set:
-  - docs/PROJECT_ENTRY.lnd
+  - evolution/PROJECT_ENTRY.lnd
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd
-  - docs/MIGRATION_TO_LND_LNC.lnd
-  - docs/AGENT_ROUTER.lnd
-  - docs/LANGUAGE_BACKLOG.lnd
-  - docs/NEXT_STEPS.lnd
-  - docs/SUPERVISOR_STATE.lnd
-  - docs/SUPERVISOR_PROFILES.lnd
-  - docs/CYCLE_LOG.lnd
-  - docs/SPEC.lnd
-  - docs/RUNTIME.lnd
+  - evolution/MIGRATION_TO_LND_LNC.lnd
+  - evolution/AGENT_ROUTER.lnd
+  - evolution/LANGUAGE_BACKLOG.lnd
+  - evolution/NEXT_STEPS.lnd
+  - evolution/SUPERVISOR_STATE.lnd
+  - evolution/SUPERVISOR_PROFILES.lnd
+  - evolution/CYCLE_LOG.lnd
+  - evolution/SPEC.lnd
+  - evolution/RUNTIME.lnd
 
 broad_domain_files:
   contracts_domain:
-    file: docs/SPEC.lnd
+    file: evolution/SPEC.lnd
     covers:
       - language_spec
       - type_system
@@ -35,20 +35,20 @@ broad_domain_files:
       - ui_diff_protocol
       - runtime_contract_references
   runtime_domain:
-    file: docs/RUNTIME.lnd
+    file: evolution/RUNTIME.lnd
     covers:
       - runtime_api
       - replay_semantics
       - deterministic_metrics
       - execution_bridge_notes
   planning_domain:
-    file: docs/LANGUAGE_BACKLOG.lnd
+    file: evolution/LANGUAGE_BACKLOG.lnd
     covers:
       - backlog_items
       - priorities
       - status
   execution_domain:
-    file: docs/NEXT_STEPS.lnd
+    file: evolution/NEXT_STEPS.lnd
     covers:
       - near_term_queue
       - mapped_steps
@@ -56,8 +56,8 @@ broad_domain_files:
 
 deprecation_policy:
   legacy_location: archive/legacy/
-  markdown_status: compatibility_only
-  markdown_rule: "No new source-of-truth content in .md files."
+  markdown_status: removed
+  markdown_rule: "Markdown files are removed from active project surface."
 
 change_workflow:
   - update PROJECT_ENTRY.lnd if core topology changes
@@ -67,10 +67,10 @@ change_workflow:
 
 validator_targets:
   lnd:
-    command: python3 scripts/lnd_validate.py docs
+    command: python3 scripts/lnd_validate.py evolution
   lnc:
     command: python3 scripts/lnc_validate.py runtime
 
 acceptance:
   - "Project control remains understandable from PROJECT_ENTRY.lnd + core_file_set only."
-  - "No uncontrolled file proliferation in docs/."
+  - "No uncontrolled file proliferation in evolution/."

@@ -109,37 +109,37 @@ queue:
   - step_id: STEP-053
     backlog_reference: LNG-ECO-07
     owner_focus: ecosystem
-    goal: Create docs/SPEC.lnd from docs/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/SPEC.lnd from evolution/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-054
     backlog_reference: LNG-ECO-08
     owner_focus: ecosystem
-    goal: Create docs/RUNTIME.lnd from docs/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/RUNTIME.lnd from evolution/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-055
     backlog_reference: LNG-ECO-09
     owner_focus: ecosystem
-    goal: Create docs/RUNTIME_CONTRACT.lnd from docs/RUNTIME_CONTRACT.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/RUNTIME_CONTRACT.lnd from evolution/RUNTIME_CONTRACT.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-056
     backlog_reference: LNG-ECO-10
     owner_focus: ecosystem
-    goal: Create docs/PATCH_FORMAT.lnd from docs/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/PATCH_FORMAT.lnd from evolution/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-057
     backlog_reference: LNG-ECO-11
     owner_focus: ecosystem
-    goal: Create docs/UI_DIFF_PROTOCOL.lnd from docs/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/UI_DIFF_PROTOCOL.lnd from evolution/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-058
     backlog_reference: LNG-ECO-12
     owner_focus: ecosystem
-    goal: Create docs/TYPE_SYSTEM.lnd from docs/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create evolution/TYPE_SYSTEM.lnd from evolution/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-059

@@ -17,12 +17,12 @@ phase_1_control_docs_first:
   objective: Convert coordinator-driving docs to .lnd first.
   status: done
   targets:
-    - docs/AGENT_ROUTER.md
-    - docs/LANGUAGE_BACKLOG.md
-    - docs/NEXT_STEPS.md
-    - docs/SUPERVISOR_STATE.md
-    - docs/SUPERVISOR_PROFILES.md
-    - docs/CYCLE_LOG.md
+    - evolution/AGENT_ROUTER.md
+    - evolution/LANGUAGE_BACKLOG.md
+    - evolution/NEXT_STEPS.md
+    - evolution/SUPERVISOR_STATE.md
+    - evolution/SUPERVISOR_PROFILES.md
+    - evolution/CYCLE_LOG.md
   outputs:
     - equivalent .lnd files with stable key order
     - compatibility note in old .md files
@@ -34,12 +34,12 @@ phase_2_execution_contracts:
   objective: Move core specs/contracts from markdown to .lnd.
   status: done
   targets:
-    - docs/SPEC.md
-    - docs/RUNTIME.md
-    - docs/RUNTIME_CONTRACT.md
-    - docs/PATCH_FORMAT.md
-    - docs/UI_DIFF_PROTOCOL.md
-    - docs/TYPE_SYSTEM.md
+    - evolution/SPEC.md
+    - evolution/RUNTIME.md
+    - evolution/RUNTIME_CONTRACT.md
+    - evolution/PATCH_FORMAT.md
+    - evolution/UI_DIFF_PROTOCOL.md
+    - evolution/TYPE_SYSTEM.md
   outputs:
     - .lnd contract versions
     - explicit schema IDs and version tags
@@ -96,13 +96,13 @@ tracking_metrics:
 minimal_source_of_truth_set:
   objective: Reduce planning/control sprawl to a compact deterministic core.
   files:
-    - docs/AGENT_ROUTER.lnd
-    - docs/LANGUAGE_BACKLOG.lnd
-    - docs/NEXT_STEPS.lnd
-    - docs/SUPERVISOR_STATE.lnd
-    - docs/SUPERVISOR_PROFILES.lnd
-    - docs/CYCLE_LOG.lnd
-    - docs/MIGRATION_TO_LND_LNC.lnd
+    - evolution/AGENT_ROUTER.lnd
+    - evolution/LANGUAGE_BACKLOG.lnd
+    - evolution/NEXT_STEPS.lnd
+    - evolution/SUPERVISOR_STATE.lnd
+    - evolution/SUPERVISOR_PROFILES.lnd
+    - evolution/CYCLE_LOG.lnd
+    - evolution/MIGRATION_TO_LND_LNC.lnd
     - formats/lnd/LND_FORMAT.lnd
     - formats/lnc/LNC_PROFILE.lnd
   rule:
