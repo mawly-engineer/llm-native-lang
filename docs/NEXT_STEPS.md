@@ -91,4 +91,4 @@ queue:
     backlog_reference: LNG-ECO-04
     owner_focus: ecosystem
     goal: Add a deterministic onboarding verification script that checks quickstart commands and docs-link integrity in CI.
-    status: open
+    status: done

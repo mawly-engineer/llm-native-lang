@@ -4,11 +4,11 @@ purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
 
 state:
   mode: staged_multi_cycle
-  active_flow_id: FLOW-ECO-20260307T120300Z
-  active_bucket: ecosystem
-  active_backlog_item_id: LNG-ECO-04
-  active_next_step_id: STEP-050
-  current_stage: execute
+  active_flow_id: null
+  active_bucket: null
+  active_backlog_item_id: null
+  active_next_step_id: null
+  current_stage: idle
   allowed_stages:
     - idle
     - create

@@ -78,7 +78,7 @@ buckets:
       - id: LNG-ECO-04
         title: Add deterministic onboarding verification script that validates quickstart and docs links in CI
         priority: P1
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

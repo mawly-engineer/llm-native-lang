@@ -1,0 +1,17 @@
+name: onboarding
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  verify-onboarding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify README onboarding quickstart and docs links
+        run: python3 scripts/verify_onboarding.py
