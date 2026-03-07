@@ -2,7 +2,7 @@
 version: 3
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-07T15:56:00Z
+updated_at_utc: 2026-03-07T15:58:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -15,8 +15,8 @@ active_queue:
   - step_id: STEP-064
     backlog_reference: LNG-ECO-16
     stream: ecosystem
-    status: pending_revise
-    notes: Preflight failed because /home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml is missing; add deterministic CI gate workflow and keep validator commands/scripts/lnd_validate.py evolution + scripts/lnc_validate.py runtime plus coverage assertions.
+    status: pending_validate
+    notes: Added /home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml with deterministic CI gate steps for scripts/lnd_validate.py evolution + scripts/lnc_validate.py runtime and coverage assertion via runtime.test_format_validators; ready for validate stage.
 
 recently_completed:
   - step_id: STEP-063

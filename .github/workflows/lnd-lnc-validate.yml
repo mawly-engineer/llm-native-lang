@@ -1,0 +1,28 @@
+name: lnd-lnc-validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-formats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate .lnd artifacts
+        run: python3 scripts/lnd_validate.py evolution
+
+      - name: Validate .lnc artifacts
+        run: python3 scripts/lnc_validate.py runtime
+
+      - name: Assert canonical coverage expectations
+        run: python3 -m unittest runtime.test_format_validators

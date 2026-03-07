@@ -9,15 +9,15 @@ state:
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-16
   active_next_step_id: STEP-064
-  current_stage: revise
+  current_stage: validate
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: validate_stage_needs_revision
-  last_error: "preflight_failed_missing_ci_workflow:/home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml"
+  last_stage_status: revise_stage_success
+  last_error: null
 
 stage_transition_rules:
   idle_to_create:
