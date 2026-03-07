@@ -109,37 +109,37 @@ queue:
   - step_id: STEP-053
     backlog_reference: LNG-ECO-07
     owner_focus: ecosystem
-    goal: Create evolution/SPEC.lnd from evolution/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/SPEC.lnd from evolution/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-054
     backlog_reference: LNG-ECO-08
     owner_focus: ecosystem
-    goal: Create evolution/RUNTIME.lnd from evolution/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/RUNTIME.lnd from evolution/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-055
     backlog_reference: LNG-ECO-09
     owner_focus: ecosystem
-    goal: Create evolution/RUNTIME_CONTRACT.lnd from evolution/RUNTIME_CONTRACT.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/RUNTIME_CONTRACT.lnd from evolution/RUNTIME_CONTRACT.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-056
     backlog_reference: LNG-ECO-10
     owner_focus: ecosystem
-    goal: Create evolution/PATCH_FORMAT.lnd from evolution/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/PATCH_FORMAT.lnd from evolution/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-057
     backlog_reference: LNG-ECO-11
     owner_focus: ecosystem
-    goal: Create evolution/UI_DIFF_PROTOCOL.lnd from evolution/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/UI_DIFF_PROTOCOL.lnd from evolution/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-058
     backlog_reference: LNG-ECO-12
     owner_focus: ecosystem
-    goal: Create evolution/TYPE_SYSTEM.lnd from evolution/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
+    goal: Create contracts/TYPE_SYSTEM.lnd from evolution/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
   - step_id: STEP-059

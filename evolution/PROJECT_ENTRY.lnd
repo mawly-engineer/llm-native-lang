@@ -22,8 +22,8 @@ core_file_set:
   - evolution/SUPERVISOR_STATE.lnd
   - evolution/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
-  - evolution/SPEC.lnd
-  - evolution/RUNTIME.lnd
+  - contracts/SPEC.lnd
+  - contracts/RUNTIME.lnd
 
 agent_and_cron_control_files:
   - evolution/agents/KAIRO_COORDINATOR.lnd
@@ -32,7 +32,7 @@ agent_and_cron_control_files:
 
 broad_domain_files:
   contracts_domain:
-    file: evolution/SPEC.lnd
+    file: contracts/SPEC.lnd
     covers:
       - language_spec
       - type_system
@@ -40,7 +40,7 @@ broad_domain_files:
       - ui_diff_protocol
       - runtime_contract_references
   runtime_domain:
-    file: evolution/RUNTIME.lnd
+    file: contracts/RUNTIME.lnd
     covers:
       - runtime_api
       - replay_semantics
