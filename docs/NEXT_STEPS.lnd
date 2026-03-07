@@ -100,3 +100,9 @@ queue:
     goal: Execute migration phase 1 by converting coordinator control docs to .lnd and leaving .md compatibility notes.
     status: done
 
+  - step_id: STEP-052
+    backlog_reference: LNG-ECO-06
+    owner_focus: ecosystem
+    goal: Define validator toolchain scaffolding for .lnd/.lnc with deterministic commands, profiles, and stable error-code mapping.
+    status: open
+
