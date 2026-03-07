@@ -9,15 +9,15 @@ state:
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-15
   active_next_step_id: STEP-061
-  current_stage: validate
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
-  last_error: null
+  last_stage_status: validate_stage_needs_revision
+  last_error: "Validator rejected execute readiness: only 2 canonical .lnc artifacts validated; LNG-ECO-15 requires >=3 and validator-covered threshold assertion."
 
 stage_transition_rules:
   idle_to_create:
