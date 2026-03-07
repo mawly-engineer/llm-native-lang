@@ -1,0 +1,49 @@
+@lnd 0.2
+kind: contract_spec
+id: PATCH-FORMAT-001
+schema_id: llm_native_lang.patch_format
+schema_version: 1.0.0
+status: active
+updated_at_utc: 2026-03-07T13:16:00Z
+project: llm-native-lang
+purpose: Canonical patch envelope and operation contract.
+
+patch_envelope:
+  required_fields:
+    - target
+    - base_revision
+    - ops
+  allowed_target_values:
+    - program
+
+operations:
+  add_node:
+    required_fields:
+      - node
+  add_edge:
+    required_fields:
+      - edge
+  replace_node:
+    required_fields:
+      - node
+  remove_node:
+    required_fields:
+      - id
+  remove_edge:
+    required_fields:
+      - from
+      - to
+      - contract
+  set_attr:
+    required_fields:
+      - node_id
+      - key
+      - value
+  ui_patch:
+    required_fields:
+      - ops
+
+invariants:
+  - ops_must_be_non_empty
+  - references_must_resolve_or_be_created_within_same_patch
+  - apply_is_atomic_all_or_nothing
