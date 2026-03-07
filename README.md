@@ -10,6 +10,7 @@ Deterministic mini-language + deterministic runtime/replay prototype.
 
 ## Minimal project structure
 
+- `docs/PROJECT_ENTRY.lnd` — single entry file + bounded topology rules
 - `docs/LND_FORMAT.lnd` — doc format spec
 - `docs/LNC_PROFILE.lnd` — code artifact profile spec
 - `docs/MIGRATION_TO_LND_LNC.lnd` — migration status/plan

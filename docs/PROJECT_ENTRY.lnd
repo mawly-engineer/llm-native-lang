@@ -1,0 +1,76 @@
+@lnd 0.2
+kind: project_entry
+id: LNG-ENTRY-001
+status: active
+updated_at_utc: 2026-03-07T14:13:00Z
+purpose: Single entry file for project control with bounded file topology.
+
+entry_policy:
+  source_of_truth: this_file
+  max_core_files: 12
+  file_growth_rule: "Do not add a new top-level contract file if an existing domain file can be extended without ambiguity."
+  split_threshold_rule: "Split only when one file contains multiple unrelated domains or exceeds maintainability constraints."
+
+core_file_set:
+  - docs/PROJECT_ENTRY.lnd
+  - docs/LND_FORMAT.lnd
+  - docs/LNC_PROFILE.lnd
+  - docs/MIGRATION_TO_LND_LNC.lnd
+  - docs/AGENT_ROUTER.lnd
+  - docs/LANGUAGE_BACKLOG.lnd
+  - docs/NEXT_STEPS.lnd
+  - docs/SUPERVISOR_STATE.lnd
+  - docs/SUPERVISOR_PROFILES.lnd
+  - docs/CYCLE_LOG.lnd
+  - docs/SPEC.lnd
+  - docs/RUNTIME.lnd
+
+broad_domain_files:
+  contracts_domain:
+    file: docs/SPEC.lnd
+    covers:
+      - language_spec
+      - type_system
+      - patch_format
+      - ui_diff_protocol
+      - runtime_contract_references
+  runtime_domain:
+    file: docs/RUNTIME.lnd
+    covers:
+      - runtime_api
+      - replay_semantics
+      - deterministic_metrics
+      - execution_bridge_notes
+  planning_domain:
+    file: docs/LANGUAGE_BACKLOG.lnd
+    covers:
+      - backlog_items
+      - priorities
+      - status
+  execution_domain:
+    file: docs/NEXT_STEPS.lnd
+    covers:
+      - near_term_queue
+      - mapped_steps
+      - current_execution_focus
+
+deprecation_policy:
+  legacy_location: archive/legacy/
+  markdown_status: compatibility_only
+  markdown_rule: "No new source-of-truth content in .md files."
+
+change_workflow:
+  - update PROJECT_ENTRY.lnd if core topology changes
+  - update target domain file (broad first, split only if required)
+  - run lnd/lnc validators
+  - append cycle/state changes only in existing control files
+
+validator_targets:
+  lnd:
+    command: python3 scripts/lnd_validate.py docs
+  lnc:
+    command: python3 scripts/lnc_validate.py runtime
+
+acceptance:
+  - "Project control remains understandable from PROJECT_ENTRY.lnd + core_file_set only."
+  - "No uncontrolled file proliferation in docs/."
