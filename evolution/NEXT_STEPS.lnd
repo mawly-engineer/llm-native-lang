@@ -2,7 +2,7 @@
 version: 3
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-07T15:50:00Z
+updated_at_utc: 2026-03-07T15:54:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -11,7 +11,12 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue: []
+active_queue:
+  - step_id: STEP-064
+    backlog_reference: LNG-ECO-16
+    stream: ecosystem
+    status: pending_validate
+    notes: Add CI workflow gate that runs scripts/lnd_validate.py evolution and scripts/lnc_validate.py runtime with deterministic non-zero failure behavior and coverage test assertions.
 
 recently_completed:
   - step_id: STEP-063

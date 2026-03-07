@@ -124,6 +124,10 @@ buckets:
         title: Add third production-relevant .lnc code_unit artifact and extend validator/tests to assert >=3 canonical runtime/examples units
         priority: P0
         status: done
+      - id: LNG-ECO-16
+        title: Enforce .lnd/.lnc validation in CI with deterministic failure gating for migration phase 4
+        priority: P0
+        status: open
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
