@@ -2,7 +2,7 @@
 kind: run_profile
 id: RUN-MIGRATION-CORE-001
 status: active
-updated_at_utc: 2026-03-07T14:36:00Z
+updated_at_utc: 2026-03-07T15:54:00Z
 purpose: Execute migration-focused evolution cycles.
 
 mission:
@@ -16,6 +16,8 @@ execution_policy:
   one_unit_per_cycle: true
   prioritize_migration_items: true
   use_legacy_markdown_as_source: false
+  require_preflight_before_validate: true
+  require_clean_git_at_cycle_end: true
 
 validator_commands:
   - python3 scripts/lnd_validate.py evolution

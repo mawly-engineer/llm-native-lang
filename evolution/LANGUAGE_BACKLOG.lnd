@@ -139,7 +139,7 @@ buckets:
       - id: LNG-PRX-03
         title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
         priority: P1
-        status: open
+        status: done
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
