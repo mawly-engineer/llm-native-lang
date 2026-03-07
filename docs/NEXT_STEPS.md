@@ -1,4 +1,4 @@
-version: 1
+version: 2
 document: NEXT_STEPS
 purpose: Ordered executable queue for upcoming coordinator cycles.
 
@@ -56,3 +56,27 @@ queue:
     owner_focus: language-core
     goal: Update SPEC language_minimal_grammar nonterminals/productions so precedence tiers match implemented grammar contracts and tests.
     status: done
+
+  - step_id: STEP-045
+    backlog_reference: LNG-CORE-10
+    owner_focus: language-core
+    goal: Add true/false literal grammar + AST/type contract coverage with deterministic bool literal nodes.
+    status: open
+
+  - step_id: STEP-046
+    backlog_reference: LNG-ECO-01
+    owner_focus: ecosystem
+    goal: Publish README positioning + quickstart + deterministic guarantees summary with explicit scope boundaries.
+    status: open
+
+  - step_id: STEP-047
+    backlog_reference: LNG-PRX-01
+    owner_focus: practical-value
+    goal: Add one complete deterministic source->patch->replay example and verify reproducibility.
+    status: open
+
+  - step_id: STEP-048
+    backlog_reference: LNG-ECO-03
+    owner_focus: ecosystem
+    goal: Add contributor workflow templates including DoD gates for spec/tests/benchmarks.
+    status: open

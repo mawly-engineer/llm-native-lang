@@ -1,4 +1,4 @@
-version: 1
+version: 2
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
 
@@ -55,6 +55,42 @@ buckets:
         title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
         priority: P1
         status: done
+      - id: LNG-CORE-10
+        title: Extend grammar contracts with boolean literals and deterministic literal-node typing
+        priority: P1
+        status: open
+
+  ecosystem:
+    description: Tooling, docs, release, and onboarding surface for external use.
+    items:
+      - id: LNG-ECO-01
+        title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
+        priority: P0
+        status: open
+      - id: LNG-ECO-02
+        title: Add first reproducible release workflow (version tag + release notes template + changelog contract)
+        priority: P1
+        status: open
+      - id: LNG-ECO-03
+        title: Add contributor guide with issue/PR templates and Definition-of-Done gates
+        priority: P1
+        status: open
+
+  practical-value:
+    description: Real-world utility, examples, and measurable task value.
+    items:
+      - id: LNG-PRX-01
+        title: Add end-to-end example app flow (source -> runtime patch -> replay artifact) with deterministic replay proof
+        priority: P0
+        status: open
+      - id: LNG-PRX-02
+        title: Add baseline benchmark harness comparing mini-language flow vs JSON/DSL baseline for reproducibility and success rate
+        priority: P1
+        status: open
+      - id: LNG-PRX-03
+        title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
+        priority: P1
+        status: open
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.

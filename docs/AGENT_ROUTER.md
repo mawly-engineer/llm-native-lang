@@ -1,15 +1,30 @@
-version: 1
+version: 2
 document: AGENT_ROUTER
 purpose: Route the single coordinator to the correct specialist focus each cycle.
-updated_at_utc: "2026-03-07T03:35:28Z"
+updated_at_utc: "2026-03-07T11:41:00Z"
 
 operating_mode:
   scheduler_model: single_coordinator
   coordinator_executes_work_directly: true
   one_backlog_item_per_cycle: true
+  dynamic_bucket_selection: true
+
+strategic_targets:
+  objective: Raise weakest dimensions first while preserving determinism.
+  dimensions:
+    language-core:
+      score_current: 4
+      score_target: 8
+    ecosystem:
+      score_current: 2
+      score_target: 7
+    practical-value:
+      score_current: 3
+      score_target: 7
+  priority_rule: Prefer the lowest current score when no blocking reliability signal exists.
 
 active_selection:
-  active_primary: language-core
+  active_primary: ecosystem
   active_secondary: validation
 
 routing_rules_in_priority_order:
@@ -29,13 +44,25 @@ routing_rules_in_priority_order:
     when:
       signal_runtime_gap: true
     select_primary: interpreter-runtime
-    reason: "Determinism/runtime correctness is currently the main risk area."
+    reason: "Determinism/runtime correctness is a hard gate."
 
-  - id: default_route_core
+  - id: route_ecosystem_on_gap
+    when:
+      signal_ecosystem_gap: true
+    select_primary: ecosystem
+    reason: "Public usability and project adoption need focused improvement."
+
+  - id: route_practical_value_on_gap
+    when:
+      signal_practical_value_gap: true
+    select_primary: practical-value
+    reason: "Hands-on utility and evidence must improve."
+
+  - id: default_route_by_lowest_dimension_score
     when:
       fallback_default: true
-    select_primary: language-core
-    reason: "Advance core language capabilities when no blocking signal exists."
+    select_primary: lowest_score_dimension
+    reason: "By default, advance whichever strategic dimension is currently weakest (ecosystem -> practical-value -> language-core)."
 
 overrides:
   force_agent: null
