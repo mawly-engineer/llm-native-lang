@@ -78,4 +78,4 @@ buckets:
       - id: LNG-INT-03
         title: End-to-end deterministic replay tests
         priority: P1
-        status: open
+        status: done

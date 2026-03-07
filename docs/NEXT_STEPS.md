@@ -19,4 +19,4 @@ queue:
     backlog_reference: LNG-INT-03
     owner_focus: integration
     goal: Add full end-to-end deterministic replay checks.
-    status: open
+    status: done

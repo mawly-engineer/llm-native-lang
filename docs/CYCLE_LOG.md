@@ -179,3 +179,14 @@ entries:
       - "python3 -m unittest runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_bridges_eval_to_patch_flow runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_reuses_run_node_via_replace runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_emits_ui_timeline_artifact_hooks runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_parse_errors_are_structured_and_atomic (4 tests, OK)"
     commit: null
     blockers: []
+
+  - cycle_id: 49
+    timestamp_utc: "2026-03-07T03:35:28Z"
+    selected_primary: integration
+    selected_secondary: language-core
+    backlog_item_id: LNG-INT-03
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_e2e_language_run_replay_is_deterministic_across_identical_runs runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_e2e_language_run_replay_ops_stable_with_snapshot_seed runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_bridges_eval_to_patch_flow runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_reuses_run_node_via_replace runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_emits_ui_timeline_artifact_hooks runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_parse_errors_are_structured_and_atomic (6 tests, OK)"
+    commit: null
+    blockers: []

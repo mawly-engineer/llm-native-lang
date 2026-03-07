@@ -610,6 +610,40 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(self.rt.state.head, "r-0")
         self.assertEqual(self.rt.query("modules"), [])
 
+    def test_e2e_language_run_replay_is_deterministic_across_identical_runs(self) -> None:
+        programs = [
+            "let x = 1 in x",
+            "let x = 2 in x",
+            "let y = 7 in y",
+        ]
+
+        for source in programs:
+            self.rt.execute_program_source(source)
+
+        replay_a = self.rt.replay_ui_timeline(include_metrics=True)
+
+        rt_clone = KairoRuntime()
+        for source in programs:
+            rt_clone.execute_program_source(source)
+
+        replay_b = rt_clone.replay_ui_timeline(include_metrics=True)
+
+        self.assertEqual(replay_a["ops"], replay_b["ops"])
+        self.assertEqual(replay_a["metrics"]["events_replayed"], replay_b["metrics"]["events_replayed"])
+        self.assertEqual(replay_a["metrics"]["events_total"], replay_b["metrics"]["events_total"])
+
+    def test_e2e_language_run_replay_ops_stable_with_snapshot_seed(self) -> None:
+        for source in ["let x = 1 in x", "let x = 3 in x"]:
+            self.rt.execute_program_source(source)
+
+        replay_before = self.rt.replay_ui_timeline(include_metrics=True)
+        self.rt.create_ui_snapshot(head="u-0")
+        replay_after = self.rt.replay_ui_timeline(include_metrics=True)
+
+        self.assertEqual(replay_before["ops"], replay_after["ops"])
+        self.assertEqual(replay_after["snapshot_head"], "u-0")
+        self.assertEqual(replay_after["metrics"]["events_total"], replay_before["metrics"]["events_total"])
+
     def test_ui_snapshot_replay_matches_head_state(self) -> None:
         u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         self.rt.apply_ui_patch(
