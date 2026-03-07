@@ -637,5 +637,5 @@ entries:
     tests:
       - "python3 -m unittest runtime.test_runtime_stub (66 tests, OK)"
       - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime runtime.test_runtime_stub (110 tests, OK)"
-    commit: "df2dcd4"
+    commit: null
     blockers: []
