@@ -1,0 +1,19 @@
+@lnc 0.1
+lnc_version: 0.1
+kind: code_unit
+id: EXAMPLE-CANONICAL-COUNTER-01
+module: runtime/examples/canonical_counter
+entry: main
+source_lang: minilang
+source: let seed = 2; let value = seed * (3 + 4); value == 14
+ir_version: v1
+deterministic_flags:
+  - stable_parse
+  - stable_eval
+  - stable_replay
+  - stable_patch_order
+tests:
+  - python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime
+  - python3 -m unittest runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_e2e_language_run_replay_is_deterministic_across_identical_runs
+refs:
+  - LNG-ECO-13
