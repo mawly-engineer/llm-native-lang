@@ -1,0 +1,35 @@
+@lnd 0.2
+kind: metrics_contract
+id: LNG-METRICS-001
+status: active
+revision: 1
+updated_at_utc: 2026-03-07T15:09:00Z
+purpose: Outcome-oriented metrics for evolution methodology.
+
+kpis:
+  - key: cycle_time_minutes
+    target: "<= 6"
+    note: average time from create to done for staged item
+
+  - key: revise_rate
+    target: "<= 0.25"
+    note: revise transitions / total staged items
+
+  - key: validator_fail_rate
+    target: "<= 0.10"
+    note: failed validator runs / total validator runs
+
+  - key: token_to_done_ratio
+    target: "decreasing_trend"
+    note: approximate token usage per done backlog item
+
+  - key: sot_change_stability
+    target: ">= 0.90"
+    note: SoT changes with explicit governance fields and notes / all SoT changes
+
+tracking_policy:
+  cadence: per_cycle_or_batch
+  source_files:
+    - evolution/CYCLE_LOG.lnd
+    - evolution/SUPERVISOR_STATE.lnd
+  reporting_location: evolution/METRICS.lnd

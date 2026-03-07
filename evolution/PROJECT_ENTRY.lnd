@@ -2,13 +2,13 @@
 kind: project_entry
 id: LNG-ENTRY-001
 status: active
-revision: 2
-updated_at_utc: 2026-03-07T14:43:00Z
+revision: 3
+updated_at_utc: 2026-03-07T15:10:00Z
 purpose: Single entry file for project control with bounded file topology.
 
 entry_policy:
   source_of_truth: this_file
-  max_core_files: 12
+  max_core_files: 14
   file_growth_rule: "Do not add a new top-level contract file if an existing domain file can be extended without ambiguity."
   split_threshold_rule: "Split only when one file contains multiple unrelated domains or exceeds maintainability constraints."
 
@@ -23,6 +23,8 @@ core_file_set:
   - evolution/SUPERVISOR_STATE.lnd
   - evolution/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
+  - evolution/ARCHITECTURE.lnd
+  - evolution/METRICS.lnd
   - contracts/SPEC.lnd
   - contracts/RUNTIME.lnd
 

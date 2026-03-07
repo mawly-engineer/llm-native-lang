@@ -1,0 +1,55 @@
+@lnd 0.2
+kind: architecture_contract
+id: LNG-ARCH-001
+status: active
+revision: 1
+updated_at_utc: 2026-03-07T15:09:00Z
+purpose: Canonical layered architecture and dependency boundaries.
+
+layers:
+  - name: formats
+    paths:
+      - formats/lnd/
+      - formats/lnc/
+    responsibility:
+      - define_data_formats
+      - define_syntax_shapes_errors
+
+  - name: contracts
+    paths:
+      - contracts/
+    responsibility:
+      - define_product_contracts
+      - define_runtime_language_patch_ui_type_boundaries
+
+  - name: runtime
+    paths:
+      - runtime/
+      - scripts/
+    responsibility:
+      - executable_implementation
+      - validators_and_tests
+
+  - name: evolution
+    paths:
+      - evolution/
+    responsibility:
+      - process_control
+      - planning_state_and_agent_profiles
+
+dependency_rules:
+  allowed:
+    - evolution -> contracts
+    - evolution -> formats
+    - scripts -> formats
+    - scripts -> evolution
+    - runtime -> contracts
+  forbidden:
+    - runtime -> evolution
+    - contracts -> evolution
+    - formats -> evolution
+
+merge_gates:
+  - run_validators
+  - run_relevant_unittests
+  - preserve_dependency_rules
