@@ -19,3 +19,4 @@ Coordinator-controlled routing file.
 ## Notes
 - Non-selected agents should SKIP with short status.
 - Selected agents should execute one highest-priority backlog item in their bucket.
+- 2026-03-07: Runtime remains primary (no failing validation/E2E signals; focus on deterministic replay behavior).

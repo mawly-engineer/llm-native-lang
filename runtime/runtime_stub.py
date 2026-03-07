@@ -380,6 +380,29 @@ class KairoRuntime:
         visit(head)
         return ordered
 
+    def _ui_revision_order_key(self, revision: str | None) -> Tuple[int, str]:
+        if revision is None:
+            return (-1, "")
+        if revision.startswith("u-"):
+            suffix = revision[2:]
+            if suffix.isdigit():
+                return (int(suffix), revision)
+        return (10**9, revision)
+
+    def _select_best_snapshot_seed(self, head: str | None) -> Tuple[str | None, int | None]:
+        distances = self._ui_collect_distances(head)
+        candidates: List[Tuple[int, Tuple[int, str], str | None]] = []
+        for event_id, distance in distances.items():
+            if self.ui_snapshot_index.get(event_id) is None:
+                continue
+            candidates.append((distance, self._ui_revision_order_key(event_id), event_id))
+
+        if not candidates:
+            return None, None
+
+        _, _, best_head = min(candidates)
+        return best_head, distances[best_head]
+
     def create_ui_snapshot(self, head: str | None = None) -> str:
         if head is None:
             head = self.ui_head
@@ -439,16 +462,12 @@ class KairoRuntime:
             events_replayed = base_count + 1
         else:
             if use_snapshot_seed:
-                distances = self._ui_collect_distances(head)
-                for event_id in distances:
-                    snapshot_id = self.ui_snapshot_index.get(event_id)
-                    if snapshot_id is None:
-                        continue
-                    distance = distances[event_id]
-                    if seed_snapshot_distance is None or distance < seed_snapshot_distance:
-                        seed_snapshot_distance = distance
-                        seed_snapshot_head = event_id
-                        seed_ops = deepcopy(self.ui_snapshots[snapshot_id].ops)
+                best_snapshot_head, best_snapshot_distance = self._select_best_snapshot_seed(head)
+                if best_snapshot_head is not None:
+                    snapshot_id = self.ui_snapshot_index[best_snapshot_head]
+                    seed_snapshot_head = best_snapshot_head
+                    seed_snapshot_distance = best_snapshot_distance
+                    seed_ops = deepcopy(self.ui_snapshots[snapshot_id].ops)
 
             parent_ops: List[Dict[str, Any]] = []
             if event.parent is not None:
@@ -498,16 +517,7 @@ class KairoRuntime:
 
         postorder = self._ui_replay_postorder(head)
         distances = self._ui_collect_distances(head)
-        best_distance: int | None = None
-        best_snapshot_head: str | None = None
-        for event_id in distances:
-            snapshot_id = self.ui_snapshot_index.get(event_id)
-            if snapshot_id is None:
-                continue
-            distance = distances[event_id]
-            if best_distance is None or distance < best_distance:
-                best_distance = distance
-                best_snapshot_head = event_id
+        best_snapshot_head, best_distance = self._select_best_snapshot_seed(head)
 
         replay_ids = postorder
         if best_snapshot_head in distances:

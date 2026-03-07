@@ -611,6 +611,31 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(replay["metrics"]["events_total"], 2)
         self.assertEqual(replay["metrics"]["snapshot_seed_distance"], 1)
 
+    def test_replay_ui_timeline_prefers_deterministic_snapshot_seed_on_equal_distance(self) -> None:
+        base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
+        left = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "title", "value": "L"}],
+            base_revision=base,
+        )
+
+        self.rt.rollback_ui(base)
+        right = self.rt.apply_ui_patch(
+            [{"op": "set_prop", "path": "/root/a", "key": "subtitle", "value": "R"}],
+            base_revision=base,
+        )
+
+        self.rt.create_ui_snapshot(head=left)
+        self.rt.create_ui_snapshot(head=right)
+
+        merged_lr = self.rt.merge_ui_branches(left, right, base_revision=base)
+        replay_lr = self.rt.replay_ui_timeline(merged_lr["merged_revision"], include_metrics=True)
+        self.assertEqual(replay_lr["snapshot_head"], left)
+
+        self.rt.rollback_ui(merged_lr["merged_revision"])
+        merged_rl = self.rt.merge_ui_branches(right, left, base_revision=base)
+        replay_rl = self.rt.replay_ui_timeline(merged_rl["merged_revision"], include_metrics=True)
+        self.assertEqual(replay_rl["snapshot_head"], left)
+
     def test_validate_ui_merge_accepts_non_conflicting_branches(self) -> None:
         base = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         left = self.rt.apply_ui_patch(

@@ -758,6 +758,34 @@ Resolver-Profilvergleich (`accept_left`/`accept_right`) um explizites Snapshot-S
 ### Nächster Schritt
 Cycle 034: Profil-Delta-Assertions schärfen + Contract-Minibeispiele + Snapshot-Heuristik ergänzen.
 
+## Cycle 035 — 2026-03-07T00:06:13Z
+### Fokus
+Deterministische Snapshot-Seed-Auswahl bei gleich weit entfernten Snapshot-Kandidaten absichern.
+
+### Routing-Entscheidung
+- selected_primary: interpreter-runtime
+- selected_secondary: validation
+- backlog_item_id: LNG-RT-01
+
+### Geliefert
+- Runtime-Stub um deterministische Snapshot-Seed-Heuristik erweitert:
+  - neue Ordnung für UI-Revisions-IDs (`u-N`) als stabiler Tie-Breaker
+  - zentrale Auswahlfunktion für den besten Snapshot-Seed (`_select_best_snapshot_seed`)
+  - Replay nutzt jetzt dieselbe Seed-Auswahl konsistent in Apply-Sequenz und Metrik-Berechnung
+- Unit-Test ergänzt:
+  - bei zwei gleich weit entfernten Snapshot-Seeds bleibt `snapshot_head` stabil, auch wenn Merge-Branchreihenfolge wechselt
+
+### Ergebnis
+- `python3 -m unittest runtime.test_runtime_stub` → 59 Tests grün.
+
+### Offene Lücken
+- Explizite Profil-Delta-Assertions (`events_total`) zwischen Resolver-Profilen fehlen weiterhin.
+- Contract-Minibeispiele für Profil-Diagnosen sind noch nicht ergänzt.
+- Snapshot-Heuristik-Guidance für längere Verläufe kann noch ausgebaut werden.
+
+### Nächster Schritt
+Cycle 036: Profil-Delta-Assertions für `events_total` ergänzen und Contract-Minibeispiel für Profil-Diagnosen nachziehen.
+
 ## Cycle 034 — 2026-03-06T23:49:00Z
 ### Fokus
 Coordinator-Routing auf Basis der aktuellen Cycle-033-Ergebnisse nachgeschärft.
