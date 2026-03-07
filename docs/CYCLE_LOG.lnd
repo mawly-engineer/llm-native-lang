@@ -874,3 +874,15 @@ entries:
     tests: []
     commit: null
     blockers: []
+
+  - cycle_id: 114
+    timestamp_utc: "2026-03-07T13:14:00Z"
+    selected_primary: ecosystem
+    selected_secondary: validation
+    backlog_item_id: LNG-ECO-10
+    status: staged_validate_needs_revision
+    tests:
+      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
+    commit: null
+    blockers:
+      - "docs/PATCH_FORMAT.lnd is missing; migration target for LNG-ECO-10 is not yet created."
