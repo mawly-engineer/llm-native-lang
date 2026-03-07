@@ -1,7 +1,7 @@
 version: 2
 document: AGENT_ROUTER
 purpose: Route the single coordinator to the correct specialist focus each cycle.
-updated_at_utc: "2026-03-07T11:41:00Z"
+updated_at_utc: "2026-03-07T11:42:30Z"
 
 operating_mode:
   scheduler_model: single_coordinator
@@ -22,6 +22,17 @@ strategic_targets:
       score_current: 3
       score_target: 7
   priority_rule: Prefer the lowest current score when no blocking reliability signal exists.
+
+cycle_quota_guard:
+  window_cycles: 5
+  min_cycles_in_focus_set: 3
+  focus_set:
+    - ecosystem
+    - practical-value
+  enforcement_rule: "If quota is not yet met inside the current 5-cycle window and no hard reliability signal is active (e2e/tests/runtime), force select_primary from focus_set."
+  tie_break_within_focus_set:
+    - lowest_dimension_score
+    - deterministic_bucket_name_order
 
 active_selection:
   active_primary: ecosystem
