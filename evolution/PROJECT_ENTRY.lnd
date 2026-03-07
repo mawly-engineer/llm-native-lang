@@ -32,6 +32,7 @@ agent_and_cron_control_files:
   - evolution/agents/KAIRO_COORDINATOR.lnd
   - evolution/runs/RUN_MIGRATION_CORE.lnd
   - evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
+  - evolution/cron/INTERNAL_VALIDATION_GATE.lnd
 
 broad_domain_files:
   contracts_domain:

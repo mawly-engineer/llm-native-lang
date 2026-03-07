@@ -23,6 +23,10 @@ validator_commands:
   - python3 scripts/lnd_validate.py evolution
   - python3 scripts/lnc_validate.py runtime
 
+gate_profile:
+  file: evolution/cron/INTERNAL_VALIDATION_GATE.lnd
+  mode: internal_local_first
+
 git_policy:
   - git fetch --all --prune
   - git checkout main

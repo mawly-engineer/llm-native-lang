@@ -1,0 +1,21 @@
+@lnd 0.2
+kind: internal_gate_profile
+id: GATE-VALIDATION-INTERNAL-001
+status: active
+updated_at_utc: 2026-03-07T16:10:00Z
+purpose: Internal deterministic validation gate without external CI dependency.
+
+gate_commands:
+  - python3 scripts/lnd_validate.py evolution
+  - python3 scripts/lnd_validate.py contracts
+  - python3 scripts/lnd_validate.py formats
+  - python3 scripts/lnc_validate.py runtime
+  - python3 -m unittest runtime.test_format_validators
+
+pass_criteria:
+  - all_commands_exit_zero
+  - git_status_clean_or_explicit_blocker
+
+notes:
+  - This replaces GitHub workflow gating for current local-first process.
+  - External CI can be reintroduced later as optional mirror gate.

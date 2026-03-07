@@ -125,9 +125,13 @@ buckets:
         priority: P0
         status: done
       - id: LNG-ECO-16
-        title: Enforce .lnd/.lnc validation in CI with deterministic failure gating for migration phase 4
+        title: Enforce internal .lnd/.lnc deterministic validation gate for migration phase 4
         priority: P0
         status: done
+      - id: LNG-ECO-17
+        title: Complete phase-5 deprecation cleanup by removing obsolete migration leftovers and marking migration status done
+        priority: P1
+        status: in_progress
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

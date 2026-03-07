@@ -61,14 +61,16 @@ phase_3_code_artifact_onboarding:
     - at least 3 production-relevant .lnc artifacts validated in CI
 
 phase_4_tooling_ci:
-  objective: Make migration enforceable.
+  objective: Make migration enforceable via internal deterministic gate.
+  status: in_progress
   tasks:
     - add lnd_validate and lnc_validate commands
     - add canonical formatter checks
     - add profile-mismatch detection
     - add fixture conformance tests
+    - maintain internal gate profile for local-first validation
   done_when:
-    - CI fails on invalid .lnd/.lnc
+    - internal gate fails on invalid .lnd/.lnc
     - stable error codes used in all failures
 
 phase_5_deprecation_cleanup:
@@ -90,7 +92,7 @@ risk_controls:
 tracking_metrics:
   - percent_docs_in_lnd
   - percent_code_artifacts_in_lnc
-  - ci_validation_pass_rate
+  - internal_gate_pass_rate
   - profile_mismatch_error_count
 
 minimal_source_of_truth_set:
@@ -110,5 +112,5 @@ minimal_source_of_truth_set:
     - "Legacy *.md files are compatibility mirrors only."
 
 next_actions:
-  - wire CI gate after first validator pass
+  - finalize internal validation gate usage in run profiles
   - add explicit mirror/deprecation headers to legacy markdown docs
