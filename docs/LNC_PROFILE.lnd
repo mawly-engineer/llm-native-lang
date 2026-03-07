@@ -1,22 +1,26 @@
-@lnc 0.1
-kind: format_spec
-id: LNC-FORMAT-001
+@lnd 0.2
+kind: format_profile_spec
+id: LNC-PROFILE-001
 status: draft
-updated_at_utc: 2026-03-07T12:21:30Z
-purpose: Deterministic code/executable artifact container format.
+updated_at_utc: 2026-03-07T12:41:00Z
+purpose: Documentation-specification of the .lnc code artifact profile.
 
 profile:
   name: lnc_code
   extension: .lnc
-  header: "@lnc <version>"
-  applies_to:
-    - executable_language_units
-    - intermediate_representation
-    - machine_executable_artifacts
-  does_not_apply_to:
-    - project_docs
-    - decision_records
-    - process_contracts
+  required_header: "@lnc <version>"
+  this_file_kind: documentation_only
+  note: "This spec is documentation, therefore stored as .lnd."
+
+applies_to:
+  - executable_language_units
+  - intermediate_representation
+  - machine_executable_artifacts
+
+does_not_apply_to:
+  - project_docs
+  - decision_records
+  - process_contracts
 
 syntax_rules:
   encoding: utf-8
@@ -93,7 +97,7 @@ error_codes:
 
 interpreter_contract:
   - Parse as strict key/value tree.
-  - Validate only code profile shapes in this spec.
+  - Validate only code profile shapes defined here.
   - Reject doc-profile shapes in .lnc with ERR_DOC_IN_CODE_FILE.
   - Never infer missing required fields.
   - Canonical formatter MUST produce byte-stable output for same input tree.

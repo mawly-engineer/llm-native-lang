@@ -52,7 +52,7 @@ phase_3_code_artifact_onboarding:
     - future generated code units
   outputs:
     - first canonical code_unit .lnc examples
-    - parser/validator support for LNC_FORMAT.lnc
+    - parser/validator support for LNC_PROFILE.lnd
   done_when:
     - at least 3 production-relevant .lnc artifacts validated in CI
 

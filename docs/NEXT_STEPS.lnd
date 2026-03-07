@@ -1,0 +1,102 @@
+@lnd 0.2
+version: 2
+document: NEXT_STEPS
+purpose: Ordered executable queue for upcoming coordinator cycles.
+
+queue:
+  - step_id: STEP-036
+    backlog_reference: LNG-VAL-01
+    owner_focus: validation
+    goal: Add explicit profile-delta assertions for events_total.
+    status: done
+
+  - step_id: STEP-037
+    backlog_reference: LNG-RT-02
+    owner_focus: interpreter-runtime
+    goal: Expand lexical scope model and deterministic tests.
+    status: done
+
+  - step_id: STEP-038
+    backlog_reference: LNG-INT-03
+    owner_focus: integration
+    goal: Add full end-to-end deterministic replay checks.
+    status: done
+
+  - step_id: STEP-039
+    backlog_reference: LNG-CORE-04
+    owner_focus: language-core
+    goal: Add deterministic AST source-span metadata for core nodes with contract tests.
+    status: done
+
+  - step_id: STEP-040
+    backlog_reference: LNG-CORE-05
+    owner_focus: language-core
+    goal: Add unary negation grammar and AST contract coverage with deterministic precedence behavior.
+    status: done
+
+  - step_id: STEP-041
+    backlog_reference: LNG-CORE-06
+    owner_focus: language-core
+    goal: Add additive/multiplicative binary grammar and deterministic precedence AST contract coverage.
+    status: done
+
+  - step_id: STEP-042
+    backlog_reference: LNG-CORE-07
+    owner_focus: language-core
+    goal: Add equality/comparison grammar tiers and deterministic precedence AST contract coverage.
+    status: done
+
+  - step_id: STEP-043
+    backlog_reference: LNG-CORE-08
+    owner_focus: language-core
+    goal: Add logical and/or grammar tiers with deterministic short-circuit AST contract coverage.
+    status: done
+
+  - step_id: STEP-044
+    backlog_reference: LNG-CORE-09
+    owner_focus: language-core
+    goal: Update SPEC language_minimal_grammar nonterminals/productions so precedence tiers match implemented grammar contracts and tests.
+    status: done
+
+  - step_id: STEP-045
+    backlog_reference: LNG-CORE-10
+    owner_focus: language-core
+    goal: Add true/false literal grammar + AST/type contract coverage with deterministic bool literal nodes.
+    status: done
+
+  - step_id: STEP-046
+    backlog_reference: LNG-ECO-01
+    owner_focus: ecosystem
+    goal: Publish README positioning + quickstart + deterministic guarantees summary with explicit scope boundaries.
+    status: done
+
+  - step_id: STEP-047
+    backlog_reference: LNG-PRX-01
+    owner_focus: practical-value
+    goal: Add one complete deterministic source->patch->replay example and verify reproducibility.
+    status: done
+
+  - step_id: STEP-048
+    backlog_reference: LNG-ECO-03
+    owner_focus: ecosystem
+    goal: Add contributor workflow templates including DoD gates for spec/tests/benchmarks.
+    status: done
+
+  - step_id: STEP-049
+    backlog_reference: LNG-ECO-02
+    owner_focus: ecosystem
+    goal: Add reproducible semver-tag release workflow with changelog contract and release-notes template.
+    status: done
+
+  - step_id: STEP-050
+    backlog_reference: LNG-ECO-04
+    owner_focus: ecosystem
+    goal: Add a deterministic onboarding verification script that checks quickstart commands and docs-link integrity in CI.
+    status: done
+
+  - step_id: STEP-051
+    backlog_reference: LNG-ECO-05
+    owner_focus: ecosystem
+    goal: Execute migration phase 1 by converting coordinator control docs to .lnd and leaving .md compatibility notes.
+    status: done
+

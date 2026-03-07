@@ -1,0 +1,150 @@
+@lnd 0.2
+version: 2
+document: LANGUAGE_BACKLOG
+purpose: Canonical machine-readable backlog for coordinator-driven execution.
+
+selection_policy:
+  per_cycle_execution_limit: 1
+  default_pick_order:
+    - highest_priority
+    - open_status
+    - deterministic_id_order
+
+allowed_status_values:
+  - open
+  - in_progress
+  - blocked
+  - done
+
+buckets:
+  language-core:
+    description: Core syntax/AST/type contracts.
+    items:
+      - id: LNG-CORE-01
+        title: Freeze minimal grammar (expr, let, if, fn, call)
+        priority: P1
+        status: done
+      - id: LNG-CORE-02
+        title: AST schema and invariants
+        priority: P1
+        status: done
+      - id: LNG-CORE-03
+        title: Type/check contracts for core nodes
+        priority: P1
+        status: done
+      - id: LNG-CORE-04
+        title: Add source-span metadata contract for all core AST nodes
+        priority: P1
+        status: done
+      - id: LNG-CORE-05
+        title: Extend grammar contract with unary negation and precedence-safe AST node
+        priority: P1
+        status: done
+      - id: LNG-CORE-06
+        title: Add additive/multiplicative binary expression grammar with deterministic precedence AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-07
+        title: Add equality/comparison binary expression grammar tiers with deterministic precedence AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-08
+        title: Add logical and/or grammar tiers with short-circuit AST contract
+        priority: P1
+        status: done
+      - id: LNG-CORE-09
+        title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
+        priority: P1
+        status: done
+      - id: LNG-CORE-10
+        title: Extend grammar contracts with boolean literals and deterministic literal-node typing
+        priority: P1
+        status: done
+
+  ecosystem:
+    description: Tooling, docs, release, and onboarding surface for external use.
+    items:
+      - id: LNG-ECO-01
+        title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
+        priority: P0
+        status: done
+      - id: LNG-ECO-02
+        title: Add first reproducible release workflow (version tag + release notes template + changelog contract)
+        priority: P1
+        status: done
+      - id: LNG-ECO-03
+        title: Add contributor guide with issue/PR templates and Definition-of-Done gates
+        priority: P1
+        status: done
+      - id: LNG-ECO-04
+        title: Add deterministic onboarding verification script that validates quickstart and docs links in CI
+        priority: P1
+        status: done
+      - id: LNG-ECO-05
+        title: Migrate coordinator control docs to .lnd with markdown compatibility stubs
+        priority: P0
+        status: done
+
+  practical-value:
+    description: Real-world utility, examples, and measurable task value.
+    items:
+      - id: LNG-PRX-01
+        title: Add end-to-end example app flow (source -> runtime patch -> replay artifact) with deterministic replay proof
+        priority: P0
+        status: done
+      - id: LNG-PRX-02
+        title: Add baseline benchmark harness comparing mini-language flow vs JSON/DSL baseline for reproducibility and success rate
+        priority: P1
+        status: open
+      - id: LNG-PRX-03
+        title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
+        priority: P1
+        status: open
+
+  interpreter-runtime:
+    description: Deterministic interpreter/runtime behavior.
+    items:
+      - id: LNG-RT-01
+        title: Deterministic evaluator for core AST
+        priority: P0
+        status: done
+      - id: LNG-RT-02
+        title: Environment/scope model with lexical bindings
+        priority: P1
+        status: done
+      - id: LNG-RT-03
+        title: Structured runtime errors (code/message/location)
+        priority: P1
+        status: done
+
+  validation:
+    description: Tests, contracts, and property checks.
+    items:
+      - id: LNG-VAL-01
+        title: Golden program suite
+        priority: P1
+        status: done
+      - id: LNG-VAL-02
+        title: Golden error suite
+        priority: P1
+        status: done
+      - id: LNG-VAL-03
+        title: Property/fuzz checks for parser/eval invariants
+        priority: P2
+        status: done
+
+  integration:
+    description: End-to-end runtime integration and replay checks.
+    items:
+      - id: LNG-INT-01
+        title: Bridge interpreter execution to runtime patch flow
+        priority: P1
+        status: done
+      - id: LNG-INT-02
+        title: UI/timeline hooks for language-run artifacts
+        priority: P1
+        status: done
+      - id: LNG-INT-03
+        title: End-to-end deterministic replay tests
+        priority: P1
+        status: done
