@@ -110,5 +110,5 @@ queue:
     backlog_reference: LNG-ECO-07
     owner_focus: ecosystem
     goal: Create docs/SPEC.lnd from docs/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
-    status: open
+    status: done
 
