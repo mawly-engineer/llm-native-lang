@@ -67,5 +67,5 @@ entries:
     status: done
     tests:
       - "python3 -m unittest runtime.test_type_contract (10 tests, OK)"
-    commit: null
+    commit: "2365cb7"
     blockers: []
