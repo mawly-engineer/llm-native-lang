@@ -1,0 +1,85 @@
+@lnd 0.2
+kind: contract_spec
+id: RUNTIME-001
+schema_id: llm_native_lang.runtime
+schema_version: 1.0.0
+status: active
+updated_at_utc: 2026-03-07T13:02:00Z
+project: llm-native-lang
+objective: Deterministic runtime API surface and replay behavior guarantees.
+
+runtime_api:
+  apply_patch:
+    input:
+      - PatchEnvelope
+    output:
+      - revision
+      - ui_revision
+
+  query:
+    input:
+      - selector
+      - sort_by_optional
+      - descending_optional
+      - limit_optional
+    output:
+      - list
+
+  apply_ui_patch:
+    input:
+      - ops
+      - base_revision_optional
+    output:
+      - ui_revision
+
+  replay_ui_timeline:
+    input:
+      - head_optional
+      - include_metrics_optional
+    output:
+      - ops
+      - metrics_optional
+
+  create_ui_snapshot:
+    input:
+      - head_optional
+    output:
+      - snapshot_revision
+
+  preview_ui_merge:
+    input:
+      - left_revision
+      - right_revision
+      - base_revision_optional
+      - policy_optional
+      - resolutions_optional
+    output:
+      - merged_ops
+      - conflicts
+      - applied_resolutions
+
+  merge_ui_branches:
+    input:
+      - left_revision
+      - right_revision
+      - base_revision_optional
+      - mode
+      - resolutions_optional
+      - resolution_notes_optional
+    output:
+      - merged_revision
+      - merged_ops
+      - mode
+      - applied_resolutions
+
+replay_metrics_keys:
+  - snapshot_head
+  - snapshot_seed_distance
+  - events_replayed
+  - events_from_snapshot_seed
+  - events_total
+
+determinism_guarantees:
+  - stable_ui_op_normalization_order
+  - deterministic_snapshot_seed_selection
+  - order_stability_for_equal_distance_seed_candidates

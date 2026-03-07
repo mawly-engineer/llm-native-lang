@@ -116,5 +116,5 @@ queue:
     backlog_reference: LNG-ECO-08
     owner_focus: ecosystem
     goal: Create docs/RUNTIME.lnd from docs/RUNTIME.md with explicit schema id/version and markdown compatibility mirror header.
-    status: open
+    status: done
 

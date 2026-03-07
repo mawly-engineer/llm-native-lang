@@ -95,7 +95,7 @@ buckets:
       - id: LNG-ECO-08
         title: Migrate docs/RUNTIME.md to docs/RUNTIME.lnd with schema id/version and md mirror header
         priority: P0
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
