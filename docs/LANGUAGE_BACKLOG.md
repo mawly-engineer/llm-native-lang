@@ -70,7 +70,7 @@ buckets:
       - id: LNG-INT-01
         title: Bridge interpreter execution to runtime patch flow
         priority: P1
-        status: open
+        status: done
       - id: LNG-INT-02
         title: UI/timeline hooks for language-run artifacts
         priority: P1

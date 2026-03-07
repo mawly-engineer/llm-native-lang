@@ -157,3 +157,14 @@ entries:
       - "python3 -m unittest runtime.test_interpreter_runtime.InterpreterRuntimePropertyFuzzTest runtime.test_interpreter_runtime.InterpreterRuntimeLexicalScopeTest (9 tests, OK)"
     commit: null
     blockers: []
+
+  - cycle_id: 47
+    timestamp_utc: "2026-03-07T03:05:31Z"
+    selected_primary: integration
+    selected_secondary: language-core
+    backlog_item_id: LNG-INT-01
+    status: done
+    tests:
+      - "python3 -m unittest runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_bridges_eval_to_patch_flow runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_reuses_run_node_via_replace runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_parse_errors_are_structured_and_atomic (3 tests, OK)"
+    commit: null
+    blockers: []

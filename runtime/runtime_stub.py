@@ -6,7 +6,10 @@ mit einfachen Typ-/Constraint-Checks.
 from dataclasses import dataclass, field
 from copy import deepcopy
 import re
-from typing import Any, Dict, List, Set, Tuple
+from typing import Any, Dict, List, Mapping, Set, Tuple
+
+from runtime.grammar_contract import ParseError, parse_expr
+from runtime.interpreter_runtime import EvalError, eval_expr
 
 
 @dataclass
@@ -1045,6 +1048,86 @@ class KairoRuntime:
         self.state.revisions[new_id] = rev
         self.state.head = new_id
         return new_id
+
+    def _node_exists(self, node_id: str) -> bool:
+        if self.state.head is None:
+            return False
+        graph = self.state.revisions[self.state.head].graph
+        return any(isinstance(mod, dict) and mod.get("id") == node_id for mod in graph.get("modules", []))
+
+    def _serialize_runtime_value(self, value: Any) -> str:
+        if isinstance(value, bool):
+            return "true" if value else "false"
+        if isinstance(value, (int, float, str)):
+            return str(value)
+        return repr(value)
+
+    def build_program_run_patch(
+        self,
+        source: str,
+        env: Mapping[str, Any] | None = None,
+        run_node_id: str = "language.run",
+        patch_id: str = "p-language-run",
+    ) -> Dict[str, Any]:
+        if not isinstance(source, str) or not source.strip():
+            raise PatchError("E_LANG_SOURCE", "source must be a non-empty string")
+
+        try:
+            ast = parse_expr(source)
+        except ParseError as exc:
+            raise PatchError("E_LANG_PARSE", str(exc)) from exc
+
+        try:
+            result = eval_expr(ast, env=env)
+        except EvalError as exc:
+            raise PatchError("E_LANG_EVAL", str(exc), details={"code": exc.code, "location": exc.location}) from exc
+
+        node_payload = {"id": run_node_id, "type": "LanguageRun"}
+        op_kind = "replace_node" if self._node_exists(run_node_id) else "add_node"
+
+        attrs = {
+            "language.source": source,
+            "language.ast_kind": ast["kind"],
+            "language.result": self._serialize_runtime_value(result),
+            "language.result_type": type(result).__name__,
+            "language.status": "ok",
+        }
+
+        ops: List[Dict[str, Any]] = [{"op": op_kind, "value": node_payload}]
+        for key in sorted(attrs.keys()):
+            ops.append(
+                {
+                    "op": "set_attr",
+                    "value": {"node_id": run_node_id, "key": key, "value": attrs[key]},
+                }
+            )
+
+        return {
+            "patch_id": patch_id,
+            "base_revision": self.state.head,
+            "target": "program_graph",
+            "ops": ops,
+        }
+
+    def execute_program_source(
+        self,
+        source: str,
+        env: Mapping[str, Any] | None = None,
+        run_node_id: str = "language.run",
+        patch_id: str = "p-language-run",
+    ) -> Dict[str, Any]:
+        patch = self.build_program_run_patch(
+            source=source,
+            env=env,
+            run_node_id=run_node_id,
+            patch_id=patch_id,
+        )
+        revision = self.apply_patch(patch)
+        return {
+            "revision": revision,
+            "run_node_id": run_node_id,
+            "result": self.query(f"modules[id={run_node_id}]")[0]["attrs"]["language.result"],
+        }
 
 
 if __name__ == "__main__":

@@ -543,6 +543,34 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertEqual(self.rt.ui_head, "u-0")
         self.assertEqual(len(self.rt.ui_timeline), 1)
 
+    def test_execute_program_source_bridges_eval_to_patch_flow(self) -> None:
+        run = self.rt.execute_program_source("let x = 1 in x")
+
+        self.assertEqual(run["revision"], "r-1")
+        node = self.rt.query("modules[id=language.run]")[0]
+        self.assertEqual(node["type"], "LanguageRun")
+        self.assertEqual(node["attrs"]["language.source"], "let x = 1 in x")
+        self.assertEqual(node["attrs"]["language.result"], "1")
+        self.assertEqual(node["attrs"]["language.result_type"], "int")
+
+    def test_execute_program_source_reuses_run_node_via_replace(self) -> None:
+        first = self.rt.execute_program_source("let x = 1 in x")
+        second = self.rt.execute_program_source("let x = 2 in x")
+
+        self.assertEqual(first["revision"], "r-1")
+        self.assertEqual(second["revision"], "r-2")
+        modules = self.rt.query("modules[id=language.run]")
+        self.assertEqual(len(modules), 1)
+        self.assertEqual(modules[0]["attrs"]["language.result"], "2")
+
+    def test_execute_program_source_parse_errors_are_structured_and_atomic(self) -> None:
+        with self.assertRaises(PatchError) as ctx:
+            self.rt.execute_program_source("let x =")
+
+        self.assertIn("E_LANG_PARSE", str(ctx.exception))
+        self.assertEqual(self.rt.state.head, "r-0")
+        self.assertEqual(self.rt.query("modules"), [])
+
     def test_ui_snapshot_replay_matches_head_state(self) -> None:
         u0 = self.rt.apply_ui_patch([{"op": "insert", "path": "/root/a", "value": {"kind": "card"}}])
         self.rt.apply_ui_patch(
