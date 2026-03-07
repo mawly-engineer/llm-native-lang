@@ -9,15 +9,15 @@ state:
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-13
   active_next_step_id: STEP-059
-  current_stage: validate
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
-  last_error: null
+  last_stage_status: validate_stage_needs_revision
+  last_error: "runtime/examples canonical .lnc artifact missing; validator cannot approve execute stage."
 
 stage_transition_rules:
   idle_to_create:
