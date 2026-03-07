@@ -115,7 +115,7 @@ buckets:
       - id: LNG-ECO-13
         title: Add first canonical .lnc code_unit artifact in runtime/examples with validator-covered profile compliance
         priority: P0
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
