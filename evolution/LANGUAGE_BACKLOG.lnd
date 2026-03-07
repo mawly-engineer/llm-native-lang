@@ -127,7 +127,7 @@ buckets:
       - id: LNG-ECO-16
         title: Enforce .lnd/.lnc validation in CI with deterministic failure gating for migration phase 4
         priority: P0
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
