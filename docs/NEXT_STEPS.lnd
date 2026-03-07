@@ -152,5 +152,5 @@ queue:
     backlog_reference: LNG-ECO-14
     owner_focus: ecosystem
     goal: Add a second production-relevant runtime/examples .lnc code_unit artifact and reference it in an examples index so scripts/lnc_validate.py covers multiple canonical artifacts.
-    status: open
+    status: done
 

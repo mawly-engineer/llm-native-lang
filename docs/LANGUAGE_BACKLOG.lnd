@@ -119,7 +119,7 @@ buckets:
       - id: LNG-ECO-14
         title: Add second production-relevant .lnc code_unit artifact in runtime/examples and wire it into validator-covered examples index
         priority: P0
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
