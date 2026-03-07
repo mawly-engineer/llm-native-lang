@@ -1,22 +1,52 @@
-# AGENT_ROUTER.md
+version: 1
+document: AGENT_ROUTER
+purpose: Route the single coordinator to the correct specialist focus each cycle.
+updated_at_utc: "2026-03-07T00:15:00Z"
 
-Coordinator-controlled routing file.
+operating_mode:
+  scheduler_model: single_coordinator
+  coordinator_executes_work_directly: true
+  one_backlog_item_per_cycle: true
 
-## Active Agent Slots
-- active_primary: interpreter-runtime
-- active_secondary: validation
+active_selection:
+  active_primary: language-core
+  active_secondary: validation
 
-## Priority Order
-1. integration (if red/discrepancy in E2E)
-2. validation (if failing tests/contracts)
-3. interpreter-runtime
-4. language-core
+routing_rules_in_priority_order:
+  - id: route_integration_on_e2e_red
+    when:
+      signal_e2e_red: true
+    select_primary: integration
+    reason: "E2E instability has highest priority."
 
-## Override Flags
-- force_agent: none
-- hold_agents: none
+  - id: route_validation_on_test_failures
+    when:
+      signal_tests_or_contracts_failing: true
+    select_primary: validation
+    reason: "Failing assertions/contracts must be stabilized before feature expansion."
 
-## Notes
-- Non-selected agents should SKIP with short status.
-- Selected agents should execute one highest-priority backlog item in their bucket.
-- 2026-03-07: Runtime remains primary (no failing validation/E2E signals; focus on deterministic replay behavior).
+  - id: route_runtime_on_runtime_gaps
+    when:
+      signal_runtime_gap: true
+    select_primary: interpreter-runtime
+    reason: "Determinism/runtime correctness is currently the main risk area."
+
+  - id: default_route_core
+    when:
+      fallback_default: true
+    select_primary: language-core
+    reason: "Advance core language capabilities when no blocking signal exists."
+
+overrides:
+  force_agent: null
+  hold_agents: []
+
+required_cycle_output_fields:
+  - selected_primary
+  - selected_secondary
+  - executed_backlog_item_id
+  - implementation_delta
+  - tests
+  - changed_files
+  - commit
+  - blockers
