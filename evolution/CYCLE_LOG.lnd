@@ -1392,5 +1392,45 @@ entries:
     status: staged_create_success
     tests:
       - "create-stage: drafted LNG-ECO-17 + STEP-065 for migration phase-5 completion scope"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 15 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang status --short (dirty)"
+    commit: null
+    blockers:
+      - "working_tree_not_clean"
+
+  - cycle_id: 157
+    timestamp_utc: "2026-03-07T16:12:00Z"
+    selected_primary: ecosystem
+    selected_secondary: validation
+    backlog_item_id: LNG-ECO-17
+    status: staged_validate_approved
+    tests:
+      - "preflight: target_artifacts_planned_for_phase5_cleanup=pass"
+      - "preflight: required_references_resolve evolution/MIGRATION_TO_LND_LNC.lnd + evolution/PROJECT_ENTRY.lnd = pass"
+      - "preflight: validator_targets evolution/contracts/formats/runtime = pass"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 15 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/contracts (PASS validated 6 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/formats (PASS validated 10 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang status --short (dirty)"
+    commit: null
+    blockers:
+      - "working_tree_not_clean"
+
+  - cycle_id: 158
+    timestamp_utc: "2026-03-07T16:14:00Z"
+    selected_primary: ecosystem
+    selected_secondary: validation
+    backlog_item_id: LNG-ECO-17
+    status: done
+    tests:
+      - "execute-stage: migration status finalized to done (phase_4_tooling_ci=done, phase_5_deprecation_cleanup=done)"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 15 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/contracts (PASS validated 6 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/formats (PASS validated 10 .lnd file(s))"
+      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
     commit: null
     blockers: []

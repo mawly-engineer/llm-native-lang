@@ -2,8 +2,8 @@
 kind: migration_plan
 id: LNG-MIG-001
 title: Migrate repository to .lnd (docs) and .lnc (code)
-status: in_progress
-updated_at_utc: 2026-03-07T15:30:00Z
+status: done
+updated_at_utc: 2026-03-07T16:14:00Z
 goal: Move project contracts and executable artifacts to split deterministic formats without breaking current delivery flow.
 
 principles:
@@ -62,7 +62,7 @@ phase_3_code_artifact_onboarding:
 
 phase_4_tooling_ci:
   objective: Make migration enforceable via internal deterministic gate.
-  status: in_progress
+  status: done
   tasks:
     - add lnd_validate and lnc_validate commands
     - add canonical formatter checks
@@ -75,6 +75,7 @@ phase_4_tooling_ci:
 
 phase_5_deprecation_cleanup:
   objective: Retire transitional duplicates.
+  status: done
   tasks:
     - remove obsolete mirrored .md where safe
     - keep only human-facing READMEs in markdown
@@ -112,5 +113,5 @@ minimal_source_of_truth_set:
     - "Legacy *.md files are compatibility mirrors only."
 
 next_actions:
-  - finalize internal validation gate usage in run profiles
-  - add explicit mirror/deprecation headers to legacy markdown docs
+  - migration_complete_keep_internal_gate_as_default
+  - reintroduce_external_ci_only_as_optional_mirror

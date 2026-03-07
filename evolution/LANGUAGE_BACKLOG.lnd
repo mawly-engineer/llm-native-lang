@@ -131,7 +131,7 @@ buckets:
       - id: LNG-ECO-17
         title: Complete phase-5 deprecation cleanup by removing obsolete migration leftovers and marking migration status done
         priority: P1
-        status: in_progress
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

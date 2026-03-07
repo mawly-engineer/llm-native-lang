@@ -2,7 +2,7 @@
 version: 3
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-07T16:08:00Z
+updated_at_utc: 2026-03-07T16:14:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -11,15 +11,12 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue:
-  - step_id: STEP-065
-    backlog_reference: LNG-ECO-17
-    stream: ecosystem
-    stage: create
-    status: in_progress
-    summary: "Draft deterministic cleanup scope for migration phase-5 completion and status finalization."
+active_queue: []
 
 recently_completed:
+  - step_id: STEP-065
+    backlog_reference: LNG-ECO-17
+    status: done
   - step_id: STEP-064
     backlog_reference: LNG-ECO-16
     status: done
