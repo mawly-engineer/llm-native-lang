@@ -26,7 +26,7 @@ buckets:
       - id: LNG-CORE-02
         title: AST schema and invariants
         priority: P1
-        status: open
+        status: done
       - id: LNG-CORE-03
         title: Type/check contracts for core nodes
         priority: P1
