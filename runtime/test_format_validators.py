@@ -4,6 +4,9 @@ import unittest
 from pathlib import Path
 
 
+CANONICAL_EXAMPLES_DIR = Path("/home/node/.openclaw/workspace/llm-native-lang/runtime/examples")
+
+
 REPO_ROOT = Path("/home/node/.openclaw/workspace/llm-native-lang")
 LND_VALIDATE = REPO_ROOT / "scripts" / "lnd_validate.py"
 LNC_VALIDATE = REPO_ROOT / "scripts" / "lnc_validate.py"
@@ -62,6 +65,14 @@ class FormatValidatorToolingTest(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1)
         self.assertIn("ERR_PROFILE_MISMATCH", result.stdout)
+
+    def test_runtime_examples_have_at_least_three_canonical_lnc_units(self) -> None:
+        canonical_units = sorted(CANONICAL_EXAMPLES_DIR.glob("*.lnc"))
+        self.assertGreaterEqual(
+            len(canonical_units),
+            3,
+            "Expected at least 3 canonical .lnc units in runtime/examples.",
+        )
 
 
 if __name__ == "__main__":

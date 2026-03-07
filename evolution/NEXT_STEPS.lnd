@@ -2,7 +2,7 @@
 version: 3
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-07T14:50:00Z
+updated_at_utc: 2026-03-07T15:48:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -12,19 +12,21 @@ queue_policy:
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
 active_queue:
-  - step_id: STEP-061
-    backlog_reference: LNG-ECO-15
-    owner_focus: ecosystem
-    goal: Add a third production-relevant .lnc code_unit artifact in runtime/examples and enforce a >=3 canonical-unit expectation in validator-covered tests.
-    status: open
+  - step_id: STEP-063
+    backlog_reference: LNG-PRX-03
+    stream: practical-value
+    title: Draft cookbook recipe pack scope and deterministic acceptance tests for LNG-PRX-03
+    status: ready_execute
+    notes:
+      - "Validator approved; execute stage is next."
 
 recently_completed:
+  - step_id: STEP-062
+    backlog_reference: LNG-PRX-02
+    status: done
+  - step_id: STEP-061
+    backlog_reference: LNG-ECO-15
+    status: done
   - step_id: STEP-060
     backlog_reference: LNG-ECO-14
-    status: done
-  - step_id: STEP-059
-    backlog_reference: LNG-ECO-13
-    status: done
-  - step_id: STEP-058
-    backlog_reference: LNG-ECO-12
     status: done

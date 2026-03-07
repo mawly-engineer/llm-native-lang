@@ -5,19 +5,19 @@ purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
 
 state:
   mode: staged_multi_cycle
-  active_flow_id: FLOW-LNG-ECO-15
-  active_bucket: ecosystem
-  active_backlog_item_id: LNG-ECO-15
-  active_next_step_id: STEP-061
-  current_stage: revise
+  active_flow_id: FLOW-LNG-PRX-03
+  active_bucket: practical-value
+  active_backlog_item_id: LNG-PRX-03
+  active_next_step_id: STEP-063
+  current_stage: execute
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: validate_stage_needs_revision
-  last_error: "Validator rejected execute readiness: only 2 canonical .lnc artifacts validated; LNG-ECO-15 requires >=3 and validator-covered threshold assertion."
+  last_stage_status: validate_stage_approved
+  last_error: null
 
 stage_transition_rules:
   idle_to_create:

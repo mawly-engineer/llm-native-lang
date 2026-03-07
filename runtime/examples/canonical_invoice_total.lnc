@@ -1,0 +1,19 @@
+@lnc 0.1
+lnc_version: 0.1
+kind: code_unit
+id: EXAMPLE-CANONICAL-INVOICE-01
+module: runtime/examples/canonical_invoice_total
+entry: main
+source_lang: minilang
+source: let base = 200; let tax = 40; let credit = 30; base + tax - credit == 210
+ir_version: v1
+deterministic_flags:
+  - stable_parse
+  - stable_eval
+  - stable_replay
+  - stable_patch_order
+tests:
+  - python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime
+  - python3 -m unittest runtime.test_format_validators.FormatValidatorToolingTest.test_runtime_examples_have_at_least_three_canonical_lnc_units
+refs:
+  - LNG-ECO-15

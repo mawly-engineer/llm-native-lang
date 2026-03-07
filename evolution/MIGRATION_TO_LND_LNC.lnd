@@ -3,7 +3,7 @@ kind: migration_plan
 id: LNG-MIG-001
 title: Migrate repository to .lnd (docs) and .lnc (code)
 status: in_progress
-updated_at_utc: 2026-03-07T13:56:00Z
+updated_at_utc: 2026-03-07T15:30:00Z
 goal: Move project contracts and executable artifacts to split deterministic formats without breaking current delivery flow.
 
 principles:
@@ -48,7 +48,7 @@ phase_2_execution_contracts:
 
 phase_3_code_artifact_onboarding:
   objective: Introduce .lnc for executable/code-unit artifacts.
-  status: in_progress
+  status: done
   targets:
     - runtime/examples/
     - deterministic IR fixtures
@@ -56,7 +56,7 @@ phase_3_code_artifact_onboarding:
   outputs:
     - first canonical code_unit .lnc examples
     - parser/validator support for LNC_PROFILE.lnd
-    - canonical_counter.lnc and canonical_checkout_total.lnc created and validator-clean (2/3 production-relevant artifacts)
+    - canonical_counter.lnc, canonical_checkout_total.lnc, and canonical_invoice_total.lnc created and validator-clean (3/3 production-relevant artifacts)
   done_when:
     - at least 3 production-relevant .lnc artifacts validated in CI
 
