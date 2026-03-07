@@ -1,0 +1,24 @@
+@lnc 0.2
+lnc_version: 0.2
+kind: task
+id: LNG-TEST-002
+title: Valid task with refs and checksum
+priority: P0
+owner_focus: practical-value
+status: in_progress
+updated_at_utc: 2026-03-07T12:08:00Z
+goal: Validate optional fields.
+inputs:
+  - docs/lnc-fixtures/valid/
+constraints:
+  - no_network_calls
+steps:
+  - parse file
+  - validate schema
+tests:
+  - python3 -m unittest runtime.test_lnc_parser
+done_when:
+  - parser accepts file
+refs:
+  - LNG-ECO-04
+checksum: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

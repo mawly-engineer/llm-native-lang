@@ -1,0 +1,20 @@
+@lnc 0.2
+lnc_version: 0.2
+kind: task
+id: LNG-TEST-001
+title: Minimal valid task
+priority: P1
+owner_focus: ecosystem
+status: open
+updated_at_utc: 2026-03-07T12:08:00Z
+goal: Validate minimal task shape.
+inputs:
+  - docs/LNC_FORMAT.lnc
+constraints:
+  - deterministic_output
+steps:
+  - run validator
+tests:
+  - python3 -m unittest runtime.test_lnc_validate
+done_when:
+  - validation passes

@@ -1,0 +1,22 @@
+@lnc 0.2
+# comment line should be ignored
+lnc_version: 0.2
+kind: task
+id: LNG-TEST-003
+title: Comments do not change semantics
+priority: P2
+owner_focus: validation
+status: open
+updated_at_utc: 2026-03-07T12:08:00Z
+goal: Ensure parser ignores comments.
+inputs:
+  - docs/lnc-fixtures/valid/task_comment_ignored.lnc
+constraints:
+  - deterministic_parse
+steps:
+  - parse
+  - assert same tree
+tests:
+  - python3 -m unittest runtime.test_lnc_parser
+done_when:
+  - parse succeeds
