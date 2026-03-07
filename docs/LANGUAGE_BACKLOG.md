@@ -62,7 +62,7 @@ buckets:
       - id: LNG-VAL-03
         title: Property/fuzz checks for parser/eval invariants
         priority: P2
-        status: open
+        status: done
 
   integration:
     description: End-to-end runtime integration and replay checks.
