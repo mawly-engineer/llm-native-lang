@@ -70,11 +70,15 @@ buckets:
       - id: LNG-ECO-02
         title: Add first reproducible release workflow (version tag + release notes template + changelog contract)
         priority: P1
-        status: open
+        status: done
       - id: LNG-ECO-03
         title: Add contributor guide with issue/PR templates and Definition-of-Done gates
         priority: P1
         status: done
+      - id: LNG-ECO-04
+        title: Add deterministic onboarding verification script that validates quickstart and docs links in CI
+        priority: P1
+        status: open
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
@@ -82,7 +86,7 @@ buckets:
       - id: LNG-PRX-01
         title: Add end-to-end example app flow (source -> runtime patch -> replay artifact) with deterministic replay proof
         priority: P0
-        status: open
+        status: done
       - id: LNG-PRX-02
         title: Add baseline benchmark harness comparing mini-language flow vs JSON/DSL baseline for reproducibility and success rate
         priority: P1

@@ -38,6 +38,13 @@ python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runt
 - `docs/RUNTIME_CONTRACT.md` — errors, merge semantics, invariants
 - `docs/LANGUAGE_BACKLOG.md` — canonical prioritized work queue
 - `docs/NEXT_STEPS.md` — near-term executable sequence
+- `docs/EXAMPLE_APP_FLOW.md` — deterministic source -> patch -> replay example contract
+
+### 4) Run the deterministic example app flow
+
+```bash
+python3 -m runtime.example_app_flow
+```
 
 ## Deterministic guarantees (summary)
 
@@ -75,6 +82,15 @@ See `CONTRIBUTING.md` for:
 - issue and pull request templates
 - Definition-of-Done (DoD) gates for spec/tests/benchmarks
 - deterministic workflow expectations for changes
+
+## Release workflow
+
+- Changelog contract: `docs/CHANGELOG_CONTRACT.md`
+- Changelog file: `CHANGELOG.md`
+- Release notes template: `.github/release-notes-template.md`
+- GitHub workflow: `.github/workflows/release.yml`
+
+Release tags must follow `vX.Y.Z` and have a matching `CHANGELOG.md` section.
 
 ## Development model
 

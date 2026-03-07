@@ -73,10 +73,22 @@ queue:
     backlog_reference: LNG-PRX-01
     owner_focus: practical-value
     goal: Add one complete deterministic source->patch->replay example and verify reproducibility.
-    status: open
+    status: done
 
   - step_id: STEP-048
     backlog_reference: LNG-ECO-03
     owner_focus: ecosystem
     goal: Add contributor workflow templates including DoD gates for spec/tests/benchmarks.
     status: done
+
+  - step_id: STEP-049
+    backlog_reference: LNG-ECO-02
+    owner_focus: ecosystem
+    goal: Add reproducible semver-tag release workflow with changelog contract and release-notes template.
+    status: done
+
+  - step_id: STEP-050
+    backlog_reference: LNG-ECO-04
+    owner_focus: ecosystem
+    goal: Add a deterministic onboarding verification script that checks quickstart commands and docs-link integrity in CI.
+    status: open

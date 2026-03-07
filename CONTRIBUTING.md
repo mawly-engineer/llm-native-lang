@@ -39,5 +39,7 @@ A PR is done only when all applicable gates pass:
    - Include reproducibility evidence or benchmark delta relevant to the changed behavior.
 4. **Backlog/state gate (when coordinator docs touched)**
    - `LANGUAGE_BACKLOG`, `NEXT_STEPS`, and `CYCLE_LOG` reflect the performed cycle outcome.
-5. **Determinism gate**
+5. **Release hygiene gate (when publishing/versioning touched)**
+   - Update `CHANGELOG.md` using `docs/CHANGELOG_CONTRACT.md` and ensure tag format stays `vX.Y.Z`.
+6. **Determinism gate**
    - No added nondeterministic ordering, unstable serialization, or time-dependent assertions.
