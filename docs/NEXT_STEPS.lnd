@@ -148,3 +148,9 @@ queue:
     goal: Create one runtime/examples .lnc code_unit artifact that passes scripts/lnc_validate.py and is referenced by migration phase-3 tracking.
     status: done
 
+  - step_id: STEP-060
+    backlog_reference: LNG-ECO-14
+    owner_focus: ecosystem
+    goal: Add a second production-relevant runtime/examples .lnc code_unit artifact and reference it in an examples index so scripts/lnc_validate.py covers multiple canonical artifacts.
+    status: open
+
