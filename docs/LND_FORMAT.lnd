@@ -1,0 +1,78 @@
+@lnd 0.1
+kind: format_spec
+id: LND-FORMAT-001
+status: draft
+updated_at_utc: 2026-03-07T12:15:00Z
+purpose: Extension split contract for docs (.lnd) and code (.lnc).
+
+scope:
+  docs_extension: .lnd
+  code_extension: .lnc
+  rule: "All human/project documentation MUST use .lnd. All executable/code artifacts MUST use .lnc."
+
+profiles:
+  lnd_doc:
+    header: "@lnd <version>"
+    extension: .lnd
+    intent:
+      - project_docs
+      - task_definitions
+      - decision_records
+      - process_contracts
+  lnc_code:
+    header: "@lnc <version>"
+    extension: .lnc
+    intent:
+      - executable_language_units
+      - intermediate_representation
+      - machine_executable_artifacts
+
+naming_rules:
+  case_policy: lowercase_recommended
+  accepted_by_contract:
+    - .lnd
+    - .Lnd
+    - .LND
+    - .lnc
+    - .Lnc
+    - .LNC
+  canonical_output_extensions:
+    - .lnd
+    - .lnc
+
+hard_constraints:
+  - "Do not store documentation records in .lnc files."
+  - "Do not store executable code artifacts in .lnd files."
+  - "A file header MUST match its extension family (@lnd for .lnd, @lnc for .lnc)."
+
+migration_from_previous_layout:
+  from: single_lnc_doc_style
+  to: split_lnd_docs_lnc_code
+  required_actions:
+    - "Rename documentation spec files from *.lnc to *.lnd."
+    - "Keep executable/code artifacts on *.lnc."
+    - "Update references in docs and tests to new *.lnd paths."
+
+interpreter_contract:
+  - "If extension is .lnd -> parse as documentation profile."
+  - "If extension is .lnc -> parse as code profile."
+  - "Reject extension/header mismatch with ERR_PROFILE_MISMATCH."
+
+error_codes:
+  ERR_PROFILE_MISMATCH:
+    reason: header_extension_family_mismatch
+    example: "file=.lnd but header=@lnc 0.2"
+  ERR_DOC_IN_CODE_FILE:
+    reason: doc_shape_detected_in_lnc
+    example: "task/decision doc fields in .lnc file"
+  ERR_CODE_IN_DOC_FILE:
+    reason: executable_shape_detected_in_lnd
+    example: "code IR payload in .lnd file"
+
+example_doc_file:
+  filename: docs/WORKFLOW_RULES.lnd
+  header: "@lnd 0.1"
+
+example_code_file:
+  filename: runtime/sample_program.lnc
+  header: "@lnc 0.1"
