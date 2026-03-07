@@ -2,8 +2,8 @@
 kind: migration_plan
 id: LNG-MIG-001
 title: Migrate repository to .lnd (docs) and .lnc (code)
-status: open
-updated_at_utc: 2026-03-07T12:23:00Z
+status: in_progress
+updated_at_utc: 2026-03-07T12:47:00Z
 goal: Move project contracts and executable artifacts to split deterministic formats without breaking current delivery flow.
 
 principles:
@@ -15,6 +15,7 @@ principles:
 
 phase_1_control_docs_first:
   objective: Convert coordinator-driving docs to .lnd first.
+  status: done
   targets:
     - docs/AGENT_ROUTER.md
     - docs/LANGUAGE_BACKLOG.md
@@ -89,7 +90,23 @@ tracking_metrics:
   - ci_validation_pass_rate
   - profile_mismatch_error_count
 
+minimal_source_of_truth_set:
+  objective: Reduce planning/control sprawl to a compact deterministic core.
+  files:
+    - docs/AGENT_ROUTER.lnd
+    - docs/LANGUAGE_BACKLOG.lnd
+    - docs/NEXT_STEPS.lnd
+    - docs/SUPERVISOR_STATE.lnd
+    - docs/SUPERVISOR_PROFILES.lnd
+    - docs/CYCLE_LOG.lnd
+    - docs/MIGRATION_TO_LND_LNC.lnd
+    - docs/LND_FORMAT.lnd
+    - docs/LNC_PROFILE.lnd
+  rule:
+    - "Coordinator MUST treat this set as authoritative."
+    - "Legacy *.md files are compatibility mirrors only."
+
 next_actions:
-  - create LNG-ECO-05: phase_1 control docs migration
   - create LNG-ECO-06: validator tooling scaffold
   - wire CI gate after first validator pass
+  - add explicit mirror/deprecation headers to legacy markdown docs
