@@ -31,6 +31,14 @@ buckets:
         title: Type/check contracts for core nodes
         priority: P1
         status: done
+      - id: LNG-CORE-04
+        title: Add source-span metadata contract for all core AST nodes
+        priority: P1
+        status: done
+      - id: LNG-CORE-05
+        title: Extend grammar contract with unary negation and precedence-safe AST node
+        priority: P1
+        status: open
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.

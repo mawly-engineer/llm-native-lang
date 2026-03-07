@@ -40,6 +40,12 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["callee"], "sum")
         self.assertEqual(len(ast["args"]), 2)
 
+    def test_parser_emits_deterministic_source_spans(self) -> None:
+        ast = parse_expr("let x = 1 in x")
+        self.assertEqual(ast["span"], {"start": 0, "end": 14})
+        self.assertEqual(ast["value"]["span"], {"start": 8, "end": 9})
+        self.assertEqual(ast["body"]["span"], {"start": 13, "end": 14})
+
 
 if __name__ == "__main__":
     unittest.main()

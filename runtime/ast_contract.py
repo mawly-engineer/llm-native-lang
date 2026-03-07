@@ -12,50 +12,56 @@ AST_SCHEMA = {
     "root": "expr",
     "nodes": {
         "let": {
-            "required": ["kind", "name", "value", "body"],
+            "required": ["kind", "span", "name", "value", "body"],
             "fields": {
                 "kind": "literal:let",
+                "span": "span",
                 "name": "ident",
                 "value": "expr",
                 "body": "expr",
             },
         },
         "if": {
-            "required": ["kind", "cond", "then", "else"],
+            "required": ["kind", "span", "cond", "then", "else"],
             "fields": {
                 "kind": "literal:if",
+                "span": "span",
                 "cond": "expr",
                 "then": "expr",
                 "else": "expr",
             },
         },
         "fn": {
-            "required": ["kind", "params", "body"],
+            "required": ["kind", "span", "params", "body"],
             "fields": {
                 "kind": "literal:fn",
+                "span": "span",
                 "params": "ident[]",
                 "body": "expr",
             },
         },
         "call": {
-            "required": ["kind", "callee", "args"],
+            "required": ["kind", "span", "callee", "args"],
             "fields": {
                 "kind": "literal:call",
+                "span": "span",
                 "callee": "ident",
                 "args": "expr[]",
             },
         },
         "ident": {
-            "required": ["kind", "name"],
+            "required": ["kind", "span", "name"],
             "fields": {
                 "kind": "literal:ident",
+                "span": "span",
                 "name": "ident",
             },
         },
         "number": {
-            "required": ["kind", "value"],
+            "required": ["kind", "span", "value"],
             "fields": {
                 "kind": "literal:number",
+                "span": "span",
                 "value": "int",
             },
         },
@@ -64,12 +70,12 @@ AST_SCHEMA = {
 
 
 _AST_FINGERPRINT_SOURCE = [
-    "let:kind,name,value,body",
-    "if:kind,cond,then,else",
-    "fn:kind,params,body",
-    "call:kind,callee,args",
-    "ident:kind,name",
-    "number:kind,value",
+    "let:kind,span,name,value,body",
+    "if:kind,span,cond,then,else",
+    "fn:kind,span,params,body",
+    "call:kind,span,callee,args",
+    "ident:kind,span,name",
+    "number:kind,span,value",
 ]
 
 AST_SCHEMA_FINGERPRINT = sha256("\n".join(_AST_FINGERPRINT_SOURCE).encode("utf-8")).hexdigest()
@@ -91,6 +97,18 @@ def _require_kind(node: dict[str, Any], expected: str) -> None:
         raise ASTValidationError(f"expected kind={expected}, got {actual}")
 
 
+def _require_span(node: dict[str, Any], label: str) -> None:
+    span = node.get("span")
+    if not isinstance(span, dict):
+        raise ASTValidationError(f"{label}.span must be an object")
+    start = span.get("start")
+    end = span.get("end")
+    if not isinstance(start, int) or not isinstance(end, int):
+        raise ASTValidationError(f"{label}.span.start and {label}.span.end must be ints")
+    if start < 0 or end < start:
+        raise ASTValidationError(f"{label}.span must satisfy 0 <= start <= end")
+
+
 def validate_ast(node: Any) -> None:
     _validate_expr(node)
 
@@ -102,6 +120,7 @@ def _validate_expr(node: Any) -> None:
     kind = node.get("kind")
     if kind == "let":
         _require_kind(node, "let")
+        _require_span(node, "let")
         _require_ident(node.get("name"), "let.name")
         _validate_expr(node.get("value"))
         _validate_expr(node.get("body"))
@@ -109,6 +128,7 @@ def _validate_expr(node: Any) -> None:
 
     if kind == "if":
         _require_kind(node, "if")
+        _require_span(node, "if")
         _validate_expr(node.get("cond"))
         _validate_expr(node.get("then"))
         _validate_expr(node.get("else"))
@@ -116,6 +136,7 @@ def _validate_expr(node: Any) -> None:
 
     if kind == "fn":
         _require_kind(node, "fn")
+        _require_span(node, "fn")
         params = node.get("params")
         if not isinstance(params, list):
             raise ASTValidationError("fn.params must be a list")
@@ -132,6 +153,7 @@ def _validate_expr(node: Any) -> None:
 
     if kind == "call":
         _require_kind(node, "call")
+        _require_span(node, "call")
         _require_ident(node.get("callee"), "call.callee")
         args = node.get("args")
         if not isinstance(args, list):
@@ -142,11 +164,13 @@ def _validate_expr(node: Any) -> None:
 
     if kind == "ident":
         _require_kind(node, "ident")
+        _require_span(node, "ident")
         _require_ident(node.get("name"), "ident.name")
         return
 
     if kind == "number":
         _require_kind(node, "number")
+        _require_span(node, "number")
         if not isinstance(node.get("value"), int):
             raise ASTValidationError("number.value must be an int")
         return

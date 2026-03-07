@@ -1,147 +1,44 @@
-# KAIRO Runtime v0.1
+version: 1
+document: RUNTIME
+purpose: Runtime API surface and deterministic behavior guarantees.
 
-## Pipeline
-1. Input (User/LLM/Event/File)
-2. Normalize → Internal Event
-3. Resolve Module Graph Dependencies
-4. Execute in Sandbox
-5. Emit State Deltas
-6. Compile UI Patches
-7. Apply Incremental Updates to Interaction Space
-8. Persist Revision + Audit Trail
+runtime_api:
+  apply_patch:
+    input: [PatchEnvelope]
+    output: [revision, ui_revision]
 
-## Runtime-Komponenten
-- **Event Bus**: priorisierte Ereignisse, idempotente Verarbeitung
-- **Graph Scheduler**: topologische Ausführung von Modulabhängigkeiten
-- **Semantic Store**: Graph + Embeddings + Kontextfenster
-- **Patch Engine**: strukturelle Änderungen an Program + UI + State
-- **UI Sync Engine**: delta-basiertes Live-Update
-- **Policy VM**: Policy Evaluation + Enforcement
-- **Revision Manager**: Snapshot + Diff + Rollback + Branch
+  query:
+    input: [selector, sort_by?, descending?, limit?]
+    output: [list]
 
-## Ausführungsgrenzen (Safety)
-- CPU/Memory/IO Budgets pro Job
-- syscall-/connector-allowlist
-- timeouts + cancellation tokens
-- read-only fallback mode bei Policy-Verstößen
+  apply_ui_patch:
+    input: [ops, base_revision?]
+    output: [ui_revision]
 
-## Fehlermodell
-- Recoverable Error: Retry / Degrade
-- Policy Error: Hard deny + audit event
-- Integrity Error: Rollback auf letzte konsistente Revision
+  replay_ui_timeline:
+    input: [head?, include_metrics?]
+    output: [ops, metrics?]
 
-## UI Event-Sourcing Skizze (Cycle 011/012)
-- UI-Änderungen werden als append-only Timeline gespeichert (`u-0`, `u-1`, ...)
-- Jede UI-Revision referenziert ihren Parent (Head-basierte Fortschreibung)
-- `apply_ui_patch` normalisiert Ops vor Persistenz (deterministisch + konfliktreduziert)
-- `replay_ui_timeline(head)` rekonstruiert den gewünschten UI-Stand DAG-nativ über `parent` + `secondary_parent`
-- `create_ui_snapshot(head)` speichert einen kompaktisierten UI-Stand (`s-*`) für einen Timeline-Head
-- Replay kann bei vorhandenen Snapshots vom nächsten (distanzbasierten) Snapshot-Vorfahren starten, auch wenn dieser über den sekundären Merge-Parent erreichbar ist
-- `replay_ui_timeline(..., include_metrics=True)` exponiert Replay-Kosten (`events_replayed`, `events_from_snapshot_seed`, `events_total`, `snapshot_seed_distance`) als Runtime-Metriken:
-  - `events_replayed` (kompatibler Alias) und `events_from_snapshot_seed` zählen den effektiven Replay-Pfad ab Snapshot-Seed
-  - `events_total` zählt die gesamte Event-Anzahl des tatsächlich traversierten Apply-Pfads (inkl. Delta-Base-Rekonstruktion)
-- `rollback_ui(revision)` verschiebt nur den Head; Historie bleibt unverändert erhalten
-- `ui_patch` kann als reguläre Op in `apply_patch` enthalten sein (auch mehrfach pro Patch) und schreibt atomar mit Graph-Änderungen
-- Jede Program-Revision trägt die gekoppelte `ui_revision` des resultierenden UI-Heads
-- Bei UI-Base-Mismatch schlägt der gesamte Program-Patch fehl (keine Teilanwendung)
-- UI-Branch-Merge via `preview_ui_merge(...)` / `merge_ui_branches(...)`:
-  - Base wird optional per LCA bestimmt
-  - Policy v0.1 = `explicit_conflict` (kein stilles Overwrite bei konkurrierenden Writes)
-  - optionale manuelle Auflösung pro Op-Key via `resolutions[]` (`accept_left|accept_right`)
-  - Merge-Events tragen explizite Dual-Parents (`parent`, `secondary_parent`) plus optionales `resolution_notes`-Decision-Log
-- `preview_ui_merge_delta(...)` ermöglicht einen nicht-destruktiven Vergleich zwischen materialisiertem Merge-Stand (`merged_ops`) und einem Delta-Set (`delta_ops`) relativ zur Base, inkl. Rekonstruktionsinvariante als Vorbereitung für mögliche Delta-Persistenz.
+  create_ui_snapshot:
+    input: [head?]
+    output: [snapshot_revision]
 
-## Replay-Metrik Troubleshooting (Cycle 024)
-- `events_replayed` misst den effektiven Replay-Pfad nach Snapshot-Seeding; bei Merge-Heads können trotz Snapshot weiterhin mehrere Branch-Events gezählt werden.
-- Bei `mode="delta"` wird die Delta-Base zuerst rekonstruiert, danach das Delta-Event angewendet; damit kann `events_replayed` höher ausfallen als `len(delta_ops)`.
-- `snapshot_seed_distance` ist die Distanz vom Replay-Head zum gewählten Snapshot-Vorfahren, nicht zur Delta-Base.
-- Für Performance-Debugging beide Werte zusammen lesen:
-  - hoher `snapshot_seed_distance` + hohe `events_replayed` → zusätzlicher Snapshot nahe am Merge-Head sinnvoll
-  - niedriger `snapshot_seed_distance`, aber hohe `events_replayed` → Kosten kommen primär aus Branch-Replay/DAG-Fan-in
+  preview_ui_merge:
+    input: [left_revision, right_revision, base_revision?, policy?, resolutions?]
+    output: [merged_ops, conflicts, applied_resolutions]
 
-## Fan-in Vergleich: materialized vs verschachteltes delta (Cycle 027)
-Ein kompaktes Vergleichsszenario mit identischem Endzustand zeigt die Metrik-Unterschiede klar:
-- Setup: Snapshot auf gemeinsamer Base, danach 2-stufiges Fan-in-Merge (erst links/rechts, dann Top/Side)
-- Variante A: beide Merges `mode="materialized"`
-- Variante B: beide Merges `mode="delta"`
+  merge_ui_branches:
+    input: [left_revision, right_revision, base_revision?, mode, resolutions?, resolution_notes?]
+    output: [merged_revision, merged_ops, mode, applied_resolutions]
 
-Beobachtung aus den Runtime-Tests:
-- `events_from_snapshot_seed` bleibt in beiden Varianten gleich (`6`), weil der gleiche DAG-Pfad ab Snapshot abgearbeitet wird.
-- `events_total` unterscheidet sich deutlich:
-  - materialized: `7`
-  - nested delta: `3`
+replay_metrics_keys:
+  - snapshot_head
+  - snapshot_seed_distance
+  - events_replayed
+  - events_from_snapshot_seed
+  - events_total
 
-Interpretation:
-- `events_from_snapshot_seed` zeigt den sichtbaren Replay-Aufwand ab Seed.
-- `events_total` zeigt den tatsächlichen internen Apply-Aufwand (inkl. Delta-Base-Rekonstruktion) und eignet sich besser für Modusvergleiche bei Merge-heavy Historien.
-
-## Gemischte Merge-Modi im 2-stufigen Fan-in (Cycle 028)
-Beim selben Fan-in-Szenario (gleicher Endzustand, Snapshot auf Base) ergeben sich für `events_total`:
-- `materialized -> materialized`: `7`
-- `materialized -> delta`: `3`
-- `delta -> materialized`: `6`
-- `delta -> delta`: `3`
-
-Konstante in allen vier Varianten:
-- `events_from_snapshot_seed = 6`
-
-Kurzfazit:
-- Der **zweite Merge im Delta-Modus** drückt in diesem Szenario `events_total` am stärksten.
-- Ein später materialisierter Merge auf Delta-Historie (`delta -> materialized`) liegt kostenmäßig zwischen den Extremen.
-
-## Entscheidungsraster: `materialized` vs `delta`
-- **Nimm `materialized`, wenn ...**
-  - du Merge-Events direkt als vollständigen Stand inspizieren möchtest
-  - Write-Kosten wichtiger sind als Replay-Kosten
-  - Debugging/Forensik eher auf Event-Payload statt Rekonstruktion basiert
-- **Nimm `delta`, wenn ...**
-  - du Merge-heavy DAGs erwartest und Replay-Kosten (`events_total`) senken willst
-  - du Base-gebundene Rekonstruktion explizit akzeptierst
-  - Snapshot-Strategien bereits etabliert sind
-- **Pragmatischer Mix**
-  - frühe Merges materialisiert halten, später Fan-in-Merges als Delta persistieren (`materialized -> delta`)
-  - Ergebnis regelmäßig mit `replay_ui_timeline(..., include_metrics=True)` verifizieren
-
-## Reproduzierbare Seed-Debugs für Random-Merge-Tests (Cycle 030)
-- Random-Tests sind vollständig seed-basiert; jeder Fail ist mit demselben Seed reproduzierbar.
-- Vorgehen bei einem Fehlfall:
-  1. Seed aus der Fehlermeldung notieren (oder testweise lokal fix setzen).
-  2. Nur den betroffenen Test laufen lassen (schneller Feedback-Loop).
-  3. Falls nötig, temporär Logging für `preview["conflicts"]`, `resolutions` und `merged_ops` aktivieren.
-- Praxisregel für Bugreports:
-  - immer Seed + betroffener Testname + erwartetes vs. tatsächliches `merged_ops`-Delta mitschicken.
-
-## Random-Op-Mix + Resolver-Profile (Cycle 031)
-- Die Random-Testhülle deckt jetzt neben `set_prop` auch strukturelle Ops (`insert`, `remove`) auf gemeinsamen Unterpfaden ab.
-- Damit werden konfliktträchtige Sequenzen realistischer (z. B. konkurrierende Insert/Remove-Muster auf `/root/a/items/*`).
-- Zwei Resolver-Profile werden gegeneinander geprüft:
-  - `accept_left`
-  - `accept_right`
-- Beide Profile müssen replaybar sein; bei echten Konflikten dürfen die resultierenden `merged_ops` bewusst voneinander abweichen.
-- Für reproduzierbare Reports reicht ein Minimalpaket:
-  - Testname + Seed + Resolver-Profil + Erwartung/Ist (`merged_ops` oder Fehlercode).
-
-## Diagnose-Rezept für divergente `merged_ops` zwischen Resolver-Profilen (Cycle 032)
-Wenn `accept_left` und `accept_right` bei gleichem Seed unterschiedliche Endstände liefern, hilft dieses Kurzschema:
-1. **Seed + Merge-Modus fixieren** (`materialized` und `delta` jeweils separat prüfen).
-2. **Konfliktliste sichern** (`preview_ui_merge(...)["conflicts"]`), damit klar ist, welche Op-Keys tatsächlich umstritten waren.
-3. **Beide Profile explizit mergen** (`resolutions_left` vs `resolutions_right`) und `merged_ops` direkt diffen.
-4. **Replay-Metriken je Profil vergleichen** (`events_from_snapshot_seed`, `events_total`, `snapshot_seed_distance`) statt nur auf Payload zu schauen.
-5. **Bugreport kompakt halten**: Testname, Seed, Modus, Profil, Konflikt-Key(s), `merged_ops`-Delta, Metrik-Diff.
-
-## Snapshot-seeded Profilmatrix für Konfliktfälle (Cycle 033)
-Ergänzend zum Rezept oben wird der Profilvergleich jetzt explizit mit Snapshot-Seed auf gemeinsamer Base getestet.
-
-Kurzmatrix (gleicher Seed, gleiche Konfliktmenge, unterschiedliche Resolver-Profile):
-- Merge-Modi: `materialized`, `delta`
-- Profile: `accept_left`, `accept_right`
-- Snapshot: explizit auf `base_revision`
-
-Erwartung in beiden Modi:
-- `snapshot_head == base_revision` für beide Profile
-- `merged_ops` unterscheiden sich bei echten Konflikten weiterhin profilabhängig
-- Metrikfelder (`events_total`, `events_from_snapshot_seed`, `events_replayed`) sind vorhanden und nicht-negativ
-
-Nutzen:
-- Snapshot-Seeding als zusätzliche Kontrollvariable ist fixiert
-- Profilunterschiede lassen sich sauber auf Resolver-Entscheidungen zurückführen statt auf fehlende Seed-Basis
+determinism_guarantees:
+  - stable_ui_op_normalization_order
+  - deterministic_snapshot_seed_selection
+  - order_stability_for_equal_distance_seed_candidates

@@ -1,39 +1,32 @@
-# KAIRO Patch Format v0.1
+version: 1
+document: PATCH_FORMAT
+purpose: Canonical patch envelope and operation contract.
 
-Alle Änderungen laufen über `PatchEnvelope`.
+patch_envelope:
+  required_fields:
+    - target
+    - base_revision
+    - ops
+  allowed_target_values:
+    - program
 
-```json
-{
-  "patch_id": "p-20260306-0001",
-  "base_revision": "r-41",
-  "target": "program_graph",
-  "ops": [
-    {"op":"add_node","path":"/modules/-","value":{"id":"workflow.auto","type":"WorkflowEngine"}},
-    {"op":"add_edge","path":"/edges/-","value":{"from":"workflow.auto","to":"ui.shared","contract":"ActionModel"}}
-  ],
-  "policy_context": {"actor":"llm","scope":"shared"},
-  "signature": "optional"
-}
-```
+operations:
+  add_node:
+    required_fields: [node]
+  add_edge:
+    required_fields: [edge]
+  replace_node:
+    required_fields: [node]
+  remove_node:
+    required_fields: [id]
+  remove_edge:
+    required_fields: [from, to, contract]
+  set_attr:
+    required_fields: [node_id, key, value]
+  ui_patch:
+    required_fields: [ops]
 
-## Op-Typen
-- `add_node`
-- `remove_node`
-- `replace_node`
-- `add_edge`
-- `remove_edge`
-- `set_attr`
-- `ui_patch` (UI-Baum)
-- `state_patch` (State-Delta)
-
-## Invarianten
-- Kein Node ohne Typ
-- Keine dangling edges
-- Policy-Check vor Commit
-- Patch muss gegen `base_revision` validieren
-- `ui_patch` (falls vorhanden) muss gegen UI-Head validieren, sonst wird der gesamte Patch verworfen
-
-## Merge-Strategie
-- Default: 3-way merge auf Revisionsgraph
-- Konfliktarten: structural / semantic / policy
-- Konflikte erzeugen `merge_proposal` statt blindem Commit
+invariants:
+  - ops_must_be_non_empty
+  - references_must_resolve_or_be_created_within_same_patch
+  - apply_is_atomic_all_or_nothing

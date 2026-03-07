@@ -19,7 +19,7 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "1dbeac1a9ef11bcc6fb61560906e9b3400704ae13e196e07b3ee4c952a093d4b",
+            "eea290ab19cb0fac65146079ae4592e03f71ea6e95af7f1a892cb103bb845afb",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -33,17 +33,43 @@ class ASTContractTests(unittest.TestCase):
         ]:
             validate_ast(parse_expr(source))
 
+    def test_all_core_nodes_include_source_span(self) -> None:
+        ast = parse_expr("let x = sum(1,2) in x")
+
+        def assert_spans(node):
+            self.assertIn("span", node)
+            self.assertIsInstance(node["span"]["start"], int)
+            self.assertIsInstance(node["span"]["end"], int)
+            self.assertGreaterEqual(node["span"]["start"], 0)
+            self.assertGreaterEqual(node["span"]["end"], node["span"]["start"])
+
+            kind = node["kind"]
+            if kind == "let":
+                assert_spans(node["value"])
+                assert_spans(node["body"])
+            elif kind == "if":
+                assert_spans(node["cond"])
+                assert_spans(node["then"])
+                assert_spans(node["else"])
+            elif kind == "fn":
+                assert_spans(node["body"])
+            elif kind == "call":
+                for arg in node["args"]:
+                    assert_spans(arg)
+
+        assert_spans(ast)
+
     def test_fn_params_must_be_unique(self) -> None:
         with self.assertRaises(ASTValidationError):
-            validate_ast({"kind": "fn", "params": ["a", "a"], "body": {"kind": "ident", "name": "a"}})
+            validate_ast({"kind": "fn", "span": {"start": 0, "end": 12}, "params": ["a", "a"], "body": {"kind": "ident", "span": {"start": 11, "end": 12}, "name": "a"}})
 
     def test_call_args_must_be_list(self) -> None:
         with self.assertRaises(ASTValidationError):
-            validate_ast({"kind": "call", "callee": "sum", "args": "bad"})
+            validate_ast({"kind": "call", "span": {"start": 0, "end": 6}, "callee": "sum", "args": "bad"})
 
     def test_let_name_required(self) -> None:
         with self.assertRaises(ASTValidationError):
-            validate_ast({"kind": "let", "name": "", "value": {"kind": "number", "value": 1}, "body": {"kind": "number", "value": 2}})
+            validate_ast({"kind": "let", "span": {"start": 0, "end": 14}, "name": "", "value": {"kind": "number", "span": {"start": 8, "end": 9}, "value": 1}, "body": {"kind": "number", "span": {"start": 13, "end": 14}, "value": 2}})
 
 
 if __name__ == "__main__":

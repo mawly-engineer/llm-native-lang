@@ -20,3 +20,15 @@ queue:
     owner_focus: integration
     goal: Add full end-to-end deterministic replay checks.
     status: done
+
+  - step_id: STEP-039
+    backlog_reference: LNG-CORE-04
+    owner_focus: language-core
+    goal: Add deterministic AST source-span metadata for core nodes with contract tests.
+    status: done
+
+  - step_id: STEP-040
+    backlog_reference: LNG-CORE-05
+    owner_focus: language-core
+    goal: Add unary negation grammar and AST contract coverage with deterministic precedence behavior.
+    status: open

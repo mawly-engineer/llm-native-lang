@@ -37,6 +37,8 @@ GRAMMAR_FINGERPRINT = sha256(
 class Token:
     kind: str
     value: str
+    start: int
+    end: int
 
 
 class ParseError(ValueError):
@@ -52,18 +54,18 @@ def _tokenize(source: str) -> List[Token]:
             i += 1
             continue
         if source.startswith("=>", i):
-            tokens.append(Token("ARROW", "=>"))
+            tokens.append(Token("ARROW", "=>", i, i + 2))
             i += 2
             continue
         if ch in "(),=":
-            tokens.append(Token(ch, ch))
+            tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
         if ch.isdigit():
             j = i + 1
             while j < len(source) and source[j].isdigit():
                 j += 1
-            tokens.append(Token("NUMBER", source[i:j]))
+            tokens.append(Token("NUMBER", source[i:j], i, j))
             i = j
             continue
         if ch.isalpha() or ch == "_":
@@ -72,14 +74,14 @@ def _tokenize(source: str) -> List[Token]:
                 j += 1
             ident = source[i:j]
             if ident in {"let", "in", "if", "then", "else", "fn"}:
-                tokens.append(Token("KW", ident))
+                tokens.append(Token("KW", ident, i, j))
             else:
-                tokens.append(Token("IDENT", ident))
+                tokens.append(Token("IDENT", ident, i, j))
             i = j
             continue
         raise ParseError(f"unexpected character: {ch}")
 
-    tokens.append(Token("EOF", ""))
+    tokens.append(Token("EOF", "", len(source), len(source)))
     return tokens
 
 
@@ -100,6 +102,14 @@ class _Parser:
         self.pos += 1
         return tok
 
+    @staticmethod
+    def _with_span(kind: str, start: int, end: int, **fields: Any) -> dict[str, Any]:
+        return {
+            "kind": kind,
+            "span": {"start": start, "end": end},
+            **fields,
+        }
+
     def parse(self) -> dict[str, Any]:
         node = self._expr()
         self._eat("EOF")
@@ -116,25 +126,32 @@ class _Parser:
         return self._call_or_atom()
 
     def _let(self) -> dict[str, Any]:
-        self._eat("KW", "let")
+        start = self._eat("KW", "let").start
         name = self._eat("IDENT").value
         self._eat("=", "=")
         value = self._expr()
         self._eat("KW", "in")
         body = self._expr()
-        return {"kind": "let", "name": name, "value": value, "body": body}
+        return self._with_span("let", start, body["span"]["end"], name=name, value=value, body=body)
 
     def _if(self) -> dict[str, Any]:
-        self._eat("KW", "if")
+        start = self._eat("KW", "if").start
         cond = self._expr()
         self._eat("KW", "then")
         then_node = self._expr()
         self._eat("KW", "else")
         else_node = self._expr()
-        return {"kind": "if", "cond": cond, "then": then_node, "else": else_node}
+        return self._with_span(
+            "if",
+            start,
+            else_node["span"]["end"],
+            cond=cond,
+            then=then_node,
+            **{"else": else_node},
+        )
 
     def _fn(self) -> dict[str, Any]:
-        self._eat("KW", "fn")
+        start = self._eat("KW", "fn").start
         self._eat("(", "(")
         params: list[str] = []
         if self._peek().kind == "IDENT":
@@ -145,7 +162,7 @@ class _Parser:
         self._eat(")", ")")
         self._eat("ARROW", "=>")
         body = self._expr()
-        return {"kind": "fn", "params": params, "body": body}
+        return self._with_span("fn", start, body["span"]["end"], params=params, body=body)
 
     def _call_or_atom(self) -> dict[str, Any]:
         atom = self._atom()
@@ -157,16 +174,24 @@ class _Parser:
                 while self._peek().kind == ",":
                     self._eat(",", ",")
                     args.append(self._expr())
-            self._eat(")", ")")
-            return {"kind": "call", "callee": atom["name"], "args": args}
+            close_tok = self._eat(")", ")")
+            return self._with_span(
+                "call",
+                atom["span"]["start"],
+                close_tok.end,
+                callee=atom["name"],
+                args=args,
+            )
         return atom
 
     def _atom(self) -> dict[str, Any]:
         tok = self._peek()
         if tok.kind == "IDENT":
-            return {"kind": "ident", "name": self._eat("IDENT").value}
+            ident = self._eat("IDENT")
+            return self._with_span("ident", ident.start, ident.end, name=ident.value)
         if tok.kind == "NUMBER":
-            return {"kind": "number", "value": int(self._eat("NUMBER").value)}
+            number = self._eat("NUMBER")
+            return self._with_span("number", number.start, number.end, value=int(number.value))
         if tok.kind == "(":
             self._eat("(", "(")
             node = self._expr()
