@@ -106,3 +106,9 @@ queue:
     goal: Define validator toolchain scaffolding for .lnd/.lnc with deterministic commands, profiles, and stable error-code mapping.
     status: done
 
+  - step_id: STEP-053
+    backlog_reference: LNG-ECO-07
+    owner_focus: ecosystem
+    goal: Create docs/SPEC.lnd from docs/SPEC.md with explicit schema id/version and markdown compatibility mirror header.
+    status: open
+
