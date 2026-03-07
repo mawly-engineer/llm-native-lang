@@ -1,0 +1,169 @@
+@lnc 0.1
+kind: format_spec
+id: LNC-FORMAT-001
+status: draft
+purpose: Deterministic, low-noise, LLM-first document format.
+
+# -----------------------------------------------------------------------------
+# 1) DESIGN GOALS (normative)
+# -----------------------------------------------------------------------------
+goals:
+  - deterministic_parse
+  - minimal_tokens
+  - schema_like_constraints_without_external_tools
+  - strict_key_order
+  - no_filler_text
+
+non_goals:
+  - markdown_rendering
+  - rich_text
+  - ambiguous_natural_language
+
+# -----------------------------------------------------------------------------
+# 2) CORE SYNTAX (normative)
+# -----------------------------------------------------------------------------
+# Document is UTF-8 text.
+# Comments start with '#'.
+# Empty lines are ignored.
+# Top-level is ordered key-value pairs.
+# Key format: [a-z0-9_]+ (snake_case only).
+# Key/value delimiter: single ':'
+# Lists use '- ' items under a key.
+# Objects use indentation with 2 spaces.
+# Tabs are forbidden.
+# Duplicate keys are forbidden.
+
+syntax_rules:
+  encoding: utf-8
+  indentation: "2_spaces_only"
+  tabs_allowed: false
+  key_regex: "^[a-z0-9_]+$"
+  duplicate_keys: forbidden
+  comments: "# comment"
+  key_value_delimiter: ":"
+  list_item_prefix: "- "
+
+scalar_types:
+  - string
+  - int
+  - float
+  - bool
+  - enum
+
+string_rules:
+  multiline_strings: forbidden
+  max_length_default: 240
+  quote_style: optional
+
+# -----------------------------------------------------------------------------
+# 3) CANONICAL NORMALIZATION (normative)
+# -----------------------------------------------------------------------------
+normalization:
+  newline: "\n"
+  trim_trailing_spaces: true
+  key_order: required
+  enum_case: lower_snake
+  booleans: [true, false]
+  null_literal: null
+
+# -----------------------------------------------------------------------------
+# 4) STANDARD DOC SHAPES (v0.1)
+# -----------------------------------------------------------------------------
+# 4.1 task_doc
+
+shape_task_doc:
+  required_keys_in_order:
+    - lnc_version
+    - kind
+    - id
+    - title
+    - priority
+    - owner_focus
+    - status
+    - goal
+    - inputs
+    - constraints
+    - steps
+    - tests
+    - done_when
+
+  key_contract:
+    lnc_version: "enum[0.1]"
+    kind: "enum[task]"
+    id: "string(regex=^[A-Z0-9-]+$)"
+    title: "string(max=120)"
+    priority: "enum[P0|P1|P2]"
+    owner_focus: "enum[language-core|ecosystem|practical-value|validation|interpreter-runtime|integration]"
+    status: "enum[open|in_progress|blocked|done]"
+    goal: "string(max=240)"
+    inputs: "list[string]"
+    constraints: "list[string]"
+    steps: "list[string]"
+    tests: "list[string]"
+    done_when: "list[string]"
+
+# 4.2 decision_doc
+
+shape_decision_doc:
+  required_keys_in_order:
+    - lnc_version
+    - kind
+    - id
+    - topic
+    - decision
+    - rationale
+    - tradeoffs
+    - followups
+
+  key_contract:
+    lnc_version: "enum[0.1]"
+    kind: "enum[decision]"
+    id: "string(regex=^[A-Z0-9-]+$)"
+    topic: "string(max=120)"
+    decision: "string(max=240)"
+    rationale: "list[string]"
+    tradeoffs: "list[string]"
+    followups: "list[string]"
+
+# -----------------------------------------------------------------------------
+# 5) INTERPRETATION CONTRACT (for any LLM)
+# -----------------------------------------------------------------------------
+interpreter_contract:
+  - Parse as strict key/value tree.
+  - Reject unknown required-key order for known shapes.
+  - Reject duplicate keys.
+  - Reject tab indentation.
+  - Ignore comments.
+  - Treat absent optional keys as null.
+  - Never infer missing required fields.
+
+# -----------------------------------------------------------------------------
+# 6) EXAMPLE (valid task_doc)
+# -----------------------------------------------------------------------------
+example_task_doc:
+  lnc_version: 0.1
+  kind: task
+  id: LNG-ECO-04
+  title: Add LNC parser and validator CLI
+  priority: P1
+  owner_focus: ecosystem
+  status: open
+  goal: Provide deterministic validation for .lnc files in CI.
+  inputs:
+    - docs/LNC_FORMAT.lnc
+    - docs/
+  constraints:
+    - use_absolute_paths
+    - no_network_calls
+    - deterministic_output
+  steps:
+    - implement runtime/lnc_parser.py
+    - implement runtime/lnc_validate.py
+    - add unit tests for valid/invalid fixtures
+    - add CI check command
+  tests:
+    - python3 -m unittest runtime.test_lnc_parser runtime.test_lnc_validate
+  done_when:
+    - validator rejects malformed files with stable error codes
+    - validator accepts valid fixtures
+    - CI fails on invalid .lnc docs
