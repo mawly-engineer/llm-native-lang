@@ -134,5 +134,5 @@ queue:
     backlog_reference: LNG-ECO-11
     owner_focus: ecosystem
     goal: Create docs/UI_DIFF_PROTOCOL.lnd from docs/UI_DIFF_PROTOCOL.md with explicit schema id/version and markdown compatibility mirror header.
-    status: open
+    status: done
 
