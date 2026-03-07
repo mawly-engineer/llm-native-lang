@@ -128,5 +128,5 @@ queue:
     backlog_reference: LNG-ECO-10
     owner_focus: ecosystem
     goal: Create docs/PATCH_FORMAT.lnd from docs/PATCH_FORMAT.md with explicit schema id/version and markdown compatibility mirror header.
-    status: open
+    status: done
 
