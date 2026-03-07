@@ -1,0 +1,21 @@
+@lnd 0.2
+kind: runtime_examples_index
+id: RUNTIME-EXAMPLES-INDEX-001
+status: active
+updated_at_utc: 2026-03-07T13:56:00Z
+purpose: Canonical index of validator-covered runtime example .lnc artifacts.
+examples:
+  - id: EXAMPLE-CANONICAL-COUNTER-01
+    path: /home/node/.openclaw/workspace/llm-native-lang/runtime/examples/canonical_counter.lnc
+    backlog_refs:
+      - LNG-ECO-13
+  - id: EXAMPLE-CANONICAL-CHECKOUT-01
+    path: /home/node/.openclaw/workspace/llm-native-lang/runtime/examples/canonical_checkout_total.lnc
+    backlog_refs:
+      - LNG-ECO-14
+validator_commands:
+  - python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime
+  - python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs
+notes:
+  - runtime/examples remains the canonical location for executable .lnc examples.
+  - This index is documentation-only and must stay in .lnd.

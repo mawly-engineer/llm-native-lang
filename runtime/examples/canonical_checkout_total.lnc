@@ -1,0 +1,19 @@
+@lnc 0.1
+lnc_version: 0.1
+kind: code_unit
+id: EXAMPLE-CANONICAL-CHECKOUT-01
+module: runtime/examples/canonical_checkout_total
+entry: main
+source_lang: minilang
+source: let subtotal = 120; let discount = 15; let shipping = 5; subtotal - discount + shipping == 110
+ir_version: v1
+deterministic_flags:
+  - stable_parse
+  - stable_eval
+  - stable_replay
+  - stable_patch_order
+tests:
+  - python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime
+  - python3 -m unittest runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_execute_program_source_bridges_eval_to_patch_flow
+refs:
+  - LNG-ECO-14
