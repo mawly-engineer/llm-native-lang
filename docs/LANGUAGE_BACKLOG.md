@@ -79,6 +79,10 @@ buckets:
         title: Add deterministic onboarding verification script that validates quickstart and docs links in CI
         priority: P1
         status: done
+      - id: LNG-ECO-05
+        title: Migrate coordinator control docs to .lnd with markdown compatibility stubs
+        priority: P0
+        status: open
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

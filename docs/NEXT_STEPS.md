@@ -92,3 +92,10 @@ queue:
     owner_focus: ecosystem
     goal: Add a deterministic onboarding verification script that checks quickstart commands and docs-link integrity in CI.
     status: done
+
+  - step_id: STEP-051
+    backlog_reference: LNG-ECO-05
+    owner_focus: ecosystem
+    goal: Execute migration phase 1 by converting coordinator control docs to .lnd and leaving .md compatibility notes.
+    status: open
+
