@@ -3,7 +3,7 @@ kind: migration_plan
 id: LNG-MIG-001
 title: Migrate repository to .lnd (docs) and .lnc (code)
 status: in_progress
-updated_at_utc: 2026-03-07T12:48:00Z
+updated_at_utc: 2026-03-07T13:40:00Z
 goal: Move project contracts and executable artifacts to split deterministic formats without breaking current delivery flow.
 
 principles:
@@ -32,6 +32,7 @@ phase_1_control_docs_first:
 
 phase_2_execution_contracts:
   objective: Move core specs/contracts from markdown to .lnd.
+  status: done
   targets:
     - docs/SPEC.md
     - docs/RUNTIME.md

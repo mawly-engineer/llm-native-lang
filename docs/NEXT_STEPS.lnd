@@ -140,5 +140,5 @@ queue:
     backlog_reference: LNG-ECO-12
     owner_focus: ecosystem
     goal: Create docs/TYPE_SYSTEM.lnd from docs/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
-    status: open
+    status: done
 
