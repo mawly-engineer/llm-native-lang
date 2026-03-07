@@ -154,3 +154,9 @@ queue:
     goal: Add a second production-relevant runtime/examples .lnc code_unit artifact and reference it in an examples index so scripts/lnc_validate.py covers multiple canonical artifacts.
     status: done
 
+  - step_id: STEP-061
+    backlog_reference: LNG-ECO-15
+    owner_focus: ecosystem
+    goal: Add a third production-relevant .lnc code_unit artifact in runtime/examples and enforce a >=3 canonical-unit expectation in validator-covered tests.
+    status: open
+

@@ -120,6 +120,10 @@ buckets:
         title: Add second production-relevant .lnc code_unit artifact in runtime/examples and wire it into validator-covered examples index
         priority: P0
         status: done
+      - id: LNG-ECO-15
+        title: Add third production-relevant .lnc code_unit artifact and extend validator/tests to assert >=3 canonical runtime/examples units
+        priority: P0
+        status: open
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
