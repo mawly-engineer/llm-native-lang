@@ -4,6 +4,7 @@ id: LNC-PROFILE-001
 status: draft
 updated_at_utc: 2026-03-07T12:41:00Z
 purpose: Documentation-specification of the .lnc code artifact profile.
+modular_index: formats/lnc/INDEX.lnd
 
 profile:
   name: lnc_code

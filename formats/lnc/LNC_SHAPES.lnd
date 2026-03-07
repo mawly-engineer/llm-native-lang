@@ -1,0 +1,26 @@
+@lnd 0.2
+kind: format_fragment
+id: LNC-SHAPES-001
+status: active
+updated_at_utc: 2026-03-07T14:27:00Z
+parent_spec: formats/lnc/LNC_PROFILE.lnd
+scope: shape_contracts
+
+shape_set:
+  - code_unit
+
+code_unit_required_keys:
+  - lnc_version
+  - kind
+  - id
+  - module
+  - entry
+  - source_lang
+  - source
+  - ir_version
+  - deterministic_flags
+  - tests
+
+code_unit_optional_keys:
+  - refs
+  - checksum

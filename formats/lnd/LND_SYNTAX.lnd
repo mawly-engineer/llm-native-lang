@@ -1,0 +1,22 @@
+@lnd 0.2
+kind: format_fragment
+id: LND-SYNTAX-001
+status: active
+updated_at_utc: 2026-03-07T14:27:00Z
+parent_spec: formats/lnd/LND_FORMAT.lnd
+scope: syntax_and_canonicalization
+
+syntax_rules:
+  encoding: utf-8
+  newline: "\n"
+  indentation: "2_spaces_only"
+  tabs_allowed: false
+  key_regex: "^[a-z0-9_]+$"
+  duplicate_keys: forbidden
+  comments: "# comment"
+
+canonicalization:
+  terminal_newline_required: true
+  trim_trailing_spaces: true
+  key_order: required
+  preserve_comments: false

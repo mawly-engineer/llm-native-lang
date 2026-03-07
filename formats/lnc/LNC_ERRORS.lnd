@@ -1,0 +1,23 @@
+@lnd 0.2
+kind: format_fragment
+id: LNC-ERRORS-001
+status: active
+updated_at_utc: 2026-03-07T14:27:00Z
+parent_spec: formats/lnc/LNC_PROFILE.lnd
+scope: stable_error_codes
+
+error_families:
+  - LNC_PARSE_*
+  - LNC_SCHEMA_*
+  - ERR_PROFILE_MISMATCH
+  - ERR_DOC_IN_CODE_FILE
+
+minimum_codes:
+  - LNC_PARSE_001
+  - LNC_PARSE_002
+  - LNC_PARSE_003
+  - LNC_SCHEMA_001
+  - LNC_SCHEMA_002
+  - LNC_SCHEMA_003
+  - ERR_PROFILE_MISMATCH
+  - ERR_DOC_IN_CODE_FILE

@@ -1,0 +1,21 @@
+@lnd 0.2
+kind: format_index
+id: LND-INDEX-001
+status: active
+updated_at_utc: 2026-03-07T14:27:00Z
+purpose: Entry index for LND format definition files.
+
+source_of_truth:
+  primary: formats/lnd/LND_FORMAT.lnd
+
+subfiles:
+  - path: formats/lnd/LND_SYNTAX.lnd
+    scope: lexical_and_structure_rules
+  - path: formats/lnd/LND_SHAPES.lnd
+    scope: document_shapes_and_key_contracts
+  - path: formats/lnd/LND_ERRORS.lnd
+    scope: stable_error_codes_and_meanings
+
+rule:
+  - Keep LND format definitions modular but bounded.
+  - Prefer extending these subfiles over creating new ones.

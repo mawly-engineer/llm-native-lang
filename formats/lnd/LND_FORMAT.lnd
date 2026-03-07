@@ -4,6 +4,7 @@ id: LND-FORMAT-001
 status: draft
 updated_at_utc: 2026-03-07T12:21:00Z
 purpose: Deterministic documentation format for project/process definitions.
+modular_index: formats/lnd/INDEX.lnd
 
 # -----------------------------------------------------------------------------
 # 1) GLOBAL SPLIT CONTRACT

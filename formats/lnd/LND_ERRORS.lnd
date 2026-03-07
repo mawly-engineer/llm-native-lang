@@ -1,0 +1,23 @@
+@lnd 0.2
+kind: format_fragment
+id: LND-ERRORS-001
+status: active
+updated_at_utc: 2026-03-07T14:27:00Z
+parent_spec: formats/lnd/LND_FORMAT.lnd
+scope: stable_error_codes
+
+error_families:
+  - LND_PARSE_*
+  - LND_SCHEMA_*
+  - LND_CANON_*
+  - ERR_PROFILE_MISMATCH
+
+minimum_codes:
+  - LND_PARSE_001
+  - LND_PARSE_002
+  - LND_PARSE_003
+  - LND_SCHEMA_001
+  - LND_SCHEMA_002
+  - LND_SCHEMA_003
+  - LND_CANON_001
+  - ERR_PROFILE_MISMATCH
