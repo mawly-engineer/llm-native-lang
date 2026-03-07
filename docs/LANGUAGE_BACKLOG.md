@@ -58,7 +58,7 @@ buckets:
       - id: LNG-CORE-10
         title: Extend grammar contracts with boolean literals and deterministic literal-node typing
         priority: P1
-        status: open
+        status: done
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
@@ -66,7 +66,7 @@ buckets:
       - id: LNG-ECO-01
         title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
         priority: P0
-        status: open
+        status: done
       - id: LNG-ECO-02
         title: Add first reproducible release workflow (version tag + release notes template + changelog contract)
         priority: P1
@@ -74,7 +74,7 @@ buckets:
       - id: LNG-ECO-03
         title: Add contributor guide with issue/PR templates and Definition-of-Done gates
         priority: P1
-        status: open
+        status: done
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.

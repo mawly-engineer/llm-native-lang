@@ -61,13 +61,13 @@ queue:
     backlog_reference: LNG-CORE-10
     owner_focus: language-core
     goal: Add true/false literal grammar + AST/type contract coverage with deterministic bool literal nodes.
-    status: open
+    status: done
 
   - step_id: STEP-046
     backlog_reference: LNG-ECO-01
     owner_focus: ecosystem
     goal: Publish README positioning + quickstart + deterministic guarantees summary with explicit scope boundaries.
-    status: open
+    status: done
 
   - step_id: STEP-047
     backlog_reference: LNG-PRX-01
@@ -79,4 +79,4 @@ queue:
     backlog_reference: LNG-ECO-03
     owner_focus: ecosystem
     goal: Add contributor workflow templates including DoD gates for spec/tests/benchmarks.
-    status: open
+    status: done

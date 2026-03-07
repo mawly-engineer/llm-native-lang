@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Callable, Mapping
+from typing import Any, Mapping
 
 from runtime.ast_contract import ASTValidationError, validate_ast
 
@@ -76,6 +76,9 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
     kind = node["kind"]
 
     if kind == "number":
+        return node["value"]
+
+    if kind == "bool":
         return node["value"]
 
     if kind == "ident":

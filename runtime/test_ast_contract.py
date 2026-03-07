@@ -13,25 +13,26 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "unary_neg", "logical_bin", "ident", "number"],
+            ["let", "if", "fn", "call", "unary_neg", "logical_bin", "ident", "number", "bool"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "ba04f1a23d7762e427b7a42166f556cfa505fb77c1f4ac4175f943dfa42ba0dc",
+            "df618c229ee63af232331662522947776ace35d3fe1f436f86139ec3363b307e",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
         for source in [
             "let x = 1 in x",
-            "if x then 1 else 2",
+            "if true then 1 else 2",
             "fn(a,b) => a",
             "sum(1,2)",
             "x",
             "42",
             "-1",
             "true and false",
+            "true",
         ]:
             validate_ast(parse_expr(source))
 
@@ -77,6 +78,10 @@ class ASTContractTests(unittest.TestCase):
     def test_let_name_required(self) -> None:
         with self.assertRaises(ASTValidationError):
             validate_ast({"kind": "let", "span": {"start": 0, "end": 14}, "name": "", "value": {"kind": "number", "span": {"start": 8, "end": 9}, "value": 1}, "body": {"kind": "number", "span": {"start": 13, "end": 14}, "value": 2}})
+
+    def test_bool_node_requires_boolean_value(self) -> None:
+        with self.assertRaises(ASTValidationError):
+            validate_ast({"kind": "bool", "span": {"start": 0, "end": 4}, "value": "true"})
 
 
 if __name__ == "__main__":

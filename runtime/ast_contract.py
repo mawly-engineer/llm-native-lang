@@ -83,6 +83,14 @@ AST_SCHEMA = {
                 "value": "int",
             },
         },
+        "bool": {
+            "required": ["kind", "span", "value"],
+            "fields": {
+                "kind": "literal:bool",
+                "span": "span",
+                "value": "bool",
+            },
+        },
     },
 }
 
@@ -96,6 +104,7 @@ _AST_FINGERPRINT_SOURCE = [
     "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
     "number:kind,span,value",
+    "bool:kind,span,value",
 ]
 
 AST_SCHEMA_FINGERPRINT = sha256("\n".join(_AST_FINGERPRINT_SOURCE).encode("utf-8")).hexdigest()
@@ -209,6 +218,13 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "number")
         if not isinstance(node.get("value"), int):
             raise ASTValidationError("number.value must be an int")
+        return
+
+    if kind == "bool":
+        _require_kind(node, "bool")
+        _require_span(node, "bool")
+        if not isinstance(node.get("value"), bool):
+            raise ASTValidationError("bool.value must be a bool")
         return
 
     raise ASTValidationError(f"unsupported expr kind: {kind}")

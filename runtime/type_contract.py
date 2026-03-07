@@ -69,6 +69,12 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.value: number literal must be int")
         return TYPE_NUMBER
 
+    if kind == "bool":
+        value = node.get("value")
+        if not isinstance(value, bool):
+            raise TypeCheckError(f"{path}.value: bool literal must be bool")
+        return TYPE_BOOL
+
     if kind == "unary_neg":
         operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
         if operand_ty != TYPE_NUMBER:

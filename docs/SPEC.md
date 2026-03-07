@@ -38,7 +38,7 @@ language_minimal_grammar:
     - "logical_and -> unary ('and' unary)*"
     - "call -> IDENT '(' args? ')'"
     - "unary -> '-' unary | call | atom"
-    - "atom -> IDENT | NUMBER | '(' expr ')'"
+    - "atom -> 'true' | 'false' | IDENT | NUMBER | '(' expr ')'"
     - "params -> IDENT (',' IDENT)*"
     - "args -> expr (',' expr)*"
 

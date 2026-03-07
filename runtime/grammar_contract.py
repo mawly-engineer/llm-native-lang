@@ -1,6 +1,6 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, unary negation, logical and/or.
+Scope: expr, let, if, fn, call, unary negation, logical and/or, bool literals.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ GRAMMAR_CONTRACT = {
         "logical_and -> unary ('and' unary)*",
         "call -> IDENT '(' args? ')'",
         "unary -> '-' unary | call | atom",
-        "atom -> IDENT | NUMBER | '(' expr ')'",
+        "atom -> 'true' | 'false' | IDENT | NUMBER | '(' expr ')'",
         "params -> IDENT (',' IDENT)*",
         "args -> expr (',' expr)*",
     ],
@@ -76,7 +76,7 @@ def _tokenize(source: str) -> List[Token]:
             while j < len(source) and (source[j].isalnum() or source[j] == "_"):
                 j += 1
             ident = source[i:j]
-            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or"}:
+            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or", "true", "false"}:
                 tokens.append(Token("KW", ident, i, j))
             else:
                 tokens.append(Token("IDENT", ident, i, j))
@@ -232,6 +232,9 @@ class _Parser:
 
     def _atom(self) -> dict[str, Any]:
         tok = self._peek()
+        if tok.kind == "KW" and tok.value in {"true", "false"}:
+            boolean = self._eat("KW")
+            return self._with_span("bool", boolean.start, boolean.end, value=boolean.value == "true")
         if tok.kind == "IDENT":
             ident = self._eat("IDENT")
             return self._with_span("ident", ident.start, ident.end, name=ident.value)

@@ -15,6 +15,9 @@ class TypeContractTests(unittest.TestCase):
     def test_number_literal_is_number(self) -> None:
         self.assertEqual(check_expr(parse_expr("42")), TYPE_NUMBER)
 
+    def test_bool_literal_is_bool(self) -> None:
+        self.assertEqual(check_expr(parse_expr("true")), TYPE_BOOL)
+
     def test_let_binds_value_type_in_body(self) -> None:
         expr = parse_expr("let x = 1 in x")
         self.assertEqual(check_expr(expr), TYPE_NUMBER)

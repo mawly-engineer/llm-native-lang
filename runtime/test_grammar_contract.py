@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "29a2ce742ba3d2d5a8b3bc21346264b90e03ee64d0bc6076386ba03a607a4222",
+            "8d52e082dc8912d18f719e918d624c57a778bfd864c8d22c71ba7e2a11ba399a",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -26,7 +26,7 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["name"], "x")
 
     def test_parse_if_expression(self) -> None:
-        ast = parse_expr("if x then 1 else 2")
+        ast = parse_expr("if true then 1 else 2")
         self.assertEqual(ast["kind"], "if")
 
     def test_parse_fn_expression(self) -> None:
@@ -51,11 +51,19 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["operand"]["kind"], "call")
         self.assertEqual(ast["operand"]["callee"], "sum")
 
+    def test_parse_bool_literals_as_literal_nodes(self) -> None:
+        ast_true = parse_expr("true")
+        ast_false = parse_expr("false")
+        self.assertEqual(ast_true["kind"], "bool")
+        self.assertTrue(ast_true["value"])
+        self.assertEqual(ast_false["kind"], "bool")
+        self.assertFalse(ast_false["value"])
+
     def test_parse_logical_and_or_with_precedence(self) -> None:
         ast = parse_expr("true or false and true")
         self.assertEqual(ast["kind"], "logical_bin")
         self.assertEqual(ast["op"], "or")
-        self.assertEqual(ast["left"]["kind"], "ident")
+        self.assertEqual(ast["left"]["kind"], "bool")
         self.assertEqual(ast["right"]["kind"], "logical_bin")
         self.assertEqual(ast["right"]["op"], "and")
 
