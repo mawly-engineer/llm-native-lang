@@ -142,3 +142,9 @@ queue:
     goal: Create docs/TYPE_SYSTEM.lnd from docs/TYPE_SYSTEM.md with explicit schema id/version and markdown compatibility mirror header.
     status: done
 
+  - step_id: STEP-059
+    backlog_reference: LNG-ECO-13
+    owner_focus: ecosystem
+    goal: Create one runtime/examples .lnc code_unit artifact that passes scripts/lnc_validate.py and is referenced by migration phase-3 tracking.
+    status: open
+

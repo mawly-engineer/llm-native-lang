@@ -112,6 +112,10 @@ buckets:
         title: Migrate docs/TYPE_SYSTEM.md to docs/TYPE_SYSTEM.lnd with schema id/version and md mirror header
         priority: P0
         status: done
+      - id: LNG-ECO-13
+        title: Add first canonical .lnc code_unit artifact in runtime/examples with validator-covered profile compliance
+        priority: P0
+        status: open
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
