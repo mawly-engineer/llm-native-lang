@@ -1423,5 +1423,118 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
         self.assertTrue(saw_conflict)
 
 
+class RuntimeGoldenErrorSuiteTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.rt = KairoRuntime()
+
+    def test_patch_error_contract_golden_cases(self) -> None:
+        cases = [
+            {
+                "name": "missing_required_patch_field",
+                "call": lambda: self.rt.apply_patch({"patch_id": "p-1", "target": "program_graph", "ops": []}),
+                "code": "E_PATCH_REQUIRED",
+                "message": "missing required field: base_revision",
+            },
+            {
+                "name": "base_revision_mismatch",
+                "setup": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-1",
+                        "base_revision": "r-0",
+                        "target": "program_graph",
+                        "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+                    }
+                ),
+                "call": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-2",
+                        "base_revision": "r-0",
+                        "target": "program_graph",
+                        "ops": [{"op": "add_node", "value": {"id": "n2", "type": "Node"}}],
+                    }
+                ),
+                "code": "E_BASE_MISMATCH",
+                "message": "base_revision mismatch",
+            },
+            {
+                "name": "duplicate_node_id",
+                "setup": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-1",
+                        "base_revision": "r-0",
+                        "target": "program_graph",
+                        "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+                    }
+                ),
+                "call": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-2",
+                        "base_revision": "r-1",
+                        "target": "program_graph",
+                        "ops": [{"op": "add_node", "value": {"id": "n1", "type": "Node"}}],
+                    }
+                ),
+                "code": "E_NODE_DUPLICATE",
+                "message": "duplicate node id: n1",
+            },
+            {
+                "name": "remove_unknown_edge",
+                "setup": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-1",
+                        "base_revision": "r-0",
+                        "target": "program_graph",
+                        "ops": [
+                            {"op": "add_node", "value": {"id": "a", "type": "A"}},
+                            {"op": "add_node", "value": {"id": "b", "type": "B"}},
+                        ],
+                    }
+                ),
+                "call": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-2",
+                        "base_revision": "r-1",
+                        "target": "program_graph",
+                        "ops": [{"op": "remove_edge", "value": {"from": "a", "to": "b", "contract": "x"}}],
+                    }
+                ),
+                "code": "E_EDGE_NOT_FOUND",
+                "message": "cannot remove unknown edge: ('a', 'b', 'x')",
+            },
+            {
+                "name": "invalid_query_selector",
+                "call": lambda: self.rt.query("modules[id><n1]"),
+                "code": "E_QUERY_SELECTOR",
+                "message": "invalid selector: modules[id><n1]",
+            },
+            {
+                "name": "ui_patch_shape_invalid",
+                "call": lambda: self.rt.apply_patch(
+                    {
+                        "patch_id": "p-ui-bad",
+                        "base_revision": "r-0",
+                        "target": "program_graph",
+                        "ops": [{"op": "ui_patch", "value": {"ops": []}}],
+                    }
+                ),
+                "code": "E_UI_PATCH_SHAPE",
+                "message": "ui_patch.ops must be a non-empty list",
+            },
+        ]
+
+        for case in cases:
+            with self.subTest(case=case["name"]):
+                self.rt = KairoRuntime()
+                setup = case.get("setup")
+                if callable(setup):
+                    setup()
+
+                with self.assertRaises(PatchError) as ctx:
+                    case["call"]()
+
+                self.assertEqual(ctx.exception.code, case["code"])
+                self.assertEqual(str(ctx.exception), f"{case['code']}: {case['message']}")
+
+
 if __name__ == "__main__":
     unittest.main()

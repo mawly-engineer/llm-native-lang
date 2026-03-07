@@ -58,7 +58,7 @@ buckets:
       - id: LNG-VAL-02
         title: Golden error suite
         priority: P1
-        status: open
+        status: done
       - id: LNG-VAL-03
         title: Property/fuzz checks for parser/eval invariants
         priority: P2
