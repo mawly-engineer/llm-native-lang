@@ -54,7 +54,7 @@ buckets:
       - id: LNG-VAL-01
         title: Golden program suite
         priority: P1
-        status: open
+        status: done
       - id: LNG-VAL-02
         title: Golden error suite
         priority: P1

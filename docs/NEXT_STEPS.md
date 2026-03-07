@@ -7,7 +7,7 @@ queue:
     backlog_reference: LNG-VAL-01
     owner_focus: validation
     goal: Add explicit profile-delta assertions for events_total.
-    status: open
+    status: done
 
   - step_id: STEP-037
     backlog_reference: LNG-RT-02

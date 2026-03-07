@@ -1417,6 +1417,9 @@ class RuntimeStubPatchOpsTest(unittest.TestCase):
                     self.assertGreaterEqual(replay_left["metrics"][metric_key], 0)
                     self.assertGreaterEqual(replay_right["metrics"][metric_key], 0)
 
+                profile_delta_events_total = replay_left["metrics"]["events_total"] - replay_right["metrics"]["events_total"]
+                self.assertEqual(profile_delta_events_total, 0)
+
         self.assertTrue(saw_conflict)
 
 
