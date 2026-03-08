@@ -9,7 +9,7 @@ status: in_progress
 updated_at_utc: 2026-03-07T12:08:00Z
 goal: Validate optional fields.
 inputs:
-  - evolution/lnc-fixtures/valid/
+  - formats/lnc/fixtures/valid/
 constraints:
   - no_network_calls
 steps:

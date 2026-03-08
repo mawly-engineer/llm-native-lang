@@ -104,8 +104,8 @@ authoritative_inputs:
   - evolution/AGENT_ROUTER.lnd
   - evolution/LANGUAGE_BACKLOG.lnd
   - evolution/NEXT_STEPS.lnd
-  - evolution/SUPERVISOR_STATE.lnd
-  - evolution/SUPERVISOR_PROFILES.lnd
+  - evolution/agents/SUPERVISOR_STATE.lnd
+  - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd

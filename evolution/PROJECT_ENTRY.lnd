@@ -19,8 +19,8 @@ core_file_set:
   - evolution/AGENT_ROUTER.lnd
   - evolution/LANGUAGE_BACKLOG.lnd
   - evolution/NEXT_STEPS.lnd
-  - evolution/SUPERVISOR_STATE.lnd
-  - evolution/SUPERVISOR_PROFILES.lnd
+  - evolution/agents/SUPERVISOR_STATE.lnd
+  - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
   - evolution/FEATURES_DONE.lnd
   - evolution/ARCHITECTURE.lnd

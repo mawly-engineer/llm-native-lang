@@ -39,17 +39,17 @@ implemented_features:
   - id: LNG-ECO-06
     title: Scaffold deterministic lnd_validate and lnc_validate tooling contracts with stable error codes
   - id: LNG-ECO-07
-    title: Migrate evolution/SPEC.md to contracts/SPEC.lnd with schema id/version and md mirror header
+    title: Consolidate language specification into contracts/SPEC.lnd
   - id: LNG-ECO-08
-    title: Migrate evolution/RUNTIME.md to contracts/RUNTIME.lnd with schema id/version and md mirror header
+    title: Consolidate runtime specification into contracts/RUNTIME.lnd
   - id: LNG-ECO-09
-    title: Migrate evolution/RUNTIME_CONTRACT.md to contracts/RUNTIME_CONTRACT.lnd with schema id/version and md mirror header
+    title: Consolidate runtime contract into contracts/RUNTIME_CONTRACT.lnd
   - id: LNG-ECO-10
-    title: Migrate evolution/PATCH_FORMAT.md to contracts/PATCH_FORMAT.lnd with schema id/version and md mirror header
+    title: Consolidate patch format into contracts/PATCH_FORMAT.lnd
   - id: LNG-ECO-11
-    title: Migrate evolution/UI_DIFF_PROTOCOL.md to contracts/UI_DIFF_PROTOCOL.lnd with schema id/version and md mirror header
+    title: Consolidate UI diff protocol into contracts/UI_DIFF_PROTOCOL.lnd
   - id: LNG-ECO-12
-    title: Migrate evolution/TYPE_SYSTEM.md to contracts/TYPE_SYSTEM.lnd with schema id/version and md mirror header
+    title: Consolidate type system into contracts/TYPE_SYSTEM.lnd
   - id: LNG-ECO-13
     title: Add first canonical .lnc code_unit artifact in runtime/examples with validator-covered profile compliance
   - id: LNG-ECO-14

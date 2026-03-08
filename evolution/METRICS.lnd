@@ -43,5 +43,5 @@ tracking_policy:
   cadence: per_cycle_or_batch
   source_files:
     - evolution/CYCLE_LOG.lnd
-    - evolution/SUPERVISOR_STATE.lnd
+    - evolution/agents/SUPERVISOR_STATE.lnd
   reporting_location: evolution/METRICS.lnd
