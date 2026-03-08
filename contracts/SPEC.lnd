@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T17:37:00Z
+updated_at_utc: 2026-03-08T17:47:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -52,7 +52,7 @@ language_minimal_grammar:
     - "equality -> comparison (('==' | '!=') comparison)*"
     - "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*"
     - "concat -> multiplicative (('+' | '-') multiplicative)*"
-    - "multiplicative -> power (('*' | '%' | '//') power)*"
+    - "multiplicative -> power (('*' | '/' | '%' | '//') power)*"
     - "power -> unary ('**' power)?"
     - "unary -> '+' unary | '-' unary | '!' unary | postfix"
     - "postfix -> atom (call_suffix | optional_call_suffix | index_suffix | optional_index_suffix | member_suffix)*"
@@ -80,11 +80,13 @@ language_runtime_semantics:
   multiplicative_operators:
     operators:
       - "*"
+      - "/"
       - "%"
       - "//"
     scope: deterministic_integer_multiplicative_arithmetic
     behavior:
       - multiply_both_operands_int_then_multiply
+      - exact_division_both_operands_int_then_require_divisible_else_E_RT_DOMAIN
       - modulo_both_operands_int_then_modulo
       - int_div_both_operands_int_then_floor_divide
       - division_or_modulo_by_zero_raise_E_RT_ZERO_DIVISION

@@ -405,6 +405,35 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return left * right
 
+    if kind == "exact_div_bin":
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+        if not isinstance(left, int) or isinstance(left, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"exact division expects int left operand, got {type(left).__name__}",
+                location={"node_kind": "exact_div_bin", "side": "left"},
+            )
+        if not isinstance(right, int) or isinstance(right, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"exact division expects int right operand, got {type(right).__name__}",
+                location={"node_kind": "exact_div_bin", "side": "right"},
+            )
+        if right == 0:
+            raise EvalError(
+                code="E_RT_ZERO_DIVISION",
+                message="exact division by zero",
+                location={"node_kind": "exact_div_bin", "side": "right"},
+            )
+        if left % right != 0:
+            raise EvalError(
+                code="E_RT_DOMAIN",
+                message=f"exact division requires divisible operands, got {left} and {right}",
+                location={"node_kind": "exact_div_bin", "left": left, "right": right},
+            )
+        return left // right
+
     if kind == "modulo_bin":
         left = _eval(node["left"], env, context)
         right = _eval(node["right"], env, context)

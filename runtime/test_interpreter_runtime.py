@@ -55,6 +55,15 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("2*false"))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
+    def test_exact_division_evaluates_deterministically(self) -> None:
+        expr = parse_expr("20/5")
+        self.assertEqual(eval_expr(expr), 4)
+
+    def test_exact_division_rejects_non_divisible_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("7/2"))
+        self.assertEqual(ctx.exception.code, "E_RT_DOMAIN")
+
     def test_modulo_evaluates_deterministically(self) -> None:
         expr = parse_expr("10%4")
         self.assertEqual(eval_expr(expr), 2)
@@ -322,10 +331,11 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         self.assertGreater(len(first_trace_ids), 0)
 
     def test_eval_trace_ids_include_node_kind_suffix(self) -> None:
-        expr = parse_expr("10%4")
+        expr = parse_expr("20/5%3")
         _result, trace_ids = eval_expr_with_trace(expr)
 
         self.assertTrue(all(trace_id.startswith("n-") for trace_id in trace_ids))
+        self.assertTrue(any(trace_id.endswith(":exact_div_bin") for trace_id in trace_ids))
         self.assertTrue(any(trace_id.endswith(":modulo_bin") for trace_id in trace_ids))
 
 
