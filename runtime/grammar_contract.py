@@ -1,7 +1,8 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, unary negation, logical and/or, bool literals,
-list literals, and index access.
+Scope: expr, let, if, fn, call, unary negation, string literals,
+string concatenation, logical and/or, bool literals, list literals,
+and index access.
 """
 
 from __future__ import annotations
@@ -23,6 +24,7 @@ GRAMMAR_CONTRACT = {
         "fn",
         "logical_or",
         "logical_and",
+        "concat",
         "unary",
         "postfix",
         "atom",
@@ -33,12 +35,13 @@ GRAMMAR_CONTRACT = {
         "if -> 'if' expr 'then' expr 'else' expr",
         "fn -> 'fn' '(' params? ')' '=>' expr",
         "logical_or -> logical_and ('or' logical_and)*",
-        "logical_and -> unary ('and' unary)*",
+        "logical_and -> concat ('and' concat)*",
+        "concat -> unary ('+' unary)*",
         "unary -> '-' unary | postfix",
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
         "index_suffix -> '[' expr ']'",
-        "atom -> 'true' | 'false' | IDENT | NUMBER | list | '(' expr ')'",
+        "atom -> 'true' | 'false' | STRING | IDENT | NUMBER | list | '(' expr ')'",
         "list -> '[' args? ']'",
         "params -> IDENT (',' IDENT)*",
         "args -> expr (',' expr)*",
@@ -74,7 +77,38 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token("ARROW", "=>", i, i + 2))
             i += 2
             continue
-        if ch in "()[],=-":
+        if ch == '"':
+            start = i
+            i += 1
+            chars: list[str] = []
+            while i < len(source):
+                cur = source[i]
+                if cur == '"':
+                    i += 1
+                    tokens.append(Token("STRING", "".join(chars), start, i))
+                    break
+                if cur == "\\":
+                    if i + 1 >= len(source):
+                        raise ParseError("unterminated string literal")
+                    nxt = source[i + 1]
+                    if nxt == '"':
+                        chars.append('"')
+                    elif nxt == "\\":
+                        chars.append("\\")
+                    elif nxt == "n":
+                        chars.append("\n")
+                    elif nxt == "t":
+                        chars.append("\t")
+                    else:
+                        raise ParseError(f"unsupported string escape: \\{nxt}")
+                    i += 2
+                    continue
+                chars.append(cur)
+                i += 1
+            else:
+                raise ParseError("unterminated string literal")
+            continue
+        if ch in "()[],=-+":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -197,15 +231,29 @@ class _Parser:
         return node
 
     def _logical_and(self) -> dict[str, Any]:
-        node = self._unary()
+        node = self._concat()
         while self._peek().kind == "KW" and self._peek().value == "and":
             self._eat("KW", "and")
-            right = self._unary()
+            right = self._concat()
             node = self._with_span(
                 "logical_bin",
                 node["span"]["start"],
                 right["span"]["end"],
                 op="and",
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _concat(self) -> dict[str, Any]:
+        node = self._unary()
+        while self._peek().kind == "+":
+            self._eat("+", "+")
+            right = self._unary()
+            node = self._with_span(
+                "concat_bin",
+                node["span"]["start"],
+                right["span"]["end"],
                 left=node,
                 right=right,
             )
@@ -265,6 +313,9 @@ class _Parser:
         if tok.kind == "KW" and tok.value in {"true", "false"}:
             boolean = self._eat("KW")
             return self._with_span("bool", boolean.start, boolean.end, value=boolean.value == "true")
+        if tok.kind == "STRING":
+            string = self._eat("STRING")
+            return self._with_span("string", string.start, string.end, value=string.value)
         if tok.kind == "IDENT":
             ident = self._eat("IDENT")
             return self._with_span("ident", ident.start, ident.end, name=ident.value)

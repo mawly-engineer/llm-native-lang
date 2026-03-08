@@ -26,6 +26,10 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("-inc(1)")
         self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), -2)
 
+    def test_string_concat_evaluates_deterministically(self) -> None:
+        expr = parse_expr('"hi"+"-"+"there"')
+        self.assertEqual(eval_expr(expr), "hi-there")
+
     def test_list_literal_evaluates_deterministically(self) -> None:
         expr = parse_expr("[1,2,3]")
         self.assertEqual(eval_expr(expr), [1, 2, 3])

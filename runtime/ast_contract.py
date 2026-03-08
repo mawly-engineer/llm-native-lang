@@ -13,66 +13,35 @@ AST_SCHEMA = {
     "nodes": {
         "let": {
             "required": ["kind", "span", "name", "value", "body"],
-            "fields": {
-                "kind": "literal:let",
-                "span": "span",
-                "name": "ident",
-                "value": "expr",
-                "body": "expr",
-            },
+            "fields": {"kind": "literal:let", "span": "span", "name": "ident", "value": "expr", "body": "expr"},
         },
         "if": {
             "required": ["kind", "span", "cond", "then", "else"],
-            "fields": {
-                "kind": "literal:if",
-                "span": "span",
-                "cond": "expr",
-                "then": "expr",
-                "else": "expr",
-            },
+            "fields": {"kind": "literal:if", "span": "span", "cond": "expr", "then": "expr", "else": "expr"},
         },
         "fn": {
             "required": ["kind", "span", "params", "body"],
-            "fields": {
-                "kind": "literal:fn",
-                "span": "span",
-                "params": "ident[]",
-                "body": "expr",
-            },
+            "fields": {"kind": "literal:fn", "span": "span", "params": "ident[]", "body": "expr"},
         },
         "call": {
             "required": ["kind", "span", "callee", "args"],
-            "fields": {
-                "kind": "literal:call",
-                "span": "span",
-                "callee": "ident",
-                "args": "expr[]",
-            },
+            "fields": {"kind": "literal:call", "span": "span", "callee": "ident", "args": "expr[]"},
         },
         "index": {
             "required": ["kind", "span", "target", "index"],
-            "fields": {
-                "kind": "literal:index",
-                "span": "span",
-                "target": "expr",
-                "index": "expr",
-            },
+            "fields": {"kind": "literal:index", "span": "span", "target": "expr", "index": "expr"},
         },
         "list": {
             "required": ["kind", "span", "items"],
-            "fields": {
-                "kind": "literal:list",
-                "span": "span",
-                "items": "expr[]",
-            },
+            "fields": {"kind": "literal:list", "span": "span", "items": "expr[]"},
         },
         "unary_neg": {
             "required": ["kind", "span", "operand"],
-            "fields": {
-                "kind": "literal:unary_neg",
-                "span": "span",
-                "operand": "expr",
-            },
+            "fields": {"kind": "literal:unary_neg", "span": "span", "operand": "expr"},
+        },
+        "concat_bin": {
+            "required": ["kind", "span", "left", "right"],
+            "fields": {"kind": "literal:concat_bin", "span": "span", "left": "expr", "right": "expr"},
         },
         "logical_bin": {
             "required": ["kind", "span", "op", "left", "right"],
@@ -86,27 +55,19 @@ AST_SCHEMA = {
         },
         "ident": {
             "required": ["kind", "span", "name"],
-            "fields": {
-                "kind": "literal:ident",
-                "span": "span",
-                "name": "ident",
-            },
+            "fields": {"kind": "literal:ident", "span": "span", "name": "ident"},
         },
         "number": {
             "required": ["kind", "span", "value"],
-            "fields": {
-                "kind": "literal:number",
-                "span": "span",
-                "value": "int",
-            },
+            "fields": {"kind": "literal:number", "span": "span", "value": "int"},
         },
         "bool": {
             "required": ["kind", "span", "value"],
-            "fields": {
-                "kind": "literal:bool",
-                "span": "span",
-                "value": "bool",
-            },
+            "fields": {"kind": "literal:bool", "span": "span", "value": "bool"},
+        },
+        "string": {
+            "required": ["kind", "span", "value"],
+            "fields": {"kind": "literal:string", "span": "span", "value": "string"},
         },
     },
 }
@@ -120,10 +81,12 @@ _AST_FINGERPRINT_SOURCE = [
     "index:kind,span,target,index",
     "list:kind,span,items",
     "unary_neg:kind,span,operand",
+    "concat_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
     "number:kind,span,value",
     "bool:kind,span,value",
+    "string:kind,span,value",
 ]
 
 AST_SCHEMA_FINGERPRINT = sha256("\n".join(_AST_FINGERPRINT_SOURCE).encode("utf-8")).hexdigest()
@@ -233,6 +196,13 @@ def _validate_expr(node: Any) -> None:
         _validate_expr(node.get("operand"))
         return
 
+    if kind == "concat_bin":
+        _require_kind(node, "concat_bin")
+        _require_span(node, "concat_bin")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
     if kind == "logical_bin":
         _require_kind(node, "logical_bin")
         _require_span(node, "logical_bin")
@@ -261,6 +231,13 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "bool")
         if not isinstance(node.get("value"), bool):
             raise ASTValidationError("bool.value must be a bool")
+        return
+
+    if kind == "string":
+        _require_kind(node, "string")
+        _require_span(node, "string")
+        if not isinstance(node.get("value"), str):
+            raise ASTValidationError("string.value must be a string")
         return
 
     raise ASTValidationError(f"unsupported expr kind: {kind}")

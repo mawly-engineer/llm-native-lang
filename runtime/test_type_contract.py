@@ -5,6 +5,7 @@ from runtime.type_contract import (
     TYPE_ANY,
     TYPE_BOOL,
     TYPE_NUMBER,
+    TYPE_STRING,
     TypeCheckError,
     check_expr,
     fn_type,
@@ -18,6 +19,9 @@ class TypeContractTests(unittest.TestCase):
 
     def test_bool_literal_is_bool(self) -> None:
         self.assertEqual(check_expr(parse_expr("true")), TYPE_BOOL)
+
+    def test_string_literal_is_string(self) -> None:
+        self.assertEqual(check_expr(parse_expr('"hello"')), TYPE_STRING)
 
     def test_let_binds_value_type_in_body(self) -> None:
         expr = parse_expr("let x = 1 in x")
@@ -58,6 +62,11 @@ class TypeContractTests(unittest.TestCase):
         self.assertEqual(check_expr(parse_expr("true or false")), TYPE_BOOL)
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("1 and true"))
+
+    def test_string_concat_requires_string_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr('"a"+"b"')), TYPE_STRING)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr('"a"+1'))
 
     def test_list_literal_requires_homogeneous_item_types(self) -> None:
         self.assertEqual(check_expr(parse_expr("[1,2,3]")), list_type(TYPE_NUMBER))

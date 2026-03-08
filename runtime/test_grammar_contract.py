@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "unary", "postfix", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "concat", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "4ddca2ba7cadcb48bff046881b2adf65d98c79289fdcc17e27221b09e919c66b",
+            "c2e4c9b5fdda784e586723f0acfa1c30622b58e1f27f95a83e87b1bcf222a07b",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -66,6 +66,17 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["left"]["kind"], "bool")
         self.assertEqual(ast["right"]["kind"], "logical_bin")
         self.assertEqual(ast["right"]["op"], "and")
+
+    def test_parse_string_literal(self) -> None:
+        ast = parse_expr('"hi"')
+        self.assertEqual(ast["kind"], "string")
+        self.assertEqual(ast["value"], "hi")
+
+    def test_parse_string_concatenation(self) -> None:
+        ast = parse_expr('"a"+"b"+"c"')
+        self.assertEqual(ast["kind"], "concat_bin")
+        self.assertEqual(ast["left"]["kind"], "concat_bin")
+        self.assertEqual(ast["right"]["kind"], "string")
 
     def test_parse_list_literal(self) -> None:
         ast = parse_expr("[1,2,3]")

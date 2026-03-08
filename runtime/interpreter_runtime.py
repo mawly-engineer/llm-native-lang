@@ -114,6 +114,9 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "bool":
         return node["value"]
 
+    if kind == "string":
+        return node["value"]
+
     if kind == "list":
         return [_eval(item, env, context) for item in node["items"]]
 
@@ -153,6 +156,23 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                 location={"node_kind": "unary_neg"},
             )
         return -value
+
+    if kind == "concat_bin":
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+        if not isinstance(left, str):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"string concatenation expects string left operand, got {type(left).__name__}",
+                location={"node_kind": "concat_bin", "side": "left"},
+            )
+        if not isinstance(right, str):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"string concatenation expects string right operand, got {type(right).__name__}",
+                location={"node_kind": "concat_bin", "side": "right"},
+            )
+        return left + right
 
     if kind == "logical_bin":
         op = node["op"]

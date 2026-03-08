@@ -25,6 +25,7 @@ class TypeSpec:
 
 TYPE_NUMBER = TypeSpec("number")
 TYPE_BOOL = TypeSpec("bool")
+TYPE_STRING = TypeSpec("string")
 TYPE_ANY = TypeSpec("any")
 
 
@@ -36,10 +37,7 @@ def fn_type(*args: TypeSpec, returns: TypeSpec = TYPE_ANY) -> TypeSpec:
     return TypeSpec("fn", args=args, returns=returns)
 
 
-DEFAULT_TYPE_ENV: dict[str, TypeSpec] = {
-    "true": TYPE_BOOL,
-    "false": TYPE_BOOL,
-}
+DEFAULT_TYPE_ENV: dict[str, TypeSpec] = {"true": TYPE_BOOL, "false": TYPE_BOOL}
 
 
 class TypeCheckError(ValueError):
@@ -82,6 +80,12 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.value: bool literal must be bool")
         return TYPE_BOOL
 
+    if kind == "string":
+        value = node.get("value")
+        if not isinstance(value, str):
+            raise TypeCheckError(f"{path}.value: string literal must be string")
+        return TYPE_STRING
+
     if kind == "list":
         items = node.get("items")
         if not isinstance(items, list):
@@ -111,6 +115,15 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         if operand_ty != TYPE_NUMBER:
             raise TypeCheckError(f"{path}.operand: expected number, got {operand_ty}")
         return TYPE_NUMBER
+
+    if kind == "concat_bin":
+        left_ty = _check(node.get("left"), ctx, f"{path}.left")
+        right_ty = _check(node.get("right"), ctx, f"{path}.right")
+        if left_ty != TYPE_STRING:
+            raise TypeCheckError(f"{path}.left: expected string, got {left_ty}")
+        if right_ty != TYPE_STRING:
+            raise TypeCheckError(f"{path}.right: expected string, got {right_ty}")
+        return TYPE_STRING
 
     if kind == "logical_bin":
         op = node.get("op")
@@ -192,9 +205,7 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             arg_ty = _check(arg, ctx, f"{path}.args[{idx}]")
             expected = callee_ty.args[idx]
             if expected != TYPE_ANY and arg_ty != expected:
-                raise TypeCheckError(
-                    f"{path}.args[{idx}]: expected {expected}, got {arg_ty}"
-                )
+                raise TypeCheckError(f"{path}.args[{idx}]: expected {expected}, got {arg_ty}")
 
         return TYPE_ANY if callee_ty.returns is None else callee_ty.returns
 

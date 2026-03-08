@@ -4,7 +4,7 @@ id: RUNTIME-001
 schema_id: llm_native_lang.runtime
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T02:00:00Z
+updated_at_utc: 2026-03-08T03:10:00Z
 project: llm-native-lang
 objective: Deterministic runtime API surface and replay behavior guarantees.
 
@@ -85,6 +85,15 @@ determinism_guarantees:
   - order_stability_for_equal_distance_seed_candidates
 
 language_runtime_semantics:
+  string_literals:
+    - parse_double_quoted_string_literals_with_deterministic_escape_rules
+    - allow_escapes_only_for_quote_backslash_newline_tab
+    - reject_unsupported_or_unterminated_escapes_as_parse_errors
+  string_concatenation:
+    - parse_left_associative_concat_bin_via_plus_operator
+    - evaluate_left_then_right_deterministically
+    - require_both_operands_string_values
+    - halt_with_E_RT_TYPE_when_concat_operands_are_non_string
   list_literals:
     - preserve_source_item_order
     - evaluate_items_left_to_right
