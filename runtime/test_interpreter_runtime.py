@@ -73,6 +73,34 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "E_RT_AST_INVALID")
         self.assertEqual(ctx.exception.location.get("phase"), "ast_validation")
 
+    def test_fuel_limit_halts_with_deterministic_reason(self) -> None:
+        expr = parse_expr("let x = 1 in let y = 2 in x")
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(expr, fuel_limit=2)
+
+        self.assertEqual(ctx.exception.code, "E_RT_FUEL_EXHAUSTED")
+        self.assertEqual(ctx.exception.location.get("phase"), "step_budget")
+        self.assertEqual(ctx.exception.location.get("halt_reason"), "fuel_exhausted")
+
+    def test_fuel_limit_behavior_is_reproducible(self) -> None:
+        expr = parse_expr("let x = 1 in let y = 2 in x")
+
+        with self.assertRaises(EvalError) as first:
+            eval_expr(expr, fuel_limit=2)
+        with self.assertRaises(EvalError) as second:
+            eval_expr(expr, fuel_limit=2)
+
+        self.assertEqual(first.exception.code, second.exception.code)
+        self.assertEqual(first.exception.location, second.exception.location)
+
+    def test_invalid_fuel_limit_raises_structured_error(self) -> None:
+        expr = parse_expr("1")
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(expr, fuel_limit=-1)
+
+        self.assertEqual(ctx.exception.code, "E_RT_FUEL_CONFIG")
+        self.assertEqual(ctx.exception.location.get("field"), "fuel_limit")
+
 
 class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):
     def _gen_expr(self, rng: random.Random, depth: int, vars_in_scope: list[str], allow_fn: bool) -> str:

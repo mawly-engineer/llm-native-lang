@@ -171,7 +171,7 @@ buckets:
       - id: LNG-RT-04
         title: Deterministic step budget and fuel-limit semantics with reproducible halt reasons
         priority: P0
-        status: open
+        status: done
 
   validation:
     description: Tests, contracts, and property checks.

@@ -29,6 +29,26 @@ class Closure:
     env: "Env"
 
 
+@dataclass
+class EvalContext:
+    fuel_remaining: int | None = None
+
+    def consume_step(self, node_kind: str) -> None:
+        if self.fuel_remaining is None:
+            return
+        if self.fuel_remaining <= 0:
+            raise EvalError(
+                code="E_RT_FUEL_EXHAUSTED",
+                message="evaluation halted: deterministic fuel budget exhausted",
+                location={
+                    "phase": "step_budget",
+                    "node_kind": node_kind,
+                    "halt_reason": "fuel_exhausted",
+                },
+            )
+        self.fuel_remaining -= 1
+
+
 class Env:
     def __init__(self, parent: "Env | None" = None) -> None:
         self.parent = parent
@@ -52,7 +72,11 @@ class Env:
         )
 
 
-def eval_expr(node: dict[str, Any], env: Mapping[str, Any] | None = None) -> Any:
+def eval_expr(
+    node: dict[str, Any],
+    env: Mapping[str, Any] | None = None,
+    fuel_limit: int | None = None,
+) -> Any:
     try:
         validate_ast(node)
     except ASTValidationError as exc:
@@ -62,6 +86,13 @@ def eval_expr(node: dict[str, Any], env: Mapping[str, Any] | None = None) -> Any
             location={"phase": "ast_validation"},
         ) from exc
 
+    if fuel_limit is not None and (not isinstance(fuel_limit, int) or fuel_limit < 0):
+        raise EvalError(
+            code="E_RT_FUEL_CONFIG",
+            message=f"fuel_limit must be a non-negative int, got {fuel_limit!r}",
+            location={"phase": "step_budget", "field": "fuel_limit"},
+        )
+
     root = Env()
     root.set("false", False)
     root.set("true", True)
@@ -69,11 +100,13 @@ def eval_expr(node: dict[str, Any], env: Mapping[str, Any] | None = None) -> Any
         for key in sorted(env.keys()):
             root.set(key, env[key])
 
-    return _eval(node, root)
+    context = EvalContext(fuel_remaining=fuel_limit)
+    return _eval(node, root, context)
 
 
-def _eval(node: dict[str, Any], env: Env) -> Any:
+def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     kind = node["kind"]
+    context.consume_step(kind)
 
     if kind == "number":
         return node["value"]
@@ -82,11 +115,11 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
         return node["value"]
 
     if kind == "list":
-        return [_eval(item, env) for item in node["items"]]
+        return [_eval(item, env, context) for item in node["items"]]
 
     if kind == "index":
-        target = _eval(node["target"], env)
-        index = _eval(node["index"], env)
+        target = _eval(node["target"], env, context)
+        index = _eval(node["index"], env, context)
 
         if not isinstance(target, list):
             raise EvalError(
@@ -112,7 +145,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
         return env.get(node["name"])
 
     if kind == "unary_neg":
-        value = _eval(node["operand"], env)
+        value = _eval(node["operand"], env, context)
         if not isinstance(value, int):
             raise EvalError(
                 code="E_RT_TYPE",
@@ -129,7 +162,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
                 message=f"unsupported logical op '{op}'",
                 location={"node_kind": "logical_bin", "op": op},
             )
-        left = _eval(node["left"], env)
+        left = _eval(node["left"], env, context)
         if not isinstance(left, bool):
             raise EvalError(
                 code="E_RT_TYPE",
@@ -139,7 +172,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
         if op == "and":
             if not left:
                 return False
-            right = _eval(node["right"], env)
+            right = _eval(node["right"], env, context)
             if not isinstance(right, bool):
                 raise EvalError(
                     code="E_RT_TYPE",
@@ -150,7 +183,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
 
         if left:
             return True
-        right = _eval(node["right"], env)
+        right = _eval(node["right"], env, context)
         if not isinstance(right, bool):
             raise EvalError(
                 code="E_RT_TYPE",
@@ -160,15 +193,15 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
         return right
 
     if kind == "let":
-        value = _eval(node["value"], env)
+        value = _eval(node["value"], env, context)
         scoped = env.child()
         scoped.set(node["name"], value)
-        return _eval(node["body"], scoped)
+        return _eval(node["body"], scoped, context)
 
     if kind == "if":
-        cond = _eval(node["cond"], env)
+        cond = _eval(node["cond"], env, context)
         branch = node["then"] if bool(cond) else node["else"]
-        return _eval(branch, env)
+        return _eval(branch, env, context)
 
     if kind == "fn":
         return Closure(params=tuple(node["params"]), body=node["body"], env=env)
@@ -176,7 +209,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
     if kind == "call":
         callee_name = node["callee"]
         callee = env.get(callee_name)
-        args = [_eval(arg, env) for arg in node["args"]]
+        args = [_eval(arg, env, context) for arg in node["args"]]
 
         if isinstance(callee, Closure):
             if len(args) != len(callee.params):
@@ -191,7 +224,7 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
             call_env = callee.env.child()
             for param, value in zip(callee.params, args):
                 call_env.set(param, value)
-            return _eval(callee.body, call_env)
+            return _eval(callee.body, call_env, context)
 
         if callable(callee):
             fn = callee
