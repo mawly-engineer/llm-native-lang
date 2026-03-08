@@ -211,4 +211,4 @@ buckets:
       - id: LNG-INT-04
         title: Build replay conformance harness comparing runtime patch traces across repeated runs
         priority: P1
-        status: open
+        status: done
