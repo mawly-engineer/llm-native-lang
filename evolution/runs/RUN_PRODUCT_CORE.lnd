@@ -18,6 +18,7 @@ execution_policy:
   suppress_idle_noop_commits: true
   idle_log_mode: summary_only
   enable_controlled_backlog_seeding: true
+  prefer_seed_on_idle_noop: true
 
 backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
 

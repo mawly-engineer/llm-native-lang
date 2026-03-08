@@ -2,17 +2,18 @@
 kind: backlog_seed_policy
 id: BACKLOG-SEED-001
 status: active
-updated_at_utc: 2026-03-08T01:47:00Z
+updated_at_utc: 2026-03-08T10:14:00Z
 purpose: Controlled auto-seeding for product-core backlog when queue is empty.
 
 trigger:
-  idle_noop_suppressed_streak_min: 3
+  idle_noop_suppressed_streak_min: 1
   require_no_open_items: true
+  seed_when_open_items_below: 2
 
 seed_limits:
   max_new_items_per_cycle: 1
-  max_new_items_per_day: 2
-  do_not_seed_if_recent_item_created_within_minutes: 30
+  max_new_items_per_day: 4
+  do_not_seed_if_recent_item_created_within_minutes: 15
 
 allowed_buckets:
   - language-core
@@ -42,6 +43,14 @@ next_step_policy:
   create_matching_next_step: true
   next_step_owner_focus_from_bucket: true
 
+idle_recovery_actions:
+  on_idle_noop_suppressed:
+    - compute_next_best_product_core_item
+    - seed_item_if_policy_allows
+    - create_matching_next_step
+  objective: "Reduce probability of consecutive idle_noop_suppressed cycles."
+
 safety:
   - never create more than one item in same cycle
   - if validator confidence low, skip seeding and emit blocker
+  - keep seeded items product-core only
