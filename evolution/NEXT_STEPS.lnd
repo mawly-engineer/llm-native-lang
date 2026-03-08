@@ -2,7 +2,7 @@
 version: 7
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T11:08:00Z
+updated_at_utc: 2026-03-08T11:19:44Z
 
 queue_policy:
   max_active_steps: 7
@@ -24,13 +24,10 @@ active_queue:
     goal: Deliver canonical public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs.
     status: open
 
+recently_completed:
   - step_id: STEP-078
     backlog_reference: LNG-INT-05
-    owner_focus: integration
-    goal: Split runtime_stub.py into deterministic submodules with zero behavior drift under regression suite.
-    status: open
-
-recently_completed:
+    status: done
   - step_id: STEP-075
     backlog_reference: LNG-CORE-17
     status: done

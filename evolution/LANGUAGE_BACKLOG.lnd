@@ -2,7 +2,7 @@
 version: 4
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T11:00:00Z
+updated_at_utc: 2026-03-08T11:19:44Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -295,7 +295,7 @@ buckets:
       - id: LNG-INT-05
         title: Split runtime_stub.py into deterministic submodules with unchanged behavior and passing regression suite
         priority: P0
-        status: open
+        status: done
         deterministic_scope: "Refactor runtime_stub.py into smaller modules while preserving all observable behavior and replay outputs."
         single_cycle_feasibility: "Implementable via staged extract-and-verify with existing regression tests."
         explicit_tests:
