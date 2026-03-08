@@ -16,7 +16,7 @@ principles:
 phase_1_control_docs_first:
   objective: Convert coordinator-driving docs to .lnd first.
   status: done
-  targets:
+  historical_targets:
     - evolution/AGENT_ROUTER.md
     - evolution/LANGUAGE_BACKLOG.md
     - evolution/NEXT_STEPS.md
@@ -25,15 +25,14 @@ phase_1_control_docs_first:
     - evolution/CYCLE_LOG.md
   outputs:
     - equivalent .lnd files with stable key order
-    - compatibility note in old .md files
+    - markdown mirrors removed after stabilization
   done_when:
-    - coordinator can read .lnd as source of truth
-    - old .md kept as mirrors or pointers
+    - coordinator reads .lnd as source of truth only
 
 phase_2_execution_contracts:
   objective: Move core specs/contracts from markdown to .lnd.
   status: done
-  targets:
+  historical_targets:
     - evolution/SPEC.md
     - evolution/RUNTIME.md
     - evolution/RUNTIME_CONTRACT.md
@@ -41,10 +40,10 @@ phase_2_execution_contracts:
     - evolution/UI_DIFF_PROTOCOL.md
     - evolution/TYPE_SYSTEM.md
   outputs:
-    - .lnd contract versions
+    - .lnd contract versions in contracts/
     - explicit schema IDs and version tags
   done_when:
-    - contract checks consume .lnd definitions
+    - contract checks consume contracts/*.lnd definitions
 
 phase_3_code_artifact_onboarding:
   objective: Introduce .lnc for executable/code-unit artifacts.
@@ -99,19 +98,21 @@ tracking_metrics:
 minimal_source_of_truth_set:
   objective: Reduce planning/control sprawl to a compact deterministic core.
   files:
+    - evolution/PROJECT_ENTRY.lnd
     - evolution/AGENT_ROUTER.lnd
     - evolution/LANGUAGE_BACKLOG.lnd
     - evolution/NEXT_STEPS.lnd
     - evolution/SUPERVISOR_STATE.lnd
     - evolution/SUPERVISOR_PROFILES.lnd
     - evolution/CYCLE_LOG.lnd
+    - evolution/FEATURES_DONE.lnd
     - evolution/MIGRATION_TO_LND_LNC.lnd
     - formats/lnd/LND_FORMAT.lnd
     - formats/lnc/LNC_PROFILE.lnd
   rule:
     - "Coordinator MUST treat this set as authoritative."
-    - "Legacy *.md files are compatibility mirrors only."
+    - "Legacy markdown is removed from active surface."
 
 next_actions:
-  - migration_complete_keep_internal_gate_as_default
-  - reintroduce_external_ci_only_as_optional_mirror
+  - migration_closed_run_internal_gate_as_default
+  - keep_external_ci_optional_and_disabled_by_default
