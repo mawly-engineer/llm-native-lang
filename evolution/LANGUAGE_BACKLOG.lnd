@@ -2,7 +2,7 @@
 version: 4
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T10:46:00Z
+updated_at_utc: 2026-03-08T10:50:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -105,7 +105,7 @@ buckets:
       - id: LNG-CORE-16
         title: Add deterministic integer division operator (//) contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce '//' as multiplicative-tier operator with fixed precedence and left associativity; enforce integer-only operands and deterministic floor-division semantics."
         single_cycle_feasibility: "Implementable by extending parser/operator tables, AST/type-check rules, interpreter evaluation, and SPEC/runtime contract tests within one cycle."
         explicit_tests:
