@@ -1932,5 +1932,5 @@ entries:
       - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
       - "revise-stage: implemented unary logical-not ('!') across grammar/AST/type/runtime/contracts and expanded deterministic test coverage"
-    commit: null
+    commit: "460f6a2"
     blockers: []
