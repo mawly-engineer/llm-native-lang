@@ -2,7 +2,7 @@
 version: 3
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T10:20:00Z
+updated_at_utc: 2026-03-08T10:34:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -94,7 +94,7 @@ buckets:
       - id: LNG-CORE-15
         title: Add deterministic modulo operator (%) contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce '%' as multiplicative-tier operator with fixed precedence, left associativity, and integer-only operands yielding deterministic integer remainder semantics."
         single_cycle_feasibility: "Implementable by extending parser precedence tables, AST/type-check rules, interpreter evaluation, and SPEC/runtime contract tests within one cycle."
         explicit_tests:

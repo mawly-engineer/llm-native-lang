@@ -2,7 +2,7 @@
 version: 5
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T10:32:00Z
+updated_at_utc: 2026-03-08T10:34:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -11,13 +11,12 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue:
-  - step_id: STEP-073
-    backlog_reference: LNG-CORE-15
-    stream: language-core
-    status: pending_execute
+active_queue: []
 
 recently_completed:
+  - step_id: STEP-073
+    backlog_reference: LNG-CORE-15
+    status: done
   - step_id: STEP-072
     backlog_reference: LNG-CORE-14
     status: done
