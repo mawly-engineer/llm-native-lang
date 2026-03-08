@@ -64,6 +64,10 @@ buckets:
         title: Add deterministic list literals and index access with strict AST/type/runtime contracts
         priority: P0
         status: done
+      - id: LNG-CORE-12
+        title: Add deterministic string literals and concatenation expression contracts across grammar/AST/type/runtime
+        priority: P1
+        status: open
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.

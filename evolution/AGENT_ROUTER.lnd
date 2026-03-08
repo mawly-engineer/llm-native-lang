@@ -51,7 +51,7 @@ meta_work_limit:
     - force_select_primary: language-core_or_runtime-replay
 
 active_selection:
-  active_primary: ecosystem
+  active_primary: language-core
   active_secondary: validation
 
 routing_rules_in_priority_order:
