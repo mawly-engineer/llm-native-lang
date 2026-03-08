@@ -2313,6 +2313,6 @@ entries:
       - "python3 -m unittest runtime.test_runtime_stub runtime.test_determinism_regression runtime.test_replay_conformance (72 tests, OK)"
       - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: null
+    commit: d2492a4
     blockers: []
 
