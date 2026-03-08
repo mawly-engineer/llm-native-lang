@@ -152,25 +152,41 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         target = _eval(node["target"], env, context)
         index = _eval(node["index"], env, context)
 
-        if not isinstance(target, list):
-            raise EvalError(
-                code="E_RT_TYPE",
-                message=f"index target must be list, got {type(target).__name__}",
-                location={"node_kind": "index", "field": "target"},
-            )
-        if not isinstance(index, int) or isinstance(index, bool):
-            raise EvalError(
-                code="E_RT_TYPE",
-                message=f"index expression must evaluate to int, got {type(index).__name__}",
-                location={"node_kind": "index", "field": "index"},
-            )
-        if index < 0 or index >= len(target):
-            raise EvalError(
-                code="E_RT_INDEX_OUT_OF_RANGE",
-                message=f"list index out of range: {index} (size={len(target)})",
-                location={"node_kind": "index", "index": index, "size": len(target)},
-            )
-        return target[index]
+        if isinstance(target, list):
+            if not isinstance(index, int) or isinstance(index, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"list index expression must evaluate to int, got {type(index).__name__}",
+                    location={"node_kind": "index", "field": "index", "target_kind": "list"},
+                )
+            if index < 0 or index >= len(target):
+                raise EvalError(
+                    code="E_RT_INDEX_OUT_OF_RANGE",
+                    message=f"list index out of range: {index} (size={len(target)})",
+                    location={"node_kind": "index", "index": index, "size": len(target), "target_kind": "list"},
+                )
+            return target[index]
+
+        if isinstance(target, MappingABC):
+            if not isinstance(index, str):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"object index expression must evaluate to string, got {type(index).__name__}",
+                    location={"node_kind": "index", "field": "index", "target_kind": "object"},
+                )
+            if index not in target:
+                raise EvalError(
+                    code="E_RT_MISSING_MEMBER",
+                    message=f"object member not found: {index}",
+                    location={"node_kind": "index", "member": index, "target_kind": "object"},
+                )
+            return target[index]
+
+        raise EvalError(
+            code="E_RT_TYPE",
+            message=f"index target must be list or object, got {type(target).__name__}",
+            location={"node_kind": "index", "field": "target"},
+        )
 
     if kind == "member_access":
         target = _eval(node["target"], env, context)

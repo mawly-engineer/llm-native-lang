@@ -77,10 +77,24 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("[9,8,7][1]")
         self.assertEqual(eval_expr(expr), 8)
 
+    def test_object_string_index_access_returns_member(self) -> None:
+        expr = parse_expr('user["name"]')
+        self.assertEqual(eval_expr(expr, env={"user": {"name": "Luis"}}), "Luis")
+
     def test_index_access_out_of_range_raises_structured_error(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("[1][3]"))
         self.assertEqual(ctx.exception.code, "E_RT_INDEX_OUT_OF_RANGE")
+
+    def test_object_string_index_access_missing_field_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('user["missing"]'), env={"user": {"name": "Luis"}})
+        self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
+
+    def test_object_string_index_access_rejects_non_string_index(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("user[0]"), env={"user": {"name": "Luis"}})
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
     def test_member_access_returns_object_field(self) -> None:
         expr = parse_expr("user.name")

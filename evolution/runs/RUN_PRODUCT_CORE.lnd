@@ -22,11 +22,17 @@ execution_policy:
   enable_stage_batching_same_item: true
   stage_batch_max_transitions_per_cycle: 4
   prefer_close_item_in_single_cycle_when_safe: true
+  require_full_validation_suite_each_cycle: true
+  prioritize_error_path_and_negative_tests: true
 
 backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
 
 validator_commands:
+  - python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime
+  - python3 -m unittest runtime.test_format_validators
   - python3 scripts/lnd_validate.py evolution
+  - python3 scripts/lnd_validate.py contracts
+  - python3 scripts/lnd_validate.py formats
   - python3 scripts/lnc_validate.py runtime
 
 gate_profile:

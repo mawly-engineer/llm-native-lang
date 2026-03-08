@@ -65,6 +65,14 @@ language_minimal_grammar:
     - "args -> expr (',' expr)*"
 
 language_runtime_semantics:
+  index_access:
+    operator: "[expr]"
+    scope: list_and_object_reads_only
+    behavior:
+      - if_target_is_list_require_integer_index_and_bounds_check
+      - if_target_is_object_require_string_key
+      - if_object_key_missing_raise_E_RT_MISSING_MEMBER
+      - if_target_is_other_type_raise_E_RT_TYPE
   optional_member_access:
     operator: "?."
     scope: object_field_reads_only
