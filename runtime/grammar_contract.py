@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
-string literals, string concatenation, modulo (%), integer division (//), logical and/or, bool literals,
+string literals, string concatenation, equality/comparison tiers, modulo (%), integer division (//), logical and/or, bool literals,
 list literals, null literals, and index access.
 """
 
@@ -24,6 +24,8 @@ GRAMMAR_CONTRACT = {
         "fn",
         "logical_or",
         "logical_and",
+        "equality",
+        "comparison",
         "concat",
         "multiplicative",
         "unary",
@@ -36,7 +38,9 @@ GRAMMAR_CONTRACT = {
         "if -> 'if' expr 'then' expr 'else' expr",
         "fn -> 'fn' '(' params? ')' '=>' expr",
         "logical_or -> logical_and ('or' logical_and)*",
-        "logical_and -> concat ('and' concat)*",
+        "logical_and -> equality ('and' equality)*",
+        "equality -> comparison (('==' | '!=') comparison)*",
+        "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*",
         "concat -> multiplicative ('+' multiplicative)*",
         "multiplicative -> unary (('%' | '//') unary)*",
         "unary -> '-' unary | '!' unary | postfix",
@@ -114,7 +118,23 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token("//", "//", i, i + 2))
             i += 2
             continue
-        if ch in "()[],=-+!%":
+        if source.startswith("==", i):
+            tokens.append(Token("==", "==", i, i + 2))
+            i += 2
+            continue
+        if source.startswith("!=", i):
+            tokens.append(Token("!=", "!=", i, i + 2))
+            i += 2
+            continue
+        if source.startswith("<=", i):
+            tokens.append(Token("<=", "<=", i, i + 2))
+            i += 2
+            continue
+        if source.startswith(">=", i):
+            tokens.append(Token(">=", ">=", i, i + 2))
+            i += 2
+            continue
+        if ch in "()[],=-+!%<>":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -237,15 +257,47 @@ class _Parser:
         return node
 
     def _logical_and(self) -> dict[str, Any]:
-        node = self._concat()
+        node = self._equality()
         while self._peek().kind == "KW" and self._peek().value == "and":
             self._eat("KW", "and")
-            right = self._concat()
+            right = self._equality()
             node = self._with_span(
                 "logical_bin",
                 node["span"]["start"],
                 right["span"]["end"],
                 op="and",
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _equality(self) -> dict[str, Any]:
+        node = self._comparison()
+        while self._peek().kind in {"==", "!="}:
+            op = self._peek().kind
+            self._eat(op, op)
+            right = self._comparison()
+            node = self._with_span(
+                "compare_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                op=op,
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _comparison(self) -> dict[str, Any]:
+        node = self._concat()
+        while self._peek().kind in {"<", "<=", ">", ">="}:
+            op = self._peek().kind
+            self._eat(op, op)
+            right = self._concat()
+            node = self._with_span(
+                "compare_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                op=op,
                 left=node,
                 right=right,
             )

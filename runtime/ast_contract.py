@@ -65,6 +65,16 @@ AST_SCHEMA = {
                 "right": "expr",
             },
         },
+        "compare_bin": {
+            "required": ["kind", "span", "op", "left", "right"],
+            "fields": {
+                "kind": "literal:compare_bin",
+                "span": "span",
+                "op": "literal:==|!=|<|<=|>|>=",
+                "left": "expr",
+                "right": "expr",
+            },
+        },
         "ident": {
             "required": ["kind", "span", "name"],
             "fields": {"kind": "literal:ident", "span": "span", "name": "ident"},
@@ -102,6 +112,7 @@ _AST_FINGERPRINT_SOURCE = [
     "modulo_bin:kind,span,left,right",
     "int_div_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
+    "compare_bin:kind,span,op,left,right",
     "ident:kind,span,name",
     "number:kind,span,value",
     "bool:kind,span,value",
@@ -249,6 +260,16 @@ def _validate_expr(node: Any) -> None:
         op = node.get("op")
         if op not in {"and", "or"}:
             raise ASTValidationError("logical_bin.op must be 'and' or 'or'")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
+    if kind == "compare_bin":
+        _require_kind(node, "compare_bin")
+        _require_span(node, "compare_bin")
+        op = node.get("op")
+        if op not in {"==", "!=", "<", "<=", ">", ">="}:
+            raise ASTValidationError("compare_bin.op must be one of '==', '!=', '<', '<=', '>', '>='")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return

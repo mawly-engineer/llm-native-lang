@@ -2,7 +2,7 @@
 version: 4
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T10:54:00Z
+updated_at_utc: 2026-03-08T11:00:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -116,7 +116,7 @@ buckets:
       - id: LNG-CORE-17
         title: Restore deterministic equality/comparison expression tiers across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Reintroduce equality/comparison tiers (==, !=, <, <=, >, >=) between concat and logical_and with fixed precedence and left associativity."
         single_cycle_feasibility: "Implementable by extending parser precedence tiers, AST/type-check rules, interpreter semantics, and SPEC/runtime contract tests within one cycle."
         explicit_tests:
@@ -195,6 +195,17 @@ buckets:
         title: Complete phase-5 deprecation cleanup by removing obsolete migration leftovers and marking migration status done
         priority: P1
         status: done
+      - id: LNG-ECO-18
+        title: Publish minimal public README + project metadata (description/topics) + first v0.1.0 release notes
+        priority: P0
+        status: open
+        deterministic_scope: "Create a concise external-facing package of docs/metadata without changing runtime semantics."
+        single_cycle_feasibility: "Implementable with focused repo/docs updates and deterministic validation in one cycle."
+        explicit_tests:
+          - "python3 scripts/lnd_validate.py evolution"
+          - "python3 scripts/lnd_validate.py contracts"
+        product_effect_target: contracts_lnd_semantic_change
+        done_when: "Public onboarding docs and release metadata are present, consistent, and validated."
 
   practical-value:
     description: Real-world utility, examples, and measurable task value.
@@ -211,6 +222,16 @@ buckets:
         title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
         priority: P1
         status: done
+      - id: LNG-PRX-04
+        title: Add one-click end-to-end public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs
+        priority: P0
+        status: open
+        deterministic_scope: "Define one canonical demo pipeline with fixed inputs, expected artifacts, and reproducible replay outputs."
+        single_cycle_feasibility: "Implementable by wiring existing modules/examples and adding verification assertions."
+        explicit_tests:
+          - "python3 -m unittest runtime.test_example_app_flow runtime.test_replay_conformance"
+        product_effect_target: runtime_py_changed
+        done_when: "Demo command/script produces byte-stable expected outputs across repeated runs."
 
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.

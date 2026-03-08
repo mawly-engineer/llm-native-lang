@@ -167,6 +167,26 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.right: expected bool, got {right_ty}")
         return TYPE_BOOL
 
+    if kind == "compare_bin":
+        op = node.get("op")
+        if op not in {"==", "!=", "<", "<=", ">", ">="}:
+            raise TypeCheckError(f"{path}.op: unsupported compare operator {op}")
+        left_ty = _check(node.get("left"), ctx, f"{path}.left")
+        right_ty = _check(node.get("right"), ctx, f"{path}.right")
+
+        if op in {"<", "<=", ">", ">="}:
+            if left_ty != TYPE_NUMBER:
+                raise TypeCheckError(f"{path}.left: expected number, got {left_ty}")
+            if right_ty != TYPE_NUMBER:
+                raise TypeCheckError(f"{path}.right: expected number, got {right_ty}")
+            return TYPE_BOOL
+
+        if left_ty != right_ty:
+            raise TypeCheckError(f"{path}: equality operands must have same type ({left_ty} vs {right_ty})")
+        if left_ty not in {TYPE_NUMBER, TYPE_BOOL, TYPE_STRING, TYPE_NULL}:
+            raise TypeCheckError(f"{path}: equality unsupported for type {left_ty}")
+        return TYPE_BOOL
+
     if kind == "ident":
         name = node.get("name")
         if not isinstance(name, str) or not name.strip():

@@ -73,6 +73,22 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("[1][3]"))
         self.assertEqual(ctx.exception.code, "E_RT_INDEX_OUT_OF_RANGE")
 
+    def test_comparison_and_equality_evaluate_deterministically(self) -> None:
+        self.assertTrue(eval_expr(parse_expr("1<2")))
+        self.assertTrue(eval_expr(parse_expr("2>=2")))
+        self.assertTrue(eval_expr(parse_expr('"a"=="a"')))
+        self.assertTrue(eval_expr(parse_expr("true!=false")))
+
+    def test_comparison_rejects_non_number_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('"a"<"b"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
+    def test_equality_rejects_mismatched_operand_types(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("1==true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
     def test_unary_logical_not_rejects_non_bool_operand(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("!1"))

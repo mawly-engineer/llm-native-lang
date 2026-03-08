@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "concat", "multiplicative", "unary", "postfix", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "equality", "comparison", "concat", "multiplicative", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "a08ea91cf972ab55c416eca92edac0651f52a4eebe6b9cf32d7aa341de49a1e3",
+            "c8aa875b92559591270e8563494d0980e4e6f1005fa8869bad3fe74490bf36ed",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -82,6 +82,15 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["left"]["kind"], "bool")
         self.assertEqual(ast["right"]["kind"], "logical_bin")
         self.assertEqual(ast["right"]["op"], "and")
+
+    def test_parse_equality_and_comparison_tiers_with_precedence(self) -> None:
+        ast = parse_expr("1+2 < 4 == true")
+        self.assertEqual(ast["kind"], "compare_bin")
+        self.assertEqual(ast["op"], "==")
+        self.assertEqual(ast["left"]["kind"], "compare_bin")
+        self.assertEqual(ast["left"]["op"], "<")
+        self.assertEqual(ast["left"]["left"]["kind"], "concat_bin")
+        self.assertEqual(ast["right"]["kind"], "bool")
 
     def test_parse_string_literal(self) -> None:
         ast = parse_expr('"hi"')

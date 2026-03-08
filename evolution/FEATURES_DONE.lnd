@@ -2,7 +2,7 @@
 kind: feature_registry
 id: LNG-FEATURES-DONE-001
 status: active
-updated_at_utc: 2026-03-08T10:50:00Z
+updated_at_utc: 2026-03-08T11:00:00Z
 purpose: Compact registry of implemented backlog features.
 
 implemented_features:
@@ -36,6 +36,8 @@ implemented_features:
     title: Add deterministic modulo operator (%) contract across grammar/AST/type/runtime
   - id: LNG-CORE-16
     title: Add deterministic integer division operator (//) contract across grammar/AST/type/runtime
+  - id: LNG-CORE-17
+    title: Restore deterministic equality/comparison expression tiers across grammar/AST/type/runtime
   - id: LNG-ECO-01
     title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
   - id: LNG-ECO-02

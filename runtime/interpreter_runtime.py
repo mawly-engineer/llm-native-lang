@@ -271,6 +271,52 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return right
 
+    if kind == "compare_bin":
+        op = node["op"]
+        if op not in {"==", "!=", "<", "<=", ">", ">="}:
+            raise EvalError(
+                code="E_RT_UNSUPPORTED_KIND",
+                message=f"unsupported compare op '{op}'",
+                location={"node_kind": "compare_bin", "op": op},
+            )
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+
+        if op in {"<", "<=", ">", ">="}:
+            if not isinstance(left, int) or isinstance(left, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"comparison {op} expects int left operand, got {type(left).__name__}",
+                    location={"node_kind": "compare_bin", "op": op, "side": "left"},
+                )
+            if not isinstance(right, int) or isinstance(right, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"comparison {op} expects int right operand, got {type(right).__name__}",
+                    location={"node_kind": "compare_bin", "op": op, "side": "right"},
+                )
+            return {
+                "<": left < right,
+                "<=": left <= right,
+                ">": left > right,
+                ">=": left >= right,
+            }[op]
+
+        allowed_types = (int, bool, str, type(None))
+        if not isinstance(left, allowed_types):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"equality {op} unsupported for left operand type {type(left).__name__}",
+                location={"node_kind": "compare_bin", "op": op, "side": "left"},
+            )
+        if type(left) is not type(right):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"equality {op} expects same operand types, got {type(left).__name__} and {type(right).__name__}",
+                location={"node_kind": "compare_bin", "op": op},
+            )
+        return (left == right) if op == "==" else (left != right)
+
     if kind == "let":
         value = _eval(node["value"], env, context)
         scoped = env.child()

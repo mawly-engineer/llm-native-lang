@@ -77,6 +77,20 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr('"a"+1'))
 
+    def test_comparison_requires_number_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr("1<2")), TYPE_BOOL)
+        self.assertEqual(check_expr(parse_expr("2>=2")), TYPE_BOOL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr('"a"<"b"'))
+
+    def test_equality_requires_same_scalar_types(self) -> None:
+        self.assertEqual(check_expr(parse_expr("1==1")), TYPE_BOOL)
+        self.assertEqual(check_expr(parse_expr("true!=false")), TYPE_BOOL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1==true"))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("[1]==[1]"))
+
     def test_modulo_requires_number_operands(self) -> None:
         self.assertEqual(check_expr(parse_expr("8%3")), TYPE_NUMBER)
         with self.assertRaises(TypeCheckError):

@@ -2253,3 +2253,19 @@ entries:
     commit: null
     blockers: []
 
+  - cycle_id: 223
+    timestamp_utc: "2026-03-08T11:00:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-17
+    status: done
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "preflight: equality/comparison target artifacts and validator entrypoints exist (PRECHECK_OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (87 tests, OK)"
+      - "execute-stage: finalized LNG-CORE-17 lifecycle (LANGUAGE_BACKLOG done, STEP-075 closed, SUPERVISOR_STATE returned to idle)"
+    commit: null
+    blockers: []
+
