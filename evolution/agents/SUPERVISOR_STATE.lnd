@@ -5,18 +5,18 @@ purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
 
 state:
   mode: staged_multi_cycle
-  active_flow_id: FLOW-LNG-CORE-18
-  active_bucket: language-core
-  active_backlog_item_id: LNG-CORE-18
-  active_next_step_id: STEP-079
-  current_stage: execute
+  active_flow_id: null
+  active_bucket: null
+  active_backlog_item_id: null
+  active_next_step_id: null
+  current_stage: idle
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: validate_stage_approved
+  last_stage_status: execute_stage_completed
   last_error: null
 
 stage_transition_rules:

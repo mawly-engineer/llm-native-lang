@@ -2,7 +2,7 @@
 version: 5
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T11:38:00Z
+updated_at_utc: 2026-03-08T11:57:57Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -127,7 +127,7 @@ buckets:
       - id: LNG-CORE-18
         title: Add deterministic exponentiation operator (**) contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce '**' as a power-tier operator with fixed precedence above multiplicative and right-associative parse behavior."
         single_cycle_feasibility: "Implementable by extending parser precedence/associativity handling, AST/type-check rules, interpreter evaluation semantics, and contract tests within one cycle."
         explicit_tests:

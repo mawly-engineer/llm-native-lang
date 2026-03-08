@@ -40,6 +40,8 @@ implemented_features:
     title: Add deterministic integer division operator (//) contract across grammar/AST/type/runtime
   - id: LNG-CORE-17
     title: Restore deterministic equality/comparison expression tiers across grammar/AST/type/runtime
+  - id: LNG-CORE-18
+    title: Add deterministic exponentiation operator (**) contract across grammar/AST/type/runtime
   - id: LNG-ECO-01
     title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
   - id: LNG-ECO-02
