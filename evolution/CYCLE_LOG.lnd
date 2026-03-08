@@ -19,1034 +19,9 @@ entry_schema:
 entries:
 
   # compacted by scripts/cycle_log_maintain.py
-  # removed_entries: 39
-  # removed_cycle_range: 34-72
-  # kept_cycle_range: 73-192
-
-  - cycle_id: 73
-    timestamp_utc: "2026-03-07T09:27:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-05
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 74
-    timestamp_utc: "2026-03-07T09:42:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-05
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 75
-    timestamp_utc: "2026-03-07T09:57:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-06
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 76
-    timestamp_utc: "2026-03-07T10:12:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-06
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 77
-    timestamp_utc: "2026-03-07T10:27:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-06
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 78
-    timestamp_utc: "2026-03-07T10:42:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-07
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 79
-    timestamp_utc: "2026-03-07T10:57:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-07
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 80
-    timestamp_utc: "2026-03-07T11:03:32Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-07
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (37 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 81
-    timestamp_utc: "2026-03-07T11:07:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-08
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 82
-    timestamp_utc: "2026-03-07T11:12:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-08
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 83
-    timestamp_utc: "2026-03-07T11:17:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-08
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (41 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 84
-    timestamp_utc: "2026-03-07T11:24:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-09
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 85
-    timestamp_utc: "2026-03-07T11:29:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-09
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 86
-    timestamp_utc: "2026-03-07T11:34:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-09
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract (10 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 87
-    timestamp_utc: "2026-03-07T11:39:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-10
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 88
-    timestamp_utc: "2026-03-07T11:43:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-10
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 89
-    timestamp_utc: "2026-03-07T11:44:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-10
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (44 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 90
-    timestamp_utc: "2026-03-07T11:51:09Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-01
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime runtime.test_runtime_stub (110 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 91
-    timestamp_utc: "2026-03-07T11:53:17Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-03
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_runtime_stub (66 tests, OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime runtime.test_runtime_stub (110 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 92
-    timestamp_utc: "2026-03-07T11:53:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-02
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime runtime.test_runtime_stub"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 93
-    timestamp_utc: "2026-03-07T12:00:52Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-01
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_example_app_flow runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_e2e_language_run_replay_is_deterministic_across_identical_runs runtime.test_runtime_stub.RuntimeStubPatchOpsTest.test_e2e_language_run_replay_ops_stable_with_snapshot_seed (3 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 94
-    timestamp_utc: "2026-03-07T12:03:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-04
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 95
-    timestamp_utc: "2026-03-07T12:29:33Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-04
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 96
-    timestamp_utc: "2026-03-07T12:34:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-04
-    status: done
-    tests:
-      - "python3 scripts/verify_onboarding.py"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 97
-    timestamp_utc: "2026-03-07T12:36:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-05
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 98
-    timestamp_utc: "2026-03-07T12:38:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-05
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-
-  - cycle_id: 99
-    timestamp_utc: "2026-03-07T12:40:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-05
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_runtime_stub (66 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 100
-    timestamp_utc: "2026-03-07T12:40:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-05
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_runtime_stub (66 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 101
-    timestamp_utc: "2026-03-07T12:44:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-06
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 102
-    timestamp_utc: "2026-03-07T12:46:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-06
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 103
-    timestamp_utc: "2026-03-07T12:48:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-06
-    status: done
-    tests:
-      - "python3 -m unittest runtime.test_format_validators (4 tests, OK)"
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 9 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (No .lnc files found.)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 104
-    timestamp_utc: "2026-03-07T12:52:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-07
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 105
-    timestamp_utc: "2026-03-07T12:54:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-07
-    status: staged_validate_approved
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 106
-    timestamp_utc: "2026-03-07T12:56:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-07
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 10 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 107
-    timestamp_utc: "2026-03-07T12:58:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-08
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 108
-    timestamp_utc: "2026-03-07T13:00:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-08
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 109
-    timestamp_utc: "2026-03-07T13:02:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-08
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 11 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 110
-    timestamp_utc: "2026-03-07T13:06:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-09
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 111
-    timestamp_utc: "2026-03-07T13:08:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-09
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 112
-    timestamp_utc: "2026-03-07T13:10:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-09
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 12 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 113
-    timestamp_utc: "2026-03-07T13:12:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-10
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 114
-    timestamp_utc: "2026-03-07T13:14:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-10
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-    commit: null
-    blockers:
-      - "contracts/PATCH_FORMAT.lnd is missing; migration target for LNG-ECO-10 is not yet created."
-
-
-  - cycle_id: 115
-    timestamp_utc: "2026-03-07T13:16:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-10
-    status: staged_revise_success
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 13 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 116
-    timestamp_utc: "2026-03-07T13:18:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-10
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 13 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 117
-    timestamp_utc: "2026-03-07T13:20:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-10
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 13 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 118
-    timestamp_utc: "2026-03-07T13:22:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-11
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 119
-    timestamp_utc: "2026-03-07T13:24:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-11
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-    commit: null
-    blockers:
-      - "contracts/UI_DIFF_PROTOCOL.lnd is missing; migration target for LNG-ECO-11 is not yet created."
-
-
-  - cycle_id: 120
-    timestamp_utc: "2026-03-07T13:26:32Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-11
-    status: staged_revise_success
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 14 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 121
-    timestamp_utc: "2026-03-07T13:28:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-11
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 14 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 122
-    timestamp_utc: "2026-03-07T13:30:29Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-11
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 14 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 123
-    timestamp_utc: "2026-03-07T13:32:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-12
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 124
-    timestamp_utc: "2026-03-07T13:34:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-12
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-    commit: null
-    blockers:
-      - "contracts/TYPE_SYSTEM.lnd is missing; migration target for LNG-ECO-12 is not yet created."
-
-
-  - cycle_id: 125
-    timestamp_utc: "2026-03-07T13:36:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-12
-    status: staged_revise_success
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 15 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 126
-    timestamp_utc: "2026-03-07T13:38:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-12
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 15 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 127
-    timestamp_utc: "2026-03-07T13:40:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-12
-    status: done
-    tests:
-      - "python3 scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 15 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 128
-    timestamp_utc: "2026-03-07T13:42:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-13
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 129
-    timestamp_utc: "2026-03-07T13:44:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-13
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-      - "python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (No .lnc files found.)"
-    commit: null
-    blockers:
-      - "runtime/examples canonical .lnc artifact is missing; execute stage cannot start for LNG-ECO-13."
-
-
-  - cycle_id: 130
-    timestamp_utc: "2026-03-07T13:46:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-13
-    status: staged_revise_success
-    tests:
-      - "python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 1 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 131
-    timestamp_utc: "2026-03-07T13:48:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-13
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 1 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 132
-    timestamp_utc: "2026-03-07T13:50:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-13
-    status: done
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 1 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 15 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 133
-    timestamp_utc: "2026-03-07T13:52:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-14
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 134
-    timestamp_utc: "2026-03-07T13:54:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-14
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 1 .lnc file(s))"
-    commit: null
-    blockers:
-      - "LNG-ECO-14 requires a second production-relevant .lnc artifact and an examples index wiring; only canonical_counter.lnc exists in runtime/examples."
-
-
-  - cycle_id: 135
-    timestamp_utc: "2026-03-07T13:56:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-14
-    status: staged_revise_success
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 2 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 16 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 136
-    timestamp_utc: "2026-03-07T14:00:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-14
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 2 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 16 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 137
-    timestamp_utc: "2026-03-07T14:02:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-14
-    status: done
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 2 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/docs (PASS validated 16 .lnd file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 138
-    timestamp_utc: "2026-03-07T14:04:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-15
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 139
-    timestamp_utc: "2026-03-07T14:08:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-15
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=fail correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 2 .lnc file(s))"
-    commit: null
-    blockers:
-      - "LNG-ECO-15 execute readiness failed: runtime/examples currently validates 2 canonical .lnc artifacts; backlog acceptance requires >=3 production-relevant artifacts plus validator-covered threshold assertion."
-
-
-  - cycle_id: 140
-    timestamp_utc: "2026-03-07T15:24:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-15
-    status: staged_revise_success
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 141
-    timestamp_utc: "2026-03-07T15:28:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-15
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 142
-    timestamp_utc: "2026-03-07T15:30:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-15
-    status: done
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 143
-    timestamp_utc: "2026-03-07T15:32:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-02
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 144
-    timestamp_utc: "2026-03-07T15:34:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-02
-    status: staged_validate_needs_revision
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=fail contract_alignment=needs_evidence correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
-    commit: null
-    blockers:
-      - "No benchmark harness artifacts or benchmark-focused tests were found yet for LNG-PRX-02 (mini-language vs JSON/DSL reproducibility and success-rate baseline)."
-
-
-  - cycle_id: 145
-    timestamp_utc: "2026-03-07T15:36:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-02
-    status: staged_revise_success
-    tests:
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_benchmark_harness.py (2 tests, OK)"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 146
-    timestamp_utc: "2026-03-07T15:40:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-02
-    status: staged_validate_approved
-    tests:
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_benchmark_harness.py (2 tests, OK)"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 147
-    timestamp_utc: "2026-03-07T15:42:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-02
-    status: done
-    tests:
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_benchmark_harness.py (2 tests, OK)"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 148
-    timestamp_utc: "2026-03-07T15:46:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-03
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 149
-    timestamp_utc: "2026-03-07T15:48:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-03
-    status: staged_validate_approved
-    tests:
-      - "validator: deterministic_scope=pass single_cycle_feasibility=pass testability=pass contract_alignment=pass correct_bucket_and_priority=pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 150
-    timestamp_utc: "2026-03-07T15:50:00Z"
-    selected_primary: practical-value
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-03
-    status: done
-    tests:
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_cookbook_recipes.py (2 tests, OK)"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 151
-    timestamp_utc: "2026-03-07T15:54:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-16
-    status: staged_create_success
-    tests: []
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 152
-    timestamp_utc: "2026-03-07T15:56:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-16
-    status: staged_validate_needs_revision
-    tests:
-      - "preflight: target_artifact=/home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml missing"
-      - "preflight: references_resolve scripts/lnd_validate.py + scripts/lnc_validate.py = pass"
-      - "preflight: validator_targets evolution + runtime = pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers:
-      - "Missing required CI workflow gate file: /home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml"
-
-
-  - cycle_id: 153
-    timestamp_utc: "2026-03-07T15:58:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-16
-    status: staged_revise_success
-    tests:
-      - "preflight: target_artifact=/home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml exists"
-      - "preflight: references_resolve scripts/lnd_validate.py + scripts/lnc_validate.py = pass"
-      - "preflight: validator_targets evolution + runtime = pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
-    commit: null
-    blockers: []
-
-
-  - cycle_id: 154
-    timestamp_utc: "2026-03-07T16:02:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-16
-    status: staged_validate_approved
-    tests:
-      - "preflight: target_artifact=/home/node/.openclaw/workspace/llm-native-lang/.github/workflows/lnd-lnc-validate.yml exists"
-      - "preflight: references_resolve scripts/lnd_validate.py + scripts/lnc_validate.py = pass"
-      - "preflight: validator_targets evolution + runtime = pass"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang status --short (clean)"
-    commit: "331202b"
-    blockers: []
-
-
-  - cycle_id: 155
-    timestamp_utc: "2026-03-07T16:06:00Z"
-    selected_primary: ecosystem
-    selected_secondary: validation
-    backlog_item_id: LNG-ECO-16
-    status: done
-    tests:
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnd_validate.py /home/node/.openclaw/workspace/llm-native-lang/evolution (PASS validated 14 .lnd file(s))"
-      - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
+  # removed_entries: 83
+  # removed_cycle_range: 73-155
+  # kept_cycle_range: 156-235
 
   - cycle_id: 156
     timestamp_utc: "2026-03-07T16:08:00Z"
@@ -1062,6 +37,7 @@ entries:
     commit: null
     blockers:
       - "working_tree_not_clean"
+
 
 
   - cycle_id: 157
@@ -1085,6 +61,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 158
     timestamp_utc: "2026-03-07T16:14:00Z"
     selected_primary: ecosystem
@@ -1102,6 +79,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 159
     timestamp_utc: "2026-03-07T16:18:00Z"
     selected_primary: ecosystem
@@ -1117,6 +95,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 160
     timestamp_utc: "2026-03-07T16:22:00Z"
     selected_primary: ecosystem
@@ -1130,6 +109,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 161
@@ -1150,6 +130,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 162
     timestamp_utc: "2026-03-07T23:58:00Z"
     selected_primary: ecosystem
@@ -1168,6 +149,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 163
     timestamp_utc: "2026-03-08T00:02:00Z"
     selected_primary: ecosystem
@@ -1184,6 +166,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 164
     timestamp_utc: "2026-03-08T00:04:00Z"
     selected_primary: ecosystem
@@ -1198,6 +181,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 165
@@ -1217,6 +201,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 166
@@ -1240,6 +225,7 @@ entries:
 
 
 
+
   - cycle_id: 167
     timestamp_utc: "2026-03-08T00:11:02Z"
     selected_primary: ecosystem
@@ -1257,6 +243,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 168
@@ -1278,6 +265,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 169
     timestamp_utc: "2026-03-08T00:14:00Z"
     selected_primary: ecosystem
@@ -1295,6 +283,7 @@ entries:
     commit: "06c594e"
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 170
@@ -1316,6 +305,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 171
     timestamp_utc: "2026-03-08T00:18:00Z"
     selected_primary: ecosystem
@@ -1333,6 +323,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 172
@@ -1354,6 +345,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 173
     timestamp_utc: "2026-03-08T00:23:13Z"
     selected_primary: ecosystem
@@ -1371,6 +363,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 174
@@ -1392,6 +385,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 175
     timestamp_utc: "2026-03-08T00:27:29Z"
     selected_primary: ecosystem
@@ -1411,6 +405,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 176
     timestamp_utc: "2026-03-08T00:29:17Z"
     selected_primary: ecosystem
@@ -1425,6 +420,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 177
@@ -1443,6 +439,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 178
@@ -1465,6 +462,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 179
     timestamp_utc: "2026-03-08T00:34:00Z"
     selected_primary: ecosystem
@@ -1483,6 +481,7 @@ entries:
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
       - "working_tree_not_clean"
+
 
 
   - cycle_id: 180
@@ -1505,6 +504,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 181
     timestamp_utc: "2026-03-08T00:39:25Z"
     selected_primary: ecosystem
@@ -1523,6 +523,7 @@ entries:
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
       - "working_tree_not_clean"
+
 
 
   - cycle_id: 182
@@ -1545,6 +546,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 183
     timestamp_utc: "2026-03-08T00:43:21Z"
     selected_primary: ecosystem
@@ -1561,6 +563,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 184
@@ -1583,6 +586,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 185
     timestamp_utc: "2026-03-08T00:47:29Z"
     selected_primary: ecosystem
@@ -1601,6 +605,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 186
@@ -1623,6 +628,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 187
     timestamp_utc: "2026-03-08T00:55:29Z"
     selected_primary: ecosystem
@@ -1637,6 +643,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 188
@@ -1659,6 +666,7 @@ entries:
 
 
 
+
   - cycle_id: 189
     timestamp_utc: "2026-03-08T00:59:37Z"
     selected_primary: ecosystem
@@ -1676,6 +684,7 @@ entries:
     commit: null
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
+
 
 
   - cycle_id: 190
@@ -1699,6 +708,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 191
     timestamp_utc: "2026-03-08T01:02:00Z"
     selected_primary: ecosystem
@@ -1720,6 +730,7 @@ entries:
       - "working_tree_not_clean"
 
 
+
   - cycle_id: 192
     timestamp_utc: "2026-03-08T01:04:00Z"
     selected_primary: ecosystem
@@ -1739,6 +750,7 @@ entries:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
 
 
+
   - cycle_id: 193
     timestamp_utc: "2026-03-08T01:50:00Z"
     selected_primary: language-core
@@ -1754,6 +766,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 194
     timestamp_utc: "2026-03-08T02:00:00Z"
@@ -1771,6 +784,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 195
     timestamp_utc: "2026-03-08T02:10:00Z"
     selected_primary: validation
@@ -1785,6 +799,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 196
     timestamp_utc: "2026-03-08T02:20:00Z"
@@ -1802,6 +817,7 @@ entries:
     commit: "1c5607a"
     blockers: []
 
+
   - cycle_id: 197
     timestamp_utc: "2026-03-08T02:50:00Z"
     selected_primary: language-core
@@ -1813,6 +829,7 @@ entries:
       - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 198
     timestamp_utc: "2026-03-08T03:00:00Z"
@@ -1832,6 +849,7 @@ entries:
     blockers:
       - "LNG-CORE-12 requires revise-stage implementation before execute: string literal + concatenation semantics are missing across grammar/AST/type/runtime/contracts."
 
+
   - cycle_id: 199
     timestamp_utc: "2026-03-08T03:10:00Z"
     selected_primary: language-core
@@ -1848,6 +866,7 @@ entries:
       - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
     commit: null
     blockers: []
+
 
   - cycle_id: 200
     timestamp_utc: "2026-03-08T05:08:03Z"
@@ -1866,6 +885,7 @@ entries:
       - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
     commit: null
     blockers: []
+
 
   - cycle_id: 201
     timestamp_utc: "2026-03-08T06:09:00Z"
@@ -1886,6 +906,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 202
     timestamp_utc: "2026-03-08T06:59:00Z"
     selected_primary: language-core
@@ -1899,6 +920,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 203
     timestamp_utc: "2026-03-08T07:10:13Z"
@@ -1919,6 +941,7 @@ entries:
     blockers:
       - "LNG-CORE-13 requires revise-stage implementation before execute: unary logical-not semantics are missing across grammar/AST/type/runtime/contracts."
 
+
   - cycle_id: 204
     timestamp_utc: "2026-03-08T07:19:00Z"
     selected_primary: language-core
@@ -1934,6 +957,7 @@ entries:
       - "revise-stage: implemented unary logical-not ('!') across grammar/AST/type/runtime/contracts and expanded deterministic test coverage"
     commit: "460f6a2"
     blockers: []
+
 
   - cycle_id: 205
     timestamp_utc: "2026-03-08T07:29:59Z"
@@ -1951,6 +975,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 206
     timestamp_utc: "2026-03-08T07:39:00Z"
@@ -1970,6 +995,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 207
     timestamp_utc: "2026-03-08T09:39:00Z"
     selected_primary: language-core
@@ -1983,6 +1009,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 208
     timestamp_utc: "2026-03-08T09:49:00Z"
@@ -2004,6 +1031,7 @@ entries:
     blockers:
       - "LNG-CORE-14 requires revise-stage implementation before execute: null literal semantics are missing across grammar/AST/type/runtime/contracts."
 
+
   - cycle_id: 209
     timestamp_utc: "2026-03-08T09:59:00Z"
     selected_primary: language-core
@@ -2021,6 +1049,7 @@ entries:
       - "revise-stage: implemented null literal ('null') across grammar/AST/type/runtime/contracts and expanded deterministic test coverage"
     commit: null
     blockers: []
+
 
   - cycle_id: 210
     timestamp_utc: "2026-03-08T10:09:00Z"
@@ -2041,6 +1070,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 211
     timestamp_utc: "2026-03-08T10:16:00Z"
     selected_primary: language-core
@@ -2060,6 +1090,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 212
     timestamp_utc: "2026-03-08T10:20:00Z"
     selected_primary: language-core
@@ -2073,6 +1104,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 213
     timestamp_utc: "2026-03-08T10:22:00Z"
@@ -2090,6 +1122,7 @@ entries:
     commit: null
     blockers:
       - "LNG-CORE-15 requires revise-stage implementation before execute: modulo (%) semantics are missing across grammar/AST/type/runtime/contracts."
+
 
   - cycle_id: 214
     timestamp_utc: "2026-03-08T10:26:00Z"
@@ -2111,6 +1144,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 215
     timestamp_utc: "2026-03-08T10:32:00Z"
     selected_primary: language-core
@@ -2129,6 +1163,7 @@ entries:
       - "validation_review: LNG-CORE-15 modulo scope implemented across grammar/AST/type/runtime/contracts; execute stage can finalize item lifecycle"
     commit: null
     blockers: []
+
 
   - cycle_id: 216
     timestamp_utc: "2026-03-08T10:34:00Z"
@@ -2149,6 +1184,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 217
     timestamp_utc: "2026-03-08T10:38:00Z"
     selected_primary: language-core
@@ -2162,6 +1198,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 218
     timestamp_utc: "2026-03-08T10:42:00Z"
@@ -2182,6 +1219,7 @@ entries:
     blockers:
       - "LNG-CORE-16 requires revise-stage implementation before execute: integer division (//) semantics are missing across grammar/AST/type/runtime/contracts."
 
+
   - cycle_id: 219
     timestamp_utc: "2026-03-08T10:46:00Z"
     selected_primary: language-core
@@ -2200,6 +1238,7 @@ entries:
       - "revise-stage: implemented integer division (//) across grammar precedence, AST/type/runtime semantics, SPEC contract grammar, and deterministic test coverage"
     commit: null
     blockers: []
+
 
   - cycle_id: 220
     timestamp_utc: "2026-03-08T10:50:00Z"
@@ -2220,6 +1259,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 221
     timestamp_utc: "2026-03-08T10:54:00Z"
     selected_primary: language-core
@@ -2233,6 +1273,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: "a6d92af"
     blockers: []
+
 
   - cycle_id: 222
     timestamp_utc: "2026-03-08T10:59:27Z"
@@ -2253,6 +1294,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 223
     timestamp_utc: "2026-03-08T11:00:00Z"
     selected_primary: language-core
@@ -2269,6 +1311,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 224
     timestamp_utc: "2026-03-08T11:06:00Z"
     selected_primary: runtime-replay
@@ -2282,6 +1325,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 225
     timestamp_utc: "2026-03-08T11:10:00Z"
@@ -2300,6 +1344,7 @@ entries:
     blockers:
       - "LNG-INT-05 requires revise-stage implementation before execute: split runtime_stub.py into deterministic submodules with no behavior drift."
 
+
   - cycle_id: 226
     timestamp_utc: "2026-03-08T11:12:00Z"
     selected_primary: runtime-replay
@@ -2315,6 +1360,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: d2492a4
     blockers: []
+
 
   - cycle_id: 227
     timestamp_utc: "2026-03-08T11:16:00Z"
@@ -2334,6 +1380,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 228
     timestamp_utc: "2026-03-08T11:19:44Z"
     selected_primary: runtime-replay
@@ -2350,6 +1397,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 229
     timestamp_utc: "2026-03-08T11:20:00Z"
     selected_primary: runtime-replay
@@ -2363,6 +1411,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
   - cycle_id: 230
     timestamp_utc: "2026-03-08T11:24:00Z"
@@ -2381,6 +1430,7 @@ entries:
     blockers:
       - "LNG-PRX-04 requires revise-stage implementation before execute: add canonical one-click demo command/script and expected-output artifact proving byte-stable replay outputs."
 
+
   - cycle_id: 231
     timestamp_utc: "2026-03-08T11:28:00Z"
     selected_primary: runtime-replay
@@ -2396,6 +1446,7 @@ entries:
       - "revise-stage: added canonical one-click public demo command (scripts/run_public_demo.py) with committed byte-stable expected-output artifact and verification test coverage"
     commit: null
     blockers: []
+
 
   - cycle_id: 232
     timestamp_utc: "2026-03-08T11:32:00Z"
@@ -2416,6 +1467,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 233
     timestamp_utc: "2026-03-08T11:34:00Z"
     selected_primary: runtime-replay
@@ -2432,6 +1484,7 @@ entries:
     commit: null
     blockers: []
 
+
   - cycle_id: 234
     timestamp_utc: "2026-03-08T11:38:00Z"
     selected_primary: language-core
@@ -2445,3 +1498,23 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
+
+  - cycle_id: 235
+    timestamp_utc: "2026-03-08T11:42:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-18
+    status: staged_validate_needs_revision
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "preflight: exponentiation target artifacts and validator entrypoints exist (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (87 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "validation_review: LNG-CORE-18 scope not yet implemented (no '**' token/right-associative power tier updates, no exponentiation AST/type/runtime semantics, no SPEC contract coverage)"
+    commit: null
+    blockers:
+      - "LNG-CORE-18 requires revise-stage implementation before execute: exponentiation (**) semantics are missing across grammar/AST/type/runtime/contracts."

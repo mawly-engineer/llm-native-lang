@@ -2,7 +2,7 @@
 kind: feature_registry
 id: LNG-FEATURES-DONE-001
 status: active
-updated_at_utc: 2026-03-08T11:00:00Z
+updated_at_utc: 2026-03-08T01:15:00Z
 purpose: Compact registry of implemented backlog features.
 
 implemented_features:
@@ -26,6 +26,8 @@ implemented_features:
     title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
   - id: LNG-CORE-10
     title: Extend grammar contracts with boolean literals and deterministic literal-node typing
+  - id: LNG-CORE-11
+    title: Add deterministic list literals and index access with strict AST/type/runtime contracts
   - id: LNG-CORE-12
     title: Add deterministic string literals and concatenation expression contracts across grammar/AST/type/runtime
   - id: LNG-CORE-13
@@ -78,12 +80,16 @@ implemented_features:
     title: Add baseline benchmark harness comparing mini-language flow vs JSON/DSL baseline for reproducibility and success rate
   - id: LNG-PRX-03
     title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
+  - id: LNG-PRX-04
+    title: Add one-click end-to-end public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs
   - id: LNG-RT-01
     title: Deterministic evaluator for core AST
   - id: LNG-RT-02
     title: Environment/scope model with lexical bindings
   - id: LNG-RT-03
     title: Structured runtime errors (code/message/location)
+  - id: LNG-RT-04
+    title: Deterministic step budget and fuel-limit semantics with reproducible halt reasons
   - id: LNG-VAL-01
     title: Golden program suite
   - id: LNG-VAL-02
@@ -98,3 +104,7 @@ implemented_features:
     title: UI/timeline hooks for language-run artifacts
   - id: LNG-INT-03
     title: End-to-end deterministic replay tests
+  - id: LNG-INT-04
+    title: Build replay conformance harness comparing runtime patch traces across repeated runs
+  - id: LNG-INT-05
+    title: Split runtime_stub.py into deterministic submodules with unchanged behavior and passing regression suite
