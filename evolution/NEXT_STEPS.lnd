@@ -11,7 +11,13 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue: []
+active_queue:
+  - step_id: STEP-071
+    backlog_reference: LNG-CORE-13
+    status: queued
+    owner_focus: language-core
+    stage: create_to_validate
+    summary: "Validate seeded unary logical-not contract item before implementation."
 
 recently_completed:
   - step_id: STEP-070
