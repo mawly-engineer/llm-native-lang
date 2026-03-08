@@ -2,7 +2,7 @@
 version: 4
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T02:00:00Z
+updated_at_utc: 2026-03-08T02:10:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -12,12 +12,6 @@ queue_policy:
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
 active_queue:
-  - step_id: STEP-068
-    backlog_reference: LNG-VAL-04
-    owner_focus: validation
-    goal: Add determinism regression suite ensuring byte-identical outputs/logs across repeated runs.
-    status: open
-
   - step_id: STEP-069
     backlog_reference: LNG-INT-04
     owner_focus: integration
@@ -25,6 +19,9 @@ active_queue:
     status: open
 
 recently_completed:
+  - step_id: STEP-068
+    backlog_reference: LNG-VAL-04
+    status: done
   - step_id: STEP-067
     backlog_reference: LNG-RT-04
     status: done

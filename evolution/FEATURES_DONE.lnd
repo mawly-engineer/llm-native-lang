@@ -2,7 +2,7 @@
 kind: feature_registry
 id: LNG-FEATURES-DONE-001
 status: active
-updated_at_utc: 2026-03-08T01:15:00Z
+updated_at_utc: 2026-03-08T02:10:00Z
 purpose: Compact registry of implemented backlog features.
 
 implemented_features:
@@ -78,6 +78,8 @@ implemented_features:
     title: Golden error suite
   - id: LNG-VAL-03
     title: Property/fuzz checks for parser/eval invariants
+  - id: LNG-VAL-04
+    title: Add determinism regression suite (same input/seed -> byte-identical outputs and logs)
   - id: LNG-INT-01
     title: Bridge interpreter execution to runtime patch flow
   - id: LNG-INT-02

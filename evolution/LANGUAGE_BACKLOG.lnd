@@ -191,7 +191,7 @@ buckets:
       - id: LNG-VAL-04
         title: Add determinism regression suite (same input/seed -> byte-identical outputs and logs)
         priority: P0
-        status: open
+        status: done
 
   integration:
     description: End-to-end runtime integration and replay checks.
