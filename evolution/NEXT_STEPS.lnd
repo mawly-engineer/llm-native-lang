@@ -2,7 +2,7 @@
 version: 10
 document: NEXT_STEPS
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-08T12:14:00Z
+updated_at_utc: 2026-03-08T12:14:30Z
 
 queue_policy:
   max_active_steps: 7
@@ -13,4 +13,11 @@ queue_policy:
     - evolution/LANGUAGE_BACKLOG.lnd
     - evolution/CYCLE_LOG.lnd
 
-active_queue: []
+active_queue:
+  - step_id: STEP-081
+    backlog_item_id: LNG-ECO-18
+    stream: ecosystem
+    title: Build minimal public onboarding/release pack (README + metadata + v0.1.0 notes)
+    status: ready_for_validate
+    stage: validate
+    priority: P0

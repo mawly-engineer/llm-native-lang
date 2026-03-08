@@ -2,7 +2,7 @@
 version: 6
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T12:10:00Z
+updated_at_utc: 2026-03-08T12:14:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -220,7 +220,7 @@ buckets:
       - id: LNG-ECO-18
         title: Publish minimal public README + project metadata (description/topics) + first v0.1.0 release notes
         priority: P0
-        status: open
+        status: in_progress
         deterministic_scope: "Create a concise external-facing package of docs/metadata without changing runtime semantics."
         single_cycle_feasibility: "Implementable with focused repo/docs updates and deterministic validation in one cycle."
         explicit_tests:
