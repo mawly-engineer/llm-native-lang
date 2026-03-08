@@ -2,7 +2,7 @@
 version: 5
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T11:57:57Z
+updated_at_utc: 2026-03-08T12:02:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -134,6 +134,17 @@ buckets:
           - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime"
         product_effect_target: runtime_py_changed
         done_when: "Exponentiation expressions parse with deterministic precedence/right-associativity, type-check as integer-only, evaluate deterministically, and contract tests pass."
+
+      - id: LNG-CORE-19
+        title: Add deterministic ternary conditional expression contract across grammar/AST/type/runtime
+        priority: P1
+        status: open
+        deterministic_scope: "Introduce conditional expression syntax `if <cond> then <expr> else <expr>` with fixed precedence between logical_or and assignment roots, plus explicit AST node contract."
+        single_cycle_feasibility: "Implementable by extending parser expression tiers, AST/type-check rules, interpreter evaluation semantics, and deterministic contract tests within one cycle."
+        explicit_tests:
+          - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime"
+        product_effect_target: runtime_py_changed
+        done_when: "Conditional expressions parse with deterministic precedence, enforce boolean condition typing and branch type compatibility, evaluate deterministically, and contract tests pass."
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
