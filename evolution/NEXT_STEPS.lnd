@@ -2,7 +2,7 @@
 version: 4
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T06:09:00Z
+updated_at_utc: 2026-03-08T07:10:13Z
 
 queue_policy:
   max_active_steps: 7
@@ -16,8 +16,8 @@ active_queue:
     backlog_reference: LNG-CORE-13
     status: queued
     owner_focus: language-core
-    stage: create_to_validate
-    summary: "Validate seeded unary logical-not contract item before implementation."
+    stage: revise_to_validate
+    summary: "Implement unary logical-not ('!') across grammar/AST/type/runtime/contracts, then re-run validators."
 
 recently_completed:
   - step_id: STEP-070
