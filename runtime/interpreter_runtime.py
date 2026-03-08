@@ -604,6 +604,7 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                     "op": op,
                     "side": "left",
                     "left_type": type(left).__name__,
+                    "right_type": type(right).__name__,
                 },
             )
         if type(left) is not type(right):

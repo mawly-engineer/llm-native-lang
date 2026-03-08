@@ -276,6 +276,7 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
                 "op": "==",
                 "side": "left",
                 "left_type": "dict",
+                "right_type": "dict",
             },
         )
 
