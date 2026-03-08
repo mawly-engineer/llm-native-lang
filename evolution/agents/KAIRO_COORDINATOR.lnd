@@ -98,7 +98,7 @@ controlled_backlog_seeding:
   rule: "Seed only after sustained idle streak and only product-core items."
 
 cycle_log_retention_policy:
-  max_entries: 120
+  max_entries: 20
   maintenance_script: scripts/cycle_log_maintain.py
   also_update: evolution/FEATURES_DONE.lnd
   trigger_when:
