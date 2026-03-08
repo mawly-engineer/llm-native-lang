@@ -71,7 +71,7 @@ buckets:
       - id: LNG-CORE-13
         title: Add deterministic unary logical-not expression contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce '!' unary operator with fixed precedence and boolean-only type rule."
         single_cycle_feasibility: "Implementable in parser, AST/type checks, runtime evaluator, and contract tests within one cycle."
         explicit_tests:
