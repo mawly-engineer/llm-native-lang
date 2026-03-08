@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Mapping
+from collections.abc import Mapping as MappingABC
 
 from runtime.ast_contract import ASTValidationError, validate_ast
 
@@ -170,6 +171,24 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                 location={"node_kind": "index", "index": index, "size": len(target)},
             )
         return target[index]
+
+    if kind == "member_access":
+        target = _eval(node["target"], env, context)
+        member = node["member"]
+
+        if not isinstance(target, MappingABC):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"member access target must be object, got {type(target).__name__}",
+                location={"node_kind": "member_access", "field": "target"},
+            )
+        if member not in target:
+            raise EvalError(
+                code="E_RT_MISSING_MEMBER",
+                message=f"object member not found: {member}",
+                location={"node_kind": "member_access", "member": member},
+            )
+        return target[member]
 
     if kind == "ident":
         return env.get(node["name"])

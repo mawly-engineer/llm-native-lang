@@ -27,6 +27,7 @@ TYPE_NUMBER = TypeSpec("number")
 TYPE_BOOL = TypeSpec("bool")
 TYPE_STRING = TypeSpec("string")
 TYPE_NULL = TypeSpec("null")
+TYPE_OBJECT = TypeSpec("object")
 TYPE_ANY = TypeSpec("any")
 
 
@@ -115,6 +116,15 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         if index_ty != TYPE_NUMBER:
             raise TypeCheckError(f"{path}.index: expected number, got {index_ty}")
         return TYPE_ANY if not target_ty.args else target_ty.args[0]
+
+    if kind == "member_access":
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
+        member = node.get("member")
+        if not isinstance(member, str) or not member.strip():
+            raise TypeCheckError(f"{path}.member: expected non-empty identifier")
+        if target_ty not in {TYPE_OBJECT, TYPE_ANY}:
+            raise TypeCheckError(f"{path}.target: expected object, got {target_ty}")
+        return TYPE_ANY
 
     if kind == "unary_neg":
         operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")

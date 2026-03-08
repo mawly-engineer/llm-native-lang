@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "22fe554bfa1ed9d06cc52d474ed155842a033be31d052da94fb2e918a3750d11",
+            "f9201388ff9d56d0fc60b14fe739646d62d894112d47dbc1901ccd18a8f52c8b",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -157,6 +157,17 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "index")
         self.assertEqual(ast["target"]["kind"], "ident")
         self.assertEqual(ast["index"]["kind"], "number")
+
+    def test_parse_member_access(self) -> None:
+        ast = parse_expr("user.profile")
+        self.assertEqual(ast["kind"], "member_access")
+        self.assertEqual(ast["target"]["kind"], "ident")
+        self.assertEqual(ast["member"], "profile")
+
+    def test_member_access_binds_tighter_than_unary_and_coalesce(self) -> None:
+        ast = parse_expr("a.b ?? c")
+        self.assertEqual(ast["kind"], "coalesce_bin")
+        self.assertEqual(ast["left"]["kind"], "member_access")
 
     def test_parser_emits_deterministic_source_spans(self) -> None:
         ast = parse_expr("let x = [1,2] in x[0]")

@@ -7,6 +7,7 @@ from runtime.type_contract import (
     TYPE_NUMBER,
     TYPE_STRING,
     TYPE_NULL,
+    TYPE_OBJECT,
     TypeCheckError,
     check_expr,
     fn_type,
@@ -141,6 +142,12 @@ class TypeContractTests(unittest.TestCase):
             check_expr(parse_expr("1[0]"))
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("[1,2][true]"))
+
+    def test_member_access_requires_object_or_any_target(self) -> None:
+        self.assertEqual(check_expr(parse_expr("obj.field"), env={"obj": TYPE_OBJECT}), TYPE_ANY)
+        self.assertEqual(check_expr(parse_expr("dyn.field"), env={"dyn": TYPE_ANY}), TYPE_ANY)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("n.field"), env={"n": TYPE_NUMBER})
 
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):

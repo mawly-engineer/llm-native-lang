@@ -2,7 +2,7 @@
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
 string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
-list literals, null literals, and index access.
+list literals, null literals, index access, and member access.
 """
 
 from __future__ import annotations
@@ -48,9 +48,10 @@ GRAMMAR_CONTRACT = {
         "multiplicative -> power (('%' | '//') power)*",
         "power -> unary ('**' power)?",
         "unary -> '-' unary | '!' unary | postfix",
-        "postfix -> atom (call_suffix | index_suffix)*",
+        "postfix -> atom (call_suffix | index_suffix | member_suffix)*",
         "call_suffix -> '(' args? ')'",
         "index_suffix -> '[' expr ']'",
+        "member_suffix -> '.' IDENT",
         "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'",
         "list -> '[' args? ']'",
         "params -> IDENT (',' IDENT)*",
@@ -146,7 +147,7 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token(">=", ">=", i, i + 2))
             i += 2
             continue
-        if ch in "()[],=-+!%<>":
+        if ch in "()[],.=-+!%<>":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -428,6 +429,17 @@ class _Parser:
                     close_tok.end,
                     target=node,
                     index=index,
+                )
+                continue
+            if tok.kind == ".":
+                self._eat(".", ".")
+                member_tok = self._eat("IDENT")
+                node = self._with_span(
+                    "member_access",
+                    node["span"]["start"],
+                    member_tok.end,
+                    target=node,
+                    member=member_tok.value,
                 )
                 continue
             break
