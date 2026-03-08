@@ -44,7 +44,7 @@ GRAMMAR_CONTRACT = {
         "logical_and -> equality ('and' equality)*",
         "equality -> comparison (('==' | '!=') comparison)*",
         "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*",
-        "concat -> multiplicative ('+' multiplicative)*",
+        "concat -> multiplicative (('+' | '-') multiplicative)*",
         "multiplicative -> power (('%' | '//') power)*",
         "power -> unary ('**' power)?",
         "unary -> '+' unary | '-' unary | '!' unary | postfix",
@@ -351,13 +351,15 @@ class _Parser:
 
     def _concat(self) -> dict[str, Any]:
         node = self._multiplicative()
-        while self._peek().kind == "+":
-            self._eat("+", "+")
+        while self._peek().kind in {"+", "-"}:
+            op = self._peek().kind
+            self._eat(op, op)
             right = self._multiplicative()
             node = self._with_span(
                 "concat_bin",
                 node["span"]["start"],
                 right["span"]["end"],
+                op=op,
                 left=node,
                 right=right,
             )

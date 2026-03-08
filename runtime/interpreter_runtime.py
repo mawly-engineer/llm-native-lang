@@ -348,24 +348,44 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         return not value
 
     if kind == "concat_bin":
+        op = node.get("op")
+        if op not in {"+", "-"}:
+            raise EvalError(
+                code="E_RT_UNSUPPORTED_KIND",
+                message=f"unsupported additive op '{op}'",
+                location={"node_kind": "concat_bin", "op": op},
+            )
+
         left = _eval(node["left"], env, context)
         right = _eval(node["right"], env, context)
 
         left_is_int = isinstance(left, int) and not isinstance(left, bool)
         right_is_int = isinstance(right, int) and not isinstance(right, bool)
-        if left_is_int and right_is_int:
-            return left + right
 
-        if isinstance(left, str) and isinstance(right, str):
-            return left + right
+        if op == "+":
+            if left_is_int and right_is_int:
+                return left + right
+            if isinstance(left, str) and isinstance(right, str):
+                return left + right
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=(
+                    "plus expects both operands as int or both as string, "
+                    f"got {type(left).__name__} and {type(right).__name__}"
+                ),
+                location={"node_kind": "concat_bin", "op": "+"},
+            )
+
+        if left_is_int and right_is_int:
+            return left - right
 
         raise EvalError(
             code="E_RT_TYPE",
             message=(
-                "plus expects both operands as int or both as string, "
+                "minus expects both operands as int, "
                 f"got {type(left).__name__} and {type(right).__name__}"
             ),
-            location={"node_kind": "concat_bin", "op": "+"},
+            location={"node_kind": "concat_bin", "op": "-"},
         )
 
     if kind == "modulo_bin":

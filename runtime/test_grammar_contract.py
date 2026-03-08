@@ -18,7 +18,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "20891f476012f0688e1d775f68144dff4188bda7b13a5b8601546ceb47292f77",
+            "3890fa88d09bada42a1eb4b72f35b7d8b865504b3aa9412a701273695f274cad",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -112,8 +112,16 @@ class GrammarContractTests(unittest.TestCase):
     def test_parse_string_concatenation(self) -> None:
         ast = parse_expr('"a"+"b"+"c"')
         self.assertEqual(ast["kind"], "concat_bin")
+        self.assertEqual(ast["op"], "+")
         self.assertEqual(ast["left"]["kind"], "concat_bin")
         self.assertEqual(ast["right"]["kind"], "string")
+
+    def test_parse_subtraction_left_associative(self) -> None:
+        ast = parse_expr("9-3-1")
+        self.assertEqual(ast["kind"], "concat_bin")
+        self.assertEqual(ast["op"], "-")
+        self.assertEqual(ast["left"]["kind"], "concat_bin")
+        self.assertEqual(ast["left"]["op"], "-")
 
     def test_parse_modulo_expression(self) -> None:
         ast = parse_expr("10%3%2")

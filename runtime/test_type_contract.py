@@ -93,6 +93,13 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("1+true"))
 
+    def test_minus_supports_number_subtraction_only(self) -> None:
+        self.assertEqual(check_expr(parse_expr("7-2")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr('"a"-"b"'))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1-true"))
+
     def test_comparison_supports_number_and_string_ordering_with_same_type(self) -> None:
         self.assertEqual(check_expr(parse_expr("1<2")), TYPE_BOOL)
         self.assertEqual(check_expr(parse_expr("2>=2")), TYPE_BOOL)

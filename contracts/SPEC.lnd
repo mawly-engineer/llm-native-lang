@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T17:07:00Z
+updated_at_utc: 2026-03-08T17:27:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -51,7 +51,7 @@ language_minimal_grammar:
     - "logical_and -> equality ('and' equality)*"
     - "equality -> comparison (('==' | '!=') comparison)*"
     - "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*"
-    - "concat -> multiplicative ('+' multiplicative)*"
+    - "concat -> multiplicative (('+' | '-') multiplicative)*"
     - "multiplicative -> power (('%' | '//') power)*"
     - "power -> unary ('**' power)?"
     - "unary -> '+' unary | '-' unary | '!' unary | postfix"
@@ -77,12 +77,15 @@ language_runtime_semantics:
       - evaluate_condition_once
       - require_condition_type_bool_or_raise_E_RT_TYPE
       - evaluate_only_selected_branch
-  plus_operator:
-    operator: "+"
-    scope: deterministic_string_concat_and_number_addition
+  additive_operators:
+    operators:
+      - "+"
+      - "-"
+    scope: deterministic_string_concat_and_number_arithmetic
     behavior:
-      - both_operands_string_then_concat
-      - both_operands_int_then_add
+      - plus_both_operands_string_then_concat
+      - plus_both_operands_int_then_add
+      - minus_both_operands_int_then_subtract
       - mixed_or_unsupported_types_raise_E_RT_TYPE
   object_literal:
     operator: "{\"key\": expr, ...}"

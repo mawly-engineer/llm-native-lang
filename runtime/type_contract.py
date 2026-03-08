@@ -229,14 +229,26 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         return TYPE_BOOL
 
     if kind == "concat_bin":
+        op = node.get("op")
+        if op not in {"+", "-"}:
+            raise TypeCheckError(f"{path}.op: expected '+' or '-', got {op}")
+
         left_ty = _check(node.get("left"), ctx, f"{path}.left")
         right_ty = _check(node.get("right"), ctx, f"{path}.right")
-        if left_ty == TYPE_STRING and right_ty == TYPE_STRING:
-            return TYPE_STRING
+
+        if op == "+":
+            if left_ty == TYPE_STRING and right_ty == TYPE_STRING:
+                return TYPE_STRING
+            if left_ty == TYPE_NUMBER and right_ty == TYPE_NUMBER:
+                return TYPE_NUMBER
+            raise TypeCheckError(
+                f"{path}: plus operands must both be string or both be number ({left_ty} vs {right_ty})"
+            )
+
         if left_ty == TYPE_NUMBER and right_ty == TYPE_NUMBER:
             return TYPE_NUMBER
         raise TypeCheckError(
-            f"{path}: plus operands must both be string or both be number ({left_ty} vs {right_ty})"
+            f"{path}: minus operands must both be number ({left_ty} vs {right_ty})"
         )
 
     if kind == "modulo_bin":

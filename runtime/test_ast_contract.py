@@ -19,7 +19,7 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "3556ec3c3fec2f8eeab2706ba3c1da4c2c85bb1dc9066ac0094df460f9e72247",
+            "ca37ce123053a336fceaf9afc744db343f4fae77c34acad0df64a25f458a7ae4",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:

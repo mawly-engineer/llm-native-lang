@@ -38,6 +38,14 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         self.assertEqual(eval_expr(parse_expr('"hi"+"-"+"there"')), "hi-there")
         self.assertEqual(eval_expr(parse_expr("10+20+3")), 33)
 
+    def test_minus_evaluates_deterministically_for_numbers(self) -> None:
+        self.assertEqual(eval_expr(parse_expr("10-3-2")), 5)
+
+    def test_minus_rejects_non_number_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('"a"-"b"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
     def test_modulo_evaluates_deterministically(self) -> None:
         expr = parse_expr("10%4")
         self.assertEqual(eval_expr(expr), 2)

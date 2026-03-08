@@ -68,8 +68,14 @@ AST_SCHEMA = {
             "fields": {"kind": "literal:unary_not", "span": "span", "operand": "expr"},
         },
         "concat_bin": {
-            "required": ["kind", "span", "left", "right"],
-            "fields": {"kind": "literal:concat_bin", "span": "span", "left": "expr", "right": "expr"},
+            "required": ["kind", "span", "op", "left", "right"],
+            "fields": {
+                "kind": "literal:concat_bin",
+                "span": "span",
+                "op": "literal:+|-",
+                "left": "expr",
+                "right": "expr",
+            },
         },
         "modulo_bin": {
             "required": ["kind", "span", "left", "right"],
@@ -146,7 +152,7 @@ _AST_FINGERPRINT_SOURCE = [
     "unary_pos:kind,span,operand",
     "unary_neg:kind,span,operand",
     "unary_not:kind,span,operand",
-    "concat_bin:kind,span,left,right",
+    "concat_bin:kind,span,op,left,right",
     "modulo_bin:kind,span,left,right",
     "int_div_bin:kind,span,left,right",
     "power_bin:kind,span,left,right",
@@ -333,6 +339,9 @@ def _validate_expr(node: Any) -> None:
     if kind == "concat_bin":
         _require_kind(node, "concat_bin")
         _require_span(node, "concat_bin")
+        op = node.get("op")
+        if op not in {"+", "-"}:
+            raise ASTValidationError("concat_bin.op must be '+' or '-'")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return

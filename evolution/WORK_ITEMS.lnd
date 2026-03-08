@@ -2,7 +2,7 @@
 version: 7
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T17:17:00Z
+updated_at_utc: 2026-03-08T17:27:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
