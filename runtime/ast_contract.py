@@ -39,6 +39,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "operand"],
             "fields": {"kind": "literal:unary_neg", "span": "span", "operand": "expr"},
         },
+        "unary_not": {
+            "required": ["kind", "span", "operand"],
+            "fields": {"kind": "literal:unary_not", "span": "span", "operand": "expr"},
+        },
         "concat_bin": {
             "required": ["kind", "span", "left", "right"],
             "fields": {"kind": "literal:concat_bin", "span": "span", "left": "expr", "right": "expr"},
@@ -81,6 +85,7 @@ _AST_FINGERPRINT_SOURCE = [
     "index:kind,span,target,index",
     "list:kind,span,items",
     "unary_neg:kind,span,operand",
+    "unary_not:kind,span,operand",
     "concat_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
@@ -193,6 +198,12 @@ def _validate_expr(node: Any) -> None:
     if kind == "unary_neg":
         _require_kind(node, "unary_neg")
         _require_span(node, "unary_neg")
+        _validate_expr(node.get("operand"))
+        return
+
+    if kind == "unary_not":
+        _require_kind(node, "unary_not")
+        _require_span(node, "unary_not")
         _validate_expr(node.get("operand"))
         return
 

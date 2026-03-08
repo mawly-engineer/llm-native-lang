@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "list", "unary_neg", "concat_bin", "logical_bin", "ident", "number", "bool", "string"],
+            ["let", "if", "fn", "call", "index", "list", "unary_neg", "unary_not", "concat_bin", "logical_bin", "ident", "number", "bool", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "14fa13746d7f042a9a522f9f255be022e00071b3d8c8fdda3d65ee7e5fce05a6",
+            "6664dc2b2702937512ef284cb7dc9a521e7ef33ff619b1a754d61ea8305d1f86",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -31,6 +31,7 @@ class ASTContractTests(unittest.TestCase):
             "x",
             "42",
             "-1",
+            "!false",
             "true and false",
             '"a"+"b"',
             '"s"',
@@ -70,6 +71,8 @@ class ASTContractTests(unittest.TestCase):
                 for item in node["items"]:
                     assert_spans(item)
             elif kind == "unary_neg":
+                assert_spans(node["operand"])
+            elif kind == "unary_not":
                 assert_spans(node["operand"])
             elif kind == "concat_bin":
                 assert_spans(node["left"])

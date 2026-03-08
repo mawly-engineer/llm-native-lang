@@ -116,6 +116,12 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.operand: expected number, got {operand_ty}")
         return TYPE_NUMBER
 
+    if kind == "unary_not":
+        operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
+        if operand_ty != TYPE_BOOL:
+            raise TypeCheckError(f"{path}.operand: expected bool, got {operand_ty}")
+        return TYPE_BOOL
+
     if kind == "concat_bin":
         left_ty = _check(node.get("left"), ctx, f"{path}.left")
         right_ty = _check(node.get("right"), ctx, f"{path}.right")

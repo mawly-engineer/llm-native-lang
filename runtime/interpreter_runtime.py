@@ -149,13 +149,23 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
 
     if kind == "unary_neg":
         value = _eval(node["operand"], env, context)
-        if not isinstance(value, int):
+        if not isinstance(value, int) or isinstance(value, bool):
             raise EvalError(
                 code="E_RT_TYPE",
                 message=f"unary negation expects int, got {type(value).__name__}",
                 location={"node_kind": "unary_neg"},
             )
         return -value
+
+    if kind == "unary_not":
+        value = _eval(node["operand"], env, context)
+        if not isinstance(value, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"unary logical-not expects bool, got {type(value).__name__}",
+                location={"node_kind": "unary_not"},
+            )
+        return not value
 
     if kind == "concat_bin":
         left = _eval(node["left"], env, context)

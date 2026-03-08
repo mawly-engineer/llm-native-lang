@@ -1,8 +1,8 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, unary negation, string literals,
-string concatenation, logical and/or, bool literals, list literals,
-and index access.
+Scope: expr, let, if, fn, call, unary negation/logical-not,
+string literals, string concatenation, logical and/or, bool literals,
+list literals, and index access.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ GRAMMAR_CONTRACT = {
         "logical_or -> logical_and ('or' logical_and)*",
         "logical_and -> concat ('and' concat)*",
         "concat -> unary ('+' unary)*",
-        "unary -> '-' unary | postfix",
+        "unary -> '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
         "index_suffix -> '[' expr ']'",
@@ -108,7 +108,7 @@ def _tokenize(source: str) -> List[Token]:
             else:
                 raise ParseError("unterminated string literal")
             continue
-        if ch in "()[],=-+":
+        if ch in "()[],=-+!":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -267,6 +267,15 @@ class _Parser:
             return self._with_span(
                 "unary_neg",
                 minus.start,
+                operand["span"]["end"],
+                operand=operand,
+            )
+        if tok.kind == "!":
+            bang = self._eat("!", "!")
+            operand = self._unary()
+            return self._with_span(
+                "unary_not",
+                bang.start,
                 operand["span"]["end"],
                 operand=operand,
             )

@@ -26,6 +26,10 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("-inc(1)")
         self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), -2)
 
+    def test_unary_logical_not_evaluates_operand(self) -> None:
+        expr = parse_expr("!is_ready()")
+        self.assertTrue(eval_expr(expr, env={"is_ready": lambda: False}))
+
     def test_string_concat_evaluates_deterministically(self) -> None:
         expr = parse_expr('"hi"+"-"+"there"')
         self.assertEqual(eval_expr(expr), "hi-there")
@@ -42,6 +46,11 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("[1][3]"))
         self.assertEqual(ctx.exception.code, "E_RT_INDEX_OUT_OF_RANGE")
+
+    def test_unary_logical_not_rejects_non_bool_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("!1"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
     def test_logical_short_circuit_and_skips_rhs_when_left_false(self) -> None:
         expr = parse_expr("false and boom()")

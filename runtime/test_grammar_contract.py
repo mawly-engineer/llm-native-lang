@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "c2e4c9b5fdda784e586723f0acfa1c30622b58e1f27f95a83e87b1bcf222a07b",
+            "1cd9e21648be27d336f98525780fd908161552f67b763840e02f39dd7457ac02",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -45,11 +45,22 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "unary_neg")
         self.assertEqual(ast["operand"]["kind"], "number")
 
+    def test_parse_unary_logical_not_expression(self) -> None:
+        ast = parse_expr("!true")
+        self.assertEqual(ast["kind"], "unary_not")
+        self.assertEqual(ast["operand"]["kind"], "bool")
+
     def test_unary_negation_wraps_call_for_precedence_safety(self) -> None:
         ast = parse_expr("-sum(1)")
         self.assertEqual(ast["kind"], "unary_neg")
         self.assertEqual(ast["operand"]["kind"], "call")
         self.assertEqual(ast["operand"]["callee"], "sum")
+
+    def test_unary_logical_not_wraps_call_for_precedence_safety(self) -> None:
+        ast = parse_expr("!flag()")
+        self.assertEqual(ast["kind"], "unary_not")
+        self.assertEqual(ast["operand"]["kind"], "call")
+        self.assertEqual(ast["operand"]["callee"], "flag")
 
     def test_parse_bool_literals_as_literal_nodes(self) -> None:
         ast_true = parse_expr("true")
