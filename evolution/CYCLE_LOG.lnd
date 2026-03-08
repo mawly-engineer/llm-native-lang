@@ -2443,5 +2443,5 @@ entries:
       - "create-stage: controlled backlog seeding created product-core item LNG-CORE-18 with mapped next step STEP-079; active flow set to validate"
       - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: 629230e
+    commit: null
     blockers: []
