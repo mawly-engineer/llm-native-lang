@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
-string literals, string concatenation, logical and/or, bool literals,
+string literals, string concatenation, modulo (%), logical and/or, bool literals,
 list literals, null literals, and index access.
 """
 
@@ -25,6 +25,7 @@ GRAMMAR_CONTRACT = {
         "logical_or",
         "logical_and",
         "concat",
+        "multiplicative",
         "unary",
         "postfix",
         "atom",
@@ -36,7 +37,8 @@ GRAMMAR_CONTRACT = {
         "fn -> 'fn' '(' params? ')' '=>' expr",
         "logical_or -> logical_and ('or' logical_and)*",
         "logical_and -> concat ('and' concat)*",
-        "concat -> unary ('+' unary)*",
+        "concat -> multiplicative ('+' multiplicative)*",
+        "multiplicative -> unary ('%' unary)*",
         "unary -> '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
@@ -108,7 +110,7 @@ def _tokenize(source: str) -> List[Token]:
             else:
                 raise ParseError("unterminated string literal")
             continue
-        if ch in "()[],=-+!":
+        if ch in "()[],=-+!%":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -246,12 +248,26 @@ class _Parser:
         return node
 
     def _concat(self) -> dict[str, Any]:
-        node = self._unary()
+        node = self._multiplicative()
         while self._peek().kind == "+":
             self._eat("+", "+")
-            right = self._unary()
+            right = self._multiplicative()
             node = self._with_span(
                 "concat_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _multiplicative(self) -> dict[str, Any]:
+        node = self._unary()
+        while self._peek().kind == "%":
+            self._eat("%", "%")
+            right = self._unary()
+            node = self._with_span(
+                "modulo_bin",
                 node["span"]["start"],
                 right["span"]["end"],
                 left=node,

@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "concat", "unary", "postfix", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "concat", "multiplicative", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "a8c6e7675fb51f14a212b43a53da8618320522ad36136d0ed5b04d942d7a3fd6",
+            "d4a4438fdfafe906dffd74e9c5f8d17c461408800c4059da9a91d20a42827ba2",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -93,6 +93,17 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "concat_bin")
         self.assertEqual(ast["left"]["kind"], "concat_bin")
         self.assertEqual(ast["right"]["kind"], "string")
+
+    def test_parse_modulo_expression(self) -> None:
+        ast = parse_expr("10%3%2")
+        self.assertEqual(ast["kind"], "modulo_bin")
+        self.assertEqual(ast["left"]["kind"], "modulo_bin")
+        self.assertEqual(ast["right"]["kind"], "number")
+
+    def test_modulo_has_higher_precedence_than_concat(self) -> None:
+        ast = parse_expr('"x"+8%3')
+        self.assertEqual(ast["kind"], "concat_bin")
+        self.assertEqual(ast["right"]["kind"], "modulo_bin")
 
     def test_parse_list_literal(self) -> None:
         ast = parse_expr("[1,2,3]")

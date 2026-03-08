@@ -9,14 +9,14 @@ state:
   active_bucket: language-core
   active_backlog_item_id: LNG-CORE-15
   active_next_step_id: STEP-073
-  current_stage: revise
+  current_stage: validate
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: validate_stage_needs_revision
+  last_stage_status: revise_stage_success
   last_error: null
 
 stage_transition_rules:

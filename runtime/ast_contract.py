@@ -47,6 +47,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "left", "right"],
             "fields": {"kind": "literal:concat_bin", "span": "span", "left": "expr", "right": "expr"},
         },
+        "modulo_bin": {
+            "required": ["kind", "span", "left", "right"],
+            "fields": {"kind": "literal:modulo_bin", "span": "span", "left": "expr", "right": "expr"},
+        },
         "logical_bin": {
             "required": ["kind", "span", "op", "left", "right"],
             "fields": {
@@ -91,6 +95,7 @@ _AST_FINGERPRINT_SOURCE = [
     "unary_neg:kind,span,operand",
     "unary_not:kind,span,operand",
     "concat_bin:kind,span,left,right",
+    "modulo_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
     "number:kind,span,value",
@@ -215,6 +220,13 @@ def _validate_expr(node: Any) -> None:
     if kind == "concat_bin":
         _require_kind(node, "concat_bin")
         _require_span(node, "concat_bin")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
+    if kind == "modulo_bin":
+        _require_kind(node, "modulo_bin")
+        _require_span(node, "modulo_bin")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return
