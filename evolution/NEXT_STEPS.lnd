@@ -2,7 +2,7 @@
 version: 5
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T09:59:00Z
+updated_at_utc: 2026-03-08T10:09:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -15,9 +15,9 @@ active_queue:
   - step_id: STEP-072
     backlog_reference: LNG-CORE-14
     stream: language-core
-    stage: validate
+    stage: execute
     status: active
-    notes: "Revise stage implemented null literal semantics across grammar/AST/type/runtime/contracts; run validate gate next cycle."
+    notes: "Validate gate approved after preflight + full validators; run execute stage next cycle to finalize LNG-CORE-14 lifecycle."
 
 recently_completed:
   - step_id: STEP-071
