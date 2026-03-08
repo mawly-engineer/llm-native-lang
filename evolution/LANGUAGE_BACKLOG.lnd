@@ -83,7 +83,7 @@ buckets:
       - id: LNG-CORE-14
         title: Add deterministic null literal contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce null literal token and AST node with fixed runtime value/null-type semantics and deterministic parser precedence behavior."
         single_cycle_feasibility: "Implementable in parser, AST/type checks, runtime evaluator, and contract tests within one cycle."
         explicit_tests:
