@@ -1,0 +1,13 @@
+{
+  "name": "llm-native-lang",
+  "description": "Deterministic language/runtime contracts and replay-oriented execution for LLM-native workflows.",
+  "version": "0.1.0",
+  "topics": [
+    "deterministic",
+    "llm",
+    "language",
+    "runtime",
+    "replay",
+    "contracts"
+  ]
+}
