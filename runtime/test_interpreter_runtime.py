@@ -2,7 +2,7 @@ import random
 import unittest
 
 from runtime.grammar_contract import ParseError, parse_expr
-from runtime.interpreter_runtime import EvalError, eval_expr
+from runtime.interpreter_runtime import EvalError, eval_expr, eval_expr_with_trace
 
 
 class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
@@ -169,6 +169,22 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
 
         self.assertEqual(ctx.exception.code, "E_RT_FUEL_CONFIG")
         self.assertEqual(ctx.exception.location.get("field"), "fuel_limit")
+
+    def test_eval_trace_ids_are_deterministic_for_same_program(self) -> None:
+        expr = parse_expr("let x = 1 in x")
+        first_result, first_trace_ids = eval_expr_with_trace(expr)
+        second_result, second_trace_ids = eval_expr_with_trace(expr)
+
+        self.assertEqual(first_result, second_result)
+        self.assertEqual(first_trace_ids, second_trace_ids)
+        self.assertGreater(len(first_trace_ids), 0)
+
+    def test_eval_trace_ids_include_node_kind_suffix(self) -> None:
+        expr = parse_expr("10%4")
+        _result, trace_ids = eval_expr_with_trace(expr)
+
+        self.assertTrue(all(trace_id.startswith("n-") for trace_id in trace_ids))
+        self.assertTrue(any(trace_id.endswith(":modulo_bin") for trace_id in trace_ids))
 
 
 class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):

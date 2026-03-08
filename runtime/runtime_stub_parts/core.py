@@ -1,11 +1,12 @@
 """Core runtime implementation for KAIRO runtime stub."""
 
 from copy import deepcopy
+import json
 import re
 from typing import Any, Dict, List, Mapping, Set, Tuple
 
 from runtime.grammar_contract import ParseError, parse_expr
-from runtime.interpreter_runtime import EvalError, eval_expr
+from runtime.interpreter_runtime import EvalError, eval_expr_with_trace
 from runtime.runtime_stub_parts.types import (
     PatchError,
     Revision,
@@ -1031,6 +1032,7 @@ class KairoRuntime:
         source: str,
         result: Any,
         result_type: str,
+        trace_ids: List[str],
     ) -> List[Dict[str, Any]]:
         run_path = f"/artifacts/language-runs/{run_node_id}"
         return [
@@ -1038,6 +1040,8 @@ class KairoRuntime:
             {"op": "set_prop", "path": run_path, "key": "source", "value": source},
             {"op": "set_prop", "path": run_path, "key": "result", "value": self._serialize_runtime_value(result)},
             {"op": "set_prop", "path": run_path, "key": "result_type", "value": result_type},
+            {"op": "set_prop", "path": run_path, "key": "trace_ids", "value": trace_ids},
+            {"op": "set_prop", "path": run_path, "key": "trace_count", "value": len(trace_ids)},
             {"op": "set_prop", "path": run_path, "key": "status", "value": "ok"},
         ]
 
@@ -1057,7 +1061,7 @@ class KairoRuntime:
             raise PatchError("E_LANG_PARSE", str(exc)) from exc
 
         try:
-            result = eval_expr(ast, env=env)
+            result, trace_ids = eval_expr_with_trace(ast, env=env)
         except EvalError as exc:
             raise PatchError("E_LANG_EVAL", str(exc), details={"code": exc.code, "location": exc.location}) from exc
 
@@ -1071,6 +1075,8 @@ class KairoRuntime:
             "language.ast_kind": ast["kind"],
             "language.result": serialized_result,
             "language.result_type": result_type,
+            "language.trace_ids": json.dumps(trace_ids, separators=(",", ":")),
+            "language.trace_count": len(trace_ids),
             "language.status": "ok",
         }
 
@@ -1092,6 +1098,7 @@ class KairoRuntime:
                         source=source,
                         result=result,
                         result_type=result_type,
+                        trace_ids=trace_ids,
                     )
                 },
             }

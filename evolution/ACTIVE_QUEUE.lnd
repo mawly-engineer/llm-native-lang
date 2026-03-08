@@ -23,4 +23,4 @@ active_queue:
     backlog_reference: LNG-RT-05
     owner_focus: interpreter-runtime
     goal: Add deterministic per-node evaluation trace IDs with replay parity tests.
-    status: open
+    status: done

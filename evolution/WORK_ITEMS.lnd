@@ -21,23 +21,6 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
-      - id: LNG-CORE-20
-        title: Add deterministic string equality and ordering guardrails (compare_bin typing/runtime contracts)
-        priority: P1
-        status: done
-        deterministic_scope: "Tighten compare semantics for strings and mixed-type guards with reproducible errors."
-        single_cycle_feasibility: "Implementable with focused type/runtime/contract updates and tests."
-        explicit_tests:
-          - "python3 -m unittest runtime.test_type_contract runtime.test_interpreter_runtime"
-        product_effect_target: runtime_py_changed
-        done_when: "String comparison behavior is deterministic, validated, and contract-documented."
-        deterministic_scope: "Introduce '**' as a power-tier operator with fixed precedence above multiplicative and right-associative parse behavior."
-        single_cycle_feasibility: "Implementable by extending parser precedence/associativity handling, AST/type-check rules, interpreter evaluation semantics, and contract tests within one cycle."
-        explicit_tests:
-          - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime"
-        product_effect_target: runtime_py_changed
-        done_when: "Exponentiation expressions parse with deterministic precedence/right-associativity, type-check as integer-only, evaluate deterministically, and contract tests pass."
-
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items:
@@ -47,17 +30,6 @@ buckets:
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
     items:
-      - id: LNG-RT-05
-        title: Add deterministic evaluation trace IDs for each executed node to improve replay/debug parity
-        priority: P1
-        status: open
-        deterministic_scope: "Emit stable per-node trace ids without changing value semantics."
-        single_cycle_feasibility: "Implementable in interpreter/runtime plus targeted tests."
-        explicit_tests:
-          - "python3 -m unittest runtime.test_interpreter_runtime runtime.test_replay_conformance"
-        product_effect_target: runtime_py_changed
-        done_when: "Trace IDs are stable across repeated runs and validated in replay tests."
-
   validation:
     description: Tests, contracts, and property checks.
     items:

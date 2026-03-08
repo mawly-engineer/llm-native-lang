@@ -2,7 +2,7 @@
 kind: completed_archive
 id: WORK-COMPLETED-ARCHIVE-001
 status: active
-updated_at_utc: 2026-03-08T12:40:34Z
+updated_at_utc: 2026-03-08T15:15:59Z
 purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
 
 completed_items:
@@ -276,3 +276,13 @@ completed_items:
     title: Split runtime_stub.py into deterministic submodules with unchanged behavior and passing regression suite
     status: done
     archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-20
+    bucket: language-core
+    title: Add deterministic string equality and ordering guardrails (compare_bin typing/runtime contracts)
+    status: done
+    archived_at_utc: 2026-03-08T15:15:59Z
+  - id: LNG-RT-05
+    bucket: interpreter-runtime
+    title: Add deterministic evaluation trace IDs for each executed node to improve replay/debug parity
+    status: done
+    archived_at_utc: 2026-03-08T15:15:59Z

@@ -32,6 +32,12 @@ class Closure:
 @dataclass
 class EvalContext:
     fuel_remaining: int | None = None
+    trace_counter: int = 0
+    trace_ids: list[str] | None = None
+
+    def next_trace_id(self, node_kind: str) -> str:
+        self.trace_counter += 1
+        return f"n-{self.trace_counter:06d}:{node_kind}"
 
     def consume_step(self, node_kind: str) -> None:
         if self.fuel_remaining is None:
@@ -72,11 +78,7 @@ class Env:
         )
 
 
-def eval_expr(
-    node: dict[str, Any],
-    env: Mapping[str, Any] | None = None,
-    fuel_limit: int | None = None,
-) -> Any:
+def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
     except ASTValidationError as exc:
@@ -100,12 +102,34 @@ def eval_expr(
         for key in sorted(env.keys()):
             root.set(key, env[key])
 
-    context = EvalContext(fuel_remaining=fuel_limit)
+    return root, EvalContext(fuel_remaining=fuel_limit)
+
+
+def eval_expr(
+    node: dict[str, Any],
+    env: Mapping[str, Any] | None = None,
+    fuel_limit: int | None = None,
+) -> Any:
+    root, context = _prepare_eval(node=node, env=env, fuel_limit=fuel_limit)
     return _eval(node, root, context)
+
+
+def eval_expr_with_trace(
+    node: dict[str, Any],
+    env: Mapping[str, Any] | None = None,
+    fuel_limit: int | None = None,
+) -> tuple[Any, list[str]]:
+    root, context = _prepare_eval(node=node, env=env, fuel_limit=fuel_limit)
+    context.trace_ids = []
+    result = _eval(node, root, context)
+    return result, context.trace_ids
 
 
 def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     kind = node["kind"]
+    trace_id = context.next_trace_id(kind)
+    if context.trace_ids is not None:
+        context.trace_ids.append(trace_id)
     context.consume_step(kind)
 
     if kind == "number":
