@@ -2396,3 +2396,22 @@ entries:
       - "revise-stage: added canonical one-click public demo command (scripts/run_public_demo.py) with committed byte-stable expected-output artifact and verification test coverage"
     commit: null
     blockers: []
+
+  - cycle_id: 232
+    timestamp_utc: "2026-03-08T11:32:00Z"
+    selected_primary: runtime-replay
+    selected_secondary: validation
+    backlog_item_id: LNG-PRX-04
+    status: staged_validate_approved
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "preflight: target artifacts and validator entrypoints exist (runtime/example_app_flow.py, runtime/replay_conformance.py, runtime/test_example_app_flow.py, runtime/test_replay_conformance.py, scripts/run_public_demo.py, runtime/examples/canonical_public_demo_expected.json, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_example_app_flow runtime.test_replay_conformance (5 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "validation_review: LNG-PRX-04 now includes canonical one-click demo command plus committed expected-output artifact; deterministic replay checks are green and execute stage can finalize item lifecycle"
+    commit: null
+    blockers: []
