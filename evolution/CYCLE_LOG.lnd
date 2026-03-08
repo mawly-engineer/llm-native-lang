@@ -1923,7 +1923,7 @@ entries:
       - "python3 /home/node/.openclaw/workspace/llm-native-lang/scripts/lnc_validate.py /home/node/.openclaw/workspace/llm-native-lang/runtime (PASS validated 3 .lnc file(s))"
       - "python3 -m unittest /home/node/.openclaw/workspace/llm-native-lang/runtime/test_format_validators.py (5 tests, OK)"
       - "git -C /home/node/.openclaw/workspace/llm-native-lang status --short --branch (clean_before_log_append)"
-    commit: null
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang status --short --branch (clean_after_commit)"
+    commit: "5a0757e"
     blockers:
       - "No open backlog items remain in /home/node/.openclaw/workspace/llm-native-lang/evolution/LANGUAGE_BACKLOG.lnd (all tracked items are done)."
-      - "working_tree_not_clean"
