@@ -2,7 +2,7 @@
 version: 4
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T02:50:00Z
+updated_at_utc: 2026-03-08T03:00:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -17,8 +17,8 @@ active_queue:
     stream: language-core
     status: active
     owner_focus: language-core
-    stage: validate
-    summary: Validate seeded product-core task for deterministic string literals + concatenation contracts before execution.
+    stage: revise
+    summary: Revise LNG-CORE-12 to add missing deterministic string literal and concatenation coverage across grammar/AST/type/runtime contracts before re-validation.
 
 recently_completed:
   - step_id: STEP-069
