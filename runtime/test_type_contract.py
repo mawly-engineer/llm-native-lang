@@ -66,6 +66,13 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("!1"))
 
+    def test_null_coalescing_requires_compatible_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr("null??1")), TYPE_NUMBER)
+        self.assertEqual(check_expr(parse_expr("1??null")), TYPE_NUMBER)
+        self.assertEqual(check_expr(parse_expr('"a"??"b"')), TYPE_STRING)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1??true"))
+
     def test_logical_and_or_require_bool_operands(self) -> None:
         self.assertEqual(check_expr(parse_expr("true and false")), TYPE_BOOL)
         self.assertEqual(check_expr(parse_expr("true or false")), TYPE_BOOL)

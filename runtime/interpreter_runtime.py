@@ -280,6 +280,12 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return left ** right
 
+    if kind == "coalesce_bin":
+        left = _eval(node["left"], env, context)
+        if left is not None:
+            return left
+        return _eval(node["right"], env, context)
+
     if kind == "logical_bin":
         op = node["op"]
         if op not in {"and", "or"}:

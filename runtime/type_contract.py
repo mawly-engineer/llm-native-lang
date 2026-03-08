@@ -164,6 +164,20 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.right: expected number, got {right_ty}")
         return TYPE_NUMBER
 
+    if kind == "coalesce_bin":
+        left_ty = _check(node.get("left"), ctx, f"{path}.left")
+        right_ty = _check(node.get("right"), ctx, f"{path}.right")
+
+        if left_ty == TYPE_NULL:
+            return right_ty
+        if right_ty == TYPE_NULL:
+            return left_ty
+        if left_ty != right_ty:
+            raise TypeCheckError(
+                f"{path}: null-coalescing operands must be compatible ({left_ty} vs {right_ty})"
+            )
+        return left_ty
+
     if kind == "logical_bin":
         op = node.get("op")
         if op not in {"and", "or"}:

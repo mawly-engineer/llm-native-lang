@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
-string literals, string concatenation, equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
+string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, null literals, and index access.
 """
 
@@ -22,6 +22,7 @@ GRAMMAR_CONTRACT = {
         "let",
         "if",
         "fn",
+        "coalesce",
         "logical_or",
         "logical_and",
         "equality",
@@ -34,10 +35,11 @@ GRAMMAR_CONTRACT = {
         "atom",
     ],
     "productions": [
-        "expr -> let | if | fn | logical_or",
+        "expr -> let | if | fn | coalesce",
         "let -> 'let' IDENT '=' expr 'in' expr",
         "if -> 'if' expr 'then' expr 'else' expr",
         "fn -> 'fn' '(' params? ')' '=>' expr",
+        "coalesce -> logical_or ('??' coalesce)?",
         "logical_or -> logical_and ('or' logical_and)*",
         "logical_and -> equality ('and' equality)*",
         "equality -> comparison (('==' | '!=') comparison)*",
@@ -115,6 +117,10 @@ def _tokenize(source: str) -> List[Token]:
                 i += 1
             else:
                 raise ParseError("unterminated string literal")
+            continue
+        if source.startswith("??", i):
+            tokens.append(Token("??", "??", i, i + 2))
+            i += 2
             continue
         if source.startswith("**", i):
             tokens.append(Token("**", "**", i, i + 2))
@@ -206,7 +212,7 @@ class _Parser:
             return self._if()
         if tok.kind == "KW" and tok.value == "fn":
             return self._fn()
-        return self._logical_or()
+        return self._coalesce()
 
     def _let(self) -> dict[str, Any]:
         start = self._eat("KW", "let").start
@@ -246,6 +252,20 @@ class _Parser:
         self._eat("ARROW", "=>")
         body = self._expr()
         return self._with_span("fn", start, body["span"]["end"], params=params, body=body)
+
+    def _coalesce(self) -> dict[str, Any]:
+        node = self._logical_or()
+        if self._peek().kind == "??":
+            self._eat("??", "??")
+            right = self._coalesce()
+            node = self._with_span(
+                "coalesce_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                left=node,
+                right=right,
+            )
+        return node
 
     def _logical_or(self) -> dict[str, Any]:
         node = self._logical_and()

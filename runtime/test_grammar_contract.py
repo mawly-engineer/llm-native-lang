@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "equality", "comparison", "concat", "multiplicative", "power", "unary", "postfix", "atom"],
+            ["expr", "let", "if", "fn", "coalesce", "logical_or", "logical_and", "equality", "comparison", "concat", "multiplicative", "power", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "f921d35f8762e61402fb890eee19d617e84f82bef40443500defa3e499d0456a",
+            "22fe554bfa1ed9d06cc52d474ed155842a033be31d052da94fb2e918a3750d11",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -74,6 +74,17 @@ class GrammarContractTests(unittest.TestCase):
         ast_null = parse_expr("null")
         self.assertEqual(ast_null["kind"], "null")
         self.assertIsNone(ast_null["value"])
+
+    def test_parse_null_coalescing_right_associative_and_precedence(self) -> None:
+        ast = parse_expr("a ?? b ?? c")
+        self.assertEqual(ast["kind"], "coalesce_bin")
+        self.assertEqual(ast["left"]["kind"], "ident")
+        self.assertEqual(ast["right"]["kind"], "coalesce_bin")
+
+    def test_null_coalescing_binds_looser_than_logical_or(self) -> None:
+        ast = parse_expr("a or b ?? c")
+        self.assertEqual(ast["kind"], "coalesce_bin")
+        self.assertEqual(ast["left"]["kind"], "logical_bin")
 
     def test_parse_logical_and_or_with_precedence(self) -> None:
         ast = parse_expr("true or false and true")

@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T11:46:00Z
+updated_at_utc: 2026-03-08T15:26:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -27,6 +27,7 @@ language_minimal_grammar:
     - let
     - if
     - fn
+    - coalesce
     - logical_or
     - logical_and
     - equality
@@ -41,10 +42,11 @@ language_minimal_grammar:
     - params
     - args
   productions:
-    - "expr -> let | if | fn | logical_or"
+    - "expr -> let | if | fn | coalesce"
     - "let -> 'let' IDENT '=' expr 'in' expr"
     - "if -> 'if' expr 'then' expr 'else' expr"
     - "fn -> 'fn' '(' params? ')' '=>' expr"
+    - "coalesce -> logical_or ('??' coalesce)?"
     - "logical_or -> logical_and ('or' logical_and)*"
     - "logical_and -> equality ('and' equality)*"
     - "equality -> comparison (('==' | '!=') comparison)*"

@@ -82,6 +82,14 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("[1][3]"))
         self.assertEqual(ctx.exception.code, "E_RT_INDEX_OUT_OF_RANGE")
 
+    def test_null_coalescing_short_circuits_on_non_null_left(self) -> None:
+        expr = parse_expr('"left"??boom()')
+        self.assertEqual(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}), "left")
+
+    def test_null_coalescing_falls_back_on_null_left(self) -> None:
+        expr = parse_expr("null??7")
+        self.assertEqual(eval_expr(expr), 7)
+
     def test_comparison_and_equality_evaluate_deterministically(self) -> None:
         self.assertTrue(eval_expr(parse_expr("1<2")))
         self.assertTrue(eval_expr(parse_expr("2>=2")))

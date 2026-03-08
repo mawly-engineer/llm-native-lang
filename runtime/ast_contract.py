@@ -59,6 +59,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "left", "right"],
             "fields": {"kind": "literal:power_bin", "span": "span", "left": "expr", "right": "expr"},
         },
+        "coalesce_bin": {
+            "required": ["kind", "span", "left", "right"],
+            "fields": {"kind": "literal:coalesce_bin", "span": "span", "left": "expr", "right": "expr"},
+        },
         "logical_bin": {
             "required": ["kind", "span", "op", "left", "right"],
             "fields": {
@@ -116,6 +120,7 @@ _AST_FINGERPRINT_SOURCE = [
     "modulo_bin:kind,span,left,right",
     "int_div_bin:kind,span,left,right",
     "power_bin:kind,span,left,right",
+    "coalesce_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
     "compare_bin:kind,span,op,left,right",
     "ident:kind,span,name",
@@ -262,6 +267,13 @@ def _validate_expr(node: Any) -> None:
     if kind == "power_bin":
         _require_kind(node, "power_bin")
         _require_span(node, "power_bin")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
+    if kind == "coalesce_bin":
+        _require_kind(node, "coalesce_bin")
+        _require_span(node, "coalesce_bin")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return
