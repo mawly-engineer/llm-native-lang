@@ -2,7 +2,7 @@
 kind: feature_registry
 id: LNG-FEATURES-DONE-001
 status: active
-updated_at_utc: 2026-03-08T02:10:00Z
+updated_at_utc: 2026-03-08T06:09:00Z
 purpose: Compact registry of implemented backlog features.
 
 implemented_features:
@@ -26,6 +26,8 @@ implemented_features:
     title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
   - id: LNG-CORE-10
     title: Extend grammar contracts with boolean literals and deterministic literal-node typing
+  - id: LNG-CORE-12
+    title: Add deterministic string literals and concatenation expression contracts across grammar/AST/type/runtime
   - id: LNG-ECO-01
     title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
   - id: LNG-ECO-02

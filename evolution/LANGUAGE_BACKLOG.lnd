@@ -67,7 +67,7 @@ buckets:
       - id: LNG-CORE-12
         title: Add deterministic string literals and concatenation expression contracts across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
