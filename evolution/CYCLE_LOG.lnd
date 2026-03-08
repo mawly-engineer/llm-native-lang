@@ -1799,5 +1799,5 @@ entries:
       - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
       - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: null
+    commit: "1c5607a"
     blockers: []
