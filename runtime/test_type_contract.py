@@ -160,6 +160,17 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x?.field"), env={"x": TYPE_NUMBER})
 
+    def test_optional_index_access_allows_null_short_circuit_and_enforces_index_types(self) -> None:
+        self.assertEqual(check_expr(parse_expr("arr?[0]"), env={"arr": list_type(TYPE_NUMBER)}), TYPE_NUMBER)
+        self.assertEqual(check_expr(parse_expr('obj?["name"]'), env={"obj": TYPE_OBJECT}), TYPE_ANY)
+        self.assertEqual(check_expr(parse_expr('n?["name"]'), env={"n": TYPE_NULL}), TYPE_NULL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("arr?[true]"), env={"arr": list_type(TYPE_NUMBER)})
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("obj?[0]"), env={"obj": TYPE_OBJECT})
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("x?[0]"), env={"x": TYPE_NUMBER})
+
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x"))

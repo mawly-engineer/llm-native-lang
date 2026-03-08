@@ -126,6 +126,32 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("user?.missing"), env={"user": {"name": "Luis"}})
         self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
 
+    def test_optional_index_access_short_circuits_null_target_to_null(self) -> None:
+        self.assertIsNone(eval_expr(parse_expr('user?["name"]'), env={"user": None}))
+
+    def test_optional_index_access_returns_value_for_list_or_object_target(self) -> None:
+        self.assertEqual(eval_expr(parse_expr("arr?[1]"), env={"arr": [3, 4]}), 4)
+        self.assertEqual(eval_expr(parse_expr('user?["name"]'), env={"user": {"name": "Luis"}}), "Luis")
+
+    def test_optional_index_access_rejects_non_collection_non_null_target(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("x?[0]"), env={"x": 1})
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
+    def test_optional_index_access_rejects_invalid_index_type_for_target(self) -> None:
+        with self.assertRaises(EvalError) as list_ctx:
+            eval_expr(parse_expr("arr?[true]"), env={"arr": [1, 2]})
+        self.assertEqual(list_ctx.exception.code, "E_RT_TYPE")
+
+        with self.assertRaises(EvalError) as obj_ctx:
+            eval_expr(parse_expr("user?[0]"), env={"user": {"name": "Luis"}})
+        self.assertEqual(obj_ctx.exception.code, "E_RT_TYPE")
+
+    def test_optional_index_access_missing_member_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('user?["missing"]'), env={"user": {"name": "Luis"}})
+        self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
+
     def test_null_coalescing_short_circuits_on_non_null_left(self) -> None:
         expr = parse_expr('"left"??boom()')
         self.assertEqual(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}), "left")

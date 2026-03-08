@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "493e1f93e404e3ccd3370376f920195130cd79121214c6282219d333e3777b45",
+            "ea76742acd4ebae9ae684f9ddc1557b7452b364a4beb20b56092d22ae296643b",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -169,6 +169,17 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "optional_member_access")
         self.assertEqual(ast["target"]["kind"], "ident")
         self.assertEqual(ast["member"], "profile")
+
+    def test_parse_optional_index_access(self) -> None:
+        ast = parse_expr('user?["profile"]')
+        self.assertEqual(ast["kind"], "optional_index_access")
+        self.assertEqual(ast["target"]["kind"], "ident")
+        self.assertEqual(ast["index"]["kind"], "string")
+
+    def test_optional_index_access_binds_tighter_than_coalesce(self) -> None:
+        ast = parse_expr('user?["name"] ?? fallback')
+        self.assertEqual(ast["kind"], "coalesce_bin")
+        self.assertEqual(ast["left"]["kind"], "optional_index_access")
 
     def test_member_access_binds_tighter_than_unary_and_coalesce(self) -> None:
         ast = parse_expr("a.b ?? c")

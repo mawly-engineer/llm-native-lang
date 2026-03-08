@@ -35,6 +35,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "target", "member"],
             "fields": {"kind": "literal:member_access", "span": "span", "target": "expr", "member": "ident"},
         },
+        "optional_index_access": {
+            "required": ["kind", "span", "target", "index"],
+            "fields": {"kind": "literal:optional_index_access", "span": "span", "target": "expr", "index": "expr"},
+        },
         "optional_member_access": {
             "required": ["kind", "span", "target", "member"],
             "fields": {"kind": "literal:optional_member_access", "span": "span", "target": "expr", "member": "ident"},
@@ -122,6 +126,7 @@ _AST_FINGERPRINT_SOURCE = [
     "call:kind,span,callee,args",
     "index:kind,span,target,index",
     "member_access:kind,span,target,member",
+    "optional_index_access:kind,span,target,index",
     "optional_member_access:kind,span,target,member",
     "list:kind,span,items",
     "unary_neg:kind,span,operand",
@@ -236,6 +241,13 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "member_access")
         _validate_expr(node.get("target"))
         _require_ident(node.get("member"), "member_access.member")
+        return
+
+    if kind == "optional_index_access":
+        _require_kind(node, "optional_index_access")
+        _require_span(node, "optional_index_access")
+        _validate_expr(node.get("target"))
+        _validate_expr(node.get("index"))
         return
 
     if kind == "optional_member_access":

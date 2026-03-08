@@ -206,6 +206,50 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return target[member]
 
+    if kind == "optional_index_access":
+        target = _eval(node["target"], env, context)
+
+        if target is None:
+            return None
+
+        index = _eval(node["index"], env, context)
+
+        if isinstance(target, list):
+            if not isinstance(index, int) or isinstance(index, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"optional index list index expression must evaluate to int, got {type(index).__name__}",
+                    location={"node_kind": "optional_index_access", "field": "index", "target_kind": "list"},
+                )
+            if index < 0 or index >= len(target):
+                raise EvalError(
+                    code="E_RT_INDEX_OUT_OF_RANGE",
+                    message=f"optional index list index out of range: {index} (size={len(target)})",
+                    location={"node_kind": "optional_index_access", "index": index, "size": len(target), "target_kind": "list"},
+                )
+            return target[index]
+
+        if isinstance(target, MappingABC):
+            if not isinstance(index, str):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"optional index object key expression must evaluate to string, got {type(index).__name__}",
+                    location={"node_kind": "optional_index_access", "field": "index", "target_kind": "object"},
+                )
+            if index not in target:
+                raise EvalError(
+                    code="E_RT_MISSING_MEMBER",
+                    message=f"object member not found: {index}",
+                    location={"node_kind": "optional_index_access", "member": index, "target_kind": "object"},
+                )
+            return target[index]
+
+        raise EvalError(
+            code="E_RT_TYPE",
+            message=f"optional index target must be list|object|null, got {type(target).__name__}",
+            location={"node_kind": "optional_index_access", "field": "target"},
+        )
+
     if kind == "optional_member_access":
         target = _eval(node["target"], env, context)
         member = node["member"]

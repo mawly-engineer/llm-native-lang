@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "member_access", "optional_member_access", "list", "unary_neg", "unary_not", "concat_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
+            ["let", "if", "fn", "call", "index", "member_access", "optional_index_access", "optional_member_access", "list", "unary_neg", "unary_not", "concat_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "253fc9d084e632a70b7aeec319cf65ccf7ff577627dc820afd6952dbe4ae044b",
+            "a213ecc7b69f3ec234c7329a375f3e99565add0fd0a78f5c7730fbacdfc28915",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -47,6 +47,7 @@ class ASTContractTests(unittest.TestCase):
             "arr[0]",
             "obj.field",
             "obj?.field",
+            'obj?["field"]',
         ]:
             validate_ast(parse_expr(source))
 
@@ -78,6 +79,9 @@ class ASTContractTests(unittest.TestCase):
                 assert_spans(node["index"])
             elif kind == "member_access":
                 assert_spans(node["target"])
+            elif kind == "optional_index_access":
+                assert_spans(node["target"])
+                assert_spans(node["index"])
             elif kind == "optional_member_access":
                 assert_spans(node["target"])
             elif kind == "list":

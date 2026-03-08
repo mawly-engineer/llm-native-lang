@@ -133,6 +133,25 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.target: expected object, got {target_ty}")
         return TYPE_ANY
 
+    if kind == "optional_index_access":
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
+        index_ty = _check(node.get("index"), ctx, f"{path}.index")
+
+        if target_ty == TYPE_NULL:
+            return TYPE_NULL
+
+        if target_ty.kind == "list":
+            if index_ty != TYPE_NUMBER:
+                raise TypeCheckError(f"{path}.index: expected number for list index, got {index_ty}")
+            return TYPE_ANY if not target_ty.args else target_ty.args[0]
+
+        if target_ty in {TYPE_OBJECT, TYPE_ANY}:
+            if index_ty != TYPE_STRING:
+                raise TypeCheckError(f"{path}.index: expected string for object key index, got {index_ty}")
+            return TYPE_ANY
+
+        raise TypeCheckError(f"{path}.target: expected list|object|any|null, got {target_ty}")
+
     if kind == "optional_member_access":
         target_ty = _check(node.get("target"), ctx, f"{path}.target")
         member = node.get("member")

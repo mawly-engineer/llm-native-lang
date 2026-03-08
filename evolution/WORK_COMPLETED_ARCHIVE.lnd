@@ -2,7 +2,7 @@
 kind: completed_archive
 id: WORK-COMPLETED-ARCHIVE-001
 status: active
-updated_at_utc: 2026-03-08T16:18:35Z
+updated_at_utc: 2026-03-08T16:26:22Z
 purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
 
 completed_items:
@@ -306,3 +306,8 @@ completed_items:
     title: Add deterministic object string-key index access via existing [expr] postfix across type/runtime contracts
     status: done
     archived_at_utc: 2026-03-08T16:18:35Z
+  - id: LNG-CORE-25
+    bucket: language-core
+    title: Add deterministic optional index access operator (?[expr]) with null short-circuit semantics across grammar/AST/type/runtime contracts
+    status: done
+    archived_at_utc: 2026-03-08T16:20:00Z
