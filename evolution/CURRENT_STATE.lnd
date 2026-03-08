@@ -2,7 +2,7 @@
 kind: current_state
 id: CURRENT-STATE-001
 status: active
-updated_at_utc: 2026-03-08T12:38:00Z
+updated_at_utc: 2026-03-08T15:18:00Z
 purpose: Minimal context snapshot for low-token execution.
 
 project_focus:
@@ -13,7 +13,7 @@ project_focus:
 runtime_status:
   branch: main
   cadence: cron_2m
-  supervisor_stage: idle
+  supervisor_stage: validate
 
 open_work:
   source_file: evolution/WORK_ITEMS.lnd

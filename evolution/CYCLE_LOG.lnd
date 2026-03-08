@@ -19,31 +19,9 @@ entry_schema:
 entries:
 
   # compacted by scripts/cycle_log_maintain.py
-  # removed_entries: 2
-  # removed_cycle_range: 228-229
-  # kept_cycle_range: 230-249
-
-  - cycle_id: 230
-    timestamp_utc: "2026-03-08T11:24:00Z"
-    selected_primary: runtime-replay
-    selected_secondary: validation
-    backlog_item_id: LNG-PRX-04
-    status: staged_validate_needs_revision
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: target artifacts and validator entrypoints exist (runtime/example_app_flow.py, runtime/replay_conformance.py, runtime/test_example_app_flow.py, runtime/test_replay_conformance.py, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_example_app_flow runtime.test_replay_conformance (4 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "validation_review: deterministic harness/tests are green, but LNG-PRX-04 done_when requires a one-click public demo command/script with committed byte-stable expected-output artifact, which is not present yet"
-    commit: null
-    blockers:
-      - "LNG-PRX-04 requires revise-stage implementation before execute: add canonical one-click demo command/script and expected-output artifact proving byte-stable replay outputs."
-
-
-
-
-
+  # removed_entries: 1
+  # removed_cycle_range: 230-230
+  # kept_cycle_range: 231-250
 
   - cycle_id: 231
     timestamp_utc: "2026-03-08T11:28:00Z"
@@ -60,6 +38,7 @@ entries:
       - "revise-stage: added canonical one-click public demo command (scripts/run_public_demo.py) with committed byte-stable expected-output artifact and verification test coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -90,6 +69,7 @@ entries:
 
 
 
+
   - cycle_id: 233
     timestamp_utc: "2026-03-08T11:34:00Z"
     selected_primary: runtime-replay
@@ -111,6 +91,7 @@ entries:
 
 
 
+
   - cycle_id: 234
     timestamp_utc: "2026-03-08T11:38:00Z"
     selected_primary: language-core
@@ -124,6 +105,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -152,6 +134,7 @@ entries:
 
 
 
+
   - cycle_id: 236
     timestamp_utc: "2026-03-08T11:46:00Z"
     selected_primary: language-core
@@ -168,6 +151,7 @@ entries:
       - "revise-stage: implemented exponentiation (**) as right-associative power tier across grammar/AST/type/runtime/contracts and deterministic tests"
     commit: null
     blockers: []
+
 
 
 
@@ -189,6 +173,7 @@ entries:
       - "validation_review: LNG-CORE-18 exponentiation scope is present across parser right-associative power tier, AST/type/runtime semantics, and SPEC/runtime contract-backed tests; execute stage can finalize item lifecycle"
     commit: b20770b
     blockers: []
+
 
 
 
@@ -215,6 +200,7 @@ entries:
 
 
 
+
   - cycle_id: 239
     timestamp_utc: "2026-03-08T12:02:00Z"
     selected_primary: language-core
@@ -228,6 +214,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -254,6 +241,7 @@ entries:
 
 
 
+
   - cycle_id: 241
     timestamp_utc: "2026-03-08T12:10:00Z"
     selected_primary: language-core
@@ -276,6 +264,7 @@ entries:
 
 
 
+
   - cycle_id: 242
     timestamp_utc: "2026-03-08T12:14:00Z"
     selected_primary: ecosystem
@@ -289,6 +278,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -315,6 +305,7 @@ entries:
 
 
 
+
   - cycle_id: 244
     timestamp_utc: "2026-03-08T12:24:00Z"
     selected_primary: ecosystem
@@ -332,6 +323,7 @@ entries:
       - "revise-stage: added required public artifacts for LNG-ECO-18 (README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json) and advanced flow to validate"
     commit: 28a31b1
     blockers: []
+
 
 
 
@@ -357,6 +349,7 @@ entries:
 
 
 
+
   - cycle_id: 246
     timestamp_utc: "2026-03-08T12:30:00Z"
     selected_primary: ecosystem
@@ -374,6 +367,7 @@ entries:
       - "execute-stage: finalized LNG-ECO-18 lifecycle (WORK_ITEMS done, STEP-077 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []
+
 
 
 
@@ -397,6 +391,7 @@ entries:
       - "working_tree_not_clean: pre-existing unstaged/untracked changes in evolution/PROJECT_ENTRY.lnd, evolution/WORK_ITEMS.lnd, evolution/agents/KAIRO_COORDINATOR.lnd, evolution/runs/RUN_PRODUCT_CORE.lnd, evolution/CURRENT_STATE.lnd, evolution/WORK_COMPLETED_ARCHIVE.lnd, scripts/work_items_compact.py"
 
 
+
   - cycle_id: 248
     timestamp_utc: "2026-03-08T12:38:00Z"
     selected_primary: language-core
@@ -416,6 +411,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 249
     timestamp_utc: "2026-03-08T15:11:00Z"
     selected_primary: runtime-replay
@@ -431,5 +427,20 @@ entries:
       - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
       - "execute-stage: finalized LNG-RT-05 by adding deterministic per-node evaluation trace IDs with replay-visible metadata and coverage"
+    commit: null
+    blockers: []
+
+
+  - cycle_id: 250
+    timestamp_utc: "2026-03-08T15:18:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-21
+    status: staged_create_success
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "create-stage: controlled backlog seeding created product-core item LNG-CORE-21 with mapped next step STEP-083; active flow set to validate"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []

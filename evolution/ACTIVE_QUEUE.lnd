@@ -2,7 +2,7 @@
 version: 11
 document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-08T12:38:00Z
+updated_at_utc: 2026-03-08T15:18:00Z
 
 queue_policy:
   max_active_steps: 5
@@ -19,8 +19,8 @@ queue_policy:
     - evolution/CYCLE_LOG.lnd
 
 active_queue:
-  - step_id: STEP-082
-    backlog_reference: LNG-RT-05
-    owner_focus: interpreter-runtime
-    goal: Add deterministic per-node evaluation trace IDs with replay parity tests.
-    status: done
+  - step_id: STEP-083
+    backlog_reference: LNG-CORE-21
+    owner_focus: language-core
+    goal: Add deterministic null-coalescing operator (??) across grammar/AST/type/runtime contracts.
+    status: open
