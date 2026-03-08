@@ -9,15 +9,15 @@ state:
   active_bucket: language-core
   active_backlog_item_id: LNG-CORE-21
   active_next_step_id: STEP-083
-  current_stage: validate
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
-  last_error: null
+  last_stage_status: validate_stage_needs_revision
+  last_error: "LNG-CORE-21 requires implementation of null-coalescing operator (??) across grammar/AST/type/runtime/contracts before execute."
 
 stage_transition_rules:
   idle_to_create:
