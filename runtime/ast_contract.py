@@ -51,6 +51,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "items"],
             "fields": {"kind": "literal:list", "span": "span", "items": "expr[]"},
         },
+        "object": {
+            "required": ["kind", "span", "entries"],
+            "fields": {"kind": "literal:object", "span": "span", "entries": "object_entry[]"},
+        },
         "unary_neg": {
             "required": ["kind", "span", "operand"],
             "fields": {"kind": "literal:unary_neg", "span": "span", "operand": "expr"},
@@ -134,6 +138,7 @@ _AST_FINGERPRINT_SOURCE = [
     "optional_index_access:kind,span,target,index",
     "optional_member_access:kind,span,target,member",
     "list:kind,span,items",
+    "object:kind,span,entries",
     "unary_neg:kind,span,operand",
     "unary_not:kind,span,operand",
     "concat_bin:kind,span,left,right",
@@ -281,6 +286,25 @@ def _validate_expr(node: Any) -> None:
             raise ASTValidationError("list.items must be a list")
         for item in items:
             _validate_expr(item)
+        return
+
+    if kind == "object":
+        _require_kind(node, "object")
+        _require_span(node, "object")
+        entries = node.get("entries")
+        if not isinstance(entries, list):
+            raise ASTValidationError("object.entries must be a list")
+        seen: set[str] = set()
+        for idx, entry in enumerate(entries):
+            if not isinstance(entry, dict):
+                raise ASTValidationError(f"object.entries[{idx}] must be an object")
+            key = entry.get("key")
+            if not isinstance(key, str):
+                raise ASTValidationError(f"object.entries[{idx}].key must be a string")
+            if key in seen:
+                raise ASTValidationError(f"object.entries[{idx}].key duplicates key: {key}")
+            seen.add(key)
+            _validate_expr(entry.get("value"))
         return
 
     if kind == "unary_neg":

@@ -136,6 +136,12 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("[1,true]"))
 
+    def test_object_literal_checks_entries_and_returns_object(self) -> None:
+        self.assertEqual(check_expr(parse_expr('{"a":1,"b":2}')), TYPE_OBJECT)
+        self.assertEqual(check_expr(parse_expr("{}")), TYPE_OBJECT)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr('{"a":1,"a":2}'))
+
     def test_index_access_supports_list_number_and_object_string_index(self) -> None:
         self.assertEqual(check_expr(parse_expr("[1,2][0]")), TYPE_NUMBER)
         self.assertEqual(check_expr(parse_expr('obj["name"]'), env={"obj": TYPE_OBJECT}), TYPE_ANY)

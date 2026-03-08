@@ -108,6 +108,23 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
                 )
         return list_type(first_ty)
 
+    if kind == "object":
+        entries = node.get("entries")
+        if not isinstance(entries, list):
+            raise TypeCheckError(f"{path}.entries: object entries must be list")
+        seen: set[str] = set()
+        for idx, entry in enumerate(entries):
+            if not isinstance(entry, dict):
+                raise TypeCheckError(f"{path}.entries[{idx}]: object entry must be object")
+            key = entry.get("key")
+            if not isinstance(key, str):
+                raise TypeCheckError(f"{path}.entries[{idx}].key: key must be string")
+            if key in seen:
+                raise TypeCheckError(f"{path}.entries[{idx}].key: duplicate key '{key}'")
+            seen.add(key)
+            _check(entry.get("value"), ctx, f"{path}.entries[{idx}].value")
+        return TYPE_OBJECT
+
     if kind == "index":
         target_ty = _check(node.get("target"), ctx, f"{path}.target")
         index_ty = _check(node.get("index"), ctx, f"{path}.index")

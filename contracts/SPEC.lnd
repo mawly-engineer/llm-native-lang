@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T16:37:00Z
+updated_at_utc: 2026-03-08T16:47:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -61,12 +61,23 @@ language_minimal_grammar:
     - "index_suffix -> '[' expr ']'"
     - "optional_index_suffix -> '?[' expr ']'"
     - "member_suffix -> '.' IDENT | '?.' IDENT"
-    - "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'"
+    - "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | object | '(' expr ')'"
     - "list -> '[' args? ']'"
+    - "object -> '{' object_entries? '}'"
+    - "object_entries -> object_entry (',' object_entry)* ','?"
+    - "object_entry -> STRING ':' expr"
     - "params -> IDENT (',' IDENT)* ','?"
     - "args -> expr (',' expr)* ','?"
 
 language_runtime_semantics:
+  object_literal:
+    operator: "{\"key\": expr, ...}"
+    scope: deterministic_object_construction
+    behavior:
+      - evaluate_entries_left_to_right
+      - keys_must_be_string_literals
+      - duplicate_keys_rejected_by_ast_contract
+      - resulting_value_is_object_mapping
   index_access:
     operator: "[expr]"
     scope: list_and_object_reads_only

@@ -148,6 +148,12 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "list":
         return [_eval(item, env, context) for item in node["items"]]
 
+    if kind == "object":
+        out: dict[str, Any] = {}
+        for entry in node["entries"]:
+            out[entry["key"]] = _eval(entry["value"], env, context)
+        return out
+
     if kind == "index":
         target = _eval(node["target"], env, context)
         index = _eval(node["index"], env, context)

@@ -69,6 +69,10 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("[1,2,3]")
         self.assertEqual(eval_expr(expr), [1, 2, 3])
 
+    def test_object_literal_evaluates_deterministically(self) -> None:
+        expr = parse_expr('{"name":"Luis","age":1}')
+        self.assertEqual(eval_expr(expr), {"name": "Luis", "age": 1})
+
     def test_null_literal_evaluates_to_none(self) -> None:
         expr = parse_expr("null")
         self.assertIsNone(eval_expr(expr))
@@ -237,6 +241,12 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
 
         self.assertEqual(ctx.exception.code, "E_RT_AST_INVALID")
         self.assertEqual(ctx.exception.location.get("phase"), "ast_validation")
+
+    def test_object_literal_duplicate_keys_raise_ast_invalid(self) -> None:
+        expr = parse_expr('{"a":1,"a":2}')
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(expr)
+        self.assertEqual(ctx.exception.code, "E_RT_AST_INVALID")
 
     def test_fuel_limit_halts_with_deterministic_reason(self) -> None:
         expr = parse_expr("let x = 1 in let y = 2 in x")

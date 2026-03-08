@@ -18,7 +18,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "c99da21a50fe5478a9bc7a7c82fa03f5d6b2313b3df9ca695cd287bb7cbddaa5",
+            "479f159df55b15478ab211e24558f9ecc43115d2811ae8239503c91e6c81bedd",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -153,7 +153,13 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "list")
         self.assertEqual(len(ast["items"]), 3)
 
-    def test_parse_trailing_commas_in_fn_call_and_list(self) -> None:
+    def test_parse_object_literal(self) -> None:
+        ast = parse_expr('{"name":"Luis","age":1}')
+        self.assertEqual(ast["kind"], "object")
+        self.assertEqual(len(ast["entries"]), 2)
+        self.assertEqual(ast["entries"][0]["key"], "name")
+
+    def test_parse_trailing_commas_in_fn_call_list_and_object(self) -> None:
         fn_ast = parse_expr("fn(a,b,) => a")
         self.assertEqual(fn_ast["kind"], "fn")
         self.assertEqual(fn_ast["params"], ["a", "b"])
@@ -166,6 +172,10 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(list_ast["kind"], "list")
         self.assertEqual(len(list_ast["items"]), 2)
 
+        object_ast = parse_expr('{"a":1,"b":2,}')
+        self.assertEqual(object_ast["kind"], "object")
+        self.assertEqual(len(object_ast["entries"]), 2)
+
     def test_parse_rejects_sparse_comma_sequences(self) -> None:
         with self.assertRaises(ParseError):
             parse_expr("sum(1,,2)")
@@ -173,6 +183,12 @@ class GrammarContractTests(unittest.TestCase):
             parse_expr("fn(a,,b)=>a")
         with self.assertRaises(ParseError):
             parse_expr("[1,,2]")
+        with self.assertRaises(ParseError):
+            parse_expr('{"a":1,,"b":2}')
+
+    def test_parse_rejects_object_entry_without_colon(self) -> None:
+        with self.assertRaises(ParseError):
+            parse_expr('{"a" 1}')
 
     def test_parse_index_access(self) -> None:
         ast = parse_expr("arr[1]")

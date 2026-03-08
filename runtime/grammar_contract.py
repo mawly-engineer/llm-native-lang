@@ -2,7 +2,7 @@
 
 Scope: expr, let, if, fn, call, optional call (?()), unary negation/logical-not,
 string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
-list literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
+list literals, object literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
 """
 
 from __future__ import annotations
@@ -54,8 +54,11 @@ GRAMMAR_CONTRACT = {
         "index_suffix -> '[' expr ']'",
         "optional_index_suffix -> '?[' expr ']'",
         "member_suffix -> '.' IDENT | '?.' IDENT",
-        "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'",
+        "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | object | '(' expr ')'",
         "list -> '[' args? ']'",
+        "object -> '{' object_entries? '}'",
+        "object_entries -> object_entry (',' object_entry)* ','?",
+        "object_entry -> STRING ':' expr",
         "params -> IDENT (',' IDENT)* ','?",
         "args -> expr (',' expr)* ','?",
     ],
@@ -161,7 +164,7 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token(">=", ">=", i, i + 2))
             i += 2
             continue
-        if ch in "()[],.=-+!%<>":
+        if ch in "()[],.{}:=-+!%<>":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -534,6 +537,22 @@ class _Parser:
                     items.append(self._expr())
             close_tok = self._eat("]", "]")
             return self._with_span("list", open_tok.start, close_tok.end, items=items)
+        if tok.kind == "{":
+            open_tok = self._eat("{", "{")
+            entries: list[dict[str, Any]] = []
+            if self._peek().kind != "}":
+                key_tok = self._eat("STRING")
+                self._eat(":", ":")
+                entries.append({"key": key_tok.value, "value": self._expr()})
+                while self._peek().kind == ",":
+                    self._eat(",", ",")
+                    if self._peek().kind == "}":
+                        break
+                    key_tok = self._eat("STRING")
+                    self._eat(":", ":")
+                    entries.append({"key": key_tok.value, "value": self._expr()})
+            close_tok = self._eat("}", "}")
+            return self._with_span("object", open_tok.start, close_tok.end, entries=entries)
         if tok.kind == "(":
             self._eat("(", "(")
             node = self._expr()
