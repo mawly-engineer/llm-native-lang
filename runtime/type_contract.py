@@ -124,6 +124,36 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
 
         raise TypeCheckError(f"{path}.target: expected list|object|any, got {target_ty}")
 
+    if kind == "optional_call":
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
+        args = node.get("args")
+        if not isinstance(args, list):
+            raise TypeCheckError(f"{path}.args: args must be list")
+
+        if target_ty == TYPE_NULL:
+            return TYPE_NULL
+
+        if target_ty == TYPE_ANY:
+            for idx, arg in enumerate(args):
+                _check(arg, ctx, f"{path}.args[{idx}]")
+            return TYPE_ANY
+
+        if target_ty.kind != "fn":
+            raise TypeCheckError(f"{path}.target: expected fn|any|null, got {target_ty}")
+
+        if len(args) != len(target_ty.args):
+            raise TypeCheckError(
+                f"{path}.args: arity mismatch, expected {len(target_ty.args)}, got {len(args)}"
+            )
+
+        for idx, arg in enumerate(args):
+            arg_ty = _check(arg, ctx, f"{path}.args[{idx}]")
+            expected = target_ty.args[idx]
+            if expected != TYPE_ANY and arg_ty != expected:
+                raise TypeCheckError(f"{path}.args[{idx}]: expected {expected}, got {arg_ty}")
+
+        return TYPE_ANY if target_ty.returns is None else target_ty.returns
+
     if kind == "member_access":
         target_ty = _check(node.get("target"), ctx, f"{path}.target")
         member = node.get("member")

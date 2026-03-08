@@ -31,6 +31,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "target", "index"],
             "fields": {"kind": "literal:index", "span": "span", "target": "expr", "index": "expr"},
         },
+        "optional_call": {
+            "required": ["kind", "span", "target", "args"],
+            "fields": {"kind": "literal:optional_call", "span": "span", "target": "expr", "args": "expr[]"},
+        },
         "member_access": {
             "required": ["kind", "span", "target", "member"],
             "fields": {"kind": "literal:member_access", "span": "span", "target": "expr", "member": "ident"},
@@ -125,6 +129,7 @@ _AST_FINGERPRINT_SOURCE = [
     "fn:kind,span,params,body",
     "call:kind,span,callee,args",
     "index:kind,span,target,index",
+    "optional_call:kind,span,target,args",
     "member_access:kind,span,target,member",
     "optional_index_access:kind,span,target,index",
     "optional_member_access:kind,span,target,member",
@@ -234,6 +239,17 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "index")
         _validate_expr(node.get("target"))
         _validate_expr(node.get("index"))
+        return
+
+    if kind == "optional_call":
+        _require_kind(node, "optional_call")
+        _require_span(node, "optional_call")
+        _validate_expr(node.get("target"))
+        args = node.get("args")
+        if not isinstance(args, list):
+            raise ASTValidationError("optional_call.args must be a list")
+        for arg in args:
+            _validate_expr(arg)
         return
 
     if kind == "member_access":

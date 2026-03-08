@@ -171,6 +171,15 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x?[0]"), env={"x": TYPE_NUMBER})
 
+    def test_optional_call_allows_null_short_circuit_and_validates_callable_targets(self) -> None:
+        self.assertEqual(check_expr(parse_expr("f?(1)"), env={"f": fn_type(TYPE_NUMBER, returns=TYPE_BOOL)}), TYPE_BOOL)
+        self.assertEqual(check_expr(parse_expr("dyn?(1)"), env={"dyn": TYPE_ANY}), TYPE_ANY)
+        self.assertEqual(check_expr(parse_expr("n?(1)"), env={"n": TYPE_NULL}), TYPE_NULL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("x?(1)"), env={"x": TYPE_NUMBER})
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("f?(true)"), env={"f": fn_type(TYPE_NUMBER, returns=TYPE_BOOL)})
+
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x"))

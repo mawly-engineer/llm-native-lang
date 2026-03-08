@@ -270,6 +270,44 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return target[member]
 
+    if kind == "optional_call":
+        target = _eval(node["target"], env, context)
+
+        if target is None:
+            return None
+
+        args = [_eval(arg, env, context) for arg in node["args"]]
+
+        if isinstance(target, Closure):
+            if len(args) != len(target.params):
+                raise EvalError(
+                    code="E_RT_ARITY_MISMATCH",
+                    message=(
+                        f"optional call arity mismatch: expected {len(target.params)}, got {len(args)}"
+                    ),
+                    location={"node_kind": "optional_call"},
+                )
+            call_env = target.env.child()
+            for param, value in zip(target.params, args):
+                call_env.set(param, value)
+            return _eval(target.body, call_env, context)
+
+        if callable(target):
+            try:
+                return target(*args)
+            except TypeError as exc:
+                raise EvalError(
+                    code="E_RT_HOST_CALL_ARITY",
+                    message=str(exc),
+                    location={"node_kind": "optional_call"},
+                ) from exc
+
+        raise EvalError(
+            code="E_RT_NOT_CALLABLE",
+            message=f"optional call target is not callable: {type(target).__name__}",
+            location={"node_kind": "optional_call"},
+        )
+
     if kind == "ident":
         return env.get(node["name"])
 

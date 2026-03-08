@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "member_access", "optional_index_access", "optional_member_access", "list", "unary_neg", "unary_not", "concat_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
+            ["let", "if", "fn", "call", "index", "optional_call", "member_access", "optional_index_access", "optional_member_access", "list", "unary_neg", "unary_not", "concat_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "a213ecc7b69f3ec234c7329a375f3e99565add0fd0a78f5c7730fbacdfc28915",
+            "f10f71a4bad0a37a7f01f2475588f96c719e2e5c285c7890ab4b1985d4e7564b",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -48,6 +48,7 @@ class ASTContractTests(unittest.TestCase):
             "obj.field",
             "obj?.field",
             'obj?["field"]',
+            "handler?(1)",
         ]:
             validate_ast(parse_expr(source))
 
@@ -77,6 +78,10 @@ class ASTContractTests(unittest.TestCase):
             elif kind == "index":
                 assert_spans(node["target"])
                 assert_spans(node["index"])
+            elif kind == "optional_call":
+                assert_spans(node["target"])
+                for arg in node["args"]:
+                    assert_spans(arg)
             elif kind == "member_access":
                 assert_spans(node["target"])
             elif kind == "optional_index_access":
@@ -122,6 +127,10 @@ class ASTContractTests(unittest.TestCase):
     def test_call_args_must_be_list(self) -> None:
         with self.assertRaises(ASTValidationError):
             validate_ast({"kind": "call", "span": {"start": 0, "end": 6}, "callee": "sum", "args": "bad"})
+
+    def test_optional_call_args_must_be_list(self) -> None:
+        with self.assertRaises(ASTValidationError):
+            validate_ast({"kind": "optional_call", "span": {"start": 0, "end": 8}, "target": {"kind": "ident", "span": {"start": 0, "end": 1}, "name": "f"}, "args": "bad"})
 
     def test_let_name_required(self) -> None:
         with self.assertRaises(ASTValidationError):

@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T16:10:00Z
+updated_at_utc: 2026-03-08T16:27:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -55,8 +55,9 @@ language_minimal_grammar:
     - "multiplicative -> power (('%' | '//') power)*"
     - "power -> unary ('**' power)?"
     - "unary -> '-' unary | '!' unary | postfix"
-    - "postfix -> atom (call_suffix | index_suffix | optional_index_suffix | member_suffix)*"
+    - "postfix -> atom (call_suffix | optional_call_suffix | index_suffix | optional_index_suffix | member_suffix)*"
     - "call_suffix -> '(' args? ')'"
+    - "optional_call_suffix -> '?(' args? ')'"
     - "index_suffix -> '[' expr ']'"
     - "optional_index_suffix -> '?[' expr ']'"
     - "member_suffix -> '.' IDENT | '?.' IDENT"
@@ -93,6 +94,15 @@ language_runtime_semantics:
       - if_base_is_object_read_member
       - if_base_is_non_object_non_null_raise_E_RT_TYPE
       - if_member_missing_raise_E_RT_MISSING_MEMBER
+  optional_call:
+    operator: "?(...)"
+    scope: callable_invocation_with_null_short_circuit
+    behavior:
+      - evaluate_target_expression_once
+      - if_target_is_null_return_null_without_evaluating_args
+      - if_target_is_closure_or_callable_invoke_with_args
+      - if_callable_arity_mismatch_raise_E_RT_ARITY_MISMATCH_or_E_RT_HOST_CALL_ARITY
+      - if_target_is_non_callable_non_null_raise_E_RT_NOT_CALLABLE
 
 non_goals:
   - human_first_prose_as_primary_system_interface

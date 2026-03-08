@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "ea76742acd4ebae9ae684f9ddc1557b7452b364a4beb20b56092d22ae296643b",
+            "d6eef5e29a48975d104f310ec24fecb435d000be66721bcae24516e42326017c",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -176,10 +176,21 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["target"]["kind"], "ident")
         self.assertEqual(ast["index"]["kind"], "string")
 
+    def test_parse_optional_call_access(self) -> None:
+        ast = parse_expr("handler?(1,2)")
+        self.assertEqual(ast["kind"], "optional_call")
+        self.assertEqual(ast["target"]["kind"], "ident")
+        self.assertEqual(len(ast["args"]), 2)
+
     def test_optional_index_access_binds_tighter_than_coalesce(self) -> None:
         ast = parse_expr('user?["name"] ?? fallback')
         self.assertEqual(ast["kind"], "coalesce_bin")
         self.assertEqual(ast["left"]["kind"], "optional_index_access")
+
+    def test_optional_call_binds_tighter_than_coalesce(self) -> None:
+        ast = parse_expr("handler?(1) ?? fallback")
+        self.assertEqual(ast["kind"], "coalesce_bin")
+        self.assertEqual(ast["left"]["kind"], "optional_call")
 
     def test_member_access_binds_tighter_than_unary_and_coalesce(self) -> None:
         ast = parse_expr("a.b ?? c")

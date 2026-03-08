@@ -152,6 +152,24 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr('user?["missing"]'), env={"user": {"name": "Luis"}})
         self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
 
+    def test_optional_call_short_circuits_null_target_and_skips_args(self) -> None:
+        expr = parse_expr("f?(boom())")
+        self.assertIsNone(eval_expr(expr, env={"f": None, "boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}))
+
+    def test_optional_call_invokes_callable_target(self) -> None:
+        expr = parse_expr("f?(2)")
+        self.assertEqual(eval_expr(expr, env={"f": lambda x: x + 3}), 5)
+
+    def test_optional_call_rejects_non_callable_non_null_target(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("f?(1)"), env={"f": 3})
+        self.assertEqual(ctx.exception.code, "E_RT_NOT_CALLABLE")
+
+    def test_optional_call_reports_arity_errors_for_callables(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("f?(1,2)"), env={"f": lambda x: x})
+        self.assertEqual(ctx.exception.code, "E_RT_HOST_CALL_ARITY")
+
     def test_null_coalescing_short_circuits_on_non_null_left(self) -> None:
         expr = parse_expr('"left"??boom()')
         self.assertEqual(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}), "left")

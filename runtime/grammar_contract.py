@@ -1,6 +1,6 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, unary negation/logical-not,
+Scope: expr, let, if, fn, call, optional call (?()), unary negation/logical-not,
 string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
 """
@@ -48,8 +48,9 @@ GRAMMAR_CONTRACT = {
         "multiplicative -> power (('%' | '//') power)*",
         "power -> unary ('**' power)?",
         "unary -> '-' unary | '!' unary | postfix",
-        "postfix -> atom (call_suffix | index_suffix | optional_index_suffix | member_suffix)*",
+        "postfix -> atom (call_suffix | optional_call_suffix | index_suffix | optional_index_suffix | member_suffix)*",
         "call_suffix -> '(' args? ')'",
+        "optional_call_suffix -> '?(' args? ')'",
         "index_suffix -> '[' expr ']'",
         "optional_index_suffix -> '?[' expr ']'",
         "member_suffix -> '.' IDENT | '?.' IDENT",
@@ -122,6 +123,10 @@ def _tokenize(source: str) -> List[Token]:
             continue
         if source.startswith("??", i):
             tokens.append(Token("??", "??", i, i + 2))
+            i += 2
+            continue
+        if source.startswith("?(", i):
+            tokens.append(Token("?(", "?(", i, i + 2))
             i += 2
             continue
         if source.startswith("?.", i):
@@ -425,6 +430,23 @@ class _Parser:
                     node["span"]["start"],
                     close_tok.end,
                     callee=node["name"],
+                    args=args,
+                )
+                continue
+            if tok.kind == "?(":
+                self._eat("?(", "?(")
+                args: list[dict[str, Any]] = []
+                if self._peek().kind != ")":
+                    args.append(self._expr())
+                    while self._peek().kind == ",":
+                        self._eat(",", ",")
+                        args.append(self._expr())
+                close_tok = self._eat(")", ")")
+                node = self._with_span(
+                    "optional_call",
+                    node["span"]["start"],
+                    close_tok.end,
+                    target=node,
                     args=args,
                 )
                 continue
