@@ -15,7 +15,7 @@ hard_rules:
   - verify_delta_after_write
   - one_meaningful_unit_per_cycle
   - preserve_staged_order
-  - append_cycle_log_every_cycle
+  - append_cycle_log_on_meaningful_change_only
   - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
   - keep_next_steps_compact
   - enforce_preflight_before_validate
@@ -47,6 +47,15 @@ git_cleanliness_gate:
   on_dirty_after_attempted_commit:
     - add_blocker: working_tree_not_clean
     - keep_current_stage
+
+idle_noop_policy:
+  when_no_eligible_item_and_no_state_change:
+    - do_not_append_cycle_log
+    - do_not_commit
+    - emit_status: idle_noop_suppressed
+  heartbeat_summary_interval_cycles: 30
+  heartbeat_summary_action:
+    - append_single_summary_log_entry
 
 staged_order:
   - create

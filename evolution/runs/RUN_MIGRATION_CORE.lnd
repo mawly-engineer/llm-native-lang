@@ -18,6 +18,8 @@ execution_policy:
   use_legacy_markdown_as_source: false
   require_preflight_before_validate: true
   require_clean_git_at_cycle_end: true
+  suppress_idle_noop_commits: true
+  idle_log_mode: summary_only
 
 validator_commands:
   - python3 scripts/lnd_validate.py evolution
