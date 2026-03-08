@@ -2,7 +2,7 @@
 version: 6
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T10:38:00Z
+updated_at_utc: 2026-03-08T10:42:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -16,7 +16,7 @@ active_queue:
     backlog_reference: LNG-CORE-16
     bucket: language-core
     status: active
-    stage: create_completed_pending_validate
+    stage: validate_failed_pending_revise
 
 recently_completed:
   - step_id: STEP-073
