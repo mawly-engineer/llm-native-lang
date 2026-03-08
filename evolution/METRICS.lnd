@@ -2,8 +2,8 @@
 kind: metrics_contract
 id: LNG-METRICS-001
 status: active
-revision: 1
-updated_at_utc: 2026-03-07T15:09:00Z
+revision: 2
+updated_at_utc: 2026-03-08T01:12:00Z
 purpose: Outcome-oriented metrics for evolution methodology.
 
 kpis:
@@ -26,6 +26,18 @@ kpis:
   - key: sot_change_stability
     target: ">= 0.90"
     note: SoT changes with explicit governance fields and notes / all SoT changes
+
+  - key: product_changes_ratio
+    target: ">= 0.80"
+    note: cycles with runtime/contracts product effect / all non-noop cycles
+
+  - key: meta_changes_ratio
+    target: "<= 0.20"
+    note: cycles with process-only/meta-only changes / all non-noop cycles
+
+  - key: runtime_test_delta
+    target: ">= 1 when introducing capability"
+    note: each new capability should include or update at least one runtime test
 
 tracking_policy:
   cadence: per_cycle_or_batch

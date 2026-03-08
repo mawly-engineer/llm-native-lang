@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-07T15:53:30Z
+updated_at_utc: 2026-03-08T01:11:00Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -20,11 +20,28 @@ hard_rules:
   - keep_next_steps_compact
   - enforce_preflight_before_validate
   - enforce_clean_git_or_blocker
+  - enforce_product_core_scope_gate
+  - enforce_meta_work_limit
 
 next_steps_compaction_rule:
   max_active_steps: 7
   max_active_steps_per_stream: 1
   done_step_retention: "keep only recent summary entries in NEXT_STEPS; full history in CYCLE_LOG"
+
+product_core_scope_gate:
+  allowed_primary_objectives:
+    - language_core_capability
+    - runtime_replay_capability
+    - llm_format_contract_capability
+  reject_changesets_if_only:
+    - cycle_log_updates
+    - process_metadata_only
+    - infra_meta_without_product_effect
+
+meta_work_limit:
+  max_meta_tasks_per_5_cycles: 1
+  on_exceed:
+    - force_next_cycles_to_product_core
 
 sot_change_execution_rule:
   separate_commit_preferred: true
@@ -47,6 +64,16 @@ git_cleanliness_gate:
   on_dirty_after_attempted_commit:
     - add_blocker: working_tree_not_clean
     - keep_current_stage
+
+definition_of_done_gate:
+  require_product_effect_one_of:
+    - runtime_py_changed
+    - runtime_examples_lnc_changed
+    - contracts_lnd_semantic_change
+  forbid_done_if_only:
+    - cycle_log_only
+    - supervisor_state_only
+    - routing_metadata_only
 
 idle_noop_policy:
   when_no_eligible_item_and_no_state_change:
