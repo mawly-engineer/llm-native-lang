@@ -9,15 +9,15 @@ state:
   active_bucket: runtime-replay
   active_backlog_item_id: LNG-PRX-04
   active_next_step_id: STEP-077
-  current_stage: create
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
-  last_error: null
+  last_stage_status: validate_stage_needs_revision
+  last_error: "LNG-PRX-04 validation found missing one-click demo command/script with committed deterministic expected-output artifact."
 
 stage_transition_rules:
   idle_to_create:
