@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "optional_call", "member_access", "optional_index_access", "optional_member_access", "list", "object", "unary_pos", "unary_neg", "unary_not", "concat_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
+            ["let", "if", "fn", "call", "index", "optional_call", "member_access", "optional_index_access", "optional_member_access", "list", "object", "unary_pos", "unary_neg", "unary_not", "concat_bin", "mul_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "ca37ce123053a336fceaf9afc744db343f4fae77c34acad0df64a25f458a7ae4",
+            "6c0b32106786c143f65c1aaa06a7b80621388eba8d4d10bc9780a0318da169c1",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -37,6 +37,7 @@ class ASTContractTests(unittest.TestCase):
             "1<2",
             "1==1",
             '"a"+"b"',
+            "8*3",
             "8%3",
             "8//3",
             "2**3",
@@ -104,6 +105,9 @@ class ASTContractTests(unittest.TestCase):
             elif kind == "unary_not":
                 assert_spans(node["operand"])
             elif kind == "concat_bin":
+                assert_spans(node["left"])
+                assert_spans(node["right"])
+            elif kind == "mul_bin":
                 assert_spans(node["left"])
                 assert_spans(node["right"])
             elif kind == "modulo_bin":

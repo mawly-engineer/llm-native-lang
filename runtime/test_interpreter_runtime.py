@@ -46,6 +46,15 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr('"a"-"b"'))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
+    def test_multiplication_evaluates_deterministically(self) -> None:
+        expr = parse_expr("2*3*4")
+        self.assertEqual(eval_expr(expr), 24)
+
+    def test_multiplication_rejects_non_number_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("2*false"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
     def test_modulo_evaluates_deterministically(self) -> None:
         expr = parse_expr("10%4")
         self.assertEqual(eval_expr(expr), 2)

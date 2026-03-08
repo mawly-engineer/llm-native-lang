@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, optional call (?()), unary plus/negation/logical-not,
-string literals, plus operator (+) for deterministic string concat/int addition, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
+string literals, plus/minus operators (+/-) for deterministic string concat/int arithmetic, null-coalescing (??), equality/comparison tiers, exponentiation (**), multiplication (*), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, object literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
 """
 
@@ -45,7 +45,7 @@ GRAMMAR_CONTRACT = {
         "equality -> comparison (('==' | '!=') comparison)*",
         "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*",
         "concat -> multiplicative (('+' | '-') multiplicative)*",
-        "multiplicative -> power (('%' | '//') power)*",
+        "multiplicative -> power (('*' | '%' | '//') power)*",
         "power -> unary ('**' power)?",
         "unary -> '+' unary | '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | optional_call_suffix | index_suffix | optional_index_suffix | member_suffix)*",
@@ -164,7 +164,7 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token(">=", ">=", i, i + 2))
             i += 2
             continue
-        if ch in "()[],.{}:=-+!%<>":
+        if ch in "()[],.{}:=-+!*%<>":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -367,15 +367,17 @@ class _Parser:
 
     def _multiplicative(self) -> dict[str, Any]:
         node = self._power()
-        while self._peek().kind in {"%", "//"}:
+        while self._peek().kind in {"*", "%", "//"}:
             op = self._peek().kind
-            if op == "%":
+            if op == "*":
+                self._eat("*", "*")
+            elif op == "%":
                 self._eat("%", "%")
             else:
                 self._eat("//", "//")
             right = self._power()
             node = self._with_span(
-                "modulo_bin" if op == "%" else "int_div_bin",
+                "mul_bin" if op == "*" else ("modulo_bin" if op == "%" else "int_div_bin"),
                 node["span"]["start"],
                 right["span"]["end"],
                 left=node,

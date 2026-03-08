@@ -18,7 +18,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "3890fa88d09bada42a1eb4b72f35b7d8b865504b3aa9412a701273695f274cad",
+            "7b7d49ddd0aa168eeadd53ec9484df9868113dcfc31307bb1fe482a0f2d69dd8",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -123,6 +123,12 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["left"]["kind"], "concat_bin")
         self.assertEqual(ast["left"]["op"], "-")
 
+    def test_parse_multiplication_expression(self) -> None:
+        ast = parse_expr("2*3*4")
+        self.assertEqual(ast["kind"], "mul_bin")
+        self.assertEqual(ast["left"]["kind"], "mul_bin")
+        self.assertEqual(ast["right"]["kind"], "number")
+
     def test_parse_modulo_expression(self) -> None:
         ast = parse_expr("10%3%2")
         self.assertEqual(ast["kind"], "modulo_bin")
@@ -147,9 +153,10 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["left"]["kind"], "power_bin")
 
     def test_multiplicative_operators_share_precedence_left_associative(self) -> None:
-        ast = parse_expr("20//5%3")
+        ast = parse_expr("20*5//2%3")
         self.assertEqual(ast["kind"], "modulo_bin")
         self.assertEqual(ast["left"]["kind"], "int_div_bin")
+        self.assertEqual(ast["left"]["left"]["kind"], "mul_bin")
 
     def test_modulo_has_higher_precedence_than_concat(self) -> None:
         ast = parse_expr('"x"+8%3')

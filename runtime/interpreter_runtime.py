@@ -388,6 +388,23 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             location={"node_kind": "concat_bin", "op": "-"},
         )
 
+    if kind == "mul_bin":
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+        if not isinstance(left, int) or isinstance(left, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"multiplication expects int left operand, got {type(left).__name__}",
+                location={"node_kind": "mul_bin", "side": "left"},
+            )
+        if not isinstance(right, int) or isinstance(right, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"multiplication expects int right operand, got {type(right).__name__}",
+                location={"node_kind": "mul_bin", "side": "right"},
+            )
+        return left * right
+
     if kind == "modulo_bin":
         left = _eval(node["left"], env, context)
         right = _eval(node["right"], env, context)

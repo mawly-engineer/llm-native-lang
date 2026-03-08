@@ -77,6 +77,10 @@ AST_SCHEMA = {
                 "right": "expr",
             },
         },
+        "mul_bin": {
+            "required": ["kind", "span", "left", "right"],
+            "fields": {"kind": "literal:mul_bin", "span": "span", "left": "expr", "right": "expr"},
+        },
         "modulo_bin": {
             "required": ["kind", "span", "left", "right"],
             "fields": {"kind": "literal:modulo_bin", "span": "span", "left": "expr", "right": "expr"},
@@ -153,6 +157,7 @@ _AST_FINGERPRINT_SOURCE = [
     "unary_neg:kind,span,operand",
     "unary_not:kind,span,operand",
     "concat_bin:kind,span,op,left,right",
+    "mul_bin:kind,span,left,right",
     "modulo_bin:kind,span,left,right",
     "int_div_bin:kind,span,left,right",
     "power_bin:kind,span,left,right",
@@ -342,6 +347,13 @@ def _validate_expr(node: Any) -> None:
         op = node.get("op")
         if op not in {"+", "-"}:
             raise ASTValidationError("concat_bin.op must be '+' or '-'")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
+    if kind == "mul_bin":
+        _require_kind(node, "mul_bin")
+        _require_span(node, "mul_bin")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return

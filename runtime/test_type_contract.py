@@ -119,6 +119,11 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("[1]==[1]"))
 
+    def test_multiplication_requires_number_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr("8*3")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("8*false"))
+
     def test_modulo_requires_number_operands(self) -> None:
         self.assertEqual(check_expr(parse_expr("8%3")), TYPE_NUMBER)
         with self.assertRaises(TypeCheckError):
@@ -134,7 +139,7 @@ class TypeContractTests(unittest.TestCase):
             check_expr(parse_expr("8//false"))
 
     def test_integer_division_and_modulo_share_multiplicative_precedence(self) -> None:
-        self.assertEqual(check_expr(parse_expr("20//5%3")), TYPE_NUMBER)
+        self.assertEqual(check_expr(parse_expr("20*5//2%3")), TYPE_NUMBER)
 
     def test_exponentiation_requires_number_operands(self) -> None:
         self.assertEqual(check_expr(parse_expr("2**3")), TYPE_NUMBER)

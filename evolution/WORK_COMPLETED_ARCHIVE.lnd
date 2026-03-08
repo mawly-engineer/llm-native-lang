@@ -2,7 +2,7 @@
 kind: completed_archive
 id: WORK-COMPLETED-ARCHIVE-001
 status: active
-updated_at_utc: 2026-03-08T17:30:31Z
+updated_at_utc: 2026-03-08T17:40:46Z
 purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
 
 completed_items:
@@ -346,3 +346,8 @@ completed_items:
     title: Add deterministic subtraction operator (-) across grammar/AST/type/runtime contracts with negative-path hardening
     status: done
     archived_at_utc: 2026-03-08T17:27:00Z
+  - id: LNG-CORE-33
+    bucket: language-core
+    title: Add deterministic multiplication operator (*) across grammar/AST/type/runtime contracts with negative-path hardening
+    status: done
+    archived_at_utc: 2026-03-08T17:40:01Z
