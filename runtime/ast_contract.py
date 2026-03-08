@@ -55,6 +55,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "left", "right"],
             "fields": {"kind": "literal:int_div_bin", "span": "span", "left": "expr", "right": "expr"},
         },
+        "power_bin": {
+            "required": ["kind", "span", "left", "right"],
+            "fields": {"kind": "literal:power_bin", "span": "span", "left": "expr", "right": "expr"},
+        },
         "logical_bin": {
             "required": ["kind", "span", "op", "left", "right"],
             "fields": {
@@ -111,6 +115,7 @@ _AST_FINGERPRINT_SOURCE = [
     "concat_bin:kind,span,left,right",
     "modulo_bin:kind,span,left,right",
     "int_div_bin:kind,span,left,right",
+    "power_bin:kind,span,left,right",
     "logical_bin:kind,span,op,left,right",
     "compare_bin:kind,span,op,left,right",
     "ident:kind,span,name",
@@ -250,6 +255,13 @@ def _validate_expr(node: Any) -> None:
     if kind == "int_div_bin":
         _require_kind(node, "int_div_bin")
         _require_span(node, "int_div_bin")
+        _validate_expr(node.get("left"))
+        _validate_expr(node.get("right"))
+        return
+
+    if kind == "power_bin":
+        _require_kind(node, "power_bin")
+        _require_span(node, "power_bin")
         _validate_expr(node.get("left"))
         _validate_expr(node.get("right"))
         return

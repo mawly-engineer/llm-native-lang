@@ -395,3 +395,20 @@ entries:
     commit: null
     blockers:
       - "LNG-CORE-18 requires revise-stage implementation before execute: exponentiation (**) semantics are missing across grammar/AST/type/runtime/contracts."
+
+  - cycle_id: 236
+    timestamp_utc: "2026-03-08T11:46:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-18
+    status: staged_revise_success
+    tests:
+      - "preflight: exponentiation target artifacts and validator entrypoints exist (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (93 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "revise-stage: implemented exponentiation (**) as right-associative power tier across grammar/AST/type/runtime/contracts and deterministic tests"
+    commit: null
+    blockers: []

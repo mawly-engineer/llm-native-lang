@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T10:46:00Z
+updated_at_utc: 2026-03-08T11:46:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -29,8 +29,11 @@ language_minimal_grammar:
     - fn
     - logical_or
     - logical_and
+    - equality
+    - comparison
     - concat
     - multiplicative
+    - power
     - unary
     - postfix
     - atom
@@ -43,9 +46,12 @@ language_minimal_grammar:
     - "if -> 'if' expr 'then' expr 'else' expr"
     - "fn -> 'fn' '(' params? ')' '=>' expr"
     - "logical_or -> logical_and ('or' logical_and)*"
-    - "logical_and -> concat ('and' concat)*"
+    - "logical_and -> equality ('and' equality)*"
+    - "equality -> comparison (('==' | '!=') comparison)*"
+    - "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*"
     - "concat -> multiplicative ('+' multiplicative)*"
-    - "multiplicative -> unary (('%' | '//') unary)*"
+    - "multiplicative -> power (('%' | '//') power)*"
+    - "power -> unary ('**' power)?"
     - "unary -> '-' unary | '!' unary | postfix"
     - "postfix -> atom (call_suffix | index_suffix)*"
     - "call_suffix -> '(' args? ')'"

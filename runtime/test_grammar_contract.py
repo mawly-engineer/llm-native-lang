@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "equality", "comparison", "concat", "multiplicative", "unary", "postfix", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "equality", "comparison", "concat", "multiplicative", "power", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "c8aa875b92559591270e8563494d0980e4e6f1005fa8869bad3fe74490bf36ed",
+            "f921d35f8762e61402fb890eee19d617e84f82bef40443500defa3e499d0456a",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -114,6 +114,17 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["kind"], "int_div_bin")
         self.assertEqual(ast["left"]["kind"], "int_div_bin")
         self.assertEqual(ast["right"]["kind"], "number")
+
+    def test_parse_exponentiation_expression_right_associative(self) -> None:
+        ast = parse_expr("2**3**2")
+        self.assertEqual(ast["kind"], "power_bin")
+        self.assertEqual(ast["left"]["kind"], "number")
+        self.assertEqual(ast["right"]["kind"], "power_bin")
+
+    def test_exponentiation_has_higher_precedence_than_multiplicative(self) -> None:
+        ast = parse_expr("2**3%3")
+        self.assertEqual(ast["kind"], "modulo_bin")
+        self.assertEqual(ast["left"]["kind"], "power_bin")
 
     def test_multiplicative_operators_share_precedence_left_associative(self) -> None:
         ast = parse_expr("20//5%3")

@@ -1,5 +1,5 @@
 @lnd 0.2
-version: 4
+version: 5
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
 
@@ -16,7 +16,7 @@ state:
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
+  last_stage_status: revise_stage_success
   last_error: null
 
 stage_transition_rules:

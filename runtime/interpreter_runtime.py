@@ -233,6 +233,29 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return left // right
 
+    if kind == "power_bin":
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+        if not isinstance(left, int) or isinstance(left, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"exponentiation expects int left operand, got {type(left).__name__}",
+                location={"node_kind": "power_bin", "side": "left"},
+            )
+        if not isinstance(right, int) or isinstance(right, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"exponentiation expects int right operand, got {type(right).__name__}",
+                location={"node_kind": "power_bin", "side": "right"},
+            )
+        if right < 0:
+            raise EvalError(
+                code="E_RT_DOMAIN",
+                message="exponentiation exponent must be non-negative",
+                location={"node_kind": "power_bin", "side": "right"},
+            )
+        return left ** right
+
     if kind == "logical_bin":
         op = node["op"]
         if op not in {"and", "or"}:

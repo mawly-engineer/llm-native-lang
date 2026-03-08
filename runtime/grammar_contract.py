@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
-string literals, string concatenation, equality/comparison tiers, modulo (%), integer division (//), logical and/or, bool literals,
+string literals, string concatenation, equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, null literals, and index access.
 """
 
@@ -28,6 +28,7 @@ GRAMMAR_CONTRACT = {
         "comparison",
         "concat",
         "multiplicative",
+        "power",
         "unary",
         "postfix",
         "atom",
@@ -42,7 +43,8 @@ GRAMMAR_CONTRACT = {
         "equality -> comparison (('==' | '!=') comparison)*",
         "comparison -> concat (('<' | '<=' | '>' | '>=') concat)*",
         "concat -> multiplicative ('+' multiplicative)*",
-        "multiplicative -> unary (('%' | '//') unary)*",
+        "multiplicative -> power (('%' | '//') power)*",
+        "power -> unary ('**' power)?",
         "unary -> '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
@@ -113,6 +115,10 @@ def _tokenize(source: str) -> List[Token]:
                 i += 1
             else:
                 raise ParseError("unterminated string literal")
+            continue
+        if source.startswith("**", i):
+            tokens.append(Token("**", "**", i, i + 2))
+            i += 2
             continue
         if source.startswith("//", i):
             tokens.append(Token("//", "//", i, i + 2))
@@ -318,16 +324,30 @@ class _Parser:
         return node
 
     def _multiplicative(self) -> dict[str, Any]:
-        node = self._unary()
+        node = self._power()
         while self._peek().kind in {"%", "//"}:
             op = self._peek().kind
             if op == "%":
                 self._eat("%", "%")
             else:
                 self._eat("//", "//")
-            right = self._unary()
+            right = self._power()
             node = self._with_span(
                 "modulo_bin" if op == "%" else "int_div_bin",
+                node["span"]["start"],
+                right["span"]["end"],
+                left=node,
+                right=right,
+            )
+        return node
+
+    def _power(self) -> dict[str, Any]:
+        node = self._unary()
+        if self._peek().kind == "**":
+            self._eat("**", "**")
+            right = self._power()
+            node = self._with_span(
+                "power_bin",
                 node["span"]["start"],
                 right["span"]["end"],
                 left=node,

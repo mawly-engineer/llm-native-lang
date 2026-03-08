@@ -56,6 +56,15 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("10//0"))
         self.assertEqual(ctx.exception.code, "E_RT_ZERO_DIVISION")
 
+    def test_exponentiation_evaluates_deterministically_and_right_associative(self) -> None:
+        expr = parse_expr("2**3**2")
+        self.assertEqual(eval_expr(expr), 512)
+
+    def test_exponentiation_negative_exponent_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("2**-1"))
+        self.assertEqual(ctx.exception.code, "E_RT_DOMAIN")
+
     def test_list_literal_evaluates_deterministically(self) -> None:
         expr = parse_expr("[1,2,3]")
         self.assertEqual(eval_expr(expr), [1, 2, 3])
