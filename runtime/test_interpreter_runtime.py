@@ -284,11 +284,27 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr('"a"+1'))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "concat_bin",
+                "op": "+",
+                "left_type": "str",
+                "right_type": "int",
+            },
+        )
 
     def test_unary_plus_rejects_non_number_operand(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("+true"))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_pos",
+                "operand_type": "bool",
+            },
+        )
 
     def test_unary_logical_not_rejects_non_bool_operand(self) -> None:
         with self.assertRaises(EvalError) as ctx:

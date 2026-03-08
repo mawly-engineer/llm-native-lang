@@ -2,7 +2,7 @@
 kind: completed_archive
 id: WORK-COMPLETED-ARCHIVE-001
 status: active
-updated_at_utc: 2026-03-08T18:27:59Z
+updated_at_utc: 2026-03-08T18:40:09Z
 purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
 
 completed_items:
@@ -371,3 +371,8 @@ completed_items:
     title: Harden equality error diagnostics with deterministic right-operand type metadata on unsupported left-operand failures
     status: done
     archived_at_utc: 2026-03-08T18:18:40Z
+  - id: LNG-CORE-38
+    bucket: language-core
+    title: Harden additive and unary-plus error diagnostics with deterministic operand-type metadata for negative-path failures
+    status: done
+    archived_at_utc: 2026-03-08T18:37:00Z

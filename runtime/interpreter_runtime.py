@@ -320,10 +320,11 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "unary_pos":
         operand = _eval(node["operand"], env, context)
         if not isinstance(operand, int) or isinstance(operand, bool):
+            operand_type = type(operand).__name__
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"unary plus expects int operand, got {type(operand).__name__}",
-                location={"node_kind": "unary_pos"},
+                message=f"unary plus expects int operand, got {operand_type}",
+                location={"node_kind": "unary_pos", "operand_type": operand_type},
             )
         return operand
 
@@ -367,13 +368,20 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                 return left + right
             if isinstance(left, str) and isinstance(right, str):
                 return left + right
+            left_type = type(left).__name__
+            right_type = type(right).__name__
             raise EvalError(
                 code="E_RT_TYPE",
                 message=(
                     "plus expects both operands as int or both as string, "
-                    f"got {type(left).__name__} and {type(right).__name__}"
+                    f"got {left_type} and {right_type}"
                 ),
-                location={"node_kind": "concat_bin", "op": "+"},
+                location={
+                    "node_kind": "concat_bin",
+                    "op": "+",
+                    "left_type": left_type,
+                    "right_type": right_type,
+                },
             )
 
         if left_is_int and right_is_int:
