@@ -17,6 +17,9 @@ execution_policy:
   require_clean_git_at_cycle_end: true
   suppress_idle_noop_commits: true
   idle_log_mode: summary_only
+  enable_controlled_backlog_seeding: true
+
+backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
 
 validator_commands:
   - python3 scripts/lnd_validate.py evolution

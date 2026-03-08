@@ -84,6 +84,11 @@ idle_noop_policy:
   heartbeat_summary_action:
     - append_single_summary_log_entry
 
+controlled_backlog_seeding:
+  enabled: true
+  policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
+  rule: "Seed only after sustained idle streak and only product-core items."
+
 cycle_log_retention_policy:
   max_entries: 120
   maintenance_script: scripts/cycle_log_maintain.py

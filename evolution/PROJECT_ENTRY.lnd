@@ -31,6 +31,7 @@ core_file_set:
 agent_and_cron_control_files:
   - evolution/agents/KAIRO_COORDINATOR.lnd
   - evolution/runs/RUN_PRODUCT_CORE.lnd
+  - evolution/runs/BACKLOG_SEED_RULES.lnd
   - evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
   - evolution/cron/INTERNAL_VALIDATION_GATE.lnd
 
