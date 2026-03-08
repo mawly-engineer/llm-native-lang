@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-08T01:11:00Z
+updated_at_utc: 2026-03-08T08:03:30Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -59,6 +59,14 @@ preflight_gate:
     - set_stage: revise
     - add_explicit_blocker
 
+git_fetch_stability_gate:
+  fetch_retry_limit: 1
+  retry_delay_seconds: 5
+  on_persistent_fetch_failure:
+    - add_blocker: git_fetch_failed
+    - skip_execution_for_cycle
+    - emit_status: infra_blocked
+
 git_cleanliness_gate:
   rule: "End cycle with clean git status after commit/push, or report explicit blocker."
   on_dirty_after_attempted_commit:
@@ -96,6 +104,18 @@ cycle_log_retention_policy:
   trigger_when:
     - cycle_log_entries_exceed_max
     - periodic_maintenance_window
+
+cycle_log_write_fallback:
+  primary_method: edit_append
+  fallback_method: full_rewrite_append
+  steps:
+    - read_latest_cycle_log
+    - reconstruct_with_new_entry
+    - write_full_file
+    - re_read_and_verify_new_cycle_id_present
+  on_fallback_failure:
+    - add_blocker: cycle_log_write_failed
+    - keep_current_stage
 
 staged_order:
   - create
