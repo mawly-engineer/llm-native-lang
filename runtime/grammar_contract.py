@@ -2,7 +2,7 @@
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
 string literals, string concatenation, logical and/or, bool literals,
-list literals, and index access.
+list literals, null literals, and index access.
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ GRAMMAR_CONTRACT = {
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
         "index_suffix -> '[' expr ']'",
-        "atom -> 'true' | 'false' | STRING | IDENT | NUMBER | list | '(' expr ')'",
+        "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'",
         "list -> '[' args? ']'",
         "params -> IDENT (',' IDENT)*",
         "args -> expr (',' expr)*",
@@ -124,7 +124,7 @@ def _tokenize(source: str) -> List[Token]:
             while j < len(source) and (source[j].isalnum() or source[j] == "_"):
                 j += 1
             ident = source[i:j]
-            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or", "true", "false"}:
+            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or", "true", "false", "null"}:
                 tokens.append(Token("KW", ident, i, j))
             else:
                 tokens.append(Token("IDENT", ident, i, j))
@@ -322,6 +322,9 @@ class _Parser:
         if tok.kind == "KW" and tok.value in {"true", "false"}:
             boolean = self._eat("KW")
             return self._with_span("bool", boolean.start, boolean.end, value=boolean.value == "true")
+        if tok.kind == "KW" and tok.value == "null":
+            null_tok = self._eat("KW", "null")
+            return self._with_span("null", null_tok.start, null_tok.end, value=None)
         if tok.kind == "STRING":
             string = self._eat("STRING")
             return self._with_span("string", string.start, string.end, value=string.value)

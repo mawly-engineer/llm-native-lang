@@ -26,6 +26,7 @@ class TypeSpec:
 TYPE_NUMBER = TypeSpec("number")
 TYPE_BOOL = TypeSpec("bool")
 TYPE_STRING = TypeSpec("string")
+TYPE_NULL = TypeSpec("null")
 TYPE_ANY = TypeSpec("any")
 
 
@@ -85,6 +86,11 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         if not isinstance(value, str):
             raise TypeCheckError(f"{path}.value: string literal must be string")
         return TYPE_STRING
+
+    if kind == "null":
+        if node.get("value") is not None:
+            raise TypeCheckError(f"{path}.value: null literal must be None")
+        return TYPE_NULL
 
     if kind == "list":
         items = node.get("items")

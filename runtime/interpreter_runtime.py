@@ -117,6 +117,9 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "string":
         return node["value"]
 
+    if kind == "null":
+        return None
+
     if kind == "list":
         return [_eval(item, env, context) for item in node["items"]]
 

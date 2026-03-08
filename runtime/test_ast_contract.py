@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "list", "unary_neg", "unary_not", "concat_bin", "logical_bin", "ident", "number", "bool", "string"],
+            ["let", "if", "fn", "call", "index", "list", "unary_neg", "unary_not", "concat_bin", "logical_bin", "ident", "number", "bool", "null", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "6664dc2b2702937512ef284cb7dc9a521e7ef33ff619b1a754d61ea8305d1f86",
+            "3ac2838aa10e82f56ae772ddaeec058bdf2d8829710e9cfa27992076b452902f",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -36,6 +36,7 @@ class ASTContractTests(unittest.TestCase):
             '"a"+"b"',
             '"s"',
             "true",
+            "null",
             "[1,2,3]",
             "arr[0]",
         ]:
@@ -102,3 +103,9 @@ class ASTContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ASTNullContractTests(unittest.TestCase):
+    def test_null_node_requires_none_value(self) -> None:
+        with self.assertRaises(ASTValidationError):
+            validate_ast({"kind": "null", "span": {"start": 0, "end": 4}, "value": "null"})

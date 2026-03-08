@@ -6,6 +6,7 @@ from runtime.type_contract import (
     TYPE_BOOL,
     TYPE_NUMBER,
     TYPE_STRING,
+    TYPE_NULL,
     TypeCheckError,
     check_expr,
     fn_type,
@@ -22,6 +23,9 @@ class TypeContractTests(unittest.TestCase):
 
     def test_string_literal_is_string(self) -> None:
         self.assertEqual(check_expr(parse_expr('"hello"')), TYPE_STRING)
+
+    def test_null_literal_is_null(self) -> None:
+        self.assertEqual(check_expr(parse_expr("null")), TYPE_NULL)
 
     def test_let_binds_value_type_in_body(self) -> None:
         expr = parse_expr("let x = 1 in x")

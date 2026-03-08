@@ -69,6 +69,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "value"],
             "fields": {"kind": "literal:bool", "span": "span", "value": "bool"},
         },
+        "null": {
+            "required": ["kind", "span", "value"],
+            "fields": {"kind": "literal:null", "span": "span", "value": "null"},
+        },
         "string": {
             "required": ["kind", "span", "value"],
             "fields": {"kind": "literal:string", "span": "span", "value": "string"},
@@ -91,6 +95,7 @@ _AST_FINGERPRINT_SOURCE = [
     "ident:kind,span,name",
     "number:kind,span,value",
     "bool:kind,span,value",
+    "null:kind,span,value",
     "string:kind,span,value",
 ]
 
@@ -242,6 +247,13 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "bool")
         if not isinstance(node.get("value"), bool):
             raise ASTValidationError("bool.value must be a bool")
+        return
+
+    if kind == "null":
+        _require_kind(node, "null")
+        _require_span(node, "null")
+        if node.get("value") is not None:
+            raise ASTValidationError("null.value must be None")
         return
 
     if kind == "string":

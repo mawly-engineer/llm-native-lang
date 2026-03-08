@@ -38,6 +38,10 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("[1,2,3]")
         self.assertEqual(eval_expr(expr), [1, 2, 3])
 
+    def test_null_literal_evaluates_to_none(self) -> None:
+        expr = parse_expr("null")
+        self.assertIsNone(eval_expr(expr))
+
     def test_index_access_returns_item(self) -> None:
         expr = parse_expr("[9,8,7][1]")
         self.assertEqual(eval_expr(expr), 8)

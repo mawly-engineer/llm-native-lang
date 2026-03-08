@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "1cd9e21648be27d336f98525780fd908161552f67b763840e02f39dd7457ac02",
+            "a8c6e7675fb51f14a212b43a53da8618320522ad36136d0ed5b04d942d7a3fd6",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -69,6 +69,11 @@ class GrammarContractTests(unittest.TestCase):
         self.assertTrue(ast_true["value"])
         self.assertEqual(ast_false["kind"], "bool")
         self.assertFalse(ast_false["value"])
+
+    def test_parse_null_literal_as_literal_node(self) -> None:
+        ast_null = parse_expr("null")
+        self.assertEqual(ast_null["kind"], "null")
+        self.assertIsNone(ast_null["value"])
 
     def test_parse_logical_and_or_with_precedence(self) -> None:
         ast = parse_expr("true or false and true")
