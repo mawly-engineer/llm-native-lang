@@ -26,6 +26,19 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("-inc(1)")
         self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), -2)
 
+    def test_list_literal_evaluates_deterministically(self) -> None:
+        expr = parse_expr("[1,2,3]")
+        self.assertEqual(eval_expr(expr), [1, 2, 3])
+
+    def test_index_access_returns_item(self) -> None:
+        expr = parse_expr("[9,8,7][1]")
+        self.assertEqual(eval_expr(expr), 8)
+
+    def test_index_access_out_of_range_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("[1][3]"))
+        self.assertEqual(ctx.exception.code, "E_RT_INDEX_OUT_OF_RANGE")
+
     def test_logical_short_circuit_and_skips_rhs_when_left_false(self) -> None:
         expr = parse_expr("false and boom()")
         self.assertFalse(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}))
@@ -68,7 +81,7 @@ class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):
             atom_choices.extend(vars_in_scope)
             return rng.choice(atom_choices)
 
-        branch = rng.choice(["atom", "let", "if", "call", "paren"])
+        branch = rng.choice(["atom", "let", "if", "call", "paren", "index"])
         if branch == "atom":
             return self._gen_expr(rng, 0, vars_in_scope, allow_fn)
         if branch == "paren":
@@ -83,6 +96,10 @@ class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):
             value = self._gen_expr(rng, depth - 1, vars_in_scope, allow_fn)
             body = self._gen_expr(rng, depth - 1, vars_in_scope + [name], allow_fn)
             return f"let {name} = {value} in {body}"
+        if branch == "index":
+            arr = f"[{rng.randint(0, 9)},{rng.randint(0, 9)}]"
+            idx = str(rng.randint(0, 1))
+            return f"{arr}[{idx}]"
 
         # call branch: keep runtime-safe by calling deterministic host functions
         callee = rng.choice(["id", "inc", "add"])

@@ -4,7 +4,7 @@ id: RUNTIME-001
 schema_id: llm_native_lang.runtime
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-07T13:02:00Z
+updated_at_utc: 2026-03-08T01:50:00Z
 project: llm-native-lang
 objective: Deterministic runtime API surface and replay behavior guarantees.
 
@@ -83,3 +83,14 @@ determinism_guarantees:
   - stable_ui_op_normalization_order
   - deterministic_snapshot_seed_selection
   - order_stability_for_equal_distance_seed_candidates
+
+language_runtime_semantics:
+  list_literals:
+    - preserve_source_item_order
+    - evaluate_items_left_to_right
+    - produce_runtime_list_value
+  index_access:
+    - evaluate_target_then_index
+    - require_target_list_value
+    - require_index_int_value
+    - halt_with_E_RT_INDEX_OUT_OF_RANGE_when_index_invalid

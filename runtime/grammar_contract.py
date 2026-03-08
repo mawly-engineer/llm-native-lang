@@ -1,6 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, unary negation, logical and/or, bool literals.
+Scope: expr, let, if, fn, call, unary negation, logical and/or, bool literals,
+list literals, and index access.
 """
 
 from __future__ import annotations
@@ -15,7 +16,17 @@ GRAMMAR_VERSION = "1.0.0"
 GRAMMAR_CONTRACT = {
     "version": GRAMMAR_VERSION,
     "start": "expr",
-    "nonterminals": ["expr", "let", "if", "fn", "logical_or", "logical_and", "call", "unary", "atom"],
+    "nonterminals": [
+        "expr",
+        "let",
+        "if",
+        "fn",
+        "logical_or",
+        "logical_and",
+        "unary",
+        "postfix",
+        "atom",
+    ],
     "productions": [
         "expr -> let | if | fn | logical_or",
         "let -> 'let' IDENT '=' expr 'in' expr",
@@ -23,9 +34,12 @@ GRAMMAR_CONTRACT = {
         "fn -> 'fn' '(' params? ')' '=>' expr",
         "logical_or -> logical_and ('or' logical_and)*",
         "logical_and -> unary ('and' unary)*",
-        "call -> IDENT '(' args? ')'",
-        "unary -> '-' unary | call | atom",
-        "atom -> 'true' | 'false' | IDENT | NUMBER | '(' expr ')'",
+        "unary -> '-' unary | postfix",
+        "postfix -> atom (call_suffix | index_suffix)*",
+        "call_suffix -> '(' args? ')'",
+        "index_suffix -> '[' expr ']'",
+        "atom -> 'true' | 'false' | IDENT | NUMBER | list | '(' expr ')'",
+        "list -> '[' args? ']'",
         "params -> IDENT (',' IDENT)*",
         "args -> expr (',' expr)*",
     ],
@@ -60,7 +74,7 @@ def _tokenize(source: str) -> List[Token]:
             tokens.append(Token("ARROW", "=>", i, i + 2))
             i += 2
             continue
-        if ch in "(),=-":
+        if ch in "()[],=-":
             tokens.append(Token(ch, ch, i, i + 1))
             i += 1
             continue
@@ -208,27 +222,43 @@ class _Parser:
                 operand["span"]["end"],
                 operand=operand,
             )
-        return self._call_or_atom()
+        return self._postfix()
 
-    def _call_or_atom(self) -> dict[str, Any]:
-        atom = self._atom()
-        if atom["kind"] == "ident" and self._peek().kind == "(":
-            self._eat("(", "(")
-            args: list[dict[str, Any]] = []
-            if self._peek().kind != ")":
-                args.append(self._expr())
-                while self._peek().kind == ",":
-                    self._eat(",", ",")
+    def _postfix(self) -> dict[str, Any]:
+        node = self._atom()
+        while True:
+            tok = self._peek()
+            if tok.kind == "(" and node["kind"] == "ident":
+                self._eat("(", "(")
+                args: list[dict[str, Any]] = []
+                if self._peek().kind != ")":
                     args.append(self._expr())
-            close_tok = self._eat(")", ")")
-            return self._with_span(
-                "call",
-                atom["span"]["start"],
-                close_tok.end,
-                callee=atom["name"],
-                args=args,
-            )
-        return atom
+                    while self._peek().kind == ",":
+                        self._eat(",", ",")
+                        args.append(self._expr())
+                close_tok = self._eat(")", ")")
+                node = self._with_span(
+                    "call",
+                    node["span"]["start"],
+                    close_tok.end,
+                    callee=node["name"],
+                    args=args,
+                )
+                continue
+            if tok.kind == "[":
+                self._eat("[", "[")
+                index = self._expr()
+                close_tok = self._eat("]", "]")
+                node = self._with_span(
+                    "index",
+                    node["span"]["start"],
+                    close_tok.end,
+                    target=node,
+                    index=index,
+                )
+                continue
+            break
+        return node
 
     def _atom(self) -> dict[str, Any]:
         tok = self._peek()
@@ -241,6 +271,16 @@ class _Parser:
         if tok.kind == "NUMBER":
             number = self._eat("NUMBER")
             return self._with_span("number", number.start, number.end, value=int(number.value))
+        if tok.kind == "[":
+            open_tok = self._eat("[", "[")
+            items: list[dict[str, Any]] = []
+            if self._peek().kind != "]":
+                items.append(self._expr())
+                while self._peek().kind == ",":
+                    self._eat(",", ",")
+                    items.append(self._expr())
+            close_tok = self._eat("]", "]")
+            return self._with_span("list", open_tok.start, close_tok.end, items=items)
         if tok.kind == "(":
             self._eat("(", "(")
             node = self._expr()

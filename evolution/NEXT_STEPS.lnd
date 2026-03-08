@@ -2,7 +2,7 @@
 version: 4
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T01:33:00Z
+updated_at_utc: 2026-03-08T01:50:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -12,12 +12,6 @@ queue_policy:
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
 active_queue:
-  - step_id: STEP-066
-    backlog_reference: LNG-CORE-11
-    owner_focus: language-core
-    goal: Implement deterministic list literals and index access contracts across grammar/AST/type/runtime.
-    status: open
-
   - step_id: STEP-067
     backlog_reference: LNG-RT-04
     owner_focus: interpreter-runtime
@@ -37,6 +31,9 @@ active_queue:
     status: open
 
 recently_completed:
+  - step_id: STEP-066
+    backlog_reference: LNG-CORE-11
+    status: done
   - step_id: STEP-065
     backlog_reference: LNG-ECO-17
     status: done

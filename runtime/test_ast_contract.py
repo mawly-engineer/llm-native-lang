@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "unary_neg", "logical_bin", "ident", "number", "bool"],
+            ["let", "if", "fn", "call", "index", "list", "unary_neg", "logical_bin", "ident", "number", "bool"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "df618c229ee63af232331662522947776ace35d3fe1f436f86139ec3363b307e",
+            "4d3329525e0d107d3142dc39c89ed0d7b48d8931e9dad5e2f8a8f5cd06c54b09",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:
@@ -33,11 +33,13 @@ class ASTContractTests(unittest.TestCase):
             "-1",
             "true and false",
             "true",
+            "[1,2,3]",
+            "arr[0]",
         ]:
             validate_ast(parse_expr(source))
 
     def test_all_core_nodes_include_source_span(self) -> None:
-        ast = parse_expr("let x = sum(1,2) in x")
+        ast = parse_expr("let x = [sum(1,2)] in x[0]")
 
         def assert_spans(node):
             self.assertIn("span", node)
@@ -59,6 +61,12 @@ class ASTContractTests(unittest.TestCase):
             elif kind == "call":
                 for arg in node["args"]:
                     assert_spans(arg)
+            elif kind == "index":
+                assert_spans(node["target"])
+                assert_spans(node["index"])
+            elif kind == "list":
+                for item in node["items"]:
+                    assert_spans(item)
             elif kind == "unary_neg":
                 assert_spans(node["operand"])
             elif kind == "logical_bin":

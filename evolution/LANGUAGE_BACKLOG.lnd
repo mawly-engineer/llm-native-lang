@@ -63,7 +63,7 @@ buckets:
       - id: LNG-CORE-11
         title: Add deterministic list literals and index access with strict AST/type/runtime contracts
         priority: P0
-        status: open
+        status: done
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.

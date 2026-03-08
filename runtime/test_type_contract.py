@@ -8,6 +8,7 @@ from runtime.type_contract import (
     TypeCheckError,
     check_expr,
     fn_type,
+    list_type,
 )
 
 
@@ -57,6 +58,19 @@ class TypeContractTests(unittest.TestCase):
         self.assertEqual(check_expr(parse_expr("true or false")), TYPE_BOOL)
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("1 and true"))
+
+    def test_list_literal_requires_homogeneous_item_types(self) -> None:
+        self.assertEqual(check_expr(parse_expr("[1,2,3]")), list_type(TYPE_NUMBER))
+        self.assertEqual(check_expr(parse_expr("[]")), list_type(TYPE_ANY))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("[1,true]"))
+
+    def test_index_access_requires_list_and_number_index(self) -> None:
+        self.assertEqual(check_expr(parse_expr("[1,2][0]")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1[0]"))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("[1,2][true]"))
 
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):

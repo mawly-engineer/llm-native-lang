@@ -49,6 +49,23 @@ AST_SCHEMA = {
                 "args": "expr[]",
             },
         },
+        "index": {
+            "required": ["kind", "span", "target", "index"],
+            "fields": {
+                "kind": "literal:index",
+                "span": "span",
+                "target": "expr",
+                "index": "expr",
+            },
+        },
+        "list": {
+            "required": ["kind", "span", "items"],
+            "fields": {
+                "kind": "literal:list",
+                "span": "span",
+                "items": "expr[]",
+            },
+        },
         "unary_neg": {
             "required": ["kind", "span", "operand"],
             "fields": {
@@ -100,6 +117,8 @@ _AST_FINGERPRINT_SOURCE = [
     "if:kind,span,cond,then,else",
     "fn:kind,span,params,body",
     "call:kind,span,callee,args",
+    "index:kind,span,target,index",
+    "list:kind,span,items",
     "unary_neg:kind,span,operand",
     "logical_bin:kind,span,op,left,right",
     "ident:kind,span,name",
@@ -189,6 +208,23 @@ def _validate_expr(node: Any) -> None:
             raise ASTValidationError("call.args must be a list")
         for arg in args:
             _validate_expr(arg)
+        return
+
+    if kind == "index":
+        _require_kind(node, "index")
+        _require_span(node, "index")
+        _validate_expr(node.get("target"))
+        _validate_expr(node.get("index"))
+        return
+
+    if kind == "list":
+        _require_kind(node, "list")
+        _require_span(node, "list")
+        items = node.get("items")
+        if not isinstance(items, list):
+            raise ASTValidationError("list.items must be a list")
+        for item in items:
+            _validate_expr(item)
         return
 
     if kind == "unary_neg":

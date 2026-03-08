@@ -13,16 +13,23 @@ class TypeSpec:
     returns: "TypeSpec | None" = None
 
     def __str__(self) -> str:
-        if self.kind != "fn":
-            return self.kind
-        args = ",".join(str(arg) for arg in self.args)
-        out = "any" if self.returns is None else str(self.returns)
-        return f"fn({args})->{out}"
+        if self.kind == "fn":
+            args = ",".join(str(arg) for arg in self.args)
+            out = "any" if self.returns is None else str(self.returns)
+            return f"fn({args})->{out}"
+        if self.kind == "list":
+            inner = "any" if not self.args else str(self.args[0])
+            return f"list[{inner}]"
+        return self.kind
 
 
 TYPE_NUMBER = TypeSpec("number")
 TYPE_BOOL = TypeSpec("bool")
 TYPE_ANY = TypeSpec("any")
+
+
+def list_type(item: TypeSpec = TYPE_ANY) -> TypeSpec:
+    return TypeSpec("list", args=(item,))
 
 
 def fn_type(*args: TypeSpec, returns: TypeSpec = TYPE_ANY) -> TypeSpec:
@@ -74,6 +81,30 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         if not isinstance(value, bool):
             raise TypeCheckError(f"{path}.value: bool literal must be bool")
         return TYPE_BOOL
+
+    if kind == "list":
+        items = node.get("items")
+        if not isinstance(items, list):
+            raise TypeCheckError(f"{path}.items: list items must be list")
+        if not items:
+            return list_type(TYPE_ANY)
+        first_ty = _check(items[0], ctx, f"{path}.items[0]")
+        for idx, item in enumerate(items[1:], start=1):
+            item_ty = _check(item, ctx, f"{path}.items[{idx}]")
+            if item_ty != first_ty:
+                raise TypeCheckError(
+                    f"{path}.items[{idx}]: list literal item type mismatch ({first_ty} vs {item_ty})"
+                )
+        return list_type(first_ty)
+
+    if kind == "index":
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
+        index_ty = _check(node.get("index"), ctx, f"{path}.index")
+        if target_ty.kind != "list":
+            raise TypeCheckError(f"{path}.target: expected list, got {target_ty}")
+        if index_ty != TYPE_NUMBER:
+            raise TypeCheckError(f"{path}.index: expected number, got {index_ty}")
+        return TYPE_ANY if not target_ty.args else target_ty.args[0]
 
     if kind == "unary_neg":
         operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")

@@ -11,13 +11,13 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_freezes_required_nonterminals(self) -> None:
         self.assertEqual(
             GRAMMAR_CONTRACT["nonterminals"],
-            ["expr", "let", "if", "fn", "logical_or", "logical_and", "call", "unary", "atom"],
+            ["expr", "let", "if", "fn", "logical_or", "logical_and", "unary", "postfix", "atom"],
         )
 
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "8d52e082dc8912d18f719e918d624c57a778bfd864c8d22c71ba7e2a11ba399a",
+            "4ddca2ba7cadcb48bff046881b2adf65d98c79289fdcc17e27221b09e919c66b",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -67,11 +67,22 @@ class GrammarContractTests(unittest.TestCase):
         self.assertEqual(ast["right"]["kind"], "logical_bin")
         self.assertEqual(ast["right"]["op"], "and")
 
+    def test_parse_list_literal(self) -> None:
+        ast = parse_expr("[1,2,3]")
+        self.assertEqual(ast["kind"], "list")
+        self.assertEqual(len(ast["items"]), 3)
+
+    def test_parse_index_access(self) -> None:
+        ast = parse_expr("arr[1]")
+        self.assertEqual(ast["kind"], "index")
+        self.assertEqual(ast["target"]["kind"], "ident")
+        self.assertEqual(ast["index"]["kind"], "number")
+
     def test_parser_emits_deterministic_source_spans(self) -> None:
-        ast = parse_expr("let x = 1 in x")
-        self.assertEqual(ast["span"], {"start": 0, "end": 14})
-        self.assertEqual(ast["value"]["span"], {"start": 8, "end": 9})
-        self.assertEqual(ast["body"]["span"], {"start": 13, "end": 14})
+        ast = parse_expr("let x = [1,2] in x[0]")
+        self.assertEqual(ast["span"], {"start": 0, "end": 21})
+        self.assertEqual(ast["value"]["span"], {"start": 8, "end": 13})
+        self.assertEqual(ast["body"]["span"], {"start": 17, "end": 21})
 
 
 if __name__ == "__main__":

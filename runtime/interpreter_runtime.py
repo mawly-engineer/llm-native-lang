@@ -81,6 +81,33 @@ def _eval(node: dict[str, Any], env: Env) -> Any:
     if kind == "bool":
         return node["value"]
 
+    if kind == "list":
+        return [_eval(item, env) for item in node["items"]]
+
+    if kind == "index":
+        target = _eval(node["target"], env)
+        index = _eval(node["index"], env)
+
+        if not isinstance(target, list):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"index target must be list, got {type(target).__name__}",
+                location={"node_kind": "index", "field": "target"},
+            )
+        if not isinstance(index, int) or isinstance(index, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"index expression must evaluate to int, got {type(index).__name__}",
+                location={"node_kind": "index", "field": "index"},
+            )
+        if index < 0 or index >= len(target):
+            raise EvalError(
+                code="E_RT_INDEX_OUT_OF_RANGE",
+                message=f"list index out of range: {index} (size={len(target)})",
+                location={"node_kind": "index", "index": index, "size": len(target)},
+            )
+        return target[index]
+
     if kind == "ident":
         return env.get(node["name"])
 
