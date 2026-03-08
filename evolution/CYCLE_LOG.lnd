@@ -2361,5 +2361,5 @@ entries:
       - "create-stage: activated product-core runtime-replay item LNG-PRX-04 with mapped next step STEP-077"
       - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: "103ea6c"
+    commit: null
     blockers: []
