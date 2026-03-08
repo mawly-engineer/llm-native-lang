@@ -586,7 +586,12 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                     f"comparison {op} expects both operands as int or both as string, "
                     f"got {type(left).__name__} and {type(right).__name__}"
                 ),
-                location={"node_kind": "compare_bin", "op": op},
+                location={
+                    "node_kind": "compare_bin",
+                    "op": op,
+                    "left_type": type(left).__name__,
+                    "right_type": type(right).__name__,
+                },
             )
 
         allowed_types = (int, bool, str, type(None))
@@ -600,7 +605,12 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             raise EvalError(
                 code="E_RT_TYPE",
                 message=f"equality {op} expects same operand types, got {type(left).__name__} and {type(right).__name__}",
-                location={"node_kind": "compare_bin", "op": op},
+                location={
+                    "node_kind": "compare_bin",
+                    "op": op,
+                    "left_type": type(left).__name__,
+                    "right_type": type(right).__name__,
+                },
             )
         return (left == right) if op == "==" else (left != right)
 

@@ -228,15 +228,42 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         with self.assertRaises(EvalError) as mixed_ctx:
             eval_expr(parse_expr('"a"<1'))
         self.assertEqual(mixed_ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            mixed_ctx.exception.location,
+            {
+                "node_kind": "compare_bin",
+                "op": "<",
+                "left_type": "str",
+                "right_type": "int",
+            },
+        )
 
         with self.assertRaises(EvalError) as bool_ctx:
             eval_expr(parse_expr("true<false"))
         self.assertEqual(bool_ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            bool_ctx.exception.location,
+            {
+                "node_kind": "compare_bin",
+                "op": "<",
+                "left_type": "bool",
+                "right_type": "bool",
+            },
+        )
 
     def test_equality_rejects_mismatched_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("1==true"))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "compare_bin",
+                "op": "==",
+                "left_type": "int",
+                "right_type": "bool",
+            },
+        )
 
     def test_plus_rejects_mixed_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:
