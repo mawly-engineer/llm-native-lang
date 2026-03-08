@@ -2,8 +2,8 @@
 kind: project_entry
 id: LNG-ENTRY-001
 status: active
-revision: 4
-updated_at_utc: 2026-03-08T01:16:00Z
+revision: 5
+updated_at_utc: 2026-03-08T12:37:00Z
 purpose: Single entry file for project control with bounded file topology.
 
 entry_policy:
@@ -22,7 +22,9 @@ core_file_set:
   - evolution/agents/SUPERVISOR_STATE.lnd
   - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
+  - evolution/CURRENT_STATE.lnd
   - evolution/WORK_ITEMS.lnd
+  - evolution/WORK_COMPLETED_ARCHIVE.lnd
   - evolution/ARCHITECTURE.lnd
   - evolution/METRICS.lnd
   - contracts/SPEC.lnd

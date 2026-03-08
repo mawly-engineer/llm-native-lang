@@ -1,0 +1,32 @@
+@lnd 0.2
+kind: current_state
+id: CURRENT-STATE-001
+status: active
+updated_at_utc: 2026-03-08T12:36:00Z
+purpose: Minimal context snapshot for low-token execution.
+
+project_focus:
+  - deterministic_mini_language
+  - deterministic_runtime_replay
+  - lnd_lnc_contract_integrity
+
+runtime_status:
+  branch: main
+  cadence: cron_2m
+  supervisor_stage: idle
+
+open_work:
+  source_file: evolution/WORK_ITEMS.lnd
+  active_queue_file: evolution/ACTIVE_QUEUE.lnd
+  summary: "Use ACTIVE_QUEUE first; consult WORK_ITEMS for status transitions only."
+
+quality_gates:
+  - python3 scripts/lnd_validate.py evolution
+  - python3 scripts/lnd_validate.py contracts
+  - python3 scripts/lnd_validate.py formats
+  - python3 scripts/lnc_validate.py runtime
+
+logs:
+  execution_log: evolution/CYCLE_LOG.lnd
+  completed_archive: evolution/WORK_COMPLETED_ARCHIVE.lnd
+  retention_max_entries: 20

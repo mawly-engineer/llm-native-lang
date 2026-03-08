@@ -1,0 +1,278 @@
+@lnd 0.2
+kind: completed_archive
+id: WORK-COMPLETED-ARCHIVE-001
+status: active
+updated_at_utc: 2026-03-08T12:33:38Z
+purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
+
+completed_items:
+  - id: LNG-CORE-01
+    bucket: language-core
+    title: Freeze minimal grammar (expr, let, if, fn, call)
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-02
+    bucket: language-core
+    title: AST schema and invariants
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-03
+    bucket: language-core
+    title: Type/check contracts for core nodes
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-04
+    bucket: language-core
+    title: Add source-span metadata contract for all core AST nodes
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-05
+    bucket: language-core
+    title: Extend grammar contract with unary negation and precedence-safe AST node
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-06
+    bucket: language-core
+    title: Add additive/multiplicative binary expression grammar with deterministic precedence AST contract
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-07
+    bucket: language-core
+    title: Add equality/comparison binary expression grammar tiers with deterministic precedence AST contract
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-08
+    bucket: language-core
+    title: Add logical and/or grammar tiers with short-circuit AST contract
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-09
+    bucket: language-core
+    title: Align SPEC grammar contract with implemented precedence tiers and nonterminal coverage
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-10
+    bucket: language-core
+    title: Extend grammar contracts with boolean literals and deterministic literal-node typing
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-11
+    bucket: language-core
+    title: Add deterministic list literals and index access with strict AST/type/runtime contracts
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-12
+    bucket: language-core
+    title: Add deterministic string literals and concatenation expression contracts across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-13
+    bucket: language-core
+    title: Add deterministic unary logical-not expression contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-14
+    bucket: language-core
+    title: Add deterministic null literal contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-15
+    bucket: language-core
+    title: Add deterministic modulo operator (%) contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-16
+    bucket: language-core
+    title: Add deterministic integer division operator (//) contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-17
+    bucket: language-core
+    title: Restore deterministic equality/comparison expression tiers across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-18
+    bucket: language-core
+    title: Add deterministic exponentiation operator (**) contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-CORE-19
+    bucket: language-core
+    title: Add deterministic ternary conditional expression contract across grammar/AST/type/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-01
+    bucket: ecosystem
+    title: Publish README positioning (what this is / is not), quickstart, and deterministic guarantees summary
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-02
+    bucket: ecosystem
+    title: Add first reproducible release workflow (version tag + release notes template + changelog contract)
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-03
+    bucket: ecosystem
+    title: Add contributor guide with issue/PR templates and Definition-of-Done gates
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-04
+    bucket: ecosystem
+    title: Add deterministic onboarding verification script that validates quickstart and docs links in CI
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-05
+    bucket: ecosystem
+    title: Migrate coordinator control docs to .lnd with markdown compatibility stubs
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-06
+    bucket: ecosystem
+    title: Scaffold deterministic lnd_validate and lnc_validate tooling contracts with stable error codes
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-07
+    bucket: ecosystem
+    title: Consolidate language specification into contracts/SPEC.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-08
+    bucket: ecosystem
+    title: Consolidate runtime specification into contracts/RUNTIME.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-09
+    bucket: ecosystem
+    title: Consolidate runtime contract into contracts/RUNTIME_CONTRACT.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-10
+    bucket: ecosystem
+    title: Consolidate patch format into contracts/PATCH_FORMAT.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-11
+    bucket: ecosystem
+    title: Consolidate UI diff protocol into contracts/UI_DIFF_PROTOCOL.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-12
+    bucket: ecosystem
+    title: Consolidate type system into contracts/TYPE_SYSTEM.lnd
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-13
+    bucket: ecosystem
+    title: Add first canonical .lnc code_unit artifact in runtime/examples with validator-covered profile compliance
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-14
+    bucket: ecosystem
+    title: Add second production-relevant .lnc code_unit artifact in runtime/examples and wire it into validator-covered examples index
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-15
+    bucket: ecosystem
+    title: Add third production-relevant .lnc code_unit artifact and extend validator/tests to assert >=3 canonical runtime/examples units
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-16
+    bucket: ecosystem
+    title: Enforce internal .lnd/.lnc deterministic validation gate for migration phase 4
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-17
+    bucket: ecosystem
+    title: Complete phase-5 deprecation cleanup by removing obsolete migration leftovers and marking migration status done
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-ECO-18
+    bucket: ecosystem
+    title: Publish minimal public README + project metadata (description/topics) + first v0.1.0 release notes
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-PRX-01
+    bucket: practical-value
+    title: Add end-to-end example app flow (source -> runtime patch -> replay artifact) with deterministic replay proof
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-PRX-02
+    bucket: practical-value
+    title: Add baseline benchmark harness comparing mini-language flow vs JSON/DSL baseline for reproducibility and success rate
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-PRX-03
+    bucket: practical-value
+    title: Add cookbook-style practical recipes for 3 common agent tasks using current language/runtime
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-PRX-04
+    bucket: practical-value
+    title: Add one-click end-to-end public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-RT-01
+    bucket: interpreter-runtime
+    title: Deterministic evaluator for core AST
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-RT-02
+    bucket: interpreter-runtime
+    title: Environment/scope model with lexical bindings
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-RT-03
+    bucket: interpreter-runtime
+    title: Structured runtime errors (code/message/location)
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-RT-04
+    bucket: interpreter-runtime
+    title: Deterministic step budget and fuel-limit semantics with reproducible halt reasons
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-VAL-01
+    bucket: validation
+    title: Golden program suite
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-VAL-02
+    bucket: validation
+    title: Golden error suite
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-VAL-03
+    bucket: validation
+    title: Property/fuzz checks for parser/eval invariants
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-VAL-04
+    bucket: validation
+    title: Add determinism regression suite (same input/seed -> byte-identical outputs and logs)
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-INT-01
+    bucket: integration
+    title: Bridge interpreter execution to runtime patch flow
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-INT-02
+    bucket: integration
+    title: UI/timeline hooks for language-run artifacts
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-INT-03
+    bucket: integration
+    title: End-to-end deterministic replay tests
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-INT-04
+    bucket: integration
+    title: Build replay conformance harness comparing runtime patch traces across repeated runs
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z
+  - id: LNG-INT-05
+    bucket: integration
+    title: Split runtime_stub.py into deterministic submodules with unchanged behavior and passing regression suite
+    status: done
+    archived_at_utc: 2026-03-08T12:33:38Z

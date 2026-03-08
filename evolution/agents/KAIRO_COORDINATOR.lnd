@@ -128,6 +128,7 @@ staged_order:
 
 authoritative_inputs:
   - evolution/PROJECT_ENTRY.lnd
+  - evolution/CURRENT_STATE.lnd
   - evolution/AGENT_ROUTER.lnd
   - evolution/WORK_ITEMS.lnd
   - evolution/ACTIVE_QUEUE.lnd
