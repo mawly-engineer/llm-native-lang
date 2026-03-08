@@ -60,6 +60,10 @@ buckets:
         title: Extend grammar contracts with boolean literals and deterministic literal-node typing
         priority: P1
         status: done
+      - id: LNG-CORE-11
+        title: Add deterministic list literals and index access with strict AST/type/runtime contracts
+        priority: P0
+        status: open
 
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
@@ -164,6 +168,10 @@ buckets:
         title: Structured runtime errors (code/message/location)
         priority: P1
         status: done
+      - id: LNG-RT-04
+        title: Deterministic step budget and fuel-limit semantics with reproducible halt reasons
+        priority: P0
+        status: open
 
   validation:
     description: Tests, contracts, and property checks.
@@ -180,6 +188,10 @@ buckets:
         title: Property/fuzz checks for parser/eval invariants
         priority: P2
         status: done
+      - id: LNG-VAL-04
+        title: Add determinism regression suite (same input/seed -> byte-identical outputs and logs)
+        priority: P0
+        status: open
 
   integration:
     description: End-to-end runtime integration and replay checks.
@@ -196,3 +208,7 @@ buckets:
         title: End-to-end deterministic replay tests
         priority: P1
         status: done
+      - id: LNG-INT-04
+        title: Build replay conformance harness comparing runtime patch traces across repeated runs
+        priority: P1
+        status: open

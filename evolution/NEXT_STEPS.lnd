@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 3
+version: 4
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-07T16:14:00Z
+updated_at_utc: 2026-03-08T01:33:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -11,7 +11,30 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue: []
+active_queue:
+  - step_id: STEP-066
+    backlog_reference: LNG-CORE-11
+    owner_focus: language-core
+    goal: Implement deterministic list literals and index access contracts across grammar/AST/type/runtime.
+    status: open
+
+  - step_id: STEP-067
+    backlog_reference: LNG-RT-04
+    owner_focus: interpreter-runtime
+    goal: Add deterministic step budget (fuel) semantics and reproducible halt reason codes.
+    status: open
+
+  - step_id: STEP-068
+    backlog_reference: LNG-VAL-04
+    owner_focus: validation
+    goal: Add determinism regression suite ensuring byte-identical outputs/logs across repeated runs.
+    status: open
+
+  - step_id: STEP-069
+    backlog_reference: LNG-INT-04
+    owner_focus: integration
+    goal: Build replay conformance harness for patch-trace equivalence across repeated executions.
+    status: open
 
 recently_completed:
   - step_id: STEP-065
@@ -22,7 +45,4 @@ recently_completed:
     status: done
   - step_id: STEP-063
     backlog_reference: LNG-PRX-03
-    status: done
-  - step_id: STEP-062
-    backlog_reference: LNG-PRX-02
     status: done
