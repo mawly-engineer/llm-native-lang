@@ -29,6 +29,9 @@ gate_profile:
   file: evolution/cron/INTERNAL_VALIDATION_GATE.lnd
   mode: internal_local_first
 
+maintenance_commands:
+  - python3 scripts/cycle_log_maintain.py --repo /home/node/.openclaw/workspace/llm-native-lang --max-entries 120
+
 git_policy:
   - git fetch --all --prune
   - git checkout main

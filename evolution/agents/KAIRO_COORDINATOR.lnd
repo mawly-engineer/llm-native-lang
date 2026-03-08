@@ -84,6 +84,14 @@ idle_noop_policy:
   heartbeat_summary_action:
     - append_single_summary_log_entry
 
+cycle_log_retention_policy:
+  max_entries: 120
+  maintenance_script: scripts/cycle_log_maintain.py
+  also_update: evolution/FEATURES_DONE.lnd
+  trigger_when:
+    - cycle_log_entries_exceed_max
+    - periodic_maintenance_window
+
 staged_order:
   - create
   - validate
