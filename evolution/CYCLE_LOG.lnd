@@ -19,188 +19,9 @@ entry_schema:
 entries:
 
   # compacted by scripts/cycle_log_maintain.py
-  # removed_entries: 3
-  # removed_cycle_range: 216-218
-  # kept_cycle_range: 219-238
-
-  - cycle_id: 219
-    timestamp_utc: "2026-03-08T10:46:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-16
-    status: staged_revise_success
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: integer-division target artifacts and validator entrypoints exist (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (81 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
-      - "revise-stage: implemented integer division (//) across grammar precedence, AST/type/runtime semantics, SPEC contract grammar, and deterministic test coverage"
-    commit: null
-    blockers: []
-
-
-
-
-  - cycle_id: 220
-    timestamp_utc: "2026-03-08T10:50:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-16
-    status: done
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: integer-division target artifacts and validator entrypoints exist (PRECHECK_OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (81 tests, OK)"
-      - "execute-stage: finalized LNG-CORE-16 lifecycle (LANGUAGE_BACKLOG done, STEP-074 closed, SUPERVISOR_STATE returned to idle)"
-    commit: null
-    blockers: []
-
-
-
-
-  - cycle_id: 221
-    timestamp_utc: "2026-03-08T10:54:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-17
-    status: staged_create_success
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "create-stage: seeded one product-core backlog item (LNG-CORE-17) with matching next step STEP-075 under controlled backlog seeding policy"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: "a6d92af"
-    blockers: []
-
-
-
-
-  - cycle_id: 222
-    timestamp_utc: "2026-03-08T10:59:27Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-17
-    status: staged_validate_approved
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: equality/comparison target artifacts and validator entrypoints exist (PRECHECK_OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (81 tests, OK)"
-      - "validation_review: LNG-CORE-17 equality/comparison scope is present across parser precedence tiers, AST/type/runtime semantics, and contract-backed tests; execute stage can finalize item lifecycle"
-    commit: null
-    blockers: []
-
-
-
-
-  - cycle_id: 223
-    timestamp_utc: "2026-03-08T11:00:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-17
-    status: done
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: equality/comparison target artifacts and validator entrypoints exist (PRECHECK_OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (87 tests, OK)"
-      - "execute-stage: finalized LNG-CORE-17 lifecycle (LANGUAGE_BACKLOG done, STEP-075 closed, SUPERVISOR_STATE returned to idle)"
-    commit: null
-    blockers: []
-
-
-
-
-  - cycle_id: 224
-    timestamp_utc: "2026-03-08T11:06:00Z"
-    selected_primary: runtime-replay
-    selected_secondary: validation
-    backlog_item_id: LNG-INT-05
-    status: staged_create_success
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "create-stage: activated product-core runtime-replay item LNG-INT-05 with mapped next step STEP-078"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-
-
-  - cycle_id: 225
-    timestamp_utc: "2026-03-08T11:10:00Z"
-    selected_primary: runtime-replay
-    selected_secondary: validation
-    backlog_item_id: LNG-INT-05
-    status: staged_validate_needs_revision
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: target artifact runtime/runtime_stub.py and validator entrypoints scripts/lnd_validate.py + scripts/lnc_validate.py exist (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_runtime_stub runtime.test_determinism_regression runtime.test_replay_conformance (72 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "validation_review: LNG-INT-05 regression suite is green, but runtime_stub.py has not been decomposed into deterministic submodules yet"
-    commit: null
-    blockers:
-      - "LNG-INT-05 requires revise-stage implementation before execute: split runtime_stub.py into deterministic submodules with no behavior drift."
-
-
-
-
-  - cycle_id: 226
-    timestamp_utc: "2026-03-08T11:12:00Z"
-    selected_primary: runtime-replay
-    selected_secondary: validation
-    backlog_item_id: LNG-INT-05
-    status: staged_revise_success
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: target artifact runtime/runtime_stub.py and validator entrypoints scripts/lnd_validate.py + scripts/lnc_validate.py exist (PRECHECK_OK)"
-      - "refactor: extracted runtime stub into deterministic submodules runtime/runtime_stub_parts/{types.py,core.py,__init__.py} with runtime/runtime_stub.py compatibility shim"
-      - "python3 -m unittest runtime.test_runtime_stub runtime.test_determinism_regression runtime.test_replay_conformance (72 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: d2492a4
-    blockers: []
-
-
-
-
-  - cycle_id: 227
-    timestamp_utc: "2026-03-08T11:16:00Z"
-    selected_primary: runtime-replay
-    selected_secondary: validation
-    backlog_item_id: LNG-INT-05
-    status: staged_validate_approved
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: target artifact runtime/runtime_stub.py and validator entrypoints scripts/lnd_validate.py + scripts/lnc_validate.py exist (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_runtime_stub runtime.test_determinism_regression runtime.test_replay_conformance (72 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "validation_review: LNG-INT-05 refactor scope remains behavior-stable with deterministic regression green; execute stage can finalize item lifecycle"
-    commit: null
-    blockers: []
-
-
-
+  # removed_entries: 9
+  # removed_cycle_range: 219-227
+  # kept_cycle_range: 228-247
 
   - cycle_id: 228
     timestamp_utc: "2026-03-08T11:19:44Z"
@@ -221,6 +42,7 @@ entries:
 
 
 
+
   - cycle_id: 229
     timestamp_utc: "2026-03-08T11:20:00Z"
     selected_primary: runtime-replay
@@ -234,6 +56,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -258,6 +81,7 @@ entries:
 
 
 
+
   - cycle_id: 231
     timestamp_utc: "2026-03-08T11:28:00Z"
     selected_primary: runtime-replay
@@ -273,6 +97,7 @@ entries:
       - "revise-stage: added canonical one-click public demo command (scripts/run_public_demo.py) with committed byte-stable expected-output artifact and verification test coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -299,6 +124,7 @@ entries:
 
 
 
+
   - cycle_id: 233
     timestamp_utc: "2026-03-08T11:34:00Z"
     selected_primary: runtime-replay
@@ -318,6 +144,7 @@ entries:
 
 
 
+
   - cycle_id: 234
     timestamp_utc: "2026-03-08T11:38:00Z"
     selected_primary: language-core
@@ -331,6 +158,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -355,6 +183,7 @@ entries:
       - "LNG-CORE-18 requires revise-stage implementation before execute: exponentiation (**) semantics are missing across grammar/AST/type/runtime/contracts."
 
 
+
   - cycle_id: 236
     timestamp_utc: "2026-03-08T11:46:00Z"
     selected_primary: language-core
@@ -371,6 +200,7 @@ entries:
       - "revise-stage: implemented exponentiation (**) as right-associative power tier across grammar/AST/type/runtime/contracts and deterministic tests"
     commit: null
     blockers: []
+
 
 
   - cycle_id: 237
@@ -390,6 +220,7 @@ entries:
       - "validation_review: LNG-CORE-18 exponentiation scope is present across parser right-associative power tier, AST/type/runtime semantics, and SPEC/runtime contract-backed tests; execute stage can finalize item lifecycle"
     commit: b20770b
     blockers: []
+
 
 
   - cycle_id: 238
@@ -412,6 +243,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 239
     timestamp_utc: "2026-03-08T12:02:00Z"
     selected_primary: language-core
@@ -425,6 +257,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
   - cycle_id: 240
@@ -447,6 +280,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 241
     timestamp_utc: "2026-03-08T12:10:00Z"
     selected_primary: language-core
@@ -467,6 +301,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 242
     timestamp_utc: "2026-03-08T12:14:00Z"
     selected_primary: ecosystem
@@ -480,6 +315,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
   - cycle_id: 243
@@ -502,6 +338,7 @@ entries:
       - "LNG-ECO-18 requires revise-stage implementation before execute: add README.md, .github/release-notes/v0.1.0.md, and .github/project-metadata.json with deterministic, validated content."
 
 
+
   - cycle_id: 244
     timestamp_utc: "2026-03-08T12:24:00Z"
     selected_primary: ecosystem
@@ -519,6 +356,7 @@ entries:
       - "revise-stage: added required public artifacts for LNG-ECO-18 (README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json) and advanced flow to validate"
     commit: 28a31b1
     blockers: []
+
 
 
   - cycle_id: 245
@@ -540,6 +378,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 246
     timestamp_utc: "2026-03-08T12:30:00Z"
     selected_primary: ecosystem
@@ -558,3 +397,40 @@ entries:
     commit: null
     blockers: []
 
+
+
+  - cycle_id: 247
+    timestamp_utc: "2026-03-08T12:34:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-20
+    status: infra_blocked
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "git_cleanliness_gate: working tree is dirty before/after cycle; execution blocked for one meaningful unit"
+    commit: null
+    blockers:
+      - "working_tree_not_clean: pre-existing unstaged/untracked changes in evolution/PROJECT_ENTRY.lnd, evolution/WORK_ITEMS.lnd, evolution/agents/KAIRO_COORDINATOR.lnd, evolution/runs/RUN_PRODUCT_CORE.lnd, evolution/CURRENT_STATE.lnd, evolution/WORK_COMPLETED_ARCHIVE.lnd, scripts/work_items_compact.py"
+
+  - cycle_id: 248
+    timestamp_utc: "2026-03-08T12:38:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-20
+    status: done
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "preflight: target artifacts and validator entrypoints exist (runtime/type_contract.py, runtime/interpreter_runtime.py, runtime/test_type_contract.py, runtime/test_interpreter_runtime.py, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_type_contract runtime.test_interpreter_runtime (60 tests, OK)"
+      - "execute-stage: finalized LNG-CORE-20 with deterministic string ordering support and mixed-type comparison guardrails across type/runtime/tests"
+    commit: null
+    blockers: []

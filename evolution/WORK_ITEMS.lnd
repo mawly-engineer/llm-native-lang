@@ -2,7 +2,7 @@
 version: 6
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T12:14:00Z
+updated_at_utc: 2026-03-08T12:38:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -24,7 +24,7 @@ buckets:
       - id: LNG-CORE-20
         title: Add deterministic string equality and ordering guardrails (compare_bin typing/runtime contracts)
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Tighten compare semantics for strings and mixed-type guards with reproducible errors."
         single_cycle_feasibility: "Implementable with focused type/runtime/contract updates and tests."
         explicit_tests:

@@ -306,24 +306,35 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         right = _eval(node["right"], env, context)
 
         if op in {"<", "<=", ">", ">="}:
-            if not isinstance(left, int) or isinstance(left, bool):
-                raise EvalError(
-                    code="E_RT_TYPE",
-                    message=f"comparison {op} expects int left operand, got {type(left).__name__}",
-                    location={"node_kind": "compare_bin", "op": op, "side": "left"},
-                )
-            if not isinstance(right, int) or isinstance(right, bool):
-                raise EvalError(
-                    code="E_RT_TYPE",
-                    message=f"comparison {op} expects int right operand, got {type(right).__name__}",
-                    location={"node_kind": "compare_bin", "op": op, "side": "right"},
-                )
-            return {
-                "<": left < right,
-                "<=": left <= right,
-                ">": left > right,
-                ">=": left >= right,
-            }[op]
+            left_is_int = isinstance(left, int) and not isinstance(left, bool)
+            right_is_int = isinstance(right, int) and not isinstance(right, bool)
+            left_is_str = isinstance(left, str)
+            right_is_str = isinstance(right, str)
+
+            if left_is_int and right_is_int:
+                return {
+                    "<": left < right,
+                    "<=": left <= right,
+                    ">": left > right,
+                    ">=": left >= right,
+                }[op]
+
+            if left_is_str and right_is_str:
+                return {
+                    "<": left < right,
+                    "<=": left <= right,
+                    ">": left > right,
+                    ">=": left >= right,
+                }[op]
+
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=(
+                    f"comparison {op} expects both operands as int or both as string, "
+                    f"got {type(left).__name__} and {type(right).__name__}"
+                ),
+                location={"node_kind": "compare_bin", "op": op},
+            )
 
         allowed_types = (int, bool, str, type(None))
         if not isinstance(left, allowed_types):

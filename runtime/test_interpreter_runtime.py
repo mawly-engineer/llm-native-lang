@@ -85,13 +85,18 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
     def test_comparison_and_equality_evaluate_deterministically(self) -> None:
         self.assertTrue(eval_expr(parse_expr("1<2")))
         self.assertTrue(eval_expr(parse_expr("2>=2")))
+        self.assertTrue(eval_expr(parse_expr('"a"<"b"')))
         self.assertTrue(eval_expr(parse_expr('"a"=="a"')))
         self.assertTrue(eval_expr(parse_expr("true!=false")))
 
-    def test_comparison_rejects_non_number_operands(self) -> None:
-        with self.assertRaises(EvalError) as ctx:
-            eval_expr(parse_expr('"a"<"b"'))
-        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+    def test_comparison_rejects_mixed_or_unsupported_ordering_types(self) -> None:
+        with self.assertRaises(EvalError) as mixed_ctx:
+            eval_expr(parse_expr('"a"<1'))
+        self.assertEqual(mixed_ctx.exception.code, "E_RT_TYPE")
+
+        with self.assertRaises(EvalError) as bool_ctx:
+            eval_expr(parse_expr("true<false"))
+        self.assertEqual(bool_ctx.exception.code, "E_RT_TYPE")
 
     def test_equality_rejects_mismatched_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:

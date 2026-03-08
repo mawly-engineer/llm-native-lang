@@ -77,11 +77,16 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr('"a"+1'))
 
-    def test_comparison_requires_number_operands(self) -> None:
+    def test_comparison_supports_number_and_string_ordering_with_same_type(self) -> None:
         self.assertEqual(check_expr(parse_expr("1<2")), TYPE_BOOL)
         self.assertEqual(check_expr(parse_expr("2>=2")), TYPE_BOOL)
+        self.assertEqual(check_expr(parse_expr('"a"<"b"')), TYPE_BOOL)
+
+    def test_comparison_rejects_mixed_or_unsupported_ordering_types(self) -> None:
         with self.assertRaises(TypeCheckError):
-            check_expr(parse_expr('"a"<"b"'))
+            check_expr(parse_expr('"a"<1'))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("true<false"))
 
     def test_equality_requires_same_scalar_types(self) -> None:
         self.assertEqual(check_expr(parse_expr("1==1")), TYPE_BOOL)

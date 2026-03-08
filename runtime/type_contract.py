@@ -184,10 +184,14 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         right_ty = _check(node.get("right"), ctx, f"{path}.right")
 
         if op in {"<", "<=", ">", ">="}:
-            if left_ty != TYPE_NUMBER:
-                raise TypeCheckError(f"{path}.left: expected number, got {left_ty}")
-            if right_ty != TYPE_NUMBER:
-                raise TypeCheckError(f"{path}.right: expected number, got {right_ty}")
+            if left_ty != right_ty:
+                raise TypeCheckError(
+                    f"{path}: ordering operands must have same type ({left_ty} vs {right_ty})"
+                )
+            if left_ty not in {TYPE_NUMBER, TYPE_STRING}:
+                raise TypeCheckError(
+                    f"{path}: ordering unsupported for type {left_ty}; expected number or string"
+                )
             return TYPE_BOOL
 
         if left_ty != right_ty:
