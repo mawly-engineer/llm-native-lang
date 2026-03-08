@@ -20,31 +20,8 @@ entries:
 
   # compacted by scripts/cycle_log_maintain.py
   # removed_entries: 1
-  # removed_cycle_range: 233-233
-  # kept_cycle_range: 234-253
-
-  - cycle_id: 234
-    timestamp_utc: "2026-03-08T11:38:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-18
-    status: staged_create_success
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "create-stage: controlled backlog seeding created product-core item LNG-CORE-18 with mapped next step STEP-079; active flow set to validate"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-    commit: null
-    blockers: []
-
-
-
-
-
-
-
-
-
+  # removed_cycle_range: 234-234
+  # kept_cycle_range: 235-254
 
   - cycle_id: 235
     timestamp_utc: "2026-03-08T11:42:00Z"
@@ -64,6 +41,7 @@ entries:
     commit: null
     blockers:
       - "LNG-CORE-18 requires revise-stage implementation before execute: exponentiation (**) semantics are missing across grammar/AST/type/runtime/contracts."
+
 
 
 
@@ -96,6 +74,7 @@ entries:
 
 
 
+
   - cycle_id: 237
     timestamp_utc: "2026-03-08T11:52:00Z"
     selected_primary: language-core
@@ -113,6 +92,7 @@ entries:
       - "validation_review: LNG-CORE-18 exponentiation scope is present across parser right-associative power tier, AST/type/runtime semantics, and SPEC/runtime contract-backed tests; execute stage can finalize item lifecycle"
     commit: b20770b
     blockers: []
+
 
 
 
@@ -147,6 +127,7 @@ entries:
 
 
 
+
   - cycle_id: 239
     timestamp_utc: "2026-03-08T12:02:00Z"
     selected_primary: language-core
@@ -160,6 +141,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -194,6 +176,7 @@ entries:
 
 
 
+
   - cycle_id: 241
     timestamp_utc: "2026-03-08T12:10:00Z"
     selected_primary: language-core
@@ -220,6 +203,7 @@ entries:
 
 
 
+
   - cycle_id: 242
     timestamp_utc: "2026-03-08T12:14:00Z"
     selected_primary: ecosystem
@@ -233,6 +217,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -267,6 +252,7 @@ entries:
 
 
 
+
   - cycle_id: 244
     timestamp_utc: "2026-03-08T12:24:00Z"
     selected_primary: ecosystem
@@ -284,6 +270,7 @@ entries:
       - "revise-stage: added required public artifacts for LNG-ECO-18 (README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json) and advanced flow to validate"
     commit: 28a31b1
     blockers: []
+
 
 
 
@@ -317,6 +304,7 @@ entries:
 
 
 
+
   - cycle_id: 246
     timestamp_utc: "2026-03-08T12:30:00Z"
     selected_primary: ecosystem
@@ -334,6 +322,7 @@ entries:
       - "execute-stage: finalized LNG-ECO-18 lifecycle (WORK_ITEMS done, STEP-077 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []
+
 
 
 
@@ -365,6 +354,7 @@ entries:
 
 
 
+
   - cycle_id: 248
     timestamp_utc: "2026-03-08T12:38:00Z"
     selected_primary: language-core
@@ -382,6 +372,7 @@ entries:
       - "execute-stage: finalized LNG-CORE-20 with deterministic string ordering support and mixed-type comparison guardrails across type/runtime/tests"
     commit: null
     blockers: []
+
 
 
 
@@ -410,6 +401,7 @@ entries:
 
 
 
+
   - cycle_id: 250
     timestamp_utc: "2026-03-08T15:18:00Z"
     selected_primary: language-core
@@ -423,6 +415,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -451,6 +444,7 @@ entries:
 
 
 
+
   - cycle_id: 252
     timestamp_utc: "2026-03-08T15:26:00Z"
     selected_primary: language-core
@@ -471,6 +465,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 253
     timestamp_utc: "2026-03-08T15:31:23Z"
     selected_primary: language-core
@@ -487,5 +482,26 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
       - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
       - "validation_review: LNG-CORE-21 null-coalescing scope is present across parser right-associative tier, AST/type/runtime semantics, and SPEC contract-backed tests; execute stage can finalize item lifecycle"
+    commit: null
+    blockers: []
+
+
+
+  - cycle_id: 254
+    timestamp_utc: "2026-03-08T15:33:43Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-21
+    status: done
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "preflight: null-coalescing target artifacts and validator entrypoints exist (runtime/grammar_contract.py, runtime/ast_contract.py, runtime/type_contract.py, runtime/interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (101 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "execute-stage: finalized LNG-CORE-21 lifecycle (WORK_ITEMS done, STEP-083 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []

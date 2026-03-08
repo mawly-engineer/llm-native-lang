@@ -23,4 +23,4 @@ active_queue:
     backlog_reference: LNG-CORE-21
     owner_focus: language-core
     goal: Add deterministic null-coalescing operator (??) across grammar/AST/type/runtime contracts.
-    status: open
+    status: done
