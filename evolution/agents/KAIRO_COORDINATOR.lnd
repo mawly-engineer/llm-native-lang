@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-08T08:03:30Z
+updated_at_utc: 2026-03-08T12:05:30Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -33,6 +33,8 @@ product_core_scope_gate:
     - language_core_capability
     - runtime_replay_capability
     - llm_format_contract_capability
+  fallback_allowed_when_no_product_core_item:
+    - ecosystem_p0_delivery
   reject_changesets_if_only:
     - cycle_log_updates
     - process_metadata_only

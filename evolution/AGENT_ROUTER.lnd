@@ -2,7 +2,7 @@
 version: 2
 document: AGENT_ROUTER
 purpose: Route the single coordinator to the correct specialist focus each cycle.
-updated_at_utc: "2026-03-08T01:10:00Z"
+updated_at_utc: "2026-03-08T12:05:00Z"
 
 operating_mode:
   scheduler_model: single_coordinator
@@ -96,6 +96,8 @@ product_scope_gate:
     - language-core
     - runtime-replay
     - llm-format-contract
+  fallback_allowed_tags_when_no_product_item:
+    - ecosystem-p0
   reject_if_only:
     - process_churn
     - log_churn
