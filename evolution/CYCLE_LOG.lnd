@@ -20,47 +20,8 @@ entries:
 
   # compacted by scripts/cycle_log_maintain.py
   # removed_entries: 1
-  # removed_cycle_range: 250-250
-  # kept_cycle_range: 251-270
-
-  - cycle_id: 251
-    timestamp_utc: "2026-03-08T15:23:45Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-21
-    status: staged_validate_needs_revision
-    tests:
-      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
-      - "preflight: null-coalescing target artifacts and validator entrypoints exist (runtime/grammar_contract.py, runtime/ast_contract.py, runtime/type_contract.py, runtime/interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (96 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
-      - "validation_review: LNG-CORE-21 scope not yet implemented (no '??' token/tier updates, no coalescing AST/type/runtime semantics, no SPEC contract coverage); revise stage required before execute"
-    commit: null
-    blockers:
-      - "LNG-CORE-21 requires revise-stage implementation before execute: add deterministic null-coalescing (??) semantics across grammar/AST/type/runtime/contracts."
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  # removed_cycle_range: 251-251
+  # kept_cycle_range: 252-271
 
   - cycle_id: 252
     timestamp_utc: "2026-03-08T15:26:00Z"
@@ -80,6 +41,7 @@ entries:
       - "revise-stage: implemented deterministic null-coalescing operator (??) with right-associative parsing tier, AST schema/type-check/runtime short-circuit semantics, SPEC updates, and coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -134,6 +96,7 @@ entries:
 
 
 
+
   - cycle_id: 254
     timestamp_utc: "2026-03-08T15:33:43Z"
     selected_primary: language-core
@@ -168,6 +131,7 @@ entries:
 
 
 
+
   - cycle_id: 255
     timestamp_utc: "2026-03-08T15:36:00Z"
     selected_primary: language-core
@@ -183,6 +147,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -231,6 +196,7 @@ entries:
 
 
 
+
   - cycle_id: 257
     timestamp_utc: "2026-03-08T15:44:00Z"
     selected_primary: language-core
@@ -248,6 +214,7 @@ entries:
       - "revise-stage: implemented deterministic member-access (.) reads with postfix grammar support, AST/type/runtime semantics, SPEC updates, and coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -291,6 +258,7 @@ entries:
 
 
 
+
   - cycle_id: 259
     timestamp_utc: "2026-03-08T15:54:00Z"
     selected_primary: language-core
@@ -320,6 +288,7 @@ entries:
 
 
 
+
   - cycle_id: 260
     timestamp_utc: "2026-03-08T15:58:00Z"
     selected_primary: language-core
@@ -335,6 +304,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -374,6 +344,7 @@ entries:
 
 
 
+
   - cycle_id: 262
     timestamp_utc: "2026-03-08T16:06:00Z"
     selected_primary: language-core
@@ -391,6 +362,7 @@ entries:
       - "revise-stage: implemented deterministic optional member-access (?.) semantics with null short-circuiting, object/member error rules, and grammar/AST/type/runtime/SPEC coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -428,6 +400,7 @@ entries:
 
 
 
+
   - cycle_id: 264
     timestamp_utc: "2026-03-08T16:15:00Z"
     selected_primary: language-core
@@ -449,6 +422,7 @@ entries:
       - "execute-stage: finalized LNG-CORE-24 lifecycle (WORK_ITEMS done, STEP-086 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []
+
 
 
 
@@ -482,6 +456,7 @@ entries:
 
 
 
+
   - cycle_id: 266
     timestamp_utc: "2026-03-08T16:27:00Z"
     selected_primary: language-core
@@ -502,6 +477,7 @@ entries:
       - "execute-stage: finalized LNG-CORE-26 lifecycle (WORK_ITEMS done, STEP-088 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []
+
 
 
 
@@ -532,6 +508,7 @@ entries:
 
 
 
+
   - cycle_id: 268
     timestamp_utc: "2026-03-08T16:47:00Z"
     selected_primary: language-core
@@ -553,6 +530,7 @@ entries:
       - "governance_note: updated contracts/SPEC.lnd source-of-truth runtime semantics for object literals with timestamp revision"
     commit: null
     blockers: []
+
 
 
 
@@ -579,6 +557,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 270
     timestamp_utc: "2026-03-08T17:07:00Z"
     selected_primary: language-core
@@ -599,4 +578,27 @@ entries:
       - "execute-stage: finalized LNG-CORE-30 lifecycle (WORK_ITEMS empty, STEP-092 closed, SUPERVISOR_STATE returned to idle)"
       - "governance_note: updated contracts/SPEC.lnd source-of-truth grammar production for unary operator set with timestamp revision"
     commit: a3c8962
+    blockers: []
+
+
+  - cycle_id: 271
+    timestamp_utc: "2026-03-08T17:17:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-31
+    status: done
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "create-stage: controlled backlog seeding created product-core item LNG-CORE-31 with mapped next step STEP-093; fast-lane enabled"
+      - "preflight: plus-operator target artifacts and validator entrypoints exist (runtime/type_contract.py, runtime/interpreter_runtime.py, runtime/test_type_contract.py, runtime/test_interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (144 tests, OK)"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "validation_review: LNG-CORE-31 plus operator scope is present across type/runtime and hardened mixed-type negative-path checks; fast-lane batched create->validate->execute transitions in one cycle"
+      - "execute-stage: finalized LNG-CORE-31 lifecycle (WORK_ITEMS empty, STEP-093 closed, SUPERVISOR_STATE returned to idle)"
+      - "governance_note: updated contracts/SPEC.lnd source-of-truth runtime semantics for plus operator with timestamp revision"
+    commit: null
     blockers: []

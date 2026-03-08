@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, optional call (?()), unary plus/negation/logical-not,
-string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
+string literals, plus operator (+) for deterministic string concat/int addition, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, object literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
 """
 

@@ -350,19 +350,23 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "concat_bin":
         left = _eval(node["left"], env, context)
         right = _eval(node["right"], env, context)
-        if not isinstance(left, str):
-            raise EvalError(
-                code="E_RT_TYPE",
-                message=f"string concatenation expects string left operand, got {type(left).__name__}",
-                location={"node_kind": "concat_bin", "side": "left"},
-            )
-        if not isinstance(right, str):
-            raise EvalError(
-                code="E_RT_TYPE",
-                message=f"string concatenation expects string right operand, got {type(right).__name__}",
-                location={"node_kind": "concat_bin", "side": "right"},
-            )
-        return left + right
+
+        left_is_int = isinstance(left, int) and not isinstance(left, bool)
+        right_is_int = isinstance(right, int) and not isinstance(right, bool)
+        if left_is_int and right_is_int:
+            return left + right
+
+        if isinstance(left, str) and isinstance(right, str):
+            return left + right
+
+        raise EvalError(
+            code="E_RT_TYPE",
+            message=(
+                "plus expects both operands as int or both as string, "
+                f"got {type(left).__name__} and {type(right).__name__}"
+            ),
+            location={"node_kind": "concat_bin", "op": "+"},
+        )
 
     if kind == "modulo_bin":
         left = _eval(node["left"], env, context)

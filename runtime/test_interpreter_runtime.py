@@ -34,9 +34,9 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("!is_ready()")
         self.assertTrue(eval_expr(expr, env={"is_ready": lambda: False}))
 
-    def test_string_concat_evaluates_deterministically(self) -> None:
-        expr = parse_expr('"hi"+"-"+"there"')
-        self.assertEqual(eval_expr(expr), "hi-there")
+    def test_plus_evaluates_deterministically_for_strings_and_numbers(self) -> None:
+        self.assertEqual(eval_expr(parse_expr('"hi"+"-"+"there"')), "hi-there")
+        self.assertEqual(eval_expr(parse_expr("10+20+3")), 33)
 
     def test_modulo_evaluates_deterministically(self) -> None:
         expr = parse_expr("10%4")
@@ -210,6 +210,11 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
     def test_equality_rejects_mismatched_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("1==true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
+    def test_plus_rejects_mixed_operand_types(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('"a"+1'))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
     def test_unary_plus_rejects_non_number_operand(self) -> None:

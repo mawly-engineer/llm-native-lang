@@ -77,6 +77,13 @@ language_runtime_semantics:
       - evaluate_condition_once
       - require_condition_type_bool_or_raise_E_RT_TYPE
       - evaluate_only_selected_branch
+  plus_operator:
+    operator: "+"
+    scope: deterministic_string_concat_and_number_addition
+    behavior:
+      - both_operands_string_then_concat
+      - both_operands_int_then_add
+      - mixed_or_unsupported_types_raise_E_RT_TYPE
   object_literal:
     operator: "{\"key\": expr, ...}"
     scope: deterministic_object_construction

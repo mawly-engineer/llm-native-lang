@@ -85,10 +85,13 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("1 and true"))
 
-    def test_string_concat_requires_string_operands(self) -> None:
+    def test_plus_supports_string_concat_and_number_addition(self) -> None:
         self.assertEqual(check_expr(parse_expr('"a"+"b"')), TYPE_STRING)
+        self.assertEqual(check_expr(parse_expr("1+2")), TYPE_NUMBER)
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr('"a"+1'))
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("1+true"))
 
     def test_comparison_supports_number_and_string_ordering_with_same_type(self) -> None:
         self.assertEqual(check_expr(parse_expr("1<2")), TYPE_BOOL)
