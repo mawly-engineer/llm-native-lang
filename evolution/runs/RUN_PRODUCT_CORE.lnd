@@ -34,6 +34,19 @@ maintenance_commands:
   - python3 scripts/cycle_log_maintain.py --repo /home/node/.openclaw/workspace/llm-native-lang --max-entries 20
   - python3 scripts/work_items_compact.py
 
+maintenance_enforcement:
+  run_timing: end_of_every_cycle
+  require_post_maintenance_git_check: true
+  auto_commit_if_only_maintenance_diffs: true
+  maintenance_diff_paths:
+    - evolution/CYCLE_LOG.lnd
+    - evolution/WORK_ITEMS.lnd
+    - evolution/WORK_COMPLETED_ARCHIVE.lnd
+  auto_commit_message: "maintenance: normalize cycle/work logs"
+  on_non_maintenance_dirty_tree:
+    - add_blocker: working_tree_not_clean
+    - skip_stage_transition
+
 git_policy:
   - git fetch --all --prune
   - if_fetch_fails_retry_once_after_5s

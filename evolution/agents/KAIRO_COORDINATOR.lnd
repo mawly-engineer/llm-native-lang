@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-08T12:05:30Z
+updated_at_utc: 2026-03-08T12:40:00Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -70,10 +70,19 @@ git_fetch_stability_gate:
     - emit_status: infra_blocked
 
 git_cleanliness_gate:
-  rule: "End cycle with clean git status after commit/push, or report explicit blocker."
+  rule: "End cycle with clean git status after maintenance, commit/push, or report explicit blocker."
   on_dirty_after_attempted_commit:
     - add_blocker: working_tree_not_clean
     - keep_current_stage
+
+maintenance_autofix_gate:
+  run_every_cycle_end: true
+  if_dirty_and_only_maintenance_paths:
+    - auto_commit_and_push
+    - continue_flow
+  if_dirty_and_contains_other_paths:
+    - add_blocker: working_tree_not_clean
+    - halt_stage_progress
 
 definition_of_done_gate:
   require_product_effect_one_of:
