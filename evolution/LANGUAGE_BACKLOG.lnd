@@ -2,7 +2,7 @@
 version: 4
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T11:20:00Z
+updated_at_utc: 2026-03-08T11:34:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -225,7 +225,7 @@ buckets:
       - id: LNG-PRX-04
         title: Add one-click end-to-end public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs
         priority: P0
-        status: in_progress
+        status: done
         deterministic_scope: "Define one canonical demo pipeline with fixed inputs, expected artifacts, and reproducible replay outputs."
         single_cycle_feasibility: "Implementable by wiring existing modules/examples and adding verification assertions."
         explicit_tests:
