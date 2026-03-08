@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 5
+version: 6
 document: LANGUAGE_BACKLOG
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T12:02:00Z
+updated_at_utc: 2026-03-08T12:10:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -138,7 +138,7 @@ buckets:
       - id: LNG-CORE-19
         title: Add deterministic ternary conditional expression contract across grammar/AST/type/runtime
         priority: P1
-        status: open
+        status: done
         deterministic_scope: "Introduce conditional expression syntax `if <cond> then <expr> else <expr>` with fixed precedence between logical_or and assignment roots, plus explicit AST node contract."
         single_cycle_feasibility: "Implementable by extending parser expression tiers, AST/type-check rules, interpreter evaluation semantics, and deterministic contract tests within one cycle."
         explicit_tests:
