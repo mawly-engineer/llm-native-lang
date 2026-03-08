@@ -149,6 +149,13 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("n.field"), env={"n": TYPE_NUMBER})
 
+    def test_optional_member_access_allows_null_and_object_targets(self) -> None:
+        self.assertEqual(check_expr(parse_expr("obj?.field"), env={"obj": TYPE_OBJECT}), TYPE_ANY)
+        self.assertEqual(check_expr(parse_expr("dyn?.field"), env={"dyn": TYPE_ANY}), TYPE_ANY)
+        self.assertEqual(check_expr(parse_expr("n?.field"), env={"n": TYPE_NULL}), TYPE_NULL)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("x?.field"), env={"x": TYPE_NUMBER})
+
     def test_unknown_identifier_fails(self) -> None:
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("x"))

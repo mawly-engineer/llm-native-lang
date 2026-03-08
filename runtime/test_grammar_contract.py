@@ -17,7 +17,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "f9201388ff9d56d0fc60b14fe739646d62d894112d47dbc1901ccd18a8f52c8b",
+            "493e1f93e404e3ccd3370376f920195130cd79121214c6282219d333e3777b45",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -161,6 +161,12 @@ class GrammarContractTests(unittest.TestCase):
     def test_parse_member_access(self) -> None:
         ast = parse_expr("user.profile")
         self.assertEqual(ast["kind"], "member_access")
+        self.assertEqual(ast["target"]["kind"], "ident")
+        self.assertEqual(ast["member"], "profile")
+
+    def test_parse_optional_member_access(self) -> None:
+        ast = parse_expr("user?.profile")
+        self.assertEqual(ast["kind"], "optional_member_access")
         self.assertEqual(ast["target"]["kind"], "ident")
         self.assertEqual(ast["member"], "profile")
 

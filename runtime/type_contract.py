@@ -126,6 +126,17 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.target: expected object, got {target_ty}")
         return TYPE_ANY
 
+    if kind == "optional_member_access":
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
+        member = node.get("member")
+        if not isinstance(member, str) or not member.strip():
+            raise TypeCheckError(f"{path}.member: expected non-empty identifier")
+        if target_ty == TYPE_NULL:
+            return TYPE_NULL
+        if target_ty not in {TYPE_OBJECT, TYPE_ANY}:
+            raise TypeCheckError(f"{path}.target: expected object|null, got {target_ty}")
+        return TYPE_ANY
+
     if kind == "unary_neg":
         operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
         if operand_ty != TYPE_NUMBER:

@@ -565,3 +565,21 @@ entries:
     commit: null
     blockers:
       - "LNG-CORE-23 requires revise-stage implementation before execute: add deterministic optional-chaining (?.) object member-read semantics with null short-circuiting across grammar/AST/type/runtime/contracts."
+
+  - cycle_id: 262
+    timestamp_utc: "2026-03-08T16:06:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-23
+    status: staged_revise_success
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "preflight: optional-chaining target artifacts and validator entrypoints exist (runtime/grammar_contract.py, runtime/ast_contract.py, runtime/type_contract.py, runtime/interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (113 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "revise-stage: implemented deterministic optional member-access (?.) semantics with null short-circuiting, object/member error rules, and grammar/AST/type/runtime/SPEC coverage"
+    commit: null
+    blockers: []

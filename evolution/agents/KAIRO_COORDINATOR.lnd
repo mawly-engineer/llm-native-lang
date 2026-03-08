@@ -15,6 +15,7 @@ hard_rules:
   - verify_delta_after_write
   - one_meaningful_unit_per_cycle
   - preserve_staged_order
+  - allow_multi_stage_progress_for_same_item_in_one_cycle
   - append_cycle_log_on_meaningful_change_only
   - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
   - keep_next_steps_compact
@@ -134,6 +135,17 @@ staged_order:
   - revise
   - validate
   - execute
+
+stage_batching_policy:
+  enabled: true
+  scope: same_backlog_item_only
+  max_transitions_per_cycle: 4
+  stop_conditions:
+    - blocker_detected
+    - validator_failure_requires_revision
+    - git_cleanliness_violation
+  preference:
+    - when_item_is_well_scoped_try_close_in_single_cycle
 
 authoritative_inputs:
   - evolution/PROJECT_ENTRY.lnd

@@ -190,6 +190,26 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return target[member]
 
+    if kind == "optional_member_access":
+        target = _eval(node["target"], env, context)
+        member = node["member"]
+
+        if target is None:
+            return None
+        if not isinstance(target, MappingABC):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"optional member access target must be object|null, got {type(target).__name__}",
+                location={"node_kind": "optional_member_access", "field": "target"},
+            )
+        if member not in target:
+            raise EvalError(
+                code="E_RT_MISSING_MEMBER",
+                message=f"object member not found: {member}",
+                location={"node_kind": "optional_member_access", "member": member},
+            )
+        return target[member]
+
     if kind == "ident":
         return env.get(node["name"])
 

@@ -96,6 +96,22 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("user.missing"), env={"user": {"name": "Luis"}})
         self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
 
+    def test_optional_member_access_short_circuits_null_target_to_null(self) -> None:
+        self.assertIsNone(eval_expr(parse_expr("user?.name"), env={"user": None}))
+
+    def test_optional_member_access_returns_member_for_object_target(self) -> None:
+        self.assertEqual(eval_expr(parse_expr("user?.name"), env={"user": {"name": "Luis"}}), "Luis")
+
+    def test_optional_member_access_rejects_non_object_non_null_target(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("user?.name"), env={"user": 1})
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
+    def test_optional_member_access_missing_field_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("user?.missing"), env={"user": {"name": "Luis"}})
+        self.assertEqual(ctx.exception.code, "E_RT_MISSING_MEMBER")
+
     def test_null_coalescing_short_circuits_on_non_null_left(self) -> None:
         expr = parse_expr('"left"??boom()')
         self.assertEqual(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}), "left")

@@ -19,6 +19,9 @@ execution_policy:
   idle_log_mode: summary_only
   enable_controlled_backlog_seeding: true
   prefer_seed_on_idle_noop: true
+  enable_stage_batching_same_item: true
+  stage_batch_max_transitions_per_cycle: 4
+  prefer_close_item_in_single_cycle_when_safe: true
 
 backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
 
