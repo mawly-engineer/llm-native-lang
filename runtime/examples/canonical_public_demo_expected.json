@@ -1,0 +1,121 @@
+{
+  "artifact": {
+    "determinism_proof": {
+      "events_replayed_equal": true,
+      "events_total_equal": true,
+      "ops_equal": true
+    },
+    "programs": [
+      "let x = 1 in x",
+      "let x = 2 in x",
+      "let y = 7 in y"
+    ],
+    "replay": {
+      "head": "u-2",
+      "metrics": {
+        "events_from_snapshot_seed": 3,
+        "events_replayed": 3,
+        "events_total": 3,
+        "snapshot_seed_distance": null
+      },
+      "ops": [
+        {
+          "op": "insert",
+          "path": "/artifacts/language-runs/language.run",
+          "value": {
+            "kind": "language-run",
+            "node_id": "language.run"
+          }
+        },
+        {
+          "key": "result",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": "7"
+        },
+        {
+          "key": "result_type",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": "int"
+        },
+        {
+          "key": "source",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": "let y = 7 in y"
+        },
+        {
+          "key": "status",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": "ok"
+        }
+      ],
+      "snapshot_head": null
+    },
+    "runs": [
+      {
+        "result": "1",
+        "revision": "r-1",
+        "run_node_id": "language.run",
+        "source": "let x = 1 in x"
+      },
+      {
+        "result": "2",
+        "revision": "r-2",
+        "run_node_id": "language.run",
+        "source": "let x = 2 in x"
+      },
+      {
+        "result": "7",
+        "revision": "r-3",
+        "run_node_id": "language.run",
+        "source": "let y = 7 in y"
+      }
+    ]
+  },
+  "batch_conformance": {
+    "conformance": true,
+    "failed": 0,
+    "passed": 3,
+    "repeats": 3,
+    "results": [
+      {
+        "conformance": true,
+        "mismatch_indices": [],
+        "repeats": 3,
+        "signatures": [
+          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513",
+          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513",
+          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513"
+        ],
+        "source": "let x = 1 in x"
+      },
+      {
+        "conformance": true,
+        "mismatch_indices": [],
+        "repeats": 3,
+        "signatures": [
+          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345",
+          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345",
+          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345"
+        ],
+        "source": "let x = 2 in x"
+      },
+      {
+        "conformance": true,
+        "mismatch_indices": [],
+        "repeats": 3,
+        "signatures": [
+          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9",
+          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9",
+          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9"
+        ],
+        "source": "let y = 7 in y"
+      }
+    ],
+    "total": 3
+  },
+  "demo": "LLM -> LNC -> Runtime -> Replay"
+}

@@ -2380,3 +2380,19 @@ entries:
     commit: null
     blockers:
       - "LNG-PRX-04 requires revise-stage implementation before execute: add canonical one-click demo command/script and expected-output artifact proving byte-stable replay outputs."
+
+  - cycle_id: 231
+    timestamp_utc: "2026-03-08T11:28:00Z"
+    selected_primary: runtime-replay
+    selected_secondary: validation
+    backlog_item_id: LNG-PRX-04
+    status: staged_revise_success
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "preflight: target artifacts and validator entrypoints exist (scripts/run_public_demo.py, runtime/examples/canonical_public_demo_expected.json, runtime/test_example_app_flow.py, runtime/test_replay_conformance.py, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_example_app_flow runtime.test_replay_conformance (5 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "revise-stage: added canonical one-click public demo command (scripts/run_public_demo.py) with committed byte-stable expected-output artifact and verification test coverage"
+    commit: null
+    blockers: []

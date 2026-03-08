@@ -1,4 +1,6 @@
+import subprocess
 import unittest
+from pathlib import Path
 
 from runtime.example_app_flow import build_example_run_artifact
 
@@ -26,6 +28,27 @@ class ExampleAppFlowTest(unittest.TestCase):
         self.assertTrue(proof["ops_equal"])
         self.assertTrue(proof["events_replayed_equal"])
         self.assertTrue(proof["events_total_equal"])
+
+    def test_public_demo_script_matches_committed_expected_artifact(self) -> None:
+        repo_root = Path("/home/node/.openclaw/workspace/llm-native-lang")
+        script_path = repo_root / "scripts" / "run_public_demo.py"
+        expected_path = repo_root / "runtime" / "examples" / "canonical_public_demo_expected.json"
+
+        result = subprocess.run(
+            [
+                "python3",
+                str(script_path),
+                "--verify-expected",
+                "--expected",
+                str(expected_path),
+            ],
+            cwd=str(repo_root),
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertEqual(result.stdout, expected_path.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
