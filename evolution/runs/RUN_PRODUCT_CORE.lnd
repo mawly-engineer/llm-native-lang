@@ -21,6 +21,7 @@ execution_policy:
   prefer_seed_on_idle_noop: true
 
 backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
+execution_mode_file: evolution/ONE_DAY_SPRINT.lnd
 
 validator_commands:
   - python3 scripts/lnd_validate.py evolution

@@ -292,3 +292,13 @@ buckets:
         title: Build replay conformance harness comparing runtime patch traces across repeated runs
         priority: P1
         status: done
+      - id: LNG-INT-05
+        title: Split runtime_stub.py into deterministic submodules with unchanged behavior and passing regression suite
+        priority: P0
+        status: open
+        deterministic_scope: "Refactor runtime_stub.py into smaller modules while preserving all observable behavior and replay outputs."
+        single_cycle_feasibility: "Implementable via staged extract-and-verify with existing regression tests."
+        explicit_tests:
+          - "python3 -m unittest runtime.test_runtime_stub runtime.test_determinism_regression runtime.test_replay_conformance"
+        product_effect_target: runtime_py_changed
+        done_when: "runtime_stub decomposition merged with green regression tests and no behavioral diffs."

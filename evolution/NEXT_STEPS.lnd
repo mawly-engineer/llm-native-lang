@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 6
+version: 7
 document: NEXT_STEPS
 purpose: Compact executable queue with low process overhead.
-updated_at_utc: 2026-03-08T11:00:00Z
+updated_at_utc: 2026-03-08T11:08:00Z
 
 queue_policy:
   max_active_steps: 7
@@ -11,7 +11,24 @@ queue_policy:
   micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
   archival_rule: "Done steps are not kept here long-term; CYCLE_LOG.lnd is the canonical execution history."
 
-active_queue: []
+active_queue:
+  - step_id: STEP-076
+    backlog_reference: LNG-ECO-18
+    owner_focus: ecosystem
+    goal: Ship one-day public onboarding pack (README, metadata, v0.1.0 release notes skeleton).
+    status: open
+
+  - step_id: STEP-077
+    backlog_reference: LNG-PRX-04
+    owner_focus: practical-value
+    goal: Deliver canonical public demo path (LLM -> LNC -> Runtime -> Replay) with deterministic expected outputs.
+    status: open
+
+  - step_id: STEP-078
+    backlog_reference: LNG-INT-05
+    owner_focus: integration
+    goal: Split runtime_stub.py into deterministic submodules with zero behavior drift under regression suite.
+    status: open
 
 recently_completed:
   - step_id: STEP-075
@@ -25,31 +42,4 @@ recently_completed:
     status: done
   - step_id: STEP-072
     backlog_reference: LNG-CORE-14
-    status: done
-  - step_id: STEP-071
-    backlog_reference: LNG-CORE-13
-    status: done
-  - step_id: STEP-070
-    backlog_reference: LNG-CORE-12
-    status: done
-  - step_id: STEP-069
-    backlog_reference: LNG-INT-04
-    status: done
-  - step_id: STEP-068
-    backlog_reference: LNG-VAL-04
-    status: done
-  - step_id: STEP-067
-    backlog_reference: LNG-RT-04
-    status: done
-  - step_id: STEP-066
-    backlog_reference: LNG-CORE-11
-    status: done
-  - step_id: STEP-065
-    backlog_reference: LNG-ECO-17
-    status: done
-  - step_id: STEP-064
-    backlog_reference: LNG-ECO-16
-    status: done
-  - step_id: STEP-063
-    backlog_reference: LNG-PRX-03
     status: done
