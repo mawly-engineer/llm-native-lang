@@ -8,16 +8,16 @@ state:
   active_flow_id: FLOW-LNG-ECO-18
   active_bucket: ecosystem
   active_backlog_item_id: LNG-ECO-18
-  active_next_step_id: STEP-081
-  current_stage: validate
+  active_next_step_id: STEP-077
+  current_stage: revise
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: create_stage_completed
-  last_error: null
+  last_stage_status: validate_stage_needs_revision
+  last_error: "LNG-ECO-18 missing required public artifacts: README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json"
 
 stage_transition_rules:
   idle_to_create:

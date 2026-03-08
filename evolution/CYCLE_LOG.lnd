@@ -480,3 +480,23 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
+
+  - cycle_id: 243
+    timestamp_utc: "2026-03-08T12:20:00Z"
+    selected_primary: ecosystem
+    selected_secondary: validation
+    backlog_item_id: LNG-ECO-18
+    status: staged_validate_needs_revision
+    tests:
+      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
+      - "preflight: required public artifact targets checked (README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json, scripts/lnd_validate.py, scripts/lnc_validate.py) (MISSING: README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 16 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "validation_review: LNG-ECO-18 remains incomplete because public README, release notes skeleton, and project metadata artifacts are not present; revise stage required before execute"
+    commit: null
+    blockers:
+      - "LNG-ECO-18 requires revise-stage implementation before execute: add README.md, .github/release-notes/v0.1.0.md, and .github/project-metadata.json with deterministic, validated content."
