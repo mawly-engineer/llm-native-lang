@@ -182,6 +182,11 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("null??7")
         self.assertEqual(eval_expr(expr), 7)
 
+    def test_if_condition_requires_bool(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("if 1 then 2 else 3"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
     def test_comparison_and_equality_evaluate_deterministically(self) -> None:
         self.assertTrue(eval_expr(parse_expr("1<2")))
         self.assertTrue(eval_expr(parse_expr("2>=2")))
@@ -306,7 +311,7 @@ class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):
         if branch == "paren":
             return f"({self._gen_expr(rng, depth - 1, vars_in_scope, allow_fn)})"
         if branch == "if":
-            cond = self._gen_expr(rng, depth - 1, vars_in_scope, allow_fn)
+            cond = rng.choice(["true", "false"])
             then_expr = self._gen_expr(rng, depth - 1, vars_in_scope, allow_fn)
             else_expr = self._gen_expr(rng, depth - 1, vars_in_scope, allow_fn)
             return f"if {cond} then {then_expr} else {else_expr}"

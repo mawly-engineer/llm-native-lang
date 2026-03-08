@@ -2,7 +2,7 @@
 version: 11
 document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-08T16:47:00Z
+updated_at_utc: 2026-03-08T16:57:00Z
 
 queue_policy:
   max_active_steps: 5

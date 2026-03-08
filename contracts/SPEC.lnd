@@ -70,6 +70,13 @@ language_minimal_grammar:
     - "args -> expr (',' expr)* ','?"
 
 language_runtime_semantics:
+  if_expression:
+    operator: "if <cond> then <then_expr> else <else_expr>"
+    scope: deterministic_branch_selection
+    behavior:
+      - evaluate_condition_once
+      - require_condition_type_bool_or_raise_E_RT_TYPE
+      - evaluate_only_selected_branch
   object_literal:
     operator: "{\"key\": expr, ...}"
     scope: deterministic_object_construction

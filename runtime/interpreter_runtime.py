@@ -532,7 +532,13 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
 
     if kind == "if":
         cond = _eval(node["cond"], env, context)
-        branch = node["then"] if bool(cond) else node["else"]
+        if not isinstance(cond, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"if condition must evaluate to bool, got {type(cond).__name__}",
+                location={"node_kind": "if", "field": "cond"},
+            )
+        branch = node["then"] if cond else node["else"]
         return _eval(branch, env, context)
 
     if kind == "fn":
