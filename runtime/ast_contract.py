@@ -55,6 +55,10 @@ AST_SCHEMA = {
             "required": ["kind", "span", "entries"],
             "fields": {"kind": "literal:object", "span": "span", "entries": "object_entry[]"},
         },
+        "unary_pos": {
+            "required": ["kind", "span", "operand"],
+            "fields": {"kind": "literal:unary_pos", "span": "span", "operand": "expr"},
+        },
         "unary_neg": {
             "required": ["kind", "span", "operand"],
             "fields": {"kind": "literal:unary_neg", "span": "span", "operand": "expr"},
@@ -139,6 +143,7 @@ _AST_FINGERPRINT_SOURCE = [
     "optional_member_access:kind,span,target,member",
     "list:kind,span,items",
     "object:kind,span,entries",
+    "unary_pos:kind,span,operand",
     "unary_neg:kind,span,operand",
     "unary_not:kind,span,operand",
     "concat_bin:kind,span,left,right",
@@ -305,6 +310,12 @@ def _validate_expr(node: Any) -> None:
                 raise ASTValidationError(f"object.entries[{idx}].key duplicates key: {key}")
             seen.add(key)
             _validate_expr(entry.get("value"))
+        return
+
+    if kind == "unary_pos":
+        _require_kind(node, "unary_pos")
+        _require_span(node, "unary_pos")
+        _validate_expr(node.get("operand"))
         return
 
     if kind == "unary_neg":

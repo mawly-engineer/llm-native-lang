@@ -210,6 +210,12 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
             raise TypeCheckError(f"{path}.target: expected object|null, got {target_ty}")
         return TYPE_ANY
 
+    if kind == "unary_pos":
+        operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
+        if operand_ty != TYPE_NUMBER:
+            raise TypeCheckError(f"{path}.operand: expected number, got {operand_ty}")
+        return TYPE_NUMBER
+
     if kind == "unary_neg":
         operand_ty = _check(node.get("operand"), ctx, f"{path}.operand")
         if operand_ty != TYPE_NUMBER:

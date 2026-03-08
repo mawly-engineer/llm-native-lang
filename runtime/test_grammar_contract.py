@@ -18,7 +18,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "479f159df55b15478ab211e24558f9ecc43115d2811ae8239503c91e6c81bedd",
+            "20891f476012f0688e1d775f68144dff4188bda7b13a5b8601546ceb47292f77",
         )
 
     def test_parse_let_expression(self) -> None:

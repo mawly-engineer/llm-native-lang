@@ -317,6 +317,16 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "ident":
         return env.get(node["name"])
 
+    if kind == "unary_pos":
+        operand = _eval(node["operand"], env, context)
+        if not isinstance(operand, int) or isinstance(operand, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"unary plus expects int operand, got {type(operand).__name__}",
+                location={"node_kind": "unary_pos"},
+            )
+        return operand
+
     if kind == "unary_neg":
         value = _eval(node["operand"], env, context)
         if not isinstance(value, int) or isinstance(value, bool):

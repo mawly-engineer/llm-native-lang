@@ -57,6 +57,11 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr("sum(1)"), env=env)
 
+    def test_unary_plus_requires_number_operand(self) -> None:
+        self.assertEqual(check_expr(parse_expr("+42")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("+true"))
+
     def test_unary_negation_requires_number_operand(self) -> None:
         self.assertEqual(check_expr(parse_expr("-42")), TYPE_NUMBER)
         with self.assertRaises(TypeCheckError):

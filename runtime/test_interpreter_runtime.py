@@ -22,6 +22,10 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("let x = 7 in let f = fn(x)=>x in f(3)")
         self.assertEqual(eval_expr(expr), 3)
 
+    def test_unary_plus_evaluates_operand(self) -> None:
+        expr = parse_expr("+inc(1)")
+        self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), 2)
+
     def test_unary_negation_evaluates_operand(self) -> None:
         expr = parse_expr("-inc(1)")
         self.assertEqual(eval_expr(expr, env={"inc": lambda x: x + 1}), -2)
@@ -206,6 +210,11 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
     def test_equality_rejects_mismatched_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("1==true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+
+    def test_unary_plus_rejects_non_number_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("+true"))
         self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
     def test_unary_logical_not_rejects_non_bool_operand(self) -> None:

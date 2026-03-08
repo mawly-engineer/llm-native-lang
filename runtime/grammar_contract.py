@@ -1,6 +1,6 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
-Scope: expr, let, if, fn, call, optional call (?()), unary negation/logical-not,
+Scope: expr, let, if, fn, call, optional call (?()), unary plus/negation/logical-not,
 string literals, string concatenation, null-coalescing (??), equality/comparison tiers, exponentiation (**), modulo (%), integer division (//), logical and/or, bool literals,
 list literals, object literals, null literals, index access, member access, optional member access (?.), and optional index access (?[ ]).
 """
@@ -47,7 +47,7 @@ GRAMMAR_CONTRACT = {
         "concat -> multiplicative ('+' multiplicative)*",
         "multiplicative -> power (('%' | '//') power)*",
         "power -> unary ('**' power)?",
-        "unary -> '-' unary | '!' unary | postfix",
+        "unary -> '+' unary | '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | optional_call_suffix | index_suffix | optional_index_suffix | member_suffix)*",
         "call_suffix -> '(' args? ')'",
         "optional_call_suffix -> '?(' args? ')'",
@@ -397,6 +397,15 @@ class _Parser:
 
     def _unary(self) -> dict[str, Any]:
         tok = self._peek()
+        if tok.kind == "+":
+            plus = self._eat("+", "+")
+            operand = self._unary()
+            return self._with_span(
+                "unary_pos",
+                plus.start,
+                operand["span"]["end"],
+                operand=operand,
+            )
         if tok.kind == "-":
             minus = self._eat("-", "-")
             operand = self._unary()
