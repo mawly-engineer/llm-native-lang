@@ -598,5 +598,5 @@ entries:
       - "validation_review: LNG-CORE-30 unary plus scope is present across grammar/AST/type/runtime with hardened negative-path checks (+true type failures in type/runtime); fast-lane batched create->validate->execute transitions in one cycle"
       - "execute-stage: finalized LNG-CORE-30 lifecycle (WORK_ITEMS empty, STEP-092 closed, SUPERVISOR_STATE returned to idle)"
       - "governance_note: updated contracts/SPEC.lnd source-of-truth grammar production for unary operator set with timestamp revision"
-    commit: null
+    commit: a3c8962
     blockers: []
