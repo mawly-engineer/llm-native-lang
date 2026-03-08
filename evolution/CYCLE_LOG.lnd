@@ -428,5 +428,5 @@ entries:
       - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
       - "validation_review: LNG-CORE-18 exponentiation scope is present across parser right-associative power tier, AST/type/runtime semantics, and SPEC/runtime contract-backed tests; execute stage can finalize item lifecycle"
-    commit: null
+    commit: b20770b
     blockers: []
