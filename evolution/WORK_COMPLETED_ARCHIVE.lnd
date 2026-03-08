@@ -2,7 +2,7 @@
 kind: completed_archive
 id: WORK-COMPLETED-ARCHIVE-001
 status: active
-updated_at_utc: 2026-03-08T18:00:28Z
+updated_at_utc: 2026-03-08T18:09:22Z
 purpose: Archive of completed work items removed from WORK_ITEMS to keep context small.
 
 completed_items:
@@ -361,3 +361,8 @@ completed_items:
     title: Harden compare-bin error diagnostics with deterministic operand-type location metadata for ordering/equality mismatches
     status: done
     archived_at_utc: 2026-03-08T17:57:00Z
+  - id: LNG-CORE-36
+    bucket: language-core
+    title: Harden equality error diagnostics with deterministic left-operand type metadata for unsupported operand kinds
+    status: done
+    archived_at_utc: 2026-03-08T18:08:50Z

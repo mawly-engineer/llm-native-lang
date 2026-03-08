@@ -265,6 +265,20 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             },
         )
 
+    def test_equality_rejects_unsupported_left_operand_with_type_metadata(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('{"a":1}=={"a":1}'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "compare_bin",
+                "op": "==",
+                "side": "left",
+                "left_type": "dict",
+            },
+        )
+
     def test_plus_rejects_mixed_operand_types(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr('"a"+1'))

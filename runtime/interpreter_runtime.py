@@ -599,7 +599,12 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             raise EvalError(
                 code="E_RT_TYPE",
                 message=f"equality {op} unsupported for left operand type {type(left).__name__}",
-                location={"node_kind": "compare_bin", "op": op, "side": "left"},
+                location={
+                    "node_kind": "compare_bin",
+                    "op": op,
+                    "side": "left",
+                    "left_type": type(left).__name__,
+                },
             )
         if type(left) is not type(right):
             raise EvalError(
