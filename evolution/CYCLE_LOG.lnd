@@ -2057,5 +2057,5 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
       - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
       - "execute-stage: finalized LNG-CORE-14 lifecycle (LANGUAGE_BACKLOG done, STEP-072 closed, SUPERVISOR_STATE returned to idle)"
-    commit: 2c012b0
+    commit: null
     blockers: []
