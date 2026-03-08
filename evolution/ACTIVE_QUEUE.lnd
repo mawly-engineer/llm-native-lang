@@ -18,9 +18,4 @@ queue_policy:
     - evolution/WORK_ITEMS.lnd
     - evolution/CYCLE_LOG.lnd
 
-active_queue:
-  - step_id: STEP-085
-    backlog_reference: LNG-CORE-23
-    owner_focus: language-core
-    goal: Add deterministic optional-chaining operator (?.) for safe object member access across grammar/AST/type/runtime contracts.
-    status: open
+active_queue: []
