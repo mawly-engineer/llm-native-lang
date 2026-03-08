@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T16:27:00Z
+updated_at_utc: 2026-03-08T16:37:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -63,8 +63,8 @@ language_minimal_grammar:
     - "member_suffix -> '.' IDENT | '?.' IDENT"
     - "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'"
     - "list -> '[' args? ']'"
-    - "params -> IDENT (',' IDENT)*"
-    - "args -> expr (',' expr)*"
+    - "params -> IDENT (',' IDENT)* ','?"
+    - "args -> expr (',' expr)* ','?"
 
 language_runtime_semantics:
   index_access:

@@ -11,6 +11,7 @@ hard_rules:
   - use_absolute_paths_only
   - no_tilde_or_relative_paths
   - read_before_edit_or_write
+  - prefer_deterministic_full_rewrite_for_state_and_log_files
   - edit_retry_once_then_write_fallback
   - verify_delta_after_write
   - one_meaningful_unit_per_cycle
@@ -118,8 +119,8 @@ cycle_log_retention_policy:
     - periodic_maintenance_window
 
 cycle_log_write_fallback:
-  primary_method: edit_append
-  fallback_method: full_rewrite_append
+  primary_method: deterministic_full_rewrite_append
+  fallback_method: deterministic_full_rewrite_append
   steps:
     - read_latest_cycle_log
     - reconstruct_with_new_entry
@@ -128,6 +129,24 @@ cycle_log_write_fallback:
   on_fallback_failure:
     - add_blocker: cycle_log_write_failed
     - keep_current_stage
+
+state_file_write_policy:
+  target_files:
+    - evolution/CYCLE_LOG.lnd
+    - evolution/WORK_ITEMS.lnd
+    - evolution/WORK_COMPLETED_ARCHIVE.lnd
+    - evolution/ACTIVE_QUEUE.lnd
+    - evolution/CURRENT_STATE.lnd
+    - evolution/agents/SUPERVISOR_STATE.lnd
+  method: deterministic_full_rewrite
+  protocol:
+    - read_latest_file
+    - reconstruct_exact_next_content
+    - write_full_file
+    - re_read_and_verify_expected_marker_or_state
+  on_failure:
+    - retry_once_after_fresh_read
+    - then_add_blocker_with_path_and_reason
 
 staged_order:
   - create

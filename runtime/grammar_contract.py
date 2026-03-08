@@ -56,8 +56,8 @@ GRAMMAR_CONTRACT = {
         "member_suffix -> '.' IDENT | '?.' IDENT",
         "atom -> 'true' | 'false' | 'null' | STRING | IDENT | NUMBER | list | '(' expr ')'",
         "list -> '[' args? ']'",
-        "params -> IDENT (',' IDENT)*",
-        "args -> expr (',' expr)*",
+        "params -> IDENT (',' IDENT)* ','?",
+        "args -> expr (',' expr)* ','?",
     ],
 }
 
@@ -262,6 +262,8 @@ class _Parser:
             params.append(self._eat("IDENT").value)
             while self._peek().kind == ",":
                 self._eat(",", ",")
+                if self._peek().kind == ")":
+                    break
                 params.append(self._eat("IDENT").value)
         self._eat(")", ")")
         self._eat("ARROW", "=>")
@@ -423,6 +425,8 @@ class _Parser:
                     args.append(self._expr())
                     while self._peek().kind == ",":
                         self._eat(",", ",")
+                        if self._peek().kind == ")":
+                            break
                         args.append(self._expr())
                 close_tok = self._eat(")", ")")
                 node = self._with_span(
@@ -440,6 +444,8 @@ class _Parser:
                     args.append(self._expr())
                     while self._peek().kind == ",":
                         self._eat(",", ",")
+                        if self._peek().kind == ")":
+                            break
                         args.append(self._expr())
                 close_tok = self._eat(")", ")")
                 node = self._with_span(
@@ -523,6 +529,8 @@ class _Parser:
                 items.append(self._expr())
                 while self._peek().kind == ",":
                     self._eat(",", ",")
+                    if self._peek().kind == "]":
+                        break
                     items.append(self._expr())
             close_tok = self._eat("]", "]")
             return self._with_span("list", open_tok.start, close_tok.end, items=items)

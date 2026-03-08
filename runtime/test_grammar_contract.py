@@ -3,6 +3,7 @@ import unittest
 from runtime.grammar_contract import (
     GRAMMAR_CONTRACT,
     GRAMMAR_FINGERPRINT,
+    ParseError,
     parse_expr,
 )
 
@@ -17,7 +18,7 @@ class GrammarContractTests(unittest.TestCase):
     def test_contract_fingerprint_is_stable(self) -> None:
         self.assertEqual(
             GRAMMAR_FINGERPRINT,
-            "d6eef5e29a48975d104f310ec24fecb435d000be66721bcae24516e42326017c",
+            "c99da21a50fe5478a9bc7a7c82fa03f5d6b2313b3df9ca695cd287bb7cbddaa5",
         )
 
     def test_parse_let_expression(self) -> None:
@@ -151,6 +152,27 @@ class GrammarContractTests(unittest.TestCase):
         ast = parse_expr("[1,2,3]")
         self.assertEqual(ast["kind"], "list")
         self.assertEqual(len(ast["items"]), 3)
+
+    def test_parse_trailing_commas_in_fn_call_and_list(self) -> None:
+        fn_ast = parse_expr("fn(a,b,) => a")
+        self.assertEqual(fn_ast["kind"], "fn")
+        self.assertEqual(fn_ast["params"], ["a", "b"])
+
+        call_ast = parse_expr("sum(1,2,)")
+        self.assertEqual(call_ast["kind"], "call")
+        self.assertEqual(len(call_ast["args"]), 2)
+
+        list_ast = parse_expr("[1,2,]")
+        self.assertEqual(list_ast["kind"], "list")
+        self.assertEqual(len(list_ast["items"]), 2)
+
+    def test_parse_rejects_sparse_comma_sequences(self) -> None:
+        with self.assertRaises(ParseError):
+            parse_expr("sum(1,,2)")
+        with self.assertRaises(ParseError):
+            parse_expr("fn(a,,b)=>a")
+        with self.assertRaises(ParseError):
+            parse_expr("[1,,2]")
 
     def test_parse_index_access(self) -> None:
         ast = parse_expr("arr[1]")
