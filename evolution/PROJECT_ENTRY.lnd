@@ -17,12 +17,12 @@ core_file_set:
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd
   - evolution/AGENT_ROUTER.lnd
-  - evolution/LANGUAGE_BACKLOG.lnd
-  - evolution/NEXT_STEPS.lnd
+  - evolution/WORK_ITEMS.lnd
+  - evolution/ACTIVE_QUEUE.lnd
   - evolution/agents/SUPERVISOR_STATE.lnd
   - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
-  - evolution/FEATURES_DONE.lnd
+  - evolution/WORK_ITEMS.lnd
   - evolution/ARCHITECTURE.lnd
   - evolution/METRICS.lnd
   - contracts/SPEC.lnd
@@ -52,13 +52,13 @@ broad_domain_files:
       - deterministic_metrics
       - execution_bridge_notes
   planning_domain:
-    file: evolution/LANGUAGE_BACKLOG.lnd
+    file: evolution/WORK_ITEMS.lnd
     covers:
       - backlog_items
       - priorities
       - status
   execution_domain:
-    file: evolution/NEXT_STEPS.lnd
+    file: evolution/ACTIVE_QUEUE.lnd
     covers:
       - near_term_queue
       - mapped_steps

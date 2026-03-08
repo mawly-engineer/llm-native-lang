@@ -102,7 +102,7 @@ controlled_backlog_seeding:
 cycle_log_retention_policy:
   max_entries: 20
   maintenance_script: scripts/cycle_log_maintain.py
-  also_update: evolution/FEATURES_DONE.lnd
+  also_update: evolution/WORK_ITEMS.lnd
   trigger_when:
     - cycle_log_entries_exceed_max
     - periodic_maintenance_window
@@ -129,8 +129,8 @@ staged_order:
 authoritative_inputs:
   - evolution/PROJECT_ENTRY.lnd
   - evolution/AGENT_ROUTER.lnd
-  - evolution/LANGUAGE_BACKLOG.lnd
-  - evolution/NEXT_STEPS.lnd
+  - evolution/WORK_ITEMS.lnd
+  - evolution/ACTIVE_QUEUE.lnd
   - evolution/agents/SUPERVISOR_STATE.lnd
   - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd

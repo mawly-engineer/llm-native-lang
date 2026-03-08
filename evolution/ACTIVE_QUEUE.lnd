@@ -1,8 +1,8 @@
 @lnd 0.2
 version: 11
-document: NEXT_STEPS
+document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-08T12:20:00Z
+updated_at_utc: 2026-03-08T12:30:00Z
 
 queue_policy:
   max_active_steps: 5
@@ -13,18 +13,12 @@ queue_policy:
     - highest_priority_backlog
     - in_progress_first
     - deterministic_step_id_order
-  micro_tasks_location: evolution/LANGUAGE_BACKLOG.lnd
+  micro_tasks_location: evolution/WORK_ITEMS.lnd
   history_source_of_truth:
-    - evolution/LANGUAGE_BACKLOG.lnd
+    - evolution/WORK_ITEMS.lnd
     - evolution/CYCLE_LOG.lnd
 
 active_queue:
-  - step_id: STEP-077
-    backlog_reference: LNG-ECO-18
-    owner_focus: ecosystem
-    goal: Publish minimal public README + project metadata + v0.1.0 release notes skeleton.
-    status: in_progress
-
   - step_id: STEP-081
     backlog_reference: LNG-CORE-20
     owner_focus: language-core
