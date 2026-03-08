@@ -86,6 +86,14 @@ class TypeContractTests(unittest.TestCase):
         with self.assertRaises(TypeCheckError):
             check_expr(parse_expr('"a"+8%3'))
 
+    def test_integer_division_requires_number_operands(self) -> None:
+        self.assertEqual(check_expr(parse_expr("8//3")), TYPE_NUMBER)
+        with self.assertRaises(TypeCheckError):
+            check_expr(parse_expr("8//false"))
+
+    def test_integer_division_and_modulo_share_multiplicative_precedence(self) -> None:
+        self.assertEqual(check_expr(parse_expr("20//5%3")), TYPE_NUMBER)
+
     def test_list_literal_requires_homogeneous_item_types(self) -> None:
         self.assertEqual(check_expr(parse_expr("[1,2,3]")), list_type(TYPE_NUMBER))
         self.assertEqual(check_expr(parse_expr("[]")), list_type(TYPE_ANY))

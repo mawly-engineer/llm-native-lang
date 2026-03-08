@@ -43,6 +43,19 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             eval_expr(parse_expr("10%0"))
         self.assertEqual(ctx.exception.code, "E_RT_ZERO_DIVISION")
 
+    def test_integer_division_evaluates_deterministically(self) -> None:
+        expr = parse_expr("20//3")
+        self.assertEqual(eval_expr(expr), 6)
+
+    def test_integer_division_uses_floor_semantics_for_negative_operands(self) -> None:
+        expr = parse_expr("-5//2")
+        self.assertEqual(eval_expr(expr), -3)
+
+    def test_integer_division_by_zero_raises_structured_error(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("10//0"))
+        self.assertEqual(ctx.exception.code, "E_RT_ZERO_DIVISION")
+
     def test_list_literal_evaluates_deterministically(self) -> None:
         expr = parse_expr("[1,2,3]")
         self.assertEqual(eval_expr(expr), [1, 2, 3])

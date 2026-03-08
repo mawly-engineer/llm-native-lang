@@ -1,7 +1,7 @@
 """Frozen minimal grammar contract for llm-native-lang.
 
 Scope: expr, let, if, fn, call, unary negation/logical-not,
-string literals, string concatenation, modulo (%), logical and/or, bool literals,
+string literals, string concatenation, modulo (%), integer division (//), logical and/or, bool literals,
 list literals, null literals, and index access.
 """
 
@@ -38,7 +38,7 @@ GRAMMAR_CONTRACT = {
         "logical_or -> logical_and ('or' logical_and)*",
         "logical_and -> concat ('and' concat)*",
         "concat -> multiplicative ('+' multiplicative)*",
-        "multiplicative -> unary ('%' unary)*",
+        "multiplicative -> unary (('%' | '//') unary)*",
         "unary -> '-' unary | '!' unary | postfix",
         "postfix -> atom (call_suffix | index_suffix)*",
         "call_suffix -> '(' args? ')'",
@@ -109,6 +109,10 @@ def _tokenize(source: str) -> List[Token]:
                 i += 1
             else:
                 raise ParseError("unterminated string literal")
+            continue
+        if source.startswith("//", i):
+            tokens.append(Token("//", "//", i, i + 2))
+            i += 2
             continue
         if ch in "()[],=-+!%":
             tokens.append(Token(ch, ch, i, i + 1))
@@ -263,11 +267,15 @@ class _Parser:
 
     def _multiplicative(self) -> dict[str, Any]:
         node = self._unary()
-        while self._peek().kind == "%":
-            self._eat("%", "%")
+        while self._peek().kind in {"%", "//"}:
+            op = self._peek().kind
+            if op == "%":
+                self._eat("%", "%")
+            else:
+                self._eat("//", "//")
             right = self._unary()
             node = self._with_span(
-                "modulo_bin",
+                "modulo_bin" if op == "%" else "int_div_bin",
                 node["span"]["start"],
                 right["span"]["end"],
                 left=node,

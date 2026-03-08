@@ -210,6 +210,29 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         return left % right
 
+    if kind == "int_div_bin":
+        left = _eval(node["left"], env, context)
+        right = _eval(node["right"], env, context)
+        if not isinstance(left, int) or isinstance(left, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"integer division expects int left operand, got {type(left).__name__}",
+                location={"node_kind": "int_div_bin", "side": "left"},
+            )
+        if not isinstance(right, int) or isinstance(right, bool):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"integer division expects int right operand, got {type(right).__name__}",
+                location={"node_kind": "int_div_bin", "side": "right"},
+            )
+        if right == 0:
+            raise EvalError(
+                code="E_RT_ZERO_DIVISION",
+                message="integer division by zero",
+                location={"node_kind": "int_div_bin", "side": "right"},
+            )
+        return left // right
+
     if kind == "logical_bin":
         op = node["op"]
         if op not in {"and", "or"}:
