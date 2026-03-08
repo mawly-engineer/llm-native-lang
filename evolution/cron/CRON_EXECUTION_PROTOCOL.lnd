@@ -13,13 +13,13 @@ protocol:
 
 required_references:
   agent_profile_file: evolution/agents/KAIRO_COORDINATOR.lnd
-  run_profile_file: evolution/runs/RUN_MIGRATION_CORE.lnd
+  run_profile_file: evolution/runs/RUN_PRODUCT_CORE.lnd
 
 minimal_cron_prompt_template:
   text: |
     Load and execute profiles exactly:
     - agent: evolution/agents/KAIRO_COORDINATOR.lnd
-    - run: evolution/runs/RUN_MIGRATION_CORE.lnd
+    - run: evolution/runs/RUN_PRODUCT_CORE.lnd
     Use workspace root: /home/node/.openclaw/workspace/llm-native-lang
     Execute one cycle.
 

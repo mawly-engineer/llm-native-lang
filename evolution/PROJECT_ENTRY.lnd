@@ -16,7 +16,6 @@ core_file_set:
   - evolution/PROJECT_ENTRY.lnd
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd
-  - evolution/MIGRATION_TO_LND_LNC.lnd
   - evolution/AGENT_ROUTER.lnd
   - evolution/LANGUAGE_BACKLOG.lnd
   - evolution/NEXT_STEPS.lnd
@@ -31,7 +30,7 @@ core_file_set:
 
 agent_and_cron_control_files:
   - evolution/agents/KAIRO_COORDINATOR.lnd
-  - evolution/runs/RUN_MIGRATION_CORE.lnd
+  - evolution/runs/RUN_PRODUCT_CORE.lnd
   - evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
   - evolution/cron/INTERNAL_VALIDATION_GATE.lnd
 

@@ -107,7 +107,6 @@ authoritative_inputs:
   - evolution/SUPERVISOR_STATE.lnd
   - evolution/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
-  - evolution/MIGRATION_TO_LND_LNC.lnd
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd
 

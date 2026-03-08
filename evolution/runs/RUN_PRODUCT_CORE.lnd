@@ -1,21 +1,18 @@
 @lnd 0.2
 kind: run_profile
-id: RUN-MIGRATION-CORE-001
+id: RUN-PRODUCT-CORE-001
 status: active
-updated_at_utc: 2026-03-07T15:54:00Z
-purpose: Execute migration-focused evolution cycles.
+updated_at_utc: 2026-03-08T01:23:00Z
+purpose: Execute product-core language/runtime evolution cycles.
 
 mission:
-  - execute_migration_plan
-  - enforce_lnd_lnc_split
-  - minimize_file_sprawl
-
-primary_plan_file: evolution/MIGRATION_TO_LND_LNC.lnd
+  - advance_language_core
+  - advance_runtime_replay
+  - preserve_llm_format_contracts
 
 execution_policy:
   one_unit_per_cycle: true
-  prioritize_migration_items: true
-  use_legacy_markdown_as_source: false
+  prioritize_product_core_items: true
   require_preflight_before_validate: true
   require_clean_git_at_cycle_end: true
   suppress_idle_noop_commits: true
