@@ -20,41 +20,8 @@ entries:
 
   # compacted by scripts/cycle_log_maintain.py
   # removed_entries: 1
-  # removed_cycle_range: 240-240
-  # kept_cycle_range: 241-260
-
-  - cycle_id: 241
-    timestamp_utc: "2026-03-08T12:10:00Z"
-    selected_primary: language-core
-    selected_secondary: validation
-    backlog_item_id: LNG-CORE-19
-    status: done
-    tests:
-      - "git -C /home/node/.openclaw/workspace/llm-native-lang fetch --all --prune && git -C /home/node/.openclaw/workspace/llm-native-lang checkout main && git -C /home/node/.openclaw/workspace/llm-native-lang pull --ff-only origin main (already up to date)"
-      - "preflight: ternary-conditional target artifacts and validator entrypoints exist (runtime/grammar_contract.py, runtime/ast_contract.py, runtime/type_contract.py, runtime/interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
-      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (93 tests, OK)"
-      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
-      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
-      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
-      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
-      - "execute-stage: finalized LNG-CORE-19 lifecycle (LANGUAGE_BACKLOG done, STEP-080 closed, SUPERVISOR_STATE returned to idle)"
-    commit: null
-    blockers: []
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  # removed_cycle_range: 241-241
+  # kept_cycle_range: 242-261
 
   - cycle_id: 242
     timestamp_utc: "2026-03-08T12:14:00Z"
@@ -69,6 +36,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -117,6 +85,7 @@ entries:
 
 
 
+
   - cycle_id: 244
     timestamp_utc: "2026-03-08T12:24:00Z"
     selected_primary: ecosystem
@@ -134,6 +103,7 @@ entries:
       - "revise-stage: added required public artifacts for LNG-ECO-18 (README.md, .github/release-notes/v0.1.0.md, .github/project-metadata.json) and advanced flow to validate"
     commit: 28a31b1
     blockers: []
+
 
 
 
@@ -181,6 +151,7 @@ entries:
 
 
 
+
   - cycle_id: 246
     timestamp_utc: "2026-03-08T12:30:00Z"
     selected_primary: ecosystem
@@ -198,6 +169,7 @@ entries:
       - "execute-stage: finalized LNG-ECO-18 lifecycle (WORK_ITEMS done, STEP-077 closed, SUPERVISOR_STATE returned to idle)"
     commit: null
     blockers: []
+
 
 
 
@@ -243,6 +215,7 @@ entries:
 
 
 
+
   - cycle_id: 248
     timestamp_utc: "2026-03-08T12:38:00Z"
     selected_primary: language-core
@@ -260,6 +233,7 @@ entries:
       - "execute-stage: finalized LNG-CORE-20 with deterministic string ordering support and mixed-type comparison guardrails across type/runtime/tests"
     commit: null
     blockers: []
+
 
 
 
@@ -302,6 +276,7 @@ entries:
 
 
 
+
   - cycle_id: 250
     timestamp_utc: "2026-03-08T15:18:00Z"
     selected_primary: language-core
@@ -315,6 +290,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -357,6 +333,7 @@ entries:
 
 
 
+
   - cycle_id: 252
     timestamp_utc: "2026-03-08T15:26:00Z"
     selected_primary: language-core
@@ -375,6 +352,7 @@ entries:
       - "revise-stage: implemented deterministic null-coalescing operator (??) with right-associative parsing tier, AST schema/type-check/runtime short-circuit semantics, SPEC updates, and coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -411,6 +389,7 @@ entries:
 
 
 
+
   - cycle_id: 254
     timestamp_utc: "2026-03-08T15:33:43Z"
     selected_primary: language-core
@@ -436,6 +415,7 @@ entries:
 
 
 
+
   - cycle_id: 255
     timestamp_utc: "2026-03-08T15:36:00Z"
     selected_primary: language-core
@@ -451,6 +431,7 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
 
 
 
@@ -481,6 +462,7 @@ entries:
 
 
 
+
   - cycle_id: 257
     timestamp_utc: "2026-03-08T15:44:00Z"
     selected_primary: language-core
@@ -498,6 +480,7 @@ entries:
       - "revise-stage: implemented deterministic member-access (.) reads with postfix grammar support, AST/type/runtime semantics, SPEC updates, and coverage"
     commit: null
     blockers: []
+
 
 
 
@@ -523,6 +506,7 @@ entries:
 
 
 
+
   - cycle_id: 259
     timestamp_utc: "2026-03-08T15:54:00Z"
     selected_primary: language-core
@@ -543,6 +527,7 @@ entries:
     blockers: []
 
 
+
   - cycle_id: 260
     timestamp_utc: "2026-03-08T15:58:00Z"
     selected_primary: language-core
@@ -558,3 +543,25 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
+
+
+  - cycle_id: 261
+    timestamp_utc: "2026-03-08T16:02:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-23
+    status: staged_validate_needs_revision
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "preflight: optional-chaining target artifacts and validator entrypoints exist (runtime/grammar_contract.py, runtime/ast_contract.py, runtime/type_contract.py, runtime/interpreter_runtime.py, contracts/SPEC.lnd, scripts/lnd_validate.py, scripts/lnc_validate.py) (PRECHECK_OK)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (107 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "validation_review: LNG-CORE-23 scope not yet implemented (no '?.' optional-chaining token/postfix tier, no OptionalMemberAccess AST/type/runtime semantics, no SPEC contract coverage); revise stage required before execute"
+    commit: null
+    blockers:
+      - "LNG-CORE-23 requires revise-stage implementation before execute: add deterministic optional-chaining (?.) object member-read semantics with null short-circuiting across grammar/AST/type/runtime/contracts."
