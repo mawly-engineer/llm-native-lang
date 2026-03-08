@@ -2,7 +2,7 @@
 version: 6
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T15:36:00Z
+updated_at_utc: 2026-03-08T15:54:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -21,23 +21,6 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
-      - id: LNG-CORE-22
-        title: Add deterministic member-access operator (.) for object fields across grammar/AST/type/runtime contracts
-        priority: P1
-        status: open
-        deterministic_scope: "Introduce dot-member expression parsing and evaluation for object field reads only (no writes/calls), with strict type/runtime errors for missing/non-object targets."
-        explicit_tests:
-          - python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime
-          - python3 scripts/lnd_validate.py evolution
-          - python3 scripts/lnd_validate.py contracts
-          - python3 scripts/lnd_validate.py formats
-          - python3 scripts/lnc_validate.py runtime
-        product_effect_target: runtime_py_changed
-        done_when:
-          - grammar includes deterministic member-access precedence tier
-          - AST/type contracts include MemberAccess node invariants
-          - runtime evaluator resolves object field reads deterministically
-          - SPEC updated with member-access semantics and error codes
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items:

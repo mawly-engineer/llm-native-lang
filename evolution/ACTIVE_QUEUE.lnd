@@ -2,7 +2,7 @@
 version: 11
 document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-08T15:36:00Z
+updated_at_utc: 2026-03-08T15:54:00Z
 
 queue_policy:
   max_active_steps: 5
@@ -18,9 +18,4 @@ queue_policy:
     - evolution/WORK_ITEMS.lnd
     - evolution/CYCLE_LOG.lnd
 
-active_queue:
-  - step_id: STEP-084
-    backlog_reference: LNG-CORE-22
-    owner_focus: language-core
-    goal: Add deterministic member-access operator (.) for object fields across grammar/AST/type/runtime contracts.
-    status: open
+active_queue: []
