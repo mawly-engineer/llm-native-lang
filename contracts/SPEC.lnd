@@ -179,6 +179,20 @@ language_runtime_semantics:
       - negative_exponent_raises_E_RT_DOMAIN
       - zero_to_negative_power_raises_E_RT_DOMAIN
       - right_associative_evaluation_chain
+  string_escape_sequences:
+    operator: "\"...\\...\""
+    scope: deterministic_string_literal_parsing
+    behavior:
+      - parse_escape_sequences_during_lexical_analysis
+      - supported_escapes:
+          - "\\n" → newline_character
+          - "\\t" → tab_character
+          - "\\r" → carriage_return_character
+          - "\\\"" → double_quote_character
+          - "\\\\" → backslash_character
+      - invalid_escape_raises_E_PARSE_INVALID_ESCAPE_with_location_and_escape_char_metadata
+      - unterminated_string_raises_E_PARSE_UNTERMINATED_STRING_with_location
+      - escaped_strings_usable_in_concatenation_list_and_object_contexts
 
 non_goals:
   - human_first_prose_as_primary_system_interface

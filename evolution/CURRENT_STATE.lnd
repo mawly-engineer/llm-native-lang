@@ -2,7 +2,7 @@
 kind: current_state
 id: CURRENT-STATE-001
 status: active
-updated_at_utc: 2026-03-09T16:08:00Z
+updated_at_utc: 2026-03-09T18:38:00Z
 purpose: Minimal context snapshot for low-token execution.
 
 project_focus:
@@ -15,7 +15,7 @@ runtime_status:
   cadence: cron_10m
   supervisor_stage: idle
   blocked: true
-  blocker_id: BLOCKER-GIT-DIRTY-001
+  blocker_id: BLOCKER-GIT-DIRTY-003
   blocker_type: git_cleanliness_violation
 
 open_work:
@@ -23,7 +23,7 @@ open_work:
   active_queue_file: evolution/ACTIVE_QUEUE.lnd
   active_item: null
   active_step: null
-  summary: "Cycle blocked: working tree has uncommitted changes from LNG-CORE-43"
+  summary: "LNG-CORE-45 completed. System blocked pending commit of test files."
 
 quality_gates:
   - python3 scripts/lnd_validate.py evolution

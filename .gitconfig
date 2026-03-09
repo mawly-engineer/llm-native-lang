@@ -1,0 +1,8 @@
+[gc]
+    auto = 256
+    autoDetach = false
+[core]
+    preloadIndex = true
+    fsmonitor = true
+[feature]
+    manyFiles = true

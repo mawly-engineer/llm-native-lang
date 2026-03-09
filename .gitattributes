@@ -1,0 +1,10 @@
+# Git performance optimizations
+*.lnd text eol=lf
+*.lnc text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+
+# Binary files - don't diff
+*.pkl binary
+*.db binary
+__pycache__/* binary

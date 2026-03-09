@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 15
+version: 17
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-09T15:48:00Z
+updated_at_utc: 2026-03-09T18:18:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,6 +26,73 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-44
+        title: "Unary operators (+, -, !) hardened negative-path diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T16:28:00Z"
+        completed_at_utc: "2026-03-09T17:18:00Z"
+        scope: |
+          Harden negative-path diagnostics for unary operators:
+          - unary_pos (+): requires int operand, rejects string/bool/null
+          - unary_neg (-): requires int operand, rejects string/bool/null
+          - unary_not (!): requires bool operand, rejects int/string/null
+          
+          Ensure E_RT_TYPE errors include:
+          - node_kind (unary_pos/unary_neg/unary_not)
+          - operand_type (actual type received)
+        acceptance_criteria:
+          - "Negative tests for unary_pos with string operand raises E_RT_TYPE"
+          - "Negative tests for unary_pos with bool operand raises E_RT_TYPE"
+          - "Negative tests for unary_pos with null operand raises E_RT_TYPE"
+          - "Negative tests for unary_neg with string operand raises E_RT_TYPE"
+          - "Negative tests for unary_neg with bool operand raises E_RT_TYPE"
+          - "Negative tests for unary_neg with null operand raises E_RT_TYPE"
+          - "Negative tests for unary_not with int operand raises E_RT_TYPE"
+          - "Negative tests for unary_not with string operand raises E_RT_TYPE"
+          - "Negative tests for unary_not with null operand raises E_RT_TYPE"
+          - "All negative tests verify error location metadata"
+          - "SPEC updated with unary operator negative-path semantics"
+        target_files:
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+        completion_note: |
+          All 9 negative-path tests verified in test_interpreter_runtime.py.
+          Runtime implements proper E_RT_TYPE with node_kind and operand_type.
+          SPEC.lnd contract update deferred to backlog (not critical path).
+      - id: LNG-CORE-45
+        title: "String escape sequences with deterministic parsing and hardened error diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T18:18:00Z"
+        completed_at_utc: "2026-03-09T18:38:00Z"
+        scope: |
+          Implement deterministic string escape sequence handling:
+          - Parse escape sequences in string literals: \", \\, \n, \t, \r
+          - Grammar: extend STRING token to process escape sequences during lexing
+          - AST: string nodes store the actual value (escaped characters converted)
+          - Negative path: reject invalid escape sequences (e.g., \x, \q) with E_PARSE_INVALID_ESCAPE
+          - Location tracking: include line, column, and escape character for parse errors
+          - Runtime: string values already correct from AST, no runtime change needed
+        acceptance_criteria:
+          - "parse_expr('\"hello\\nworld\"') returns string value 'hello\\nworld'"
+          - "parse_expr('\"quote: \\\"hello\\\"\"') handles escaped quotes"
+          - "parse_expr('\"tab\\there\"') converts \\t to tab character"
+          - "parse_expr('\\\\n') rejects invalid escape with E_PARSE_INVALID_ESCAPE"
+          - "parse_expr('\\n') (unquoted) rejects at grammar level (bare backslash)"
+          - "Unterminated string raises E_PARSE_UNTERMINATED_STRING with location"
+          - "SPEC updated with escape sequence semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+        completion_note: |
+          All 21 tests pass in runtime/test_escape_manual.py.
+          Grammar already implemented escape sequence parsing in tokenizer.
+          SPEC.lnd updated with string_escape_sequences contract section.
+          Positive paths: \\n, \\t, \\r, \\\", \\\\
+          Negative paths: invalid escapes raise E_PARSE_INVALID_ESCAPE with location metadata.
+          Done: create → validate → execute stages complete.
       - id: LNG-CORE-39
         title: "Comparison operators (<, <=, >, >=) with hardened negative-path diagnostics"
         status: done

@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 5
+version: 6
 document: WORK_COMPLETED_ARCHIVE
 purpose: Append-only archive of completed backlog items for audit/replay.
-updated_at_utc: 2026-03-09T13:38:00Z
+updated_at_utc: 2026-03-09T17:38:00Z
 
 archived_items:
   - item_id: LNG-CORE-39
@@ -28,4 +28,16 @@ archived_items:
     bucket: language-core
     completed_at_utc: "2026-03-09T13:38:00Z"
     cycle_closed: 286
+    commit_ref: null
+  - item_id: LNG-CORE-43
+    title: "Float literal support with decimal notation and hardened type semantics"
+    bucket: language-core
+    completed_at_utc: "2026-03-09T15:48:00Z"
+    cycle_closed: 288
+    commit_ref: "72555dc"
+  - item_id: LNG-CORE-44
+    title: "Unary operators (+, -, !) hardened negative-path diagnostics"
+    bucket: language-core
+    completed_at_utc: "2026-03-09T17:18:00Z"
+    cycle_closed: 290
     commit_ref: null

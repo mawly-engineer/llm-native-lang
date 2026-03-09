@@ -556,5 +556,55 @@ class InterpreterRuntimePropertyFuzzTest(unittest.TestCase):
                 parse_expr(mutated)
 
 
+class StringEscapeSequenceTest(unittest.TestCase):
+    """LNG-CORE-45: String escape sequences with deterministic parsing."""
+
+    def test_escape_newline_in_string(self) -> None:
+        """parse_expr('"hello\\nworld"') returns string value 'hello\nworld'"""
+        expr = parse_expr('"hello\\nworld"')
+        self.assertEqual(expr["kind"], "string")
+        self.assertEqual(expr["value"], "hello\nworld")
+
+    def test_escape_tab_in_string(self) -> None:
+        """parse_expr('"tab\\there"') converts \\t to tab character"""
+        expr = parse_expr('"tab\\there"')
+        self.assertEqual(expr["value"], "tab\there")
+
+    def test_escape_carriage_return_in_string(self) -> None:
+        """parse_expr handles \\r escape sequence"""
+        expr = parse_expr('"line1\\rline2"')
+        self.assertEqual(expr["value"], "line1\rline2")
+
+    def test_escape_quote_in_string(self) -> None:
+        """parse_expr('"quote: \\\"hello\\\""') handles escaped quotes"""
+        expr = parse_expr('"quote: \\\"hello\\\""')
+        self.assertEqual(expr["value"], 'quote: "hello"')
+
+    def test_escape_backslash_in_string(self) -> None:
+        """parse_expr handles escaped backslash"""
+        expr = parse_expr('"path: \\\\\\home\\\\user"')
+        self.assertEqual(expr["value"], "path: \\home\\user")
+
+    def test_invalid_escape_raises_structured_error(self) -> None:
+        """parse_expr('\\\\n') rejects invalid escape with E_PARSE_INVALID_ESCAPE"""
+        with self.assertRaises(ParseError) as ctx:
+            parse_expr('"\\x"')
+        self.assertEqual(ctx.exception.code, "E_PARSE_INVALID_ESCAPE")
+        self.assertIn("escape_char", ctx.exception.location)
+        self.assertEqual(ctx.exception.location["escape_char"], "x")
+
+    def test_unterminated_string_raises_structured_error(self) -> None:
+        """Unterminated string raises E_PARSE_UNTERMINATED_STRING with location"""
+        with self.assertRaises(ParseError) as ctx:
+            parse_expr('"unterminated')
+        self.assertEqual(ctx.exception.code, "E_PARSE_UNTERMINATED_STRING")
+        self.assertIn("column", ctx.exception.location)
+
+    def test_bare_backslash_not_valid(self) -> None:
+        """parse_expr('\\n') (unquoted) rejects at grammar level"""
+        with self.assertRaises(ParseError):
+            parse_expr("\\n")
+
+
 if __name__ == "__main__":
     unittest.main()

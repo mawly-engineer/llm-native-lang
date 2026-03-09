@@ -78,7 +78,13 @@ class Token:
 
 
 class ParseError(ValueError):
-    pass
+    """Structured parse error with location metadata."""
+
+    def __init__(self, message: str, code: str = "E_PARSE_GENERIC", location: dict | None = None) -> None:
+        super().__init__(message)
+        self.message = message
+        self.code = code
+        self.location = location or {}
 
 
 def _tokenize(source: str) -> List[Token]:
@@ -105,7 +111,11 @@ def _tokenize(source: str) -> List[Token]:
                     break
                 if cur == "\\":
                     if i + 1 >= len(source):
-                        raise ParseError("unterminated string literal")
+                        raise ParseError(
+                            "unterminated string literal",
+                            code="E_PARSE_UNTERMINATED_STRING",
+                            location={"line": 1, "column": start}
+                        )
                     nxt = source[i + 1]
                     if nxt == '"':
                         chars.append('"')
@@ -115,14 +125,24 @@ def _tokenize(source: str) -> List[Token]:
                         chars.append("\n")
                     elif nxt == "t":
                         chars.append("\t")
+                    elif nxt == "r":
+                        chars.append("\r")
                     else:
-                        raise ParseError(f"unsupported string escape: \\{nxt}")
+                        raise ParseError(
+                            f"unsupported string escape: \\{nxt}",
+                            code="E_PARSE_INVALID_ESCAPE",
+                            location={"line": 1, "column": i, "escape_char": nxt}
+                        )
                     i += 2
                     continue
                 chars.append(cur)
                 i += 1
             else:
-                raise ParseError("unterminated string literal")
+                raise ParseError(
+                    "unterminated string literal",
+                    code="E_PARSE_UNTERMINATED_STRING",
+                    location={"line": 1, "column": start}
+                )
             continue
         if source.startswith("??", i):
             tokens.append(Token("??", "??", i, i + 2))
