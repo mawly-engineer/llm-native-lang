@@ -306,6 +306,102 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
             },
         )
 
+    def test_unary_plus_rejects_string_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('+"hello"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_pos",
+                "operand_type": "str",
+            },
+        )
+
+    def test_unary_plus_rejects_null_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("+null"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_pos",
+                "operand_type": "NoneType",
+            },
+        )
+
+    def test_unary_neg_rejects_string_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('-"hello"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_neg",
+                "operand_type": "str",
+            },
+        )
+
+    def test_unary_neg_rejects_bool_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("-true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_neg",
+                "operand_type": "bool",
+            },
+        )
+
+    def test_unary_neg_rejects_null_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("-null"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_neg",
+                "operand_type": "NoneType",
+            },
+        )
+
+    def test_unary_not_rejects_int_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("!1"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_not",
+                "operand_type": "int",
+            },
+        )
+
+    def test_unary_not_rejects_string_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('!"hello"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_not",
+                "operand_type": "str",
+            },
+        )
+
+    def test_unary_not_rejects_null_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("!null"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(
+            ctx.exception.location,
+            {
+                "node_kind": "unary_not",
+                "operand_type": "NoneType",
+            },
+        )
+
     def test_unary_logical_not_rejects_non_bool_operand(self) -> None:
         with self.assertRaises(EvalError) as ctx:
             eval_expr(parse_expr("!1"))
