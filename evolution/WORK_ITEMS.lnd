@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 10
+version: 11
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-09T10:39:00Z
+updated_at_utc: 2026-03-09T11:23:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -46,6 +46,33 @@ buckets:
           - "Runtime implements int comparison and string comparison"
           - "Negative tests: int-string mix, bool operands, null operands"
           - "SPEC updated with comparison runtime semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+      - id: LNG-CORE-40
+        title: "Power operator (**) with hardened negative-path diagnostics"
+        status: open
+        priority: P1
+        created_at_utc: "2026-03-09T11:23:00Z"
+        scope: |
+          Implement deterministic power operator (**) for integer exponentiation:
+          - Base and exponent must both be int
+          - Result is int (base ** exponent)
+          - Negative exponents raise E_RT_DOMAIN (no float results)
+          - Zero to negative power raises E_RT_DOMAIN
+          - Large results may overflow (Python int handles arbitrary precision)
+          - Mixed types or non-int operands raise E_RT_TYPE with left_type/right_type metadata
+        acceptance_criteria:
+          - "Grammar contract has '**' token in power tier"
+          - "AST contract has PowerBin node with left/right fields"
+          - "Type contract validates both operands are int"
+          - "Runtime implements int power with negative exponent check"
+          - "Negative tests: int-string mix, bool operands, negative exponent, zero to negative power"
+          - "SPEC updated with power operator runtime semantics"
         target_files:
           - runtime/grammar_contract.py
           - runtime/ast_contract.py
