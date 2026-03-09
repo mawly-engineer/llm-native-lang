@@ -59,3 +59,25 @@ entries:
       - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
     commit: null
     blockers: []
+
+  - cycle_id: 281
+    timestamp_utc: "2026-03-09T11:43:00Z"
+    selected_primary: language-core
+    selected_secondary: validation
+    backlog_item_id: LNG-CORE-40
+    status: done
+    tests:
+      - "git fetch --all --prune && git checkout main && git pull --ff-only origin main (already up to date)"
+      - "preflight: power operator target artifacts exist (grammar_contract has '**' token, ast_contract has power_bin node, type_contract validates both operands as int, interpreter_runtime implements int power with negative exponent check)"
+      - "python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime (157 tests, OK)"
+      - "python3 -m unittest runtime.test_format_validators (5 tests, OK)"
+      - "python3 scripts/lnd_validate.py evolution (PASS validated 17 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py contracts (PASS validated 6 .lnd file(s))"
+      - "python3 scripts/lnd_validate.py formats (PASS validated 10 .lnd file(s))"
+      - "python3 scripts/lnc_validate.py runtime (PASS validated 3 .lnc file(s))"
+      - "validation_review: LNG-CORE-40 power operator scope present across grammar/AST/type/runtime with hardened negative-path diagnostics (negative tests: int-string mix, bool operands, negative exponent, zero to negative power)"
+      - "negative-path-tests: power_bin rejects int-string operands with E_RT_TYPE, rejects bool operands with E_RT_TYPE, rejects negative exponent with E_RT_DOMAIN"
+      - "execute-stage: finalized LNG-CORE-40 lifecycle (WORK_ITEMS done, WORK_COMPLETED_ARCHIVE updated, SUPERVISOR_STATE returned to idle)"
+      - "governance_note: updated contracts/SPEC.lnd source-of-truth runtime semantics for power operator with timestamp revision"
+    commit: null
+    blockers: []

@@ -376,3 +376,13 @@ completed_items:
     title: Harden additive and unary-plus error diagnostics with deterministic operand-type metadata for negative-path failures
     status: done
     archived_at_utc: 2026-03-08T18:37:00Z
+  - id: LNG-CORE-39
+    bucket: language-core
+    title: Comparison operators (<, <=, >, >=) with hardened negative-path diagnostics
+    status: done
+    archived_at_utc: 2026-03-09T11:09:00Z
+  - id: LNG-CORE-40
+    bucket: language-core
+    title: Power operator (**) with hardened negative-path diagnostics
+    status: done
+    archived_at_utc: 2026-03-09T11:43:00Z
