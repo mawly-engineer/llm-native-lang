@@ -18,6 +18,16 @@ hard_rules:
   - preserve_staged_order
   - allow_multi_stage_progress_for_same_item_in_one_cycle
   - append_cycle_log_on_meaningful_change_only
+  - skip_full_test_output_on_no_change
+  - compact_cycle_log_auto_after_n_cycles: 10
+  - lightweight_mode_for_small_items:
+      enabled: true
+      max_supervisor_stages: 2
+      eligible_for:
+        - spec_update
+        - doc_tweak
+        - governance_note
+        - single_file_change
   - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
   - keep_next_steps_compact
   - enforce_preflight_before_validate

@@ -44,7 +44,8 @@ maintenance_commands:
   - python3 scripts/work_items_compact.py
 
 maintenance_enforcement:
-  run_timing: end_of_every_cycle
+  run_timing: every_n_cycles
+  run_every_n_cycles: 10
   require_post_maintenance_git_check: true
   auto_commit_if_only_maintenance_diffs: true
   maintenance_diff_paths:

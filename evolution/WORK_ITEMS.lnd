@@ -1,11 +1,16 @@
 @lnd 0.2
-version: 13
+version: 14
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-09T12:13:00Z
+updated_at_utc: 2026-03-09T13:03:00Z
 
 selection_policy:
-  per_cycle_execution_limit: 1
+  per_cycle_execution_limit: 3
+  batch_by_stage_type: true
+  lightweight_stages:
+    - spec_update
+    - doc_tweak
+    - governance_note
   default_pick_order:
     - highest_priority
     - open_status
@@ -101,6 +106,32 @@ buckets:
           - "Runtime implements int modulo with zero divisor check"
           - "Negative tests: int-string mix, bool operands, zero divisor, float operands"
           - "SPEC updated with modulo operator runtime semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+      - id: LNG-CORE-42
+        title: "Integer division operator (//) with hardened negative-path diagnostics"
+        status: open
+        priority: P1
+        created_at_utc: "2026-03-09T13:03:00Z"
+        scope: |
+          Implement deterministic integer division operator (//) for integer arithmetic:
+          - Dividend and divisor must both be int
+          - Result is int (floor division: dividend // divisor)
+          - Divisor of zero raises E_RT_ZERO_DIVISION (division by zero)
+          - Floor division: rounds down toward negative infinity (-5 // 2 = -3)
+          - Mixed types or non-int operands raise E_RT_TYPE with left_type/right_type metadata
+        acceptance_criteria:
+          - "Grammar contract has '//' token in multiplicative tier"
+          - "AST contract has FloorDivBin node with left/right fields"
+          - "Type contract validates both operands are int"
+          - "Runtime implements int floor division with zero divisor check"
+          - "Negative tests: int-string mix, bool operands, zero divisor, float operands"
+          - "SPEC updated with floor division runtime semantics"
         target_files:
           - runtime/grammar_contract.py
           - runtime/ast_contract.py
