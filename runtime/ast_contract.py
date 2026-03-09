@@ -127,7 +127,7 @@ AST_SCHEMA = {
         },
         "number": {
             "required": ["kind", "span", "value"],
-            "fields": {"kind": "literal:number", "span": "span", "value": "int"},
+            "fields": {"kind": "literal:number", "span": "span", "value": "int|float"},
         },
         "bool": {
             "required": ["kind", "span", "value"],
@@ -170,7 +170,7 @@ _AST_FINGERPRINT_SOURCE = [
     "logical_bin:kind,span,op,left,right",
     "compare_bin:kind,span,op,left,right",
     "ident:kind,span,name",
-    "number:kind,span,value",
+    "number:kind,span,value:int|float",
     "bool:kind,span,value",
     "null:kind,span,value",
     "string:kind,span,value",
@@ -427,8 +427,9 @@ def _validate_expr(node: Any) -> None:
     if kind == "number":
         _require_kind(node, "number")
         _require_span(node, "number")
-        if not isinstance(node.get("value"), int):
-            raise ASTValidationError("number.value must be an int")
+        value = node.get("value")
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            raise ASTValidationError("number.value must be an int or float")
         return
 
     if kind == "bool":

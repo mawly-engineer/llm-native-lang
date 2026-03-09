@@ -2,7 +2,7 @@
 kind: current_state
 id: CURRENT-STATE-001
 status: active
-updated_at_utc: 2026-03-09T13:03:00Z
+updated_at_utc: 2026-03-09T16:08:00Z
 purpose: Minimal context snapshot for low-token execution.
 
 project_focus:
@@ -12,15 +12,18 @@ project_focus:
 
 runtime_status:
   branch: main
-  cadence: cron_2m
-  supervisor_stage: validate
+  cadence: cron_10m
+  supervisor_stage: idle
+  blocked: true
+  blocker_id: BLOCKER-GIT-DIRTY-001
+  blocker_type: git_cleanliness_violation
 
 open_work:
   source_file: evolution/WORK_ITEMS.lnd
   active_queue_file: evolution/ACTIVE_QUEUE.lnd
-  active_item: LNG-CORE-42
-  active_step: STEP-104
-  summary: "Implement integer division operator (//) with hardened negative-path diagnostics"
+  active_item: null
+  active_step: null
+  summary: "Cycle blocked: working tree has uncommitted changes from LNG-CORE-43"
 
 quality_gates:
   - python3 scripts/lnd_validate.py evolution

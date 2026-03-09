@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 4
+version: 5
 document: WORK_COMPLETED_ARCHIVE
 purpose: Append-only archive of completed backlog items for audit/replay.
-updated_at_utc: 2026-03-09T12:13:00Z
+updated_at_utc: 2026-03-09T13:38:00Z
 
 archived_items:
   - item_id: LNG-CORE-39
@@ -22,4 +22,10 @@ archived_items:
     bucket: language-core
     completed_at_utc: "2026-03-09T12:13:00Z"
     cycle_closed: 283
+    commit_ref: null
+  - item_id: LNG-CORE-42
+    title: "Integer division operator (//) with hardened negative-path diagnostics"
+    bucket: language-core
+    completed_at_utc: "2026-03-09T13:38:00Z"
+    cycle_closed: 286
     commit_ref: null

@@ -172,6 +172,16 @@ def _tokenize(source: str) -> List[Token]:
             j = i + 1
             while j < len(source) and source[j].isdigit():
                 j += 1
+            # Check for decimal point for float literals
+            if j < len(source) and source[j] == ".":
+                k = j + 1
+                while k < len(source) and source[k].isdigit():
+                    k += 1
+                # Require at least one digit after decimal
+                if k > j + 1:
+                    tokens.append(Token("NUMBER", source[i:k], i, k))
+                    i = k
+                    continue
             tokens.append(Token("NUMBER", source[i:j], i, j))
             i = j
             continue
@@ -539,6 +549,9 @@ class _Parser:
             return self._with_span("ident", ident.start, ident.end, name=ident.value)
         if tok.kind == "NUMBER":
             number = self._eat("NUMBER")
+            # Parse as float if contains decimal point, else int
+            if "." in number.value:
+                return self._with_span("number", number.start, number.end, value=float(number.value))
             return self._with_span("number", number.start, number.end, value=int(number.value))
         if tok.kind == "[":
             open_tok = self._eat("[", "[")

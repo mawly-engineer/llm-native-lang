@@ -24,6 +24,8 @@ class TypeSpec:
 
 
 TYPE_NUMBER = TypeSpec("number")
+TYPE_INT = TypeSpec("int")
+TYPE_FLOAT = TypeSpec("float")
 TYPE_BOOL = TypeSpec("bool")
 TYPE_STRING = TypeSpec("string")
 TYPE_NULL = TypeSpec("null")
@@ -72,9 +74,11 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
 
     if kind == "number":
         value = node.get("value")
-        if not isinstance(value, int):
-            raise TypeCheckError(f"{path}.value: number literal must be int")
-        return TYPE_NUMBER
+        if isinstance(value, int) and not isinstance(value, bool):
+            return TYPE_INT
+        if isinstance(value, float):
+            return TYPE_FLOAT
+        raise TypeCheckError(f"{path}.value: number literal must be int or float")
 
     if kind == "bool":
         value = node.get("value")

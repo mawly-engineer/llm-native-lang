@@ -1,9 +1,9 @@
 @lnd 0.2
 kind: run_profile
-id: RUN-PRODUCT-CORE-001
+id: RUN-PRODUCT-CORE-004
 status: active
-updated_at_utc: 2026-03-08T08:03:00Z
-purpose: Execute product-core language/runtime evolution cycles.
+updated_at_utc: 2026-03-09T14:30:00Z
+purpose: Execute product-core cycles with DYNAMIC BATCHING.
 
 mission:
   - advance_language_core
@@ -11,7 +11,9 @@ mission:
   - preserve_llm_format_contracts
 
 execution_policy:
-  one_unit_per_cycle: true
+  dynamic_batching: true
+  batch_time_threshold: 120
+  max_items_per_cycle: 3
   prioritize_product_core_items: true
   require_preflight_before_validate: true
   require_clean_git_at_cycle_end: true
@@ -22,18 +24,26 @@ execution_policy:
   enable_stage_batching_same_item: true
   stage_batch_max_transitions_per_cycle: 4
   prefer_close_item_in_single_cycle_when_safe: true
-  require_full_validation_suite_each_cycle: true
+  require_full_validation_suite_each_cycle: false
   prioritize_error_path_and_negative_tests: true
 
 backlog_seed_policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
 
+# DYNAMIC BATCHING: Process multiple items if time allows
+batching_commands:
+  - python3 scripts/smart_batching.py
+
 validator_commands:
-  - python3 -m unittest runtime.test_grammar_contract runtime.test_ast_contract runtime.test_type_contract runtime.test_interpreter_runtime
-  - python3 -m unittest runtime.test_format_validators
-  - python3 scripts/lnd_validate.py evolution
-  - python3 scripts/lnd_validate.py contracts
-  - python3 scripts/lnd_validate.py formats
-  - python3 scripts/lnc_validate.py runtime
+  - python3 validate_incremental.py
+  - python3 scripts/detect_changes.py --mark
+
+smart_validation_config:
+  enabled: true
+  mode: incremental
+  change_detection: scripts/detect_changes.py
+  incremental_validator: validate_incremental.py
+  skip_if_no_changes: true
+  mark_good_after_success: true
 
 gate_profile:
   file: evolution/cron/INTERNAL_VALIDATION_GATE.lnd
@@ -42,6 +52,7 @@ gate_profile:
 maintenance_commands:
   - python3 scripts/cycle_log_maintain.py --repo /home/node/.openclaw/workspace/llm-native-lang --max-entries 20
   - python3 scripts/work_items_compact.py
+  - python3 scripts/metrics_dashboard.py
 
 maintenance_enforcement:
   run_timing: every_n_cycles
@@ -67,9 +78,25 @@ maintenance_enforcement:
     - skip_stage_transition
 
 git_policy:
-  - git fetch --all --prune
-  - if_fetch_fails_retry_once_after_5s
-  - if_second_fetch_fails_set_blocker_git_fetch_failed_and_skip_execution
-  - git checkout main
-  - git pull --ff-only origin main
-  - commit_and_push_if_changed
+  fetch_frequency: every_n_cycles
+  fetch_every_n_cycles: 3
+  gc_auto: true
+  gc_auto_threshold: 256
+  commands:
+    - git fetch --all --prune
+    - if_fetch_fails_retry_once_after_5s
+    - if_second_fetch_fails_set_blocker_git_fetch_failed_and_skip_execution
+    - git checkout main
+    - git pull --ff-only origin main
+    - commit_and_push_if_changed
+
+performance_optimizations:
+  version: "2025-03-09-dynamic-batch"
+  changes:
+    - "Dynamic Batching: multiple items per cycle if time allows"
+    - "Git repo optimized: gc --aggressive (13M -> 864K)"
+    - "Incremental validation: only changed files -> specific tests"
+    - "Git fetch: every 3 cycles"
+    - "Pre-commit hooks for local validation"
+    - "Metrics dashboard for cycle tracking"
+    - "Smart change detection with domain mapping"

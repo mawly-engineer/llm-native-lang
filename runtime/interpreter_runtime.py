@@ -569,10 +569,14 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         if op in {"<", "<=", ">", ">="}:
             left_is_int = isinstance(left, int) and not isinstance(left, bool)
             right_is_int = isinstance(right, int) and not isinstance(right, bool)
+            left_is_float = isinstance(left, float)
+            right_is_float = isinstance(right, float)
+            left_is_num = left_is_int or left_is_float
+            right_is_num = right_is_int or right_is_float
             left_is_str = isinstance(left, str)
             right_is_str = isinstance(right, str)
 
-            if left_is_int and right_is_int:
+            if left_is_num and right_is_num:
                 return {
                     "<": left < right,
                     "<=": left <= right,
@@ -591,7 +595,7 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             raise EvalError(
                 code="E_RT_TYPE",
                 message=(
-                    f"comparison {op} expects both operands as int or both as string, "
+                    f"comparison {op} expects both operands as int, float, or both as string, "
                     f"got {type(left).__name__} and {type(right).__name__}"
                 ),
                 location={
