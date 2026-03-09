@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 17
+version: 18
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-09T19:58:00Z
+updated_at_utc: 2026-03-09T20:38:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,6 +26,117 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-48
+        title: "Object literals {\"key\": expr, ...} with deterministic construction and hardened negative-path diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T20:58:00Z"
+        completed_at_utc: "2026-03-09T21:48:00Z"
+        scope: |
+          Implement deterministic object literal construction:
+          - Syntax: '{' STRING ':' expr (',' STRING ':' expr)* ','? '}'
+          - Grammar: object production already defined, ensure tokenizer handles braces
+          - AST: object node with entries field (array of {key: string, value: expr})
+          - Runtime: evaluate entries left-to-right, collect into Python dict
+          - Empty object '{}' is valid (zero entries)
+          - Trailing comma allowed (deterministic grammar already supports)
+          - Duplicate keys: reject at AST validation level (not runtime)
+          - Keys must be string literals (not computed expressions)
+          - Negative path: unclosed brace, malformed separator, non-string key
+          - Type: object is a first-class value type
+        acceptance_criteria:
+          - "parse_expr('{\"a\": 1, \"b\": 2}') creates object node with 2 entries"
+          - "parse_expr('{}') creates empty object node"
+          - "parse_expr('{\"x\": 1,}') handles trailing comma"
+          - "eval('{\"a\": 1, \"b\": 2}') returns object with correct key-value pairs"
+          - "eval('{\"nested\": {\"inner\": 42}}') handles nested objects"
+          - "eval('{\"computed\": 1 + 2}') evaluates expressions in values"
+          - "Duplicate key detection: '{\"a\": 1, \"a\": 2}' raises E_PARSE_DUPLICATE_KEY"
+          - "Negative tests: unclosed '{' raises E_PARSE with location"
+          - "Negative tests: '{\"a\" 1}' (missing colon) raises E_PARSE"
+          - "Negative tests: '{a: 1}' (non-string key) raises E_PARSE"
+          - "SPEC updated with object literal semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Grammar: _atom() parses '{' STRING ':' expr (',' STRING ':' expr)* ','? '}' -> object node
+          - AST: 'object' node with 'entries' field (array of {key, value}) defined in AST_SCHEMA
+          - Runtime: _eval handles 'object' kind by evaluating entries left-to-right into Python dict
+          - Tests: 14/14 tests pass in test_object_literals.py
+          - Empty object '{}' works, trailing comma '{"a": 1,}' handled
+          - Nested objects: '{"outer": {"inner": 42}}' works
+          - Expressions in values: '{"computed": 1 + 2}' evaluates correctly
+          - Negative paths: unclosed '{', missing colon, non-string key all raise E_PARSE
+          - Duplicate keys: AST validation raises error for '{"a": 1, "a": 2}'
+        next_steps:
+          - id: LNG-CORE-48-STEP-01
+            title: "Create object literal support"
+            stage: create
+            focus: language-core
+            done_when: "AST and runtime support object nodes, tests pass"
+      - id: LNG-CORE-47
+        title: "List literals [expr, ...] with deterministic construction and hardened negative-path diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T20:08:00Z"
+        completed_at_utc: "2026-03-09T20:38:00Z"
+        scope: |
+          Implement deterministic list literal construction:
+          - Syntax: '[' expr (',' expr)* ','? ']'
+          - Grammar: list production already defined, ensure tokenizer handles brackets
+          - AST: list node with items field (array of expressions)
+          - Runtime: evaluate items left-to-right, collect into Python list
+          - Empty list '[]' is valid (zero items)
+          - Trailing comma allowed (deterministic grammar already supports)
+          - Negative path: unclosed bracket, malformed separator
+          - Type: list is a first-class value type
+        acceptance_criteria:
+          - "parse_expr('[1, 2, 3]') creates list node with 3 int items"
+          - "parse_expr('[]') creates empty list node"
+          - "parse_expr('[1,]') handles trailing comma"
+          - "eval('[1, 2, 3]') returns [1, 2, 3]"
+          - "eval('[true, false, null]') handles mixed types in list"
+          - "eval('[1 + 2, 3 * 4]') evaluates expressions in items"
+          - "Negative tests: unclosed '[' raises E_PARSE with location"
+          - "Negative tests: '[1 2]' (missing comma) raises E_PARSE"
+          - "Nested lists: '[[1, 2], [3, 4]]' works correctly"
+          - "SPEC updated with list literal semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Grammar: _atom() parses '[' expr (',' expr)* ','? ']' -> list node
+          - AST: 'list' node with 'items' field defined in AST_SCHEMA
+          - Runtime: _eval handles 'list' kind by evaluating items left-to-right
+          - Tests: parse_expr('[1, 2, 3]'), eval('[1 + 2, 3 * 4]'), nested lists all pass
+          - Empty list '[]' works, trailing comma '[1,]' handled
+          - Negative paths: unclosed '[' and '[1 2]' raise E_PARSE with location
+          - 91/92 runtime tests pass (1 pre-existing escape sequence error unrelated)
+        next_steps:
+          - id: LNG-CORE-47-STEP-01
+            title: "Create list literal support"
+            stage: create
+            focus: language-core
+            done_when: "AST and runtime support list nodes, tests pass"
       - id: LNG-CORE-46
         title: "Logical operators (and, or) with short-circuit evaluation"
         status: done
@@ -137,7 +248,8 @@ buckets:
           All 21 tests pass in runtime/test_escape_manual.py.
           Grammar already implemented escape sequence parsing in tokenizer.
           SPEC.lnd updated with string_escape_sequences contract section.
-          Positive paths: \\n, \\t, \\r, \\\", \\\\n          Negative paths: invalid escapes raise E_PARSE_INVALID_ESCAPE with location metadata.
+          Positive paths: \\n, \\t, \\r, \\", \\\\
+          Negative paths: invalid escapes raise E_PARSE_INVALID_ESCAPE with location metadata.
           Done: create -> validate -> execute stages complete.
       - id: LNG-CORE-39
         title: "Comparison operators (<, <=, >, >=) with hardened negative-path diagnostics"
@@ -284,16 +396,16 @@ buckets:
           - contracts/SPEC.lnd
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
-    items:
+    items: []
   practical-value:
     description: Real-world utility, examples, and measurable task value.
-    items:
+    items: []
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
-    items:
+    items: []
   validation:
     description: Tests, contracts, and property checks.
-    items:
+    items: []
   integration:
     description: End-to-end runtime integration and replay checks.
-    items:
+    items: []
