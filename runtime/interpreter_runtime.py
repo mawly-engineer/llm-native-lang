@@ -331,20 +331,22 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "unary_neg":
         value = _eval(node["operand"], env, context)
         if not isinstance(value, int) or isinstance(value, bool):
+            operand_type = type(value).__name__
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"unary negation expects int, got {type(value).__name__}",
-                location={"node_kind": "unary_neg"},
+                message=f"unary negation expects int, got {operand_type}",
+                location={"node_kind": "unary_neg", "operand_type": operand_type},
             )
         return -value
 
     if kind == "unary_not":
         value = _eval(node["operand"], env, context)
         if not isinstance(value, bool):
+            operand_type = type(value).__name__
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"unary logical-not expects bool, got {type(value).__name__}",
-                location={"node_kind": "unary_not"},
+                message=f"unary logical-not expects bool, got {operand_type}",
+                location={"node_kind": "unary_not", "operand_type": operand_type},
             )
         return not value
 
@@ -527,20 +529,22 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             )
         left = _eval(node["left"], env, context)
         if not isinstance(left, bool):
+            left_type = type(left).__name__
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"logical {op} expects bool left operand, got {type(left).__name__}",
-                location={"node_kind": "logical_bin", "op": op, "side": "left"},
+                message=f"logical {op} expects bool left operand, got {left_type}",
+                location={"node_kind": "logical_bin", "op": op, "side": "left", "operand_type": left_type},
             )
         if op == "and":
             if not left:
                 return False
             right = _eval(node["right"], env, context)
             if not isinstance(right, bool):
+                right_type = type(right).__name__
                 raise EvalError(
                     code="E_RT_TYPE",
-                    message=f"logical and expects bool right operand, got {type(right).__name__}",
-                    location={"node_kind": "logical_bin", "op": op, "side": "right"},
+                    message=f"logical and expects bool right operand, got {right_type}",
+                    location={"node_kind": "logical_bin", "op": op, "side": "right", "operand_type": right_type},
                 )
             return right
 
@@ -548,10 +552,11 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             return True
         right = _eval(node["right"], env, context)
         if not isinstance(right, bool):
+            right_type = type(right).__name__
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"logical or expects bool right operand, got {type(right).__name__}",
-                location={"node_kind": "logical_bin", "op": op, "side": "right"},
+                message=f"logical or expects bool right operand, got {right_type}",
+                location={"node_kind": "logical_bin", "op": op, "side": "right", "operand_type": right_type},
             )
         return right
 

@@ -415,6 +415,100 @@ class InterpreterRuntimeLexicalScopeTest(unittest.TestCase):
         expr = parse_expr("true or boom()")
         self.assertTrue(eval_expr(expr, env={"boom": lambda: (_ for _ in ()).throw(RuntimeError("boom"))}))
 
+    def test_logical_and_rejects_int_left_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("1 and true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "and")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "int")
+
+    def test_logical_and_rejects_int_right_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("true and 1"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "and")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "int")
+
+    def test_logical_and_rejects_string_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('"hello" and true'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "and")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "str")
+
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('true and "hello"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "str")
+
+    def test_logical_and_rejects_null_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("null and true"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "NoneType")
+
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("true and null"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "NoneType")
+
+    def test_logical_or_rejects_int_left_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("1 or false"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "or")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "int")
+
+    def test_logical_or_rejects_int_right_operand(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("false or 1"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "or")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "int")
+
+    def test_logical_or_rejects_string_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('"hello" or false'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["op"], "or")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "str")
+
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('false or "hello"'))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "str")
+
+    def test_logical_or_rejects_null_operands(self) -> None:
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("null or false"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["node_kind"], "logical_bin")
+        self.assertEqual(ctx.exception.location["side"], "left")
+        self.assertEqual(ctx.exception.location["operand_type"], "NoneType")
+
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr("false or null"))
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
+        self.assertEqual(ctx.exception.location["side"], "right")
+        self.assertEqual(ctx.exception.location["operand_type"], "NoneType")
+
     def test_function_arity_mismatch_raises_structured_error(self) -> None:
         expr = parse_expr("let f = fn(a,b)=>a in f(1)")
         with self.assertRaises(EvalError) as ctx:

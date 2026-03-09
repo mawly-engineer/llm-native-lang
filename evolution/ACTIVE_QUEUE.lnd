@@ -2,7 +2,7 @@
 version: 25
 document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-09T19:18:00Z
+updated_at_utc: 2026-03-09T19:28:00Z
 
 queue_policy:
   max_active_steps: 5
@@ -18,13 +18,4 @@ queue_policy:
     - evolution/WORK_ITEMS.lnd
     - evolution/CYCLE_LOG.lnd
 
-active_queue:
-  - item_id: LNG-CORE-46
-    step_id: STEP-LNG-CORE-46-CREATE
-    stage: create
-    title: "Logical operators (and, or) with short-circuit evaluation"
-    priority: P1
-    bucket: language-core
-    created_at_utc: "2026-03-09T19:18:00Z"
-    next_action: create_backlog_item_and_next_step
-    owner_focus: language-core
+active_queue: []
