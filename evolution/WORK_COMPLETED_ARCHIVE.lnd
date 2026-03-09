@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 6
+version: 7
 document: WORK_COMPLETED_ARCHIVE
 purpose: Append-only archive of completed backlog items for audit/replay.
-updated_at_utc: 2026-03-09T17:38:00Z
+updated_at_utc: 2026-03-09T18:48:00Z
 
 archived_items:
   - item_id: LNG-CORE-39
@@ -41,3 +41,9 @@ archived_items:
     completed_at_utc: "2026-03-09T17:18:00Z"
     cycle_closed: 290
     commit_ref: null
+  - item_id: LNG-CORE-45
+    title: "String escape sequences with deterministic parsing and hardened error diagnostics"
+    bucket: language-core
+    completed_at_utc: "2026-03-09T18:48:00Z"
+    cycle_closed: 291
+    commit_ref: "303ed09"
