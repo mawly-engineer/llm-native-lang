@@ -1,23 +1,23 @@
 @lnd 0.2
-version: 23
+version: 24
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
-updated_at_utc: 2026-03-09T18:48:00Z
+updated_at_utc: 2026-03-09T19:18:00Z
 
 state:
   mode: staged_multi_cycle
-  active_flow_id: null
-  active_bucket: null
-  active_backlog_item_id: null
-  active_next_step_id: null
-  current_stage: idle
+  active_flow_id: FLOW-LNG-CORE-46
+  active_bucket: language-core
+  active_backlog_item_id: LNG-CORE-46
+  active_next_step_id: STEP-LNG-CORE-46-CREATE
+  current_stage: create
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: execute_stage_completed
+  last_stage_status: idle_noop_suppressed
   last_error: null
   last_completed_item:
     item_id: LNG-CORE-45
@@ -44,5 +44,5 @@ stage_transition_rules:
 
 retry_policy:
   on_stage_error: repeat_same_stage_next_cycle
-  on_validation_failure: repeat revise->validate loop until approved
+  on_validation_failure: repeat_revise_validate_loop_until_approved
   max_retries: unlimited
