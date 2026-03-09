@@ -51,6 +51,15 @@ maintenance_enforcement:
     - evolution/CYCLE_LOG.lnd
     - evolution/WORK_ITEMS.lnd
     - evolution/WORK_COMPLETED_ARCHIVE.lnd
+  maintenance_commit_gate:
+    require_one_of:
+      - new_cycle_log_entry_with_meaningful_change
+      - new_archive_item_added
+      - work_items_status_changed
+    forbid_if_only:
+      - timestamp_only_changes
+      - formatting_only_changes
+      - idle_noop_touches
   auto_commit_message: "maintenance: normalize cycle/work logs"
   on_non_maintenance_dirty_tree:
     - add_blocker: working_tree_not_clean

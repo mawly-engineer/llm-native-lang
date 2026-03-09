@@ -18,6 +18,9 @@ state:
     - execute
   last_stage_status: execute_stage_completed
   last_error: null
+  last_completed_item:
+    item_id: LNG-CORE-39
+    completed_at_utc: "2026-03-09T11:09:00Z"
 
 stage_transition_rules:
   idle_to_create:

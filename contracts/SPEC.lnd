@@ -4,7 +4,7 @@ id: SPEC-001
 schema_id: llm_native_lang.spec
 schema_version: 1.0.0
 status: active
-updated_at_utc: 2026-03-08T17:47:00Z
+updated_at_utc: 2026-03-09T11:09:00Z
 project: llm-native-lang
 objective: Deterministic language runtime plus deterministic DAG-based UI replay.
 
@@ -145,6 +145,31 @@ language_runtime_semantics:
       - if_target_is_closure_or_callable_invoke_with_args
       - if_callable_arity_mismatch_raise_E_RT_ARITY_MISMATCH_or_E_RT_HOST_CALL_ARITY
       - if_target_is_non_callable_non_null_raise_E_RT_NOT_CALLABLE
+  comparison_operators:
+    operators:
+      - "<"
+      - "<="
+      - ">"
+      - ">="
+      - "=="
+      - "!="
+    scope: deterministic_ordering_and_equality_comparison
+    behavior:
+      - ordering_less_than_both_operands_int_then_numeric_compare
+      - ordering_less_than_both_operands_string_then_lexicographic_compare
+      - ordering_less_than_or_equal_both_operands_int_then_numeric_compare
+      - ordering_less_than_or_equal_both_operands_string_then_lexicographic_compare
+      - ordering_greater_than_both_operands_int_then_numeric_compare
+      - ordering_greater_than_both_operands_string_then_lexicographic_compare
+      - ordering_greater_than_or_equal_both_operands_int_then_numeric_compare
+      - ordering_greater_than_or_equal_both_operands_string_then_lexicographic_compare
+      - equality_both_operands_same_type_int_then_numeric_equality
+      - equality_both_operands_same_type_bool_then_boolean_equality
+      - equality_both_operands_same_type_string_then_lexicographic_equality
+      - equality_both_operands_same_type_null_then_null_equality
+      - ordering_mixed_types_or_unsupported_operand_types_raise_E_RT_TYPE_with_left_type_right_type_metadata
+      - equality_mismatched_operand_types_raise_E_RT_TYPE_with_left_type_right_type_metadata
+      - equality_unsupported_operand_types_raise_E_RT_TYPE_with_side_and_type_metadata
 
 non_goals:
   - human_first_prose_as_primary_system_interface

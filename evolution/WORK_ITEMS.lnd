@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 9
+version: 10
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-08T18:37:00Z
+updated_at_utc: 2026-03-09T10:39:00Z
 
 selection_policy:
   per_cycle_execution_limit: 1
@@ -21,6 +21,38 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-39
+        title: "Comparison operators (<, <=, >, >=) with hardened negative-path diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T10:39:00Z"
+        completed_at_utc: "2026-03-09T11:09:00Z"
+        scope: |
+          Implement deterministic comparison operators for int/string ordering:
+          - < (less than)
+          - <= (less than or equal)
+          - > (greater than)
+          - >= (greater than or equal)
+          
+          Rules:
+          - Both operands must be same type (int-int or string-string)
+          - int: numeric comparison
+          - string: lexicographic comparison
+          - Mixed types or non-comparable types raise E_RT_TYPE with left_type/right_type metadata
+        acceptance_criteria:
+          - "Grammar contract has comparison tier tokens"
+          - "AST contract has CompareBin node with operator field"
+          - "Type contract validates operand type compatibility"
+          - "Runtime implements int comparison and string comparison"
+          - "Negative tests: int-string mix, bool operands, null operands"
+          - "SPEC updated with comparison runtime semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_interpreter_runtime.py
+          - contracts/SPEC.lnd
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items:

@@ -100,6 +100,7 @@ idle_noop_policy:
   when_no_eligible_item_and_no_state_change:
     - do_not_append_cycle_log
     - do_not_commit
+    - do_not_touch_state_files_for_timestamp_only
     - emit_status: idle_noop_suppressed
   heartbeat_summary_interval_cycles: 30
   heartbeat_summary_action:
@@ -144,6 +145,11 @@ state_file_write_policy:
     - reconstruct_exact_next_content
     - write_full_file
     - re_read_and_verify_expected_marker_or_state
+  suppression_rules:
+    - skip_write_if_only_timestamp_or_formatting_change
+    - skip_archive_write_if_no_new_done_item
+    - skip_queue_write_if_queue_content_unchanged
+    - skip_current_or_supervisor_state_write_if_stage_and_flow_unchanged
   on_failure:
     - retry_once_after_fresh_read
     - then_add_blocker_with_path_and_reason
