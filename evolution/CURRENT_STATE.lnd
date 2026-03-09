@@ -2,7 +2,7 @@
 kind: current_state
 id: CURRENT-STATE-001
 status: active
-updated_at_utc: 2026-03-09T19:38:00Z
+updated_at_utc: 2026-03-09T19:58:00Z
 purpose: Minimal context snapshot for low-token execution.
 
 project_focus:
@@ -17,13 +17,14 @@ runtime_status:
   blocked: false
   blocker_id: null
   blocker_type: null
+  last_commit: "edd2af6"
 
 open_work:
   source_file: evolution/WORK_ITEMS.lnd
   active_queue_file: evolution/ACTIVE_QUEUE.lnd
   active_item: null
   active_step: null
-  summary: "LNG-CORE-46 completed: Logical operators with short-circuit evaluation. All 12 tests pass. System idle, ready for next backlog item."
+  summary: "LNG-CORE-46 completed and committed. System idle, ready for next backlog item. Commit: edd2af6"
 
 quality_gates:
   - python3 scripts/lnd_validate.py evolution
