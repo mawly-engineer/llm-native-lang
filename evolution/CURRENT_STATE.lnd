@@ -1,8 +1,8 @@
 @lnd 0.2
 kind: current_state
-id: CURRENT-STATE-001
+id: CURRENT-STATE-002
 status: active
-updated_at_utc: 2026-03-09T23:58:00Z
+updated_at_utc: 2026-03-10T02:22:00Z
 purpose: Minimal context snapshot for low-token execution.
 
 project_focus:
@@ -13,18 +13,18 @@ project_focus:
 runtime_status:
   branch: main
   cadence: cron_10m
-  supervisor_stage: idle
+  supervisor_stage: create
   blocked: false
   blocker_id: null
   blocker_type: null
-  last_commit: "CYCLE-2026-03-09-2358-015"
+  last_commit: "CYCLE-2026-03-10-0222-016"
 
 open_work:
   source_file: evolution/WORK_ITEMS.lnd
   active_queue_file: evolution/ACTIVE_QUEUE.lnd
-  active_item: null
-  active_step: null
-  summary: "LNG-CORE-50 completed. If/then/else conditionals fully implemented. System idle, ready for next product-core backlog item."
+  active_item: LNG-CORE-51
+  active_step: LNG-CORE-51-STEP-01
+  summary: "LNG-CORE-50 completed (if/then/else). LNG-CORE-51 seeded (function expressions). System in create stage for fn grammar/AST."
 
 quality_gates:
   - python3 scripts/lnd_validate.py evolution

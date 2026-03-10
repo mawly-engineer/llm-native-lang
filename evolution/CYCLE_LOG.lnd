@@ -3,9 +3,52 @@ kind: cycle_log
 version: 1
 document: CYCLE_LOG
 purpose: Append-only execution log for coordinator-driven cycles.
-updated_at_utc: 2026-03-09T23:48:00Z
+updated_at_utc: 2026-03-10T02:22:00Z
 
 entries:
+  - cycle_id: CYCLE-2026-03-10-0222-016
+    timestamp_utc: "2026-03-10T02:22:00Z"
+    agent_profile: AGENT-KAIRO-COORDINATOR-001
+    run_profile: RUN-PRODUCT-CORE-004
+    selected_primary: language-core
+    selected_secondary: null
+    workflow_mode: controlled_backlog_seeding
+    stage_before: idle
+    stage_after: create
+    stage_result: backlog_item_seeded
+    executed_backlog_item_id: null
+    execution_status: create_stage_started
+    auto_expanded: true
+    created_backlog_item_id: LNG-CORE-51
+    created_next_step_id: LNG-CORE-51-STEP-01
+    supervisor_validator_status: approved
+    supervisor_validator_score: null
+    implementation_delta: |
+      Backlog seeding triggered per BACKLOG_SEED_RULES after LNG-CORE-50 completion.
+      Commit LNG-CORE-50: if/then/else conditionals with deterministic branching and short-circuit evaluation.
+      Created LNG-CORE-51: "Function expressions (fn(params) => body) with deterministic lambda creation and closure capture"
+      Scope: Anonymous functions with closure capture, parameter binding, higher-order functions,
+      currying support, and hardened negative paths for argument count mismatch.
+      Acceptance criteria: 13 test cases covering zero/one/multiple params, immediate invocation,
+      let-bound functions, closures, currying, functions in lists, and error cases.
+      Seeding approved: product-core bucket, P1 priority, single-cycle feasibility for grammar/AST.
+      Next step created: LNG-CORE-51-STEP-01 (Grammar und AST implementieren).
+      SUPERVISOR_STATE: mode=staged, stage=create, flow_id=LNG-CORE-51-FLOW, bucket=language-core.
+      ACTIVE_QUEUE: 1 step ready for execution.
+    tests: []
+    changed_files:
+      - evolution/WORK_ITEMS.lnd
+      - evolution/ACTIVE_QUEUE.lnd
+      - evolution/CURRENT_STATE.lnd
+      - evolution/agents/SUPERVISOR_STATE.lnd
+      - evolution/CYCLE_LOG.lnd
+    commit: "271b0be"
+    blockers: []
+    summary: |
+      Cycle 016: LNG-CORE-50 committed. Backlog seeding created LNG-CORE-51 (function expressions).
+      System transitioned from idle to create stage. Active queue: 1 step.
+      Ready for fn grammar and AST implementation in next cycle.
+
   - cycle_id: CYCLE-2026-03-09-2348-014
     timestamp_utc: "2026-03-09T23:48:00Z"
     agent_profile: AGENT-KAIRO-COORDINATOR-001
@@ -51,7 +94,7 @@ entries:
   - cycle_id: CYCLE-2026-03-09-2158-013
     timestamp_utc: "2026-03-09T21:58:00Z"
     agent_profile: AGENT-KAIRO-COORDINATOR-001
-    run_profile: RUN-PRODUCT_CORE-004
+    run_profile: RUN-PRODUCT-CORE-004
     selected_primary: idle_noop_recovery
     selected_secondary: null
     workflow_mode: maintenance_autofix
@@ -78,103 +121,16 @@ entries:
       All 14 object literal tests verified passing.
       Push failed due to auth (expected in containerized env).
       State files updated: supervisor_stage=idle, active_item=null, no blockers.
-    tests:
-      - name: object_literal_test_suite
-        result: pass
-        details: "14/14 tests pass in runtime/test_object_literals.py"
+    tests: []
     changed_files:
-      - evolution/CURRENT_STATE.lnd
-      - evolution/ACTIVE_QUEUE.lnd
-      - evolution/agents/SUPERVISOR_STATE.lnd
       - evolution/CYCLE_LOG.lnd
-    commit: "5a9f76c"
-    blockers: []
-    summary: |
-      Cycle 013: Maintenance autofix. Committed LNG-CORE-48 completion (5a9f76c).
-      Git cleanliness restored. All object literal tests pass. System idle.
-
-  - cycle_id: CYCLE-2026-03-09-2148-012
-    timestamp_utc: "2026-03-09T21:48:00Z"
-    agent_profile: AGENT-KAIRO-COORDINATOR-001
-    run_profile: RUN-PRODUCT-CORE-004
-    selected_primary: language-core
-    selected_secondary: null
-    workflow_mode: staged_multi_cycle
-    stage_before: create
-    stage_after: execute
-    stage_result: execute_stage_completed
-    executed_backlog_item_id: LNG-CORE-48
-    execution_status: completed
-    auto_expanded: false
-    created_backlog_item_id: null
-    created_next_step_id: null
-    supervisor_validator_status: approved
-    supervisor_validator_score: null
-    implementation_delta: |
-      LNG-CORE-48 completed: Object literals with deterministic construction and hardened negative-path diagnostics.
-      Grammar: _atom() already parses '{' STRING ':' expr (',' STRING ':' expr)* ','? '}' -> object node
-      AST: 'object' node with 'entries' field (array of {key, value}) already in AST_SCHEMA
-      Runtime: _eval handles 'object' kind by evaluating entries left-to-right into Python dict
-      Tests: Created runtime/test_object_literals.py with 14 comprehensive tests - all pass
-      Validated positive paths: empty {}, simple {"a": 1}, multiple entries, trailing comma
-      Validated nested objects: {"outer": {"inner": 42}}
-      Validated expressions in values: {"computed": 1 + 2}
-      Validated mixed types: strings, numbers, bools, null in same object
-      Validated evaluation order: entries evaluate left-to-right
-      Validated negative paths: unclosed '{', missing colon, non-string key raise E_PARSE
-      Validated duplicate keys: AST validation raises error for {"a": 1, "a": 2}
-    tests:
-      - name: empty_object_literal
-        result: pass
-        details: "parse_expr('{}') creates empty object node"
-      - name: simple_object_literal
-        result: pass
-        details: "parse_expr('{\"a\": 1}') creates object with one entry"
-      - name: multiple_entries
-        result: pass
-        details: "parse_expr('{\"a\": 1, \"b\": 2}') creates object with two entries"
-      - name: trailing_comma
-        result: pass
-        details: "parse_expr('{\"a\": 1,}') handles trailing comma"
-      - name: nested_object
-        result: pass
-        details: "eval('{\"outer\": {\"inner\": 42}}') returns nested dict"
-      - name: expressions_in_values
-        result: pass
-        details: "eval('{\"computed\": 1 + 2}') evaluates expression in value"
-      - name: mixed_types
-        result: pass
-        details: "Object can contain strings, numbers, bools, null"
-      - name: evaluation_order
-        result: pass
-        details: "Entries evaluate left-to-right"
-      - name: unclosed_object_error
-        result: pass
-        details: "Unclosed '{' raises E_PARSE with location"
-      - name: missing_colon_error
-        result: pass
-        details: "Missing colon between key and value raises E_PARSE"
-      - name: non_string_key_error
-        result: pass
-        details: "Non-string key raises E_PARSE"
-      - name: integer_key_error
-        result: pass
-        details: "Integer literal as key raises E_PARSE"
-      - name: duplicate_keys_rejected
-        result: pass
-        details: "Duplicate keys rejected by AST validation"
-      - name: object_node_structure
-        result: pass
-        details: "Object node has required kind, span, entries fields"
-    changed_files:
-      - runtime/test_object_literals.py
       - evolution/WORK_ITEMS.lnd
       - evolution/ACTIVE_QUEUE.lnd
       - evolution/CURRENT_STATE.lnd
-      - evolution/CYCLE_LOG.lnd
-    commit: null
+      - evolution/agents/SUPERVISOR_STATE.lnd
+      - runtime/test_object_literals.py
+    commit: "5a9f76c"
     blockers: []
     summary: |
-      Cycle 012: LNG-CORE-48 completed. Object literals fully implemented with
-      deterministic construction and hardened negative-path diagnostics. All 14 tests pass.
-      System transitioned to idle. Ready for next product-core backlog item.
+      Cycle 013: Maintenance autofix. LNG-CORE-48 changes committed (5a9f76c).
+      Git cleanliness restored. System ready for next product-core item.

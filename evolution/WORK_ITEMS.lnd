@@ -166,6 +166,49 @@ buckets:
       - id: LNG-CORE-47
         [remaining done items preserved but truncated for brevity...]
         status: done
+      - id: LNG-CORE-51
+        title: "Function expressions (fn(params) => body) with deterministic lambda creation and closure capture"
+        status: open
+        priority: P1
+        created_at_utc: "2026-03-10T02:22:00Z"
+        scope: |
+          Implement deterministic function expressions (lambdas) for first-class functions:
+          - Syntax: 'fn' '(' params? ')' '=>' expr
+          - Grammar: fn production in _expr() with optional parameters and arrow body
+          - AST: 'fn' node with params (array of strings) and body (expr) fields
+          - Runtime: create closure capturing current scope, return callable function value
+          - Closure: capture bound variables at definition site, access at call time
+          - Params: zero or more named parameters, order preserved
+          - Call: function value can be invoked with arguments via call_suffix
+          - Higher-order: functions can accept and return other functions
+          - Recursive: support self-reference via let-bound name (for named recursion)
+          - Negative path: parameter/argument count mismatch, type errors at call time
+        acceptance_criteria:
+          - "parse_expr('fn() => 42') creates fn node with params=[], body=int(42)"
+          - "parse_expr('fn(x) => x * 2') creates fn node with params=['x'], body=bin_op"
+          - "eval('fn() => 42') returns a callable function value"
+          - "eval('(fn(x) => x * 2)(5)') returns 10 (immediate invocation)"
+          - "eval('let double = fn(x) => x * 2 in double(3)') returns 6"
+          - "eval('let add = fn(a, b) => a + b in add(1, 2)') returns 3 (multiple params)"
+          - "eval('let makeAdder = fn(n) => fn(x) => x + n in makeAdder(5)(3)') returns 8 (closure)"
+          - "eval('fn(x) => fn(y) => x + y') returns curried function"
+          - "eval('let f = fn(x) => x > 0 in f(5) or f(-1)') functions in boolean context"
+          - "eval('[fn(x) => x, fn(y) => y * 2][0](5)') returns 5 (functions in lists)"
+          - "Negative: eval('(fn() => 42)(1)') raises E_RT_ARG_COUNT_MISMATCH (no params given 1 arg)"
+          - "Negative: eval('(fn(x) => x)()') raises E_RT_ARG_COUNT_MISMATCH (1 param given 0 args)"
+          - "SPEC updated with fn expression semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - contracts/SPEC.lnd
+          - runtime/test_function_expressions.py
+        implementation_status:
+          grammar: not_started
+          ast: not_started
+          runtime: not_started
+          tests: not_started
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items: []
