@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 27
+version: 28
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-10T15:32:00Z
+updated_at_utc: 2026-03-10T15:42:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,6 +26,31 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-62
+        title: String escape sequences (\n, \t, \", \\, \r)
+        status: done
+        priority: P1
+        created_at: "2026-03-10T15:42:00Z"
+        completed_at: "2026-03-10T16:02:00Z"
+        description: |
+          Implement escape sequence processing for string literals.
+          Required sequences: \n (newline), \t (tab), \" (quote), \\ (backslash), \r (carriage return).
+          Essential for complete SPEC v1.0.0 string literal support.
+        acceptance:
+          - Lexer processes escape sequences during string tokenization
+          - \n becomes actual newline character (0x0A)
+          - \t becomes actual tab character (0x09)
+          - \" becomes double quote without ending string
+          - \\ becomes single backslash
+          - \r becomes carriage return (0x0D)
+          - Invalid escape sequences raise E_PARSE_INVALID_ESCAPE with location
+          - Unterminated strings raise E_PARSE_UNTERMINATED_STRING with location
+          - Works in concatenation: "line1\nline2" + "tab\there"
+          - Works in list literals: ["a\nb", "c\td"]
+          - Works in object keys/values: {"key\n": "val\t"}
+        target_files:
+          - runtime/lexer.py
+          - runtime/test_string_escapes.py (new)
       - id: LNG-CORE-61
         title: Optional call operator ?(args) for null-safe function calls
         status: done
