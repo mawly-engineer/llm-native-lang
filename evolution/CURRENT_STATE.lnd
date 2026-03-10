@@ -13,18 +13,18 @@ project_focus:
 runtime_status:
   branch: main
   cadence: cron_10m
-  supervisor_stage: create
+  supervisor_stage: idle
   blocked: false
   blocker_id: null
   blocker_type: null
-  last_commit: "CYCLE-2026-03-10-0222-016"
+  last_commit: "CYCLE-2026-03-10-0352-018"
 
 open_work:
   source_file: evolution/WORK_ITEMS.lnd
   active_queue_file: evolution/ACTIVE_QUEUE.lnd
-  active_item: LNG-CORE-51
-  active_step: LNG-CORE-51-STEP-01
-  summary: "LNG-CORE-50 completed (if/then/else). LNG-CORE-51 seeded (function expressions). System in create stage for fn grammar/AST."
+  active_item: null
+  active_step: null
+  summary: "LNG-CORE-51 completed (function expressions). System idle, ready for backlog seeding."
 
 quality_gates:
   - python3 scripts/lnd_validate.py evolution
