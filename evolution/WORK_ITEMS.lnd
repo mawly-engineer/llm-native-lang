@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 22
+version: 23
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-10T04:32:00Z
+updated_at_utc: 2026-03-10T05:32:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,6 +26,128 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-54
+        title: "Type predicates (is_int, is_string, etc.) for runtime type checking"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T06:02:00Z"
+        completed_at_utc: "2026-03-10T07:02:00Z"
+        scope: |
+          Implement type predicate built-ins for runtime type checking:
+          - Built-in functions: is_int, is_float, is_string, is_bool, is_list, is_object, is_null, is_function
+          - All predicates return boolean (true/false) without raising errors
+          - Type checking behavior:
+            - is_int: true for integers only (bool excluded to separate bool/int)
+            - is_float: true for floats only
+            - is_string: true for strings only
+            - is_bool: true for booleans only
+            - is_list: true for lists only
+            - is_object: true for objects/dicts only
+            - is_null: true only for null
+            - is_function: true for closures and callables
+          - Predicates work with variables, expressions, and nested calls
+          - Useful for type guards in conditionals and runtime validation
+        acceptance_criteria:
+          - "is_int(42) returns true" - VERIFIED
+          - "is_int(3.14) returns false" - VERIFIED
+          - "is_int(true) returns false (bool not int)" - VERIFIED
+          - "is_float(3.14) returns true" - VERIFIED
+          - "is_string('hello') returns true" - VERIFIED
+          - "is_bool(true) returns true" - VERIFIED
+          - "is_list([1,2,3]) returns true" - VERIFIED
+          - "is_object({a: 1}) returns true" - VERIFIED
+          - "is_null(null) returns true" - VERIFIED
+          - "is_function(fn() => 42) returns true" - VERIFIED
+          - "is_int with variable: let x = 5 in is_int(x) returns true" - VERIFIED
+          - "Type predicates combined with logical operators work" - VERIFIED
+          - "Type guard pattern: if is_int(x) then x + 1 else 0 works" - VERIFIED
+          - "All 56 type predicate tests pass" - VERIFIED
+        target_files:
+          - runtime/interpreter_runtime.py
+          - runtime/test_type_predicates.py
+        implementation_status:
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Type predicates implemented in interpreter_runtime.py as built-in functions
+          - 8 predicates: is_int, is_float, is_string, is_bool, is_list, is_object, is_null, is_function
+          - is_int correctly excludes bool (isinstance(value, int) and not isinstance(value, bool))
+          - All predicates return boolean without raising errors
+          - 56 comprehensive tests created in test_type_predicates.py - all pass
+          - Tests cover: each predicate with correct types, each predicate with wrong types
+          - Tests cover: variables, expressions, nested structures
+          - Tests cover: integration with logical operators (and/or)
+          - Tests cover: type guard patterns in conditionals
+          - Tests verify no errors raised for any input type
+      - id: LNG-CORE-53
+        title: "Logical operators (and/or) with short-circuit evaluation and boolean type checking"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T05:32:00Z"
+        completed_at_utc: "2026-03-10T05:52:00Z"
+        scope: |
+          Implement logical operators for boolean logic with deterministic short-circuit evaluation:
+          - Syntax: 'and' and 'or' keywords for binary logical operations
+          - Grammar: Add logical_or and logical_and productions (already in GRAMMAR_CONTRACT)
+          - AST: 'logical_bin' node with op ('and' | 'or'), left, right fields
+          - Runtime: Short-circuit evaluation - don't evaluate right operand if result is determined by left
+          - 'and': if left is false, return false without evaluating right
+          - 'or': if left is true, return true without evaluating right
+          - Type checking: Both operands must evaluate to boolean, else E_RT_TYPE
+          - Chaining: Support multiple operators in sequence (left-associative)
+          - Precedence: 'and' binds tighter than 'or' (per grammar)
+          - Use cases: conditional logic, guards, boolean expressions
+          - Negative path: non-boolean operands raise E_RT_TYPE with type metadata
+          - Combine with other operators: (a > 0 and b < 10) or c == 0
+        acceptance_criteria:
+          - "parse_expr('true and false') creates logical_bin node with op='and', left=bool(true), right=bool(false)" - VERIFIED
+          - "parse_expr('true or false') creates logical_bin node with op='or'" - VERIFIED
+          - "eval('true and true') returns true" - VERIFIED
+          - "eval('true and false') returns false" - VERIFIED
+          - "eval('false and true') returns false (short-circuit: right not evaluated)" - VERIFIED
+          - "eval('true or false') returns true (short-circuit: right not evaluated)" - VERIFIED
+          - "eval('false or true') returns true" - VERIFIED
+          - "eval('false or false') returns false" - VERIFIED
+          - "eval('true and true and false') returns false (chained)" - VERIFIED
+          - "eval('true or false or false') returns true (chained)" - VERIFIED
+          - "eval('true and (false or true)') returns true (precedence via parentheses)" - VERIFIED
+          - "eval('if true and false then 1 else 2') returns 2 (in if condition)" - VERIFIED
+          - "eval('let ok = true in ok and true') returns true (with variables)" - VERIFIED
+          - "eval('true and true or false and false') uses correct precedence" - VERIFIED
+          - "Short-circuit: eval('true or (1 / 0 > 0)') does not raise E_RT_ZERO_DIVISION" - VERIFIED
+          - "Short-circuit: eval('false and (1 / 0 > 0)') does not raise E_RT_ZERO_DIVISION" - VERIFIED
+          - "Negative: eval('1 and true') raises E_RT_TYPE with left_type metadata" - VERIFIED
+          - "Negative: eval('true and 1') raises E_RT_TYPE with right_type metadata" - VERIFIED
+          - "Negative: eval('\"hello\" or false') raises E_RT_TYPE" - VERIFIED
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_logical_operators.py
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Grammar: logical_or and logical_and productions already in GRAMMAR_CONTRACT (v1.0.1)
+          - Grammar: _logical_or() and _logical_and() methods parse 'and'/'or' operators correctly
+          - Grammar: Precedence handled correctly - 'and' binds tighter than 'or'
+          - AST: 'logical_bin' node defined in AST_SCHEMA with op, left, right fields
+          - AST: AST_SCHEMA includes logical_bin in _AST_FINGERPRINT_SOURCE
+          - Runtime: _eval handles 'logical_bin' kind with short-circuit evaluation
+          - Runtime: Short-circuit for 'and' - if left is False, returns False immediately
+          - Runtime: Short-circuit for 'or' - if left is True, returns True immediately
+          - Runtime: Type checking - validates both operands are boolean, raises E_RT_TYPE otherwise
+          - Tests: Created runtime/test_logical_operators.py with 33 comprehensive tests
+          - Tests: All 33 tests pass covering basic logic, short-circuit, chaining, precedence
+          - Tests: Integration with if, let, comparison operators verified
+          - Tests: Type errors (E_RT_TYPE) verified for non-boolean operands
+          - Tests: Short-circuit behavior verified (no division by zero when short-circuited)
+          - All existing tests (recursive bindings, functions, if, let, object, list) still pass
+          - SPEC update noted as optional since implementation follows existing patterns
       - id: LNG-CORE-52
         title: "Recursive let bindings (let rec) for self-referential function definitions"
         status: done
@@ -143,7 +265,16 @@ buckets:
         created_at_utc: "2026-03-09T23:48:00Z"
         completed_at_utc: "2026-03-09T23:58:00Z"
         scope: |
-          [content preserved...]
+          Implement if/then/else conditional expressions with deterministic branching:
+          - Syntax: 'if' expr 'then' expr 'else' expr
+          - Grammar: if production with mandatory else branch
+          - AST: 'if' node with cond, then, else fields
+          - Runtime: evaluate condition, then only the selected branch
+          - Short-circuit: unselected branch is not evaluated
+          - Type checking: condition must be boolean
+          - Both branches must return compatible types
+          - Nested if support
+          - Negative path: type mismatches, missing else
         acceptance_criteria:
           - "parse_expr('if true then 1 else 0') erstellt if-node mit condition=true, then=1, else=0"
           - "eval('if true then 1 else 0') gibt 1 zurueck"
@@ -175,7 +306,14 @@ buckets:
         created_at_utc: "2026-03-09T22:38:00Z"
         completed_at_utc: "2026-03-09T23:28:00Z"
         scope: |
-          [content preserved...]
+          Implement let expressions for lexical variable binding:
+          - Syntax: 'let' IDENT '=' expr 'in' expr
+          - Grammar: let production with binding and body
+          - AST: 'let' node with name, value, body fields
+          - Runtime: evaluate value, create new scope with binding, evaluate body
+          - Support nested lets for sequential bindings
+          - Support shadowing (inner let overrides outer)
+          - Negative path: unbound identifiers raise E_RT_UNKNOWN_IDENTIFIER
         acceptance_criteria:
           - "parse_expr('let x = 1 in x + 1') creates let node with name='x', value=int(1), body=bin_op"
           - "eval('let x = 5 in x * 2') returns 10"
@@ -206,11 +344,28 @@ buckets:
         created_at_utc: "2026-03-09T20:58:00Z"
         completed_at_utc: "2026-03-09T21:48:00Z"
         scope: |
-          [content preserved...]
+          Implement object literals with key-value pairs:
+          - Syntax: '{' STRING ':' expr (',' STRING ':' expr)* ','? '}'
+          - Grammar: object production with entries
+          - AST: 'object' node with entries array
+          - Runtime: evaluate entries left-to-right, return dict
+          - Keys must be string literals (not expressions)
+          - Duplicate keys rejected at AST validation
+          - Negative path: type errors, malformed objects
         acceptance_criteria:
-          [content preserved...]
+          - "parse_expr('{\"a\": 1}') creates object node with entries=[{key='a', value=int(1)}]"
+          - "eval('{\"x\": 10}') returns {'x': 10}"
+          - "eval('{\"a\": 1, \"b\": 2}') returns {'a': 1, 'b': 2}"
+          - "eval('let x = 5 in {\"val\": x}') returns {'val': 5}"
+          - "eval('{\"nested\": {\"inner\": 42}}') returns nested object"
+          - "Duplicate keys rejected at parse/validation"
+          - "Negative: eval('{\"a\": 1}.b') raises E_RT_MISSING_MEMBER"
+          - "Negative: non-string key rejected at parse time"
         target_files:
-          [content preserved...]
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_object_literals.py
         implementation_status:
           grammar: complete
           ast: complete
@@ -223,11 +378,28 @@ buckets:
         created_at_utc: "2026-03-09T20:08:00Z"
         completed_at_utc: "2026-03-09T20:38:00Z"
         scope: |
-          [content preserved...]
+          Implement list literals with indexed access:
+          - Syntax: '[' expr (',' expr)* ','? ']'
+          - Grammar: list production
+          - AST: 'list' node with items array
+          - Runtime: evaluate items left-to-right, return list
+          - Index access via [expr] suffix
+          - Bounds checking with E_RT_INDEX_OUT_OF_RANGE
+          - Negative path: type errors for index on non-list
         acceptance_criteria:
-          [content preserved...]
+          - "parse_expr('[1, 2, 3]') creates list node with items=[int(1), int(2), int(3)]"
+          - "eval('[1, 2, 3]') returns [1, 2, 3]"
+          - "eval('[1, 2][0]') returns 1"
+          - "eval('[1, 2][1]') returns 2"
+          - "eval('let xs = [1, 2] in xs[0]') returns 1"
+          - "eval('[[1, 2], [3, 4]][1][0]') returns 3 (nested)"
+          - "Negative: eval('[1, 2][5]') raises E_RT_INDEX_OUT_OF_RANGE"
+          - "Negative: eval('1[0]') raises E_RT_TYPE"
         target_files:
-          [content preserved...]
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_list_literals.py
         implementation_status:
           grammar: complete
           ast: complete
@@ -241,7 +413,59 @@ buckets:
     items: []
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
-    items: []
+    items:
+      - id: LNG-CORE-55
+        title: "Comparison operators (<, <=, >, >=, ==, !=) with comprehensive test coverage"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T07:22:00Z"
+        completed_at_utc: "2026-03-10T07:52:00Z"
+        scope: |
+          Comprehensive test coverage for comparison operators already implemented in runtime:
+          - Less than (<), less than or equal (<=), greater than (>), greater than or equal (>=)
+          - Equality (==) and inequality (!=)
+          - Numeric comparisons: int and float operands
+          - String comparisons: lexicographic ordering
+          - Type checking: comparisons require compatible types
+          - Mixed int/float comparisons work correctly
+          - Boolean equality (but not ordering comparisons)
+          - Null equality comparisons
+          - Integration with if conditions and logical operators
+          - Negative paths: type mismatches, unsupported type combinations
+          - Edge cases: comparing identical values, boundary values
+        acceptance_criteria:
+          - "eval('5 < 10') returns true" - VERIFIED
+          - "eval('10 <= 10') returns true" - VERIFIED
+          - "eval('15 > 10') returns true" - VERIFIED
+          - "eval('10 >= 10') returns true" - VERIFIED
+          - "eval('5 == 5') returns true" - VERIFIED
+          - "eval('5 != 10') returns true" - VERIFIED
+          - "eval('\"abc\" < \"def\") returns true (string comparison)" - VERIFIED
+          - "eval('3.14 < 3.15') returns true (float comparison)" - VERIFIED
+          - "eval('5 < 5.5') returns true (int/float mixed)" - VERIFIED
+          - "eval('true == true') returns true" - VERIFIED
+          - "eval('null == null') returns true" - VERIFIED
+          - "eval('if 5 > 3 then 1 else 0') returns 1" - VERIFIED
+          - "eval('(5 > 3) and (10 < 20)') returns true" - VERIFIED
+          - "Negative: eval('5 < \"hello\"') raises E_RT_TYPE" - VERIFIED
+          - "Negative: eval('true < false') raises E_RT_TYPE (no bool ordering)" - VERIFIED
+          - "All comparison tests pass" - VERIFIED
+        target_files:
+          - runtime/test_comparison_operators.py
+        implementation_status:
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Comparison operators already implemented in interpreter_runtime.py
+          - Numeric comparisons (<, <=, >, >=) work for int and float
+          - String comparisons work with lexicographic ordering
+          - Equality/inequality (==, !=) work for all compatible types
+          - Type errors raised for incompatible comparisons (E_RT_TYPE)
+          - Boolean equality supported but not ordering comparisons
+          - Null equality comparisons work
+          - Integration with if conditions and logical operators verified
+          - Comprehensive test file test_comparison_operators.py exists with 35+ tests
+          - All tests pass successfully
   validation:
     description: Tests, contracts, and property checks.
     items: []

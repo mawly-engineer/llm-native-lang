@@ -79,6 +79,46 @@ class Env:
         )
 
 
+def _is_int(value: Any) -> bool:
+    """Type predicate: returns true for integers (excluding bool)."""
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _is_float(value: Any) -> bool:
+    """Type predicate: returns true for floats."""
+    return isinstance(value, float)
+
+
+def _is_string(value: Any) -> bool:
+    """Type predicate: returns true for strings."""
+    return isinstance(value, str)
+
+
+def _is_bool(value: Any) -> bool:
+    """Type predicate: returns true for booleans."""
+    return isinstance(value, bool)
+
+
+def _is_list(value: Any) -> bool:
+    """Type predicate: returns true for lists."""
+    return isinstance(value, list)
+
+
+def _is_object(value: Any) -> bool:
+    """Type predicate: returns true for objects (dicts)."""
+    return isinstance(value, dict)
+
+
+def _is_null(value: Any) -> bool:
+    """Type predicate: returns true for null."""
+    return value is None
+
+
+def _is_function(value: Any) -> bool:
+    """Type predicate: returns true for functions/closures."""
+    return isinstance(value, Closure) or callable(value)
+
+
 def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
@@ -99,6 +139,17 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     root = Env()
     root.set("false", False)
     root.set("true", True)
+    
+    # Type predicate built-ins
+    root.set("is_int", _is_int)
+    root.set("is_float", _is_float)
+    root.set("is_string", _is_string)
+    root.set("is_bool", _is_bool)
+    root.set("is_list", _is_list)
+    root.set("is_object", _is_object)
+    root.set("is_null", _is_null)
+    root.set("is_function", _is_function)
+    
     if env:
         for key in sorted(env.keys()):
             root.set(key, env[key])

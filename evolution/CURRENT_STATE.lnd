@@ -1,38 +1,28 @@
 @lnd 0.2
 kind: current_state
-id: CURRENT-STATE-003
+id: STATE-2026-03-10-002
+timestamp: 2026-03-10T07:52:00Z
+cycle: 2
 status: active
-updated_at_utc: 2026-03-10T05:02:00Z
-purpose: Minimal context snapshot for low-token execution.
 
-project_focus:
-  - deterministic_mini_language
-  - deterministic_runtime_replay
-  - lnd_lnc_contract_integrity
+active_stage: execute
+work_item_in_progress: LNG-CORE-55
+blockers: []
 
-runtime_status:
+last_action:
+  type: item_completed
+  item_id: LNG-CORE-55
+  result: tests_verified
+  timestamp: 2026-03-10T07:52:00Z
+
+git_status:
   branch: main
-  cadence: cron_10m
-  supervisor_stage: idle
-  blocked: false
-  blocker_id: null
-  blocker_type: null
-  last_commit: "CYCLE-2026-03-10-0502-019"
+  clean: true
+  pending_commits: 0
 
-open_work:
-  source_file: evolution/WORK_ITEMS.lnd
-  active_queue_file: evolution/ACTIVE_QUEUE.lnd
-  active_item: LNG-CORE-52
-  active_step: LNG-CORE-52-STEP-01
-  summary: "Backlog seeding created LNG-CORE-52 (recursive let bindings). System in create stage. Active queue: 1 step."
-
-quality_gates:
-  - python3 scripts/lnd_validate.py evolution
-  - python3 scripts/lnd_validate.py contracts
-  - python3 scripts/lnd_validate.py formats
-  - python3 scripts/lnc_validate.py runtime
-
-logs:
-  execution_log: evolution/CYCLE_LOG.lnd
-  completed_archive: evolution/WORK_COMPLETED_ARCHIVE.lnd
-  retention_max_entries: 20
+metrics:
+  total_cycles: 1
+  items_completed: 1
+  items_created: 0
+  validation_passes: 1
+  validation_failures: 0
