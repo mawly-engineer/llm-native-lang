@@ -544,25 +544,41 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
     if kind == "power_bin":
         left = _eval(node["left"], env, context)
         right = _eval(node["right"], env, context)
-        if not isinstance(left, int) or isinstance(left, bool):
+        
+        # Accept int or float for base (exclude bool)
+        left_is_int = isinstance(left, int) and not isinstance(left, bool)
+        left_is_float = isinstance(left, float)
+        if not (left_is_int or left_is_float):
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"exponentiation expects int left operand, got {type(left).__name__}",
+                message=f"exponentiation expects int or float left operand, got {type(left).__name__}",
                 location={"node_kind": "power_bin", "side": "left"},
             )
-        if not isinstance(right, int) or isinstance(right, bool):
+        
+        # Accept int or float for exponent (exclude bool)
+        right_is_int = isinstance(right, int) and not isinstance(right, bool)
+        right_is_float = isinstance(right, float)
+        if not (right_is_int or right_is_float):
             raise EvalError(
                 code="E_RT_TYPE",
-                message=f"exponentiation expects int right operand, got {type(right).__name__}",
+                message=f"exponentiation expects int or float right operand, got {type(right).__name__}",
                 location={"node_kind": "power_bin", "side": "right"},
             )
-        if right < 0:
-            raise EvalError(
-                code="E_RT_DOMAIN",
-                message="exponentiation exponent must be non-negative",
-                location={"node_kind": "power_bin", "side": "right"},
-            )
-        return left ** right
+        
+        # Compute power - Python's ** handles negative and fractional exponents
+        result = left ** right
+        
+        # Return int if result is a whole number and inputs were ints
+        # Otherwise return float
+        if left_is_int and right_is_int and right >= 0:
+            # Both inputs were positive ints, result is guaranteed int by Python
+            return result
+        
+        # For mixed types or negative/fractional exponents, return float
+        # but convert whole numbers to int for consistency
+        if isinstance(result, float) and result.is_integer():
+            return int(result)
+        return result
 
     if kind == "coalesce_bin":
         left = _eval(node["left"], env, context)

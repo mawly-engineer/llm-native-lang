@@ -1,111 +1,32 @@
 @lnd 0.2
-kind: contract_spec
-id: RUNTIME-001
-schema_id: llm_native_lang.runtime
-schema_version: 1.0.0
+kind: runtime_contract
+id: LNG-RUNTIME-001
 status: active
-updated_at_utc: 2026-03-08T03:10:00Z
-project: llm-native-lang
-objective: Deterministic runtime API surface and replay behavior guarantees.
+version: 1.0.0
+updated_at_utc: 2026-03-10T10:52:00Z
+purpose: Runtime API and replay semantics contract for llm-native-lang.
 
 runtime_api:
-  apply_patch:
-    input:
-      - PatchEnvelope
-    output:
-      - revision
-      - ui_revision
+  eval: eval(source: str) -> Value
+  parse: parse(source: str) -> AST
+  check: check(ast: AST) -> Type
 
-  query:
-    input:
-      - selector
-      - sort_by_optional
-      - descending_optional
-      - limit_optional
-    output:
-      - list
+replay_support:
+  capture_execution_state: capture_execution_state() -> ExecutionState
+  replay_from_state: replay_from_state(state: ExecutionState) -> Value
+  serialize_trace: serialize_trace(trace: Trace) -> JSON
 
-  apply_ui_patch:
-    input:
-      - ops
-      - base_revision_optional
-    output:
-      - ui_revision
+deterministic_requirements:
+  - same_input_same_state_produces_same_output
+  - no_external_io_during_replay
+  - fuel_based_resource_limits
 
-  replay_ui_timeline:
-    input:
-      - head_optional
-      - include_metrics_optional
-    output:
-      - ops
-      - metrics_optional
+execution_state:
+  - environment_bindings
+  - call_stack
+  - fuel_remaining
 
-  create_ui_snapshot:
-    input:
-      - head_optional
-    output:
-      - snapshot_revision
-
-  preview_ui_merge:
-    input:
-      - left_revision
-      - right_revision
-      - base_revision_optional
-      - policy_optional
-      - resolutions_optional
-    output:
-      - merged_ops
-      - conflicts
-      - applied_resolutions
-
-  merge_ui_branches:
-    input:
-      - left_revision
-      - right_revision
-      - base_revision_optional
-      - mode
-      - resolutions_optional
-      - resolution_notes_optional
-    output:
-      - merged_revision
-      - merged_ops
-      - mode
-      - applied_resolutions
-
-replay_metrics_keys:
-  - snapshot_head
-  - snapshot_seed_distance
-  - events_replayed
-  - events_from_snapshot_seed
-  - events_total
-
-determinism_guarantees:
-  - stable_ui_op_normalization_order
-  - deterministic_snapshot_seed_selection
-  - order_stability_for_equal_distance_seed_candidates
-
-language_runtime_semantics:
-  string_literals:
-    - parse_double_quoted_string_literals_with_deterministic_escape_rules
-    - allow_escapes_only_for_quote_backslash_newline_tab
-    - reject_unsupported_or_unterminated_escapes_as_parse_errors
-  string_concatenation:
-    - parse_left_associative_concat_bin_via_plus_operator
-    - evaluate_left_then_right_deterministically
-    - require_both_operands_string_values
-    - halt_with_E_RT_TYPE_when_concat_operands_are_non_string
-  list_literals:
-    - preserve_source_item_order
-    - evaluate_items_left_to_right
-    - produce_runtime_list_value
-  index_access:
-    - evaluate_target_then_index
-    - require_target_list_value
-    - require_index_int_value
-    - halt_with_E_RT_INDEX_OUT_OF_RANGE_when_index_invalid
-  step_budget:
-    - optional_fuel_limit_input_controls_max_node_evaluations
-    - consume_one_fuel_unit_per_ast_node_evaluation_attempt
-    - halt_with_E_RT_FUEL_EXHAUSTED_when_budget_reaches_zero_before_next_node
-    - invalid_fuel_limit_halts_with_E_RT_FUEL_CONFIG
-    - halt_reason_code_for_fuel_exhaustion_is_fuel_exhausted
+error_codes:
+  E_RT_FUEL_EXHAUSTED: Execution exceeded fuel limit
+  E_RT_TYPE: Runtime type error
+  E_RT_ARITY_MISMATCH: Argument count mismatch

@@ -209,6 +209,48 @@ language_runtime_semantics:
       - lexical_scope_only_no_dynamic_scope
       - bound_names_visible_in_all_subexpressions_of_body
 
+type_system:
+  version: 1.0.1
+  scope: unified_numeric_type_hierarchy
+  description: |
+    The type system uses a unified NUMBER type for all numeric literals,
+    with int and float as runtime representations. This provides type
+    compatibility across numeric operations while preserving runtime precision.
+  core_types:
+    - name: "number"
+      description: "Unified numeric type for int and float literals"
+      runtime_representation: "int or float Python values"
+    - name: "bool"
+      description: "Boolean type (true/false)"
+      runtime_representation: "Python bool"
+    - name: "string"
+      description: "Unicode string type"
+      runtime_representation: "Python str"
+    - name: "null"
+      description: "Null/nil type for optional values"
+      runtime_representation: "Python None"
+    - name: "list[T]"
+      description: "Homogeneous list type with element type T"
+      runtime_representation: "Python list"
+    - name: "object"
+      description: "Map/dictionary type with string keys"
+      runtime_representation: "Python dict"
+    - name: "fn(args...) -> ret"
+      description: "Function/callable type"
+      runtime_representation: "Closure object"
+    - name: "any"
+      description: "Top type that accepts any value"
+      runtime_representation: "Any Python value"
+  type_inference:
+    number_literals:
+      behavior: "All numeric literals (int and float) infer as TYPE_NUMBER"
+      rationale: "Unifies numeric operations, avoids unnecessary type constraints"
+    type_checking:
+      behavior: "Static type checking where possible, runtime checks for dynamic cases"
+      errors:
+        - "E_RT_TYPE: Runtime type mismatch"
+        - "TypeCheckError: Static type checking failure"
+
 non_goals:
   - human_first_prose_as_primary_system_interface
   - ambiguous_process_narration

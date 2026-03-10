@@ -74,10 +74,8 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
 
     if kind == "number":
         value = node.get("value")
-        if isinstance(value, int) and not isinstance(value, bool):
-            return TYPE_INT
-        if isinstance(value, float):
-            return TYPE_FLOAT
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return TYPE_NUMBER
         raise TypeCheckError(f"{path}.value: number literal must be int or float")
 
     if kind == "bool":
