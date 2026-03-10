@@ -130,6 +130,42 @@ buckets:
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items:
+      - id: LNG-ECO-14
+        title: Performance benchmarking suite with metrics dashboard
+        status: done
+        priority: P0
+        created_at: "2026-03-10T21:02:00Z"
+        description: |
+          Create comprehensive performance benchmarking suite for the interpreter.
+          
+          Goals:
+          - Measure parse/eval performance for common expression patterns
+          - Track performance regression across commits
+          - Generate machine-readable benchmark reports
+          - Integrate with CI for performance gating
+          
+          Deliverables:
+          - runtime/benchmark_suite.py with representative workloads
+          - scripts/run_benchmarks.py for automated execution
+          - metrics/ folder for benchmark data storage
+          - Performance dashboard visualization (optional v2)
+          
+          Benchmark categories:
+          - Parser performance: nested expressions, large literals
+          - Evaluator performance: recursive functions, list operations
+          - Memory usage: closure capture, environment growth
+          - Fuel consumption: step counting accuracy
+        acceptance:
+          - At least 10 benchmark workloads defined
+          - Baseline metrics captured for current runtime
+          - Benchmark runs are deterministic (same input = same metrics)
+          - JSON output format for machine parsing
+          - Integration with existing benchmark_harness.py
+        target_files:
+          - runtime/benchmark_suite.py (new)
+          - scripts/run_benchmarks.py (new)
+          - metrics/baseline.json (new)
+          - evolution/WORK_ITEMS.lnd
       - id: LNG-CORE-63
         title: Error code registry with consistent naming and documentation
         status: done

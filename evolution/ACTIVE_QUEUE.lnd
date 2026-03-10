@@ -5,7 +5,11 @@ document: ACTIVE_QUEUE
 purpose: Near-term execution queue with mapped steps.
 updated_at_utc: 2026-03-10T19:32:00Z
 
-queue: []
+queue:
+  - item_id: LNG-ECO-14
+    stage: create
+    priority: P0
+    added_at: "2026-03-10T21:02:00Z"
 
 done:
   - item_id: LNG-CORE-65
