@@ -59,6 +59,62 @@ entries:
       Cycle 017: LNG-CORE-62 completed. String escape sequences verified working.
       System in idle state, ready for next backlog seeding.
 
+  - cycle_id: CYCLE-2026-03-10-1742-020
+    timestamp_utc: "2026-03-10T17:42:00Z"
+    agent_profile: AGENT-KAIRO-COORDINATOR-001
+    run_profile: RUN-PRODUCT-CORE-004
+    selected_primary: language-core
+    selected_secondary: null
+    workflow_mode: backlog_seeding
+    stage_before: idle
+    stage_after: create
+    stage_result: backlog_seeded
+    executed_backlog_item_id: null
+    execution_status: complete
+    auto_expanded: false
+    created_backlog_item_id: LNG-CORE-64
+    created_next_step_id: null
+    supervisor_validator_status: approved
+    supervisor_validator_score: null
+    implementation_delta: |
+      Cycle 020: Backlog seeding - created LNG-CORE-64 (Recursive let bindings).
+
+      Trigger: All product-core items complete, idle cycle threshold met (1 cycle).
+      Per BACKLOG_SEED_RULES.lnd, seeded new product-core capability.
+
+      Gap identified from SPEC v1.0.0:
+      - Recursive let bindings (let rec) defined in grammar: 'let' 'rec'? IDENT
+      - Parser already generates recursive: true field in AST
+      - AST validation fails: unsupported expr kind on recursive field
+      - Interpreter cannot evaluate recursive closures
+
+      Example failing code:
+      let rec fact = fn(n) =>
+        if n == 0 then 1 else n * fact(n - 1)
+      in fact(5)
+
+      Error: E_RT_AST_INVALID - unsupported expr kind: None
+
+      Created item:
+      - ID: LNG-CORE-64
+      - Title: Recursive let bindings (let rec) evaluation
+      - Priority: P1
+      - Bucket: language-core
+      - Target: runtime/ast_contract.py, runtime/interpreter_runtime.py
+
+      Next stage: create (awaiting implementation)
+    tests:
+      - validation: passed
+    changed_files:
+      - evolution/WORK_ITEMS.lnd (new item LNG-CORE-64)
+      - evolution/CURRENT_STATE.lnd (cycle 20, stage: create)
+      - evolution/ACTIVE_QUEUE.lnd (added LNG-CORE-64)
+    commit: null
+    blockers: []
+    summary: |
+      Cycle 020: Backlog seeded. LNG-CORE-64 created for recursive let bindings.
+      System ready for implementation cycle.
+
   - cycle_id: CYCLE-2026-03-10-1542-016
     timestamp_utc: "2026-03-10T15:42:00Z"
     agent_profile: AGENT-KAIRO-COORDINATOR-001
