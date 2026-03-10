@@ -2,20 +2,44 @@
 kind: format_index
 id: LND-INDEX-001
 status: active
-updated_at_utc: 2026-03-07T14:27:00Z
-purpose: Entry index for LND format definition files.
+updated_at_utc: 2026-03-10T22:52:00Z
+purpose: Modular index for LND format specifications and extensions.
 
-source_of_truth:
-  primary: formats/lnd/LND_FORMAT.lnd
+base_spec:
+  file: formats/lnd/LND_FORMAT.lnd
+  version: 0.2
+  status: stable
+  description: Core LND format specification
 
-subfiles:
-  - path: formats/lnd/LND_SYNTAX.lnd
-    scope: lexical_and_structure_rules
-  - path: formats/lnd/LND_SHAPES.lnd
-    scope: document_shapes_and_key_contracts
-  - path: formats/lnd/LND_ERRORS.lnd
-    scope: stable_error_codes_and_meanings
+extensions:
+  - id: IDX-AGENT-001
+    kind: agent_profile
+    file: evolution/agents/KAIRO_COORDINATOR.lnd
+    status: active
+    description: KAIRO evolution coordinator agent profile
 
-rule:
-  - Keep LND format definitions modular but bounded.
-  - Prefer extending these subfiles over creating new ones.
+  - id: IDX-RUN-001
+    kind: run_profile
+    file: evolution/runs/RUN_PRODUCT_CORE.lnd
+    status: active
+    description: Product core run execution profile
+
+  - id: IDX-CRON-001
+    kind: cron_protocol
+    file: evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
+    status: active
+    description: Cron-triggered execution protocol
+
+registry_policy:
+  registration_required: true
+  validation_gate: pre_register
+  min_reviewers: 1
+  max_pending_age_days: 7
+
+query_interface:
+  list_by_kind:
+    command: "grep '^kind:' formats/lnd/*.lnd | sort -t: -k2"
+  find_by_id:
+    command: "grep -l '^id: <id>' formats/lnd/*.lnd evolution/**/*.lnd"
+  check_status:
+    command: "yq '.status' <file>"

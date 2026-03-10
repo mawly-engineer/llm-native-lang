@@ -2,10 +2,17 @@
 kind: active_queue
 id: QUEUE-001
 status: active
-updated_at_utc: 2026-03-10T22:32:00Z
+updated_at_utc: 2026-03-10T22:52:00Z
 purpose: Near-term execution queue for KAIRO evolution cycles.
 
-items: []
+items:
+  - id: ITEM-001
+    title: Initialize core LND format specification
+    description: Create the foundational LND_FORMAT.lnd specification file
+    priority: p0
+    objective: language_core_capability
+    stage: create
+    added_at_utc: 2026-03-10T22:52:00Z
 
 capacity:
   max_concurrent: 3
