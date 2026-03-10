@@ -658,40 +658,39 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         return Closure(params=tuple(node["params"]), body=node["body"], env=env)
 
     if kind == "call":
-        callee_name = node["callee"]
-        callee = env.get(callee_name)
+        target = _eval(node["target"], env, context)
         args = [_eval(arg, env, context) for arg in node["args"]]
 
-        if isinstance(callee, Closure):
-            if len(args) != len(callee.params):
+        if isinstance(target, Closure):
+            if len(args) != len(target.params):
                 raise EvalError(
                     code="E_RT_ARITY_MISMATCH",
                     message=(
-                        f"arity mismatch for '{callee_name}': "
-                        f"expected {len(callee.params)}, got {len(args)}"
+                        f"arity mismatch: "
+                        f"expected {len(target.params)}, got {len(args)}"
                     ),
-                    location={"node_kind": "call", "callee": callee_name},
+                    location={"node_kind": "call"},
                 )
-            call_env = callee.env.child()
-            for param, value in zip(callee.params, args):
+            call_env = target.env.child()
+            for param, value in zip(target.params, args):
                 call_env.set(param, value)
-            return _eval(callee.body, call_env, context)
+            return _eval(target.body, call_env, context)
 
-        if callable(callee):
-            fn = callee
+        if callable(target):
+            fn = target
             try:
                 return fn(*args)
             except TypeError as exc:
                 raise EvalError(
                     code="E_RT_HOST_CALL_ARITY",
                     message=str(exc),
-                    location={"node_kind": "call", "callee": callee_name},
+                    location={"node_kind": "call"},
                 ) from exc
 
         raise EvalError(
             code="E_RT_NOT_CALLABLE",
-            message=f"'{callee_name}' is not callable",
-            location={"node_kind": "call", "callee": callee_name},
+            message=f"value is not callable: {type(target).__name__}",
+            location={"node_kind": "call"},
         )
 
     raise EvalError(

@@ -168,9 +168,10 @@ buckets:
         status: done
       - id: LNG-CORE-51
         title: "Function expressions (fn(params) => body) with deterministic lambda creation and closure capture"
-        status: open
+        status: done
         priority: P1
         created_at_utc: "2026-03-10T02:22:00Z"
+        completed_at_utc: "2026-03-10T03:42:00Z"
         scope: |
           Implement deterministic function expressions (lambdas) for first-class functions:
           - Syntax: 'fn' '(' params? ')' '=>' expr
@@ -205,10 +206,29 @@ buckets:
           - contracts/SPEC.lnd
           - runtime/test_function_expressions.py
         implementation_status:
-          grammar: not_started
-          ast: not_started
-          runtime: not_started
-          tests: not_started
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Grammar: _fn() method parses 'fn' '(' params? ')' '=>' expr with trailing comma support
+          - Grammar: call_suffix now works on arbitrary expressions (not just idents), enabling immediate invocation
+          - AST: 'fn' node with params (string array) and body (expr) defined in AST_SCHEMA
+          - AST: 'call' node changed from callee (ident) to target (expr) to support arbitrary call targets
+          - Runtime: _eval handles 'fn' kind by creating Closure with captured environment
+          - Runtime: _eval handles 'call' kind by evaluating target, checking Closure, binding params
+          - Closure: properly captures lexical scope at definition point
+          - Tests: Created runtime/test_function_expressions.py with 18 comprehensive tests - all pass
+          - No-param functions: fn() => 42 works correctly
+          - Single/multi-param functions work as expected
+          - Immediate invocation: (fn(x) => x * 2)(5) -> 10
+          - Let-bound functions: let double = fn(x) => x * 2 in double(3) -> 6
+          - Closures: makeAdder pattern works, capturing outer scope variables
+          - Currying: fn(x) => fn(y) => x + y pattern supported
+          - Higher-order: functions can be stored in lists and passed around
+          - Negative: E_RT_ARITY_MISMATCH raised when arg count doesn't match param count
+          - All 18 tests pass; existing tests for let/if/object/list all still pass
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items: []

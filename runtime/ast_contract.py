@@ -24,8 +24,8 @@ AST_SCHEMA = {
             "fields": {"kind": "literal:fn", "span": "span", "params": "ident[]", "body": "expr"},
         },
         "call": {
-            "required": ["kind", "span", "callee", "args"],
-            "fields": {"kind": "literal:call", "span": "span", "callee": "ident", "args": "expr[]"},
+            "required": ["kind", "span", "target", "args"],
+            "fields": {"kind": "literal:call", "span": "span", "target": "expr", "args": "expr[]"},
         },
         "index": {
             "required": ["kind", "span", "target", "index"],
@@ -252,7 +252,7 @@ def _validate_expr(node: Any) -> None:
     if kind == "call":
         _require_kind(node, "call")
         _require_span(node, "call")
-        _require_ident(node.get("callee"), "call.callee")
+        _validate_expr(node.get("target"))
         args = node.get("args")
         if not isinstance(args, list):
             raise ASTValidationError("call.args must be a list")

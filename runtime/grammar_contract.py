@@ -466,7 +466,7 @@ class _Parser:
         node = self._atom()
         while True:
             tok = self._peek()
-            if tok.kind == "(" and node["kind"] == "ident":
+            if tok.kind == "(":
                 self._eat("(", "(")
                 args: list[dict[str, Any]] = []
                 if self._peek().kind != ")":
@@ -481,7 +481,7 @@ class _Parser:
                     "call",
                     node["span"]["start"],
                     close_tok.end,
-                    callee=node["name"],
+                    target=node,
                     args=args,
                 )
                 continue

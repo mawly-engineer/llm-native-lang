@@ -3,9 +3,80 @@ kind: cycle_log
 version: 1
 document: CYCLE_LOG
 purpose: Append-only execution log for coordinator-driven cycles.
-updated_at_utc: 2026-03-10T02:22:00Z
+updated_at_utc: 2026-03-10T03:42:00Z
 
 entries:
+  - cycle_id: CYCLE-2026-03-10-0342-017
+    timestamp_utc: "2026-03-10T03:42:00Z"
+    agent_profile: AGENT-KAIRO-COORDINATOR-001
+    run_profile: RUN-PRODUCT-CORE-004
+    selected_primary: language-core
+    selected_secondary: null
+    workflow_mode: single_item_execute
+    stage_before: create
+    stage_after: done
+    stage_result: item_completed
+    executed_backlog_item_id: LNG-CORE-51
+    execution_status: complete
+    auto_expanded: false
+    created_backlog_item_id: null
+    created_next_step_id: null
+    supervisor_validator_status: approved
+    supervisor_validator_score: null
+    implementation_delta: |
+      Completed LNG-CORE-51: Function expressions (fn(params) => body) with closure capture.
+      
+      Changes made:
+      1. Grammar (runtime/grammar_contract.py):
+         - _fn() method parses 'fn' '(' params? ')' '=>' expr
+         - call_suffix now works on arbitrary expressions (removed ident-only restriction)
+         - Changed call node from callee (string) to target (expr) for arbitrary call targets
+      
+      2. AST (runtime/ast_contract.py):
+         - 'fn' node with params (string array) and body (expr) already defined
+         - Updated 'call' node: target is now expr (was ident string)
+         - Updated validator to check target expression instead of callee ident
+      
+      3. Runtime (runtime/interpreter_runtime.py):
+         - _eval handles 'fn' kind by creating Closure with captured environment
+         - _eval handles 'call' kind by evaluating target, checking Closure, binding params
+         - Closure properly captures lexical scope at definition point
+      
+      4. Tests (runtime/test_function_expressions.py):
+         - Created 18 comprehensive tests covering all acceptance criteria
+         - All 18 tests pass
+         - Existing tests (let, if, object, list) all still pass
+      
+      Test coverage:
+      - No-param functions: fn() => 42
+      - Single/multi-param functions
+      - Immediate invocation: (fn(x) => x * 2)(5) -> 10
+      - Let-bound functions with calls
+      - Closures with captured variables
+      - Currying: fn(x) => fn(y) => x + y
+      - Higher-order functions (functions in lists)
+      - Error handling: E_RT_ARITY_MISMATCH for arg count mismatches
+    tests:
+      - runtime/test_function_expressions.py: 18/18 pass
+      - runtime/test_let_expressions.py: 19/19 pass
+      - runtime/test_if_expressions.py: 19/19 pass
+      - runtime/test_object_literals.py: 14/14 pass
+    changed_files:
+      - runtime/grammar_contract.py
+      - runtime/ast_contract.py
+      - runtime/interpreter_runtime.py
+      - runtime/test_function_expressions.py
+      - evolution/WORK_ITEMS.lnd
+      - evolution/CURRENT_STATE.lnd
+      - evolution/CYCLE_LOG.lnd
+    commit: pending
+    blockers: []
+    summary: |
+      Cycle 017: LNG-CORE-51 completed (function expressions with closure capture).
+      Grammar, AST, runtime, and tests all implemented and verified.
+      System transitioned from create to done stage. All 18 new tests pass.
+      Existing test suites remain green. Ready for next product-core item.
+
   - cycle_id: CYCLE-2026-03-10-0222-016
     timestamp_utc: "2026-03-10T02:22:00Z"
     agent_profile: AGENT-KAIRO-COORDINATOR-001
