@@ -5,7 +5,7 @@ from __future__ import annotations
 from hashlib import sha256
 from typing import Any
 
-AST_SCHEMA_VERSION = "1.0.1"
+AST_SCHEMA_VERSION = "1.0.2"
 
 AST_SCHEMA = {
     "version": AST_SCHEMA_VERSION,
@@ -30,6 +30,14 @@ AST_SCHEMA = {
         "index": {
             "required": ["kind", "span", "target", "index"],
             "fields": {"kind": "literal:index", "span": "span", "target": "expr", "index": "expr"},
+        },
+        "slice": {
+            "required": ["kind", "span", "target", "start", "end", "step"],
+            "fields": {"kind": "literal:slice", "span": "span", "target": "expr", "start": "expr|null", "end": "expr|null", "step": "expr|null"},
+        },
+        "range_call": {
+            "required": ["kind", "span", "args"],
+            "fields": {"kind": "literal:range_call", "span": "span", "args": "expr[]"},
         },
         "optional_call": {
             "required": ["kind", "span", "target", "args"],
@@ -151,6 +159,8 @@ _AST_FINGERPRINT_SOURCE = [
     "fn:kind,span,params,body",
     "call:kind,span,callee,args",
     "index:kind,span,target,index",
+    "slice:kind,span,target,start,end,step",
+    "range_call:kind,span,args",
     "optional_call:kind,span,target,args",
     "member_access:kind,span,target,member",
     "optional_index_access:kind,span,target,index",
@@ -269,6 +279,33 @@ def _validate_expr(node: Any) -> None:
         _require_span(node, "index")
         _validate_expr(node.get("target"))
         _validate_expr(node.get("index"))
+        return
+
+    if kind == "slice":
+        _require_kind(node, "slice")
+        _require_span(node, "slice")
+        _validate_expr(node.get("target"))
+        start = node.get("start")
+        end = node.get("end")
+        step = node.get("step")
+        if start is not None:
+            _validate_expr(start)
+        if end is not None:
+            _validate_expr(end)
+        if step is not None:
+            _validate_expr(step)
+        return
+
+    if kind == "range_call":
+        _require_kind(node, "range_call")
+        _require_span(node, "range_call")
+        args = node.get("args")
+        if not isinstance(args, list):
+            raise ASTValidationError("range_call.args must be a list")
+        if len(args) < 1 or len(args) > 3:
+            raise ASTValidationError("range_call.args must have 1 to 3 arguments")
+        for arg in args:
+            _validate_expr(arg)
         return
 
     if kind == "optional_call":

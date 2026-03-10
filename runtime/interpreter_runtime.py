@@ -245,6 +245,81 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             location={"node_kind": "index", "field": "target"},
         )
 
+    if kind == "slice":
+        target = _eval(node["target"], env, context)
+
+        if not isinstance(target, list):
+            raise EvalError(
+                code="E_RT_TYPE",
+                message=f"slice target must be list, got {type(target).__name__}",
+                location={"node_kind": "slice", "field": "target"},
+            )
+
+        # Evaluate bounds
+        def eval_bound(bound_node):
+            if bound_node is None:
+                return None
+            value = _eval(bound_node, env, context)
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"slice bounds must evaluate to int, got {type(value).__name__}",
+                    location={"node_kind": "slice", "field": "bound"},
+                )
+            return value
+
+        start = eval_bound(node.get("start"))
+        end = eval_bound(node.get("end"))
+        step = eval_bound(node.get("step"))
+
+        # Default step is 1
+        if step is None:
+            step = 1
+
+        if step == 0:
+            raise EvalError(
+                code="E_RT_SLICE_STEP_ZERO",
+                message="slice step cannot be zero",
+                location={"node_kind": "slice", "field": "step"},
+            )
+
+        # Normalize bounds similar to Python slicing
+        length = len(target)
+
+        def normalize_index(idx, default):
+            if idx is None:
+                return default
+            if idx < 0:
+                idx = length + idx
+            return max(0, min(idx, length))
+
+        if step > 0:
+            start_idx = normalize_index(start, 0)
+            end_idx = normalize_index(end, length)
+        else:
+            # Negative step: start from end, go backward
+            start_idx = normalize_index(start, length - 1)
+            if start_idx >= length:
+                start_idx = length - 1
+            end_idx = normalize_index(end, -1)
+
+        # Build result by iterating
+        result = []
+        if step > 0:
+            current = start_idx
+            while current < end_idx:
+                if 0 <= current < length:
+                    result.append(target[current])
+                current += step
+        else:
+            current = start_idx
+            while current > end_idx:
+                if 0 <= current < length:
+                    result.append(target[current])
+                current += step
+
+        return result
+
     if kind == "member_access":
         target = _eval(node["target"], env, context)
         member = node["member"]
@@ -842,6 +917,50 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             message=f"value is not callable: {type(target).__name__}",
             location={"node_kind": "call"},
         )
+
+    if kind == "range_call":
+        args = node["args"]
+        evaluated_args = [_eval(arg, env, context) for arg in args]
+        
+        # Validate all arguments are integers
+        for idx, val in enumerate(evaluated_args):
+            if not isinstance(val, int) or isinstance(val, bool):
+                raise EvalError(
+                    code="E_RT_TYPE",
+                    message=f"range argument {idx} must be int, got {type(val).__name__}",
+                    location={"node_kind": "range_call", "arg_index": idx},
+                )
+        
+        # Parse arguments based on count
+        if len(evaluated_args) == 1:
+            start, end, step = 0, evaluated_args[0], 1
+        elif len(evaluated_args) == 2:
+            start, end, step = evaluated_args[0], evaluated_args[1], 1
+        else:  # 3 args
+            start, end, step = evaluated_args[0], evaluated_args[1], evaluated_args[2]
+        
+        # Validate step is not zero
+        if step == 0:
+            raise EvalError(
+                code="E_RT_RANGE_STEP_ZERO",
+                message="range step cannot be zero",
+                location={"node_kind": "range_call", "field": "step"},
+            )
+        
+        # Generate range list
+        result = []
+        if step > 0:
+            current = start
+            while current < end:
+                result.append(current)
+                current += step
+        else:
+            current = start
+            while current > end:
+                result.append(current)
+                current += step
+        
+        return result
 
     raise EvalError(
         code="E_RT_UNSUPPORTED_KIND",
