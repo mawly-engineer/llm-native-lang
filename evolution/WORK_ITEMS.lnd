@@ -1,8 +1,9 @@
 @lnd 0.2
-version: 28
+kind: work_items
+version: 30
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-10T15:42:00Z
+updated_at_utc: 2026-03-10T17:22:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -27,108 +28,61 @@ buckets:
     description: Core syntax/AST/type contracts.
     items:
       - id: LNG-CORE-62
-        title: String escape sequences (\n, \t, \", \\, \r)
+        title: String escape sequences
         status: done
         priority: P1
         created_at: "2026-03-10T15:42:00Z"
         completed_at: "2026-03-10T16:02:00Z"
-        description: |
-          Implement escape sequence processing for string literals.
-          Required sequences: \n (newline), \t (tab), \" (quote), \\ (backslash), \r (carriage return).
-          Essential for complete SPEC v1.0.0 string literal support.
-        acceptance:
-          - Lexer processes escape sequences during string tokenization
-          - \n becomes actual newline character (0x0A)
-          - \t becomes actual tab character (0x09)
-          - \" becomes double quote without ending string
-          - \\ becomes single backslash
-          - \r becomes carriage return (0x0D)
-          - Invalid escape sequences raise E_PARSE_INVALID_ESCAPE with location
-          - Unterminated strings raise E_PARSE_UNTERMINATED_STRING with location
-          - Works in concatenation: "line1\nline2" + "tab\there"
-          - Works in list literals: ["a\nb", "c\td"]
-          - Works in object keys/values: {"key\n": "val\t"}
+        description: Implement escape sequence processing for string literals.
         target_files:
           - runtime/lexer.py
-          - runtime/test_string_escapes.py (new)
       - id: LNG-CORE-61
-        title: Optional call operator ?(args) for null-safe function calls
+        title: Optional call operator
         status: done
         priority: P1
         created_at: "2026-03-10T15:02:00Z"
         completed_at: "2026-03-10T15:32:00Z"
-        description: |
-          Implement optional call operator for null-safe function invocation.
-          Syntax: expr?(arg1, arg2, ...)
-          Semantics: If expr evaluates to null, return null without evaluating args.
-          If expr is callable, invoke with evaluated args.
-          Raises E_RT_NOT_CALLABLE if expr is non-null and non-callable.
-          Required by SPEC v1.0.0 grammar for complete optional chaining support.
-          Complements existing ?[index] and ?.member operators.
-        acceptance:
-          - AST node kind "optional_call" added to ast_contract.py
-          - Runtime implements optional call evaluation with short-circuit semantics
-          - When target is null, returns null without evaluating arguments
-          - When target is callable, invokes with evaluated arguments
-          - Arity mismatch raises E_RT_ARITY_MISMATCH or E_RT_HOST_CALL_ARITY
-          - Non-callable non-null target raises E_RT_NOT_CALLABLE
-          - Works with closures, built-in functions, and function values in objects
-          - Nested optional calls supported: fn?(arg1)?(arg2)
-          - Tests cover: null target, valid call, arity mismatch, type errors
+        description: Implement optional call operator for null-safe function invocation.
         target_files:
-          - runtime/ast_contract.py
           - runtime/interpreter_runtime.py
-          - runtime/test_optional_call.py (new)
       - id: LNG-CORE-60
-        title: Range expressions with step (range(start, end, step))
+        title: Range expressions
         status: done
         priority: P1
         created_at: "2026-03-10T13:52:00Z"
         completed_at: "2026-03-10T14:22:00Z"
-        description: |
-          Implement range expressions for generating numeric sequences.
-          Syntax: range(end) | range(start, end) | range(start, end, step)
-          Returns a list of integers from start (inclusive) to end (exclusive).
-          Supports negative step for descending sequences.
-          Essential for list iteration, indexing, and list comprehensions.
-        acceptance:
-          - AST node kind "range_call" added to ast_contract.py
-          - Runtime implements range evaluation with bounds checking
-          - Supports single-argument form: range(5) -> [0, 1, 2, 3, 4]
-          - Supports two-argument form: range(1, 5) -> [1, 2, 3, 4]
-          - Supports three-argument form: range(0, 10, 2) -> [0, 2, 4, 6, 8]
-          - Supports negative step: range(5, 0, -1) -> [5, 4, 3, 2, 1]
-          - Zero step raises E_RT_RANGE_STEP_ZERO
-          - Empty ranges return []: range(5, 5) -> []
-          - Works with variables: range(x, y, z)
+        description: Implement range expressions for generating numeric sequences.
         target_files:
-          - runtime/ast_contract.py
           - runtime/interpreter_runtime.py
-          - runtime/test_range.py (new)
       - id: LNG-CORE-59
-        title: List slicing operator [start:end:step]
+        title: List slicing operator
         status: done
         priority: P1
         created_at: "2026-03-10T12:22:00Z"
         completed_at: "2026-03-10T13:22:00Z"
-        description: |
-          Implement list slicing with Python-style slice notation [start:end:step].
-          Supports negative indices, optional bounds, and step values.
-          Required by SPEC v1.0.0 grammar for list operations.
-        acceptance:
-          - AST node kind "slice" added to ast_contract.py
-          - Runtime implements slice evaluation with bounds checking
-          - Supports negative indices (e.g., [-1] for last element)
-          - Supports optional start/end (e.g., [:5], [2:])
-          - Supports step parameter (e.g., [::2], [::-1])
-          - Tests cover edge cases: empty slices, out of bounds, negative step
+        description: Implement list slicing with Python-style slice notation.
         target_files:
-          - runtime/ast_contract.py
           - runtime/interpreter_runtime.py
-          - runtime/test_list_slicing.py (new)
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
-    items: []
+    items:
+      - id: LNG-CORE-63
+        title: Error code registry with consistent naming and documentation
+        status: done
+        priority: P1
+        created_at: "2026-03-10T16:52:00Z"
+        completed_at: "2026-03-10T17:22:00Z"
+        description: |
+          Created centralized error code registry system with 19 error codes documented.
+          E_PARSE_* (3 codes) and E_RT_* (16 codes) with validation script.
+        acceptance:
+          - Create errors/ERROR_REGISTRY.lnd ✅
+          - Categorize errors ✅
+          - Each error has documentation ✅
+          - Validation script created ✅
+        target_files:
+          - errors/ERROR_REGISTRY.lnd (new)
+          - scripts/validate_errors.py (new)
   practical-value:
     description: Real-world utility, examples, and measurable task value.
     items: []

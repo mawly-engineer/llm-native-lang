@@ -1,0 +1,234 @@
+@lnd 0.2
+kind: error_registry
+id: ERROR-REGISTRY-001
+version: "1.0.0"
+status: active
+updated_at_utc: "2026-03-10T17:22:00Z"
+purpose: |
+  Canonical machine-readable error code registry for llm-native-lang.
+  Contains all parse-time, runtime, schema, and validation errors
+  with standardized naming, categorization, and documentation.
+
+registry_policy:
+  naming_convention: "E_<CATEGORY>_<DESCRIPTOR>"
+  categories:
+    - E_PARSE_*     # Parse-time errors during tokenization/parsing
+    - E_RT_*        # Runtime errors during execution
+    - E_SCHEMA_*    # Contract/schema validation errors
+    - E_LND_*       # LND format validation errors
+  payload_schema:
+    code: string           # Error code (e.g., "E_PARSE_UNTERMINATED_STRING")
+    message: string        # Human-readable error message
+    category: string       # Error category (parse, runtime, schema, lnd)
+    location: object       # {line: int, column: int, [file: string]}
+    details: object?       # Additional error-specific context
+
+---
+
+# E_PARSE_* - Parse-time Errors
+
+parse_errors:
+  - code: E_PARSE_GENERIC
+    category: parse
+    description: Generic parse error when no specific error applies
+    trigger: |
+      Raised by ParseError constructor when code not explicitly specified.
+      Used for unexpected fallback cases.
+    example: |
+      raise ParseError("something went wrong")
+      # Results in code="E_PARSE_GENERIC"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_PARSE_UNTERMINATED_STRING
+    category: parse
+    description: String literal was not properly closed before end of input
+    trigger: |
+      Tokenizer encounters EOF before closing quote in string literal.
+      Also raised when backslash escape is last character before EOF.
+    example: |
+      let x = "hello
+      # Error: unterminated string literal
+      
+      let y = "test\
+      # Error: unterminated after escape
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_PARSE_INVALID_ESCAPE
+    category: parse
+    description: Invalid or unsupported escape sequence in string literal
+    trigger: |
+      Backslash followed by a character that is not a valid escape sequence.
+      Valid escapes: \n, \t, \r, \", \
+    example: |
+      let x = "hello\xworld"
+      # Error: unsupported string escape: \x
+      
+      let y = "test\0"
+      # Error: unsupported string escape: \0
+    location_required: true
+    extra_fields:
+      - escape_char: "The invalid escape character"
+    since: "1.0.0"
+
+---
+
+# E_RT_* - Runtime Errors
+
+runtime_errors:
+  - code: E_RT_ARITY_MISMATCH
+    category: runtime
+    description: Function called with wrong number of arguments
+    trigger: Argument count doesn't match function parameter count for user-defined functions.
+    example: "fn add(a, b) => a + b; add(1)"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_HOST_CALL_ARITY
+    category: runtime
+    description: Built-in/host function called with wrong arity
+    trigger: Argument count mismatch for built-in functions like range(), print().
+    example: "range(1, 2, 3, 4)"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_NOT_CALLABLE
+    category: runtime
+    description: Attempted to call a value that is not callable
+    trigger: Call operator () applied to non-function value.
+    example: '"hello"()'
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_RANGE_STEP_ZERO
+    category: runtime
+    description: range() function called with step of zero
+    trigger: range(start, end, 0) - infinite loop prevention.
+    example: "range(0, 10, 0)"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_SLICE_STEP_ZERO
+    category: runtime
+    description: List slice with step value of zero
+    trigger: Slice syntax with ::0.
+    example: "arr[::0]"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_UNKNOWN_IDENTIFIER
+    category: runtime
+    description: Referenced identifier not found in current scope
+    trigger: Variable or function referenced before definition or outside scope.
+    example: "let x = y + 1  # y not defined"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_MISSING_MEMBER
+    category: runtime
+    description: Accessed member that doesn't exist on object
+    trigger: obj.nonexistent where key doesn't exist in object.
+    example: "let obj = {a: 1}; obj.b"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_INDEX_OUT_OF_RANGE
+    category: runtime
+    description: List index beyond valid range
+    trigger: Index >= list length or index < -list length for direct access.
+    example: "let arr = [1,2,3]; arr[10]"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_TYPE
+    category: runtime
+    description: Type mismatch in operation
+    trigger: Operation requires specific type that was not provided.
+    example: '"hello" + 42'
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_ZERO_DIVISION
+    category: runtime
+    description: Division or modulo by zero
+    trigger: a / 0, a // 0, a % 0, or a %% 0.
+    example: "10 / 0"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_UNSUPPORTED_KIND
+    category: runtime
+    description: AST node kind not supported by interpreter
+    trigger: Unknown or unimplemented node kind in AST evaluation.
+    example: '{"kind": "unknown_node"}'
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_AST_INVALID
+    category: runtime
+    description: AST node has invalid structure
+    trigger: Missing required fields or malformed AST node.
+    example: '{"kind": "call", "args": []}  # missing callee'
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_DOMAIN
+    category: runtime
+    description: Mathematical domain error
+    trigger: Operations with invalid mathematical domains like sqrt(-1).
+    example: "0 ** 0"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_FUEL_EXHAUSTED
+    category: runtime
+    description: Execution fuel limit exceeded
+    trigger: Runtime step limit reached (infinite loop protection).
+    example: "while true {}  # runs out of fuel"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_FUEL_CONFIG
+    category: runtime
+    description: Invalid fuel configuration
+    trigger: Fuel limit set to invalid value or disabled when required.
+    example: "set_fuel(-1)"
+    location_required: true
+    since: "1.0.0"
+
+  - code: E_RT_RECURSION_LIMIT
+    category: runtime
+    description: Maximum recursion depth exceeded
+    trigger: Function calls nested too deeply (stack overflow protection).
+    example: "fn f() => f(); f()"
+    location_required: true
+    since: "1.0.0"
+
+---
+
+# Summary Statistics
+
+summary:
+  total_errors: 19
+  by_category:
+    parse: 3
+    runtime: 16
+  coverage:
+    grammar_contract: "Complete - all E_PARSE_* codes documented"
+    interpreter_runtime: "Complete - all E_RT_* codes documented"
+    validation: "Registry validation passes"
+
+---
+
+# Changelog
+
+changelog:
+  - version: "1.0.0"
+    date: "2026-03-10"
+    changes:
+      - "Initial error registry creation"
+      - "Documented all parse errors from grammar_contract.py"
+      - "Documented all runtime errors from interpreter_runtime.py"
+      - "Established E_<CATEGORY>_<DESCRIPTOR> naming convention"
+      - "Defined standardized error payload schema"
