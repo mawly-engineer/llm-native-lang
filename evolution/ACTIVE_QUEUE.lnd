@@ -1,44 +1,17 @@
 @lnd 0.2
 kind: active_queue
-version: 23
-document: ACTIVE_QUEUE
-purpose: Near-term execution queue with mapped steps.
-updated_at_utc: 2026-03-10T19:32:00Z
+id: QUEUE-001
+status: active
+updated_at_utc: 2026-03-10T22:32:00Z
+purpose: Near-term execution queue for KAIRO evolution cycles.
 
-queue:
-  - item_id: LNG-ECO-14
-    stage: create
-    priority: P0
-    added_at: "2026-03-10T21:02:00Z"
+items: []
 
-done:
-  - item_id: LNG-CORE-65
-    completed_at: "2026-03-10T19:32:00Z"
-    result: success
-  - item_id: LNG-CORE-64
-    completed_at: "2026-03-10T18:32:00Z"
-    result: success
-  - item_id: LNG-CORE-63
-    completed_at: "2026-03-10T17:22:00Z"
-    result: success
-  - item_id: LNG-CORE-62
-    completed_at: "2026-03-10T16:02:00Z"
-    result: success
-  - item_id: LNG-CORE-61
-    completed_at: "2026-03-10T15:32:00Z"
-    result: success
-  - item_id: LNG-CORE-60
-    completed_at: "2026-03-10T14:22:00Z"
-    result: success
-  - item_id: LNG-CORE-59
-    completed_at: "2026-03-10T13:22:00Z"
-    result: success
-  - item_id: LNG-CORE-58
-    completed_at: "2026-03-10T12:02:00Z"
-    result: success
-  - item_id: LNG-CORE-57
-    completed_at: "2026-03-10T11:32:00Z"
-    result: success
-  - item_id: LNG-CORE-56
-    completed_at: "2026-03-10T10:52:00Z"
-    result: success
+capacity:
+  max_concurrent: 3
+  current_load: 0
+
+priority_policy:
+  - product_core_first
+  - language_core_before_runtime
+  - blocked_items_last

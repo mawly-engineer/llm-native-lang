@@ -1,37 +1,32 @@
 @lnd 0.2
 kind: current_state
-id: STATE-2026-03-10-2142-025
-timestamp: 2026-03-10T21:42:00Z
-cycle: 25
+id: STATE-001
 status: active
+updated_at_utc: 2026-03-10T22:32:00Z
+purpose: Track current execution state for KAIRO evolution cycles.
 
-active_stage: done
-work_item_in_progress: null
+cycle:
+  number: 2
+  stage: idle
+  started_at_utc: 2026-03-10T22:30:00Z
+  completed_at_utc: 2026-03-10T22:32:00Z
+
+active_item: null
+
+streams:
+  language_core:
+    status: idle
+    current_item: null
+  runtime_replay:
+    status: idle
+    current_item: null
+  contracts:
+    status: idle
+    current_item: null
+
 blockers: []
 
-last_action:
-  type: item_execution
-  action: complete_work_item
-  item_id: LNG-ECO-14
-  result: success
-  timestamp_utc: "2026-03-10T21:42:00Z"
-  details:
-    - "Completed LNG-ECO-14: Performance benchmarking suite with metrics dashboard"
-    - "Verified benchmark_suite.py with 15 representative workloads"
-    - "Verified run_benchmarks.py with CLI, filtering, comparison, CI mode"
-    - "Verified metrics/baseline.json with captured baseline"
-    - "12/15 workloads pass (3 fail due to pending language features: range builtin, list slice syntax)"
-    - "Status changed: open -> done"
-    - "Stage completed: create -> validate -> execute -> done"
-
-git_status:
-  branch: main
-  clean: false
-  pending_commits: 1
-
 metrics:
-  total_cycles: 25
-  items_completed: 13
-  items_created: 7
-  validation_passes: 10
-  validation_failures: 1
+  total_cycles: 2
+  completed_items: 1
+  blocked_cycles: 0

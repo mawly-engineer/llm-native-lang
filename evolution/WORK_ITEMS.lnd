@@ -1,197 +1,71 @@
 @lnd 0.2
 kind: work_items
-version: 33
-document: WORK_ITEMS
-purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-10T19:12:00Z
+id: WORK-001
+status: active
+updated_at_utc: 2026-03-10T22:32:00Z
+purpose: Master backlog for llm-native-lang project.
 
-selection_policy:
-  per_cycle_execution_limit: 3
-  batch_by_stage_type: true
-  lightweight_stages:
-    - spec_update
-    - doc_tweak
-    - governance_note
-  default_pick_order:
-    - highest_priority
-    - open_status
-    - deterministic_id_order
+categories:
+  language_core:
+    description: Language specification and core capabilities
+    items: []
 
-allowed_status_values:
-  - open
-  - in_progress
-  - blocked
-  - done
-
-buckets:
-  language-core:
-    description: Core syntax/AST/type contracts.
+  runtime_replay:
+    description: Runtime execution and replay system
     items:
-      - id: LNG-CORE-65
-        title: Object member access operator (.field)
+      - id: ITEM-005
+        title: Implement range() builtin with comprehensive tests
+        description: Add range(start, stop, step) builtin to interpreter with support for positive/negative step, bounds validation, and E_RT_RANGE_STEP_ZERO error
+        priority: p0
         status: done
-        priority: P1
-        created_at: "2026-03-10T19:12:00Z"
-        completed_at: "2026-03-10T19:32:00Z"
-        description: |
-          Implement object member access via dot notation (obj.field).
-          
-          Grammar defined in SPEC v1.0.0:
-          member_suffix -> '.' IDENT
-          
-          Example that should work:
-          let person = {"name": "Alice", "age": 30}
-          in person.name + " is " + person.age
-          
-          Expected: "Alice is 30"
-          Current: Parse error or runtime error (not implemented)
-          
-          Required behaviors:
-          - Evaluate base expression (must be object)
-          - Access field by identifier name
-          - Raise E_RT_MISSING_MEMBER if field not found
-          - Raise E_RT_TYPE if base is not an object
-        acceptance:
-          - Parser handles member_suffix in postfix expressions ✅
-          - AST contract validates member access nodes ✅
-          - Interpreter evaluates object field access ✅
-          - Error handling for missing fields ✅
-          - Error handling for non-object base ✅
-          - Tests for nested object access (obj.a.b) ✅
-          - Tests for member access in expressions ✅
-        target_files:
-          - runtime/ast_contract.py
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-10T22:30:00Z
+        completed_at_utc: 2026-03-10T22:32:00Z
+        stage: execute
+        files_changed:
           - runtime/interpreter_runtime.py
-          - runtime/test_member_access.py
-      - id: LNG-CORE-64
-        title: Recursive let bindings (let rec) evaluation
-        status: done
-        priority: P1
-        created_at: "2026-03-10T17:42:00Z"
-        completed_at: "2026-03-10T17:52:00Z"
-        description: |
-          Implement recursive let bindings evaluation. Grammar already supports
-          'let rec' syntax and parser generates recursive: true field, but the
-          interpreter cannot evaluate recursive functions.
-          
-          Example that fails:
-          let rec fact = fn(n) =>
-            if n == 0 then 1 else n * fact(n - 1)
-          in fact(5)
-          
-          Expected: 120
-          Actual: E_RT_AST_INVALID - unsupported expr kind: None
-        acceptance:
-          - AST contract validates recursive field ✅
-          - Interpreter evaluates recursive closures ✅
-          - Fix forward reference in recursive bindings ✅
-          - Tests for recursive factorial ✅
-          - Tests for mutually recursive functions ✅
-        target_files:
-          - runtime/ast_contract.py
-          - runtime/interpreter_runtime.py
-          - runtime/test_recursive_bindings.py
-      - id: LNG-CORE-62
-        title: String escape sequences
-        status: done
-        priority: P1
-        created_at: "2026-03-10T15:42:00Z"
-        completed_at: "2026-03-10T16:02:00Z"
-        description: Implement escape sequence processing for string literals.
-        target_files:
-          - runtime/lexer.py
-      - id: LNG-CORE-61
-        title: Optional call operator
-        status: done
-        priority: P1
-        created_at: "2026-03-10T15:02:00Z"
-        completed_at: "2026-03-10T15:32:00Z"
-        description: Implement optional call operator for null-safe function invocation.
-        target_files:
-          - runtime/interpreter_runtime.py
-      - id: LNG-CORE-60
-        title: Range expressions
-        status: done
-        priority: P1
-        created_at: "2026-03-10T13:52:00Z"
-        completed_at: "2026-03-10T14:22:00Z"
-        description: Implement range expressions for generating numeric sequences.
-        target_files:
-          - runtime/interpreter_runtime.py
-      - id: LNG-CORE-59
-        title: List slicing operator
-        status: done
-        priority: P1
-        created_at: "2026-03-10T12:22:00Z"
-        completed_at: "2026-03-10T13:22:00Z"
-        description: Implement list slicing with Python-style slice notation.
-        target_files:
-          - runtime/interpreter_runtime.py
-  ecosystem:
-    description: Tooling, docs, release, and onboarding surface for external use.
+          - runtime/test_range_builtin.py
+
+  contracts:
+    description: LND/LNC format contracts and validation
     items:
-      - id: LNG-ECO-14
-        title: Performance benchmarking suite with metrics dashboard
-        status: done
-        priority: P0
-        created_at: "2026-03-10T21:02:00Z"
-        description: |
-          Create comprehensive performance benchmarking suite for the interpreter.
-          
-          Goals:
-          - Measure parse/eval performance for common expression patterns
-          - Track performance regression across commits
-          - Generate machine-readable benchmark reports
-          - Integrate with CI for performance gating
-          
-          Deliverables:
-          - runtime/benchmark_suite.py with representative workloads
-          - scripts/run_benchmarks.py for automated execution
-          - metrics/ folder for benchmark data storage
-          - Performance dashboard visualization (optional v2)
-          
-          Benchmark categories:
-          - Parser performance: nested expressions, large literals
-          - Evaluator performance: recursive functions, list operations
-          - Memory usage: closure capture, environment growth
-          - Fuel consumption: step counting accuracy
-        acceptance:
-          - At least 10 benchmark workloads defined
-          - Baseline metrics captured for current runtime
-          - Benchmark runs are deterministic (same input = same metrics)
-          - JSON output format for machine parsing
-          - Integration with existing benchmark_harness.py
-        target_files:
-          - runtime/benchmark_suite.py (new)
-          - scripts/run_benchmarks.py (new)
-          - metrics/baseline.json (new)
-          - evolution/WORK_ITEMS.lnd
-      - id: LNG-CORE-63
-        title: Error code registry with consistent naming and documentation
-        status: done
-        priority: P1
-        created_at: "2026-03-10T16:52:00Z"
-        completed_at: "2026-03-10T17:22:00Z"
-        description: |
-          Created centralized error code registry system with 19 error codes documented.
-          E_PARSE_* (3 codes) and E_RT_* (16 codes) with validation script.
-        acceptance:
-          - Create errors/ERROR_REGISTRY.lnd ✅
-          - Categorize errors ✅
-          - Each error has documentation ✅
-          - Validation script created ✅
-        target_files:
-          - errors/ERROR_REGISTRY.lnd (new)
-          - scripts/validate_errors.py (new)
-  practical-value:
-    description: Real-world utility, examples, and measurable task value.
-    items: []
-  interpreter-runtime:
-    description: Deterministic interpreter/runtime behavior.
-    items: []
-  validation:
-    description: Tests, contracts, and property checks.
-    items: []
-  integration:
-    description: End-to-end runtime integration and replay checks.
-    items: []
+      - id: ITEM-001
+        title: Initialize core LND format specification
+        description: Create the foundational LND_FORMAT.lnd specification file
+        priority: p0
+        status: proposed
+        objective: language_core_capability
+        created_at_utc: 2026-03-10T22:22:00Z
+        stage: create
+
+      - id: ITEM-002
+        title: Initialize LNC contract profile
+        description: Create the foundational LNC_PROFILE.lnd contract file
+        priority: p0
+        status: proposed
+        objective: llm_format_contract_capability
+        created_at_utc: 2026-03-10T22:22:00Z
+        stage: create
+
+      - id: ITEM-003
+        title: Create AGENT_ROUTER configuration
+        description: Establish agent routing and stream allocation rules
+        priority: p1
+        status: proposed
+        objective: language_core_capability
+        created_at_utc: 2026-03-10T22:22:00Z
+        stage: create
+
+      - id: ITEM-004
+        title: Create SUPERVISOR_STATE tracking
+        description: Establish supervisor validation state tracking
+        priority: p1
+        status: proposed
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-10T22:22:00Z
+        stage: create
+
+seeding_policy:
+  enabled: true
+  max_seeds_per_cycle: 2
+  min_idle_cycles_before_seed: 3

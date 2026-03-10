@@ -119,6 +119,53 @@ def _is_function(value: Any) -> bool:
     return isinstance(value, Closure) or callable(value)
 
 
+def _builtin_range(*args: Any) -> list[int]:
+    """Builtin: range(stop) or range(start, stop) or range(start, stop, step).
+
+    Returns a list of integers from start (inclusive) to stop (exclusive)
+    with the given step. Negative step supported for reverse ranges.
+    Raises TypeError for wrong number of args or non-int arguments.
+    """
+    if len(args) == 0 or len(args) > 3:
+        raise TypeError(f"range expected 1 to 3 arguments, got {len(args)}")
+
+    # Validate all arguments are integers (not bool)
+    for i, arg in enumerate(args):
+        if not isinstance(arg, int) or isinstance(arg, bool):
+            raise TypeError(f"range argument {i} must be int")
+
+    # Parse arguments
+    if len(args) == 1:
+        start, stop, step = 0, args[0], 1
+    elif len(args) == 2:
+        start, stop, step = args[0], args[1], 1
+    else:
+        start, stop, step = args[0], args[1], args[2]
+
+    # Validate step is not zero
+    if step == 0:
+        raise EvalError(
+            code="E_RT_RANGE_STEP_ZERO",
+            message="range step cannot be zero",
+            location={"builtin": "range", "field": "step"},
+        )
+
+    # Generate range list
+    result = []
+    if step > 0:
+        current = start
+        while current < stop:
+            result.append(current)
+            current += step
+    else:
+        current = start
+        while current > stop:
+            result.append(current)
+            current += step
+
+    return result
+
+
 def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
@@ -149,6 +196,9 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     root.set("is_object", _is_object)
     root.set("is_null", _is_null)
     root.set("is_function", _is_function)
+    
+    # Collection built-ins
+    root.set("range", _builtin_range)
     
     if env:
         for key in sorted(env.keys()):
