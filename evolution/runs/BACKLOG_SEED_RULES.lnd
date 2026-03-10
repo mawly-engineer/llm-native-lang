@@ -1,56 +1,20 @@
 @lnd 0.2
 kind: backlog_seed_policy
-id: BACKLOG-SEED-001
+id: SEED-RULES-001
 status: active
-updated_at_utc: 2026-03-08T10:14:00Z
-purpose: Controlled auto-seeding for product-core backlog when queue is empty.
+updated_at_utc: 2026-03-10T10:52:00Z
+purpose: Rules for controlled backlog seeding after sustained idle streaks.
 
-trigger:
-  idle_noop_suppressed_streak_min: 1
-  require_no_open_items: true
-  seed_when_open_items_below: 2
+seed_conditions:
+  - condition: all_product_core_items_done
+    threshold_cycles: 1
+    action: seed_next_product_core_item
 
-seed_limits:
-  max_new_items_per_cycle: 1
-  max_new_items_per_day: 4
-  do_not_seed_if_recent_item_created_within_minutes: 15
+creation_rules:
+  - rule: seed_only_product_core_when_language_core_complete
+    priority: P1
+    target_bucket: ecosystem
 
-allowed_buckets:
-  - language-core
-  - practical-value
-  - interpreter-runtime
-  - integration
-
-forbidden_seed_categories:
-  - process_only
-  - log_only
-  - migration_cleanup
-
-required_new_item_fields:
-  - deterministic_scope
-  - single_cycle_feasibility
-  - explicit_tests
-  - product_effect_target
-  - done_when
-
-priority_policy:
-  default_priority: P1
-  promote_to_p0_if:
-    - runtime_reproducibility_gap_detected
-    - failing_product_test_detected
-
-next_step_policy:
-  create_matching_next_step: true
-  next_step_owner_focus_from_bucket: true
-
-idle_recovery_actions:
-  on_idle_noop_suppressed:
-    - compute_next_best_product_core_item
-    - seed_item_if_policy_allows
-    - create_matching_next_step
-  objective: "Reduce probability of consecutive idle_noop_suppressed cycles."
-
-safety:
-  - never create more than one item in same cycle
-  - if validator confidence low, skip seeding and emit blocker
-  - keep seeded items product-core only
+governance:
+  max_seeds_per_cycle: 1
+  require_explicit_backlog_item_id: true

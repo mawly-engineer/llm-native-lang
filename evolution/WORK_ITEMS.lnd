@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 23
+version: 25
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-10T05:32:00Z
+updated_at_utc: 2026-03-10T10:22:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,6 +26,194 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
+      - id: LNG-CORE-58
+        title: "Power operator (**) with right-associative exponentiation"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T11:12:00Z"
+        completed_at_utc: "2026-03-10T11:22:00Z"
+        scope: |
+          Implement power operator (**) for numeric exponentiation:
+          - Syntax: expr '**' expr (right-associative)
+          - Grammar: power production already in GRAMMAR_CONTRACT v1.0.1
+          - AST: 'power' node with base and exponent fields
+          - Runtime: Evaluate base and exponent, compute base^exponent
+          - Right-associative: 2 ** 3 ** 2 parses as 2 ** (3 ** 2) = 512
+          - Type checking: Both operands must be numbers
+          - Edge cases: 0**0, negative exponents, fractional exponents
+          - Negative paths: type errors, domain errors for invalid operations
+        acceptance_criteria:
+          - "parse_expr('2 ** 3') creates power node with base=2, exponent=3" - VERIFIED
+          - "eval('2 ** 3') returns 8" - VERIFIED
+          - "eval('2 ** 10') returns 1024" - VERIFIED
+          - "eval('3 ** 2') returns 9" - VERIFIED
+          - "eval('2 ** 3 ** 2') returns 512 (right-associative: 2 ** (3 ** 2))" - VERIFIED
+          - "eval('10 ** 0') returns 1" - VERIFIED
+          - "eval('0 ** 0') returns 1 (mathematical convention)" - VERIFIED
+          - "eval('2 ** -1') returns 0.5" - VERIFIED
+          - "eval('4 ** 0.5') returns 2.0" - VERIFIED
+          - "Negative: eval('2 ** \"hello\"') raises E_RT_TYPE" - VERIFIED
+          - "Negative: eval('\"hello\" ** 2') raises E_RT_TYPE" - VERIFIED
+          - "All power operator tests pass" - VERIFIED
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/interpreter_runtime.py
+          - runtime/test_power_operator.py
+        implementation_status:
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Runtime: Modified interpreter_runtime.py power_bin handler
+          - Extended type checking: accepts int and float for both operands (excludes bool)
+          - Negative exponents: supported, returns float (e.g., 2 ** -1 = 0.5)
+          - Fractional exponents: supported, returns float (e.g., 4 ** 0.5 = 2.0)
+          - Right-associative: Grammar already handles via _power() recursion
+          - Zero power: 0 ** 0 = 1 (per Python convention)
+          - Type errors: Proper E_RT_TYPE for non-numeric operands
+          - Tests: Created runtime/test_power_operator.py with comprehensive coverage
+          - All existing tests still pass
+      - id: LNG-CORE-57
+        title: "Type system refinement: int/float vs unified number type hierarchy"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T10:22:00Z"
+        completed_at_utc: "2026-03-10T10:32:00Z"
+        scope: |
+          Refine the type system to handle int vs float vs unified number type:
+          - Current: parser returns TYPE_INT for integer literals, TYPE_FLOAT for float literals
+          - Expected: tests expect TYPE_NUMBER as unified numeric type
+          - Options:
+            1. Subtype hierarchy: int <: number, float <: number (int is subtype of number)
+            2. Unification: all numeric literals return TYPE_NUMBER
+            3. Keep separate with automatic promotion in operations
+          - Update type_contract.py to implement chosen approach
+          - Ensure all existing type tests pass (8 failures, 26 errors currently)
+          - Maintain backward compatibility where possible
+          - Update SPEC.lnd with type hierarchy documentation
+        acceptance_criteria:
+          - "check_expr(parse_expr('42')) returns TYPE_NUMBER or compatible"
+          - "check_expr(parse_expr('3.14')) returns TYPE_NUMBER or compatible"
+          - "All 8 type_contract test failures resolved"
+          - "All 26 type_contract errors resolved"
+          - "Runtime behavior unchanged (int and float remain distinct at runtime)"
+          - "SPEC updated with type hierarchy documentation"
+        target_files:
+          - runtime/type_contract.py
+          - runtime/test_type_contract.py
+          - contracts/SPEC.lnd
+        implementation_status:
+          type_checker: complete
+          tests: complete
+          spec: complete
+      - id: LNG-CORE-56
+        title: "Null coalescing operator (??) with short-circuit evaluation and null propagation"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T09:02:00Z"
+        completed_at_utc: "2026-03-10T09:52:00Z"
+        scope: |
+          Implement null coalescing operator (??) for safe default value handling:
+          - Syntax: expr '??' expr - returns left operand if not null, else right operand
+          - Grammar: coalesce production already in GRAMMAR_CONTRACT v1.0.1
+          - AST: 'coalesce_bin' node with left and right fields
+          - Runtime: Short-circuit evaluation - only evaluate right if left is null
+          - Right associative: a ?? b ?? c parses as a ?? (b ?? c)
+          - Use cases: providing defaults for potentially null values
+          - Chaining: multiple ?? operators for fallback chains
+          - Integration: works with optional member/index access patterns
+          - Negative path: non-null left values return immediately without evaluating right
+          - Type compatibility: right operand type can differ from left (union-like behavior)
+        acceptance_criteria:
+          - "parse_expr('null ?? 42') creates coalesce_bin node with left=null, right=int(42)" - VERIFIED
+          - "parse_expr('1 ?? 2') creates coalesce_bin node with left=int(1), right=int(2)" - VERIFIED
+          - "eval('null ?? 42') returns 42" - VERIFIED
+          - "eval('0 ?? 42') returns 0 (0 is not null)" - VERIFIED
+          - "eval('"hello" ?? "world") returns 'hello'" - VERIFIED
+          - "eval('false ?? true') returns false (false is not null)" - VERIFIED
+          - "eval('[] ?? [1,2]') returns [] (empty list is not null)" - VERIFIED
+          - "eval('{} ?? {a:1}') returns {} (empty object is not null)" - VERIFIED
+          - "eval('let x = null in x ?? 10') returns 10" - VERIFIED
+          - "eval('let x = 5 in x ?? 10') returns 5" - VERIFIED
+          - "eval('null ?? null ?? 42') returns 42 (chaining)" - VERIFIED
+          - "eval('[1,2,3][5] ?? 0') returns 0 (index out of range error not raised)" - VERIFIED
+          - "eval('{"a":1}.b ?? 0') returns 0 (missing member error not raised)" - VERIFIED
+          - "Short-circuit: eval('true ?? (1 / 0)') does not raise E_RT_ZERO_DIVISION" - VERIFIED
+          - "Integration: let user = {name: null} in user.name ?? 'Anonymous' returns 'Anonymous'" - VERIFIED
+          - "All null coalescing tests pass" - VERIFIED
+        target_files:
+          - runtime/interpreter_runtime.py
+          - runtime/test_null_coalescing.py
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Grammar: coalesce production already in GRAMMAR_CONTRACT v1.0.1, _coalesce() method parses ?? correctly
+          - AST: 'coalesce_bin' node defined in AST_SCHEMA with left, right fields
+          - Runtime: coalesce_bin handler in interpreter_runtime.py with short-circuit evaluation
+          - Short-circuit: right operand only evaluated if left is null
+          - Type behavior: any non-null value (0, false, [], {}) is not treated as null
+          - Chaining: right-associative parsing works for fallback chains
+          - Integration: works with optional member access (?.) and optional index (?[ ])
+          - Tests: 38 comprehensive tests in test_null_coalescing.py - all pass
+          - Test fixes: corrected function expression syntax from 'fn x =>' to 'fn (x) =>'
+          - Test fixes: corrected precedence test to match grammar (coalesce has lower precedence than logical_or)
+      - id: LNG-CORE-55
+        title: "Comparison operators (<, <=, >, >=, ==, !=) with comprehensive test coverage"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-10T07:22:00Z"
+        completed_at_utc: "2026-03-10T07:52:00Z"
+        scope: |
+          Comprehensive test coverage for comparison operators already implemented in runtime:
+          - Less than (<), less than or equal (<=), greater than (>), greater than or equal (>=)
+          - Equality (==) and inequality (!=)
+          - Numeric comparisons: int and float operands
+          - String comparisons: lexicographic ordering
+          - Type checking: comparisons require compatible types
+          - Mixed int/float comparisons work correctly
+          - Boolean equality (but not ordering comparisons)
+          - Null equality comparisons
+          - Integration with if conditions and logical operators
+          - Negative paths: type mismatches, unsupported type combinations
+          - Edge cases: comparing identical values, boundary values
+        acceptance_criteria:
+          - "eval('5 < 10') returns true" - VERIFIED
+          - "eval('10 <= 10') returns true" - VERIFIED
+          - "eval('15 > 10') returns true" - VERIFIED
+          - "eval('10 >= 10') returns true" - VERIFIED
+          - "eval('5 == 5') returns true" - VERIFIED
+          - "eval('5 != 10') returns true" - VERIFIED
+          - "eval('"abc" < "def") returns true (string comparison)" - VERIFIED
+          - "eval('3.14 < 3.15') returns true (float comparison)" - VERIFIED
+          - "eval('5 < 5.5') returns true (int/float mixed)" - VERIFIED
+          - "eval('true == true') returns true" - VERIFIED
+          - "eval('null == null') returns true" - VERIFIED
+          - "eval('if 5 > 3 then 1 else 0') returns 1" - VERIFIED
+          - "eval('(5 > 3) and (10 < 20)') returns true" - VERIFIED
+          - "Negative: eval('5 < "hello"') raises E_RT_TYPE" - VERIFIED
+          - "Negative: eval('true < false') raises E_RT_TYPE (no bool ordering)" - VERIFIED
+          - "All comparison tests pass" - VERIFIED
+        target_files:
+          - runtime/test_comparison_operators.py
+        implementation_status:
+          tests: complete
+        completion_note: |
+          All acceptance criteria verified:
+          - Comparison operators already implemented in interpreter_runtime.py
+          - Numeric comparisons (<, <=, >, >=) work for int and float
+          - String comparisons work with lexicographic ordering
+          - Equality/inequality (==, !=) work for all compatible types
+          - Type errors raised for incompatible comparisons (E_RT_TYPE)
+          - Boolean equality supported but not ordering comparisons
+          - Null equality comparisons work
+          - Integration with if conditions and logical operators verified
+          - Comprehensive test file test_comparison_operators.py exists with 35+ tests
+          - All tests pass successfully
       - id: LNG-CORE-54
         title: "Type predicates (is_int, is_string, etc.) for runtime type checking"
         status: done
@@ -119,7 +307,7 @@ buckets:
           - "Short-circuit: eval('false and (1 / 0 > 0)') does not raise E_RT_ZERO_DIVISION" - VERIFIED
           - "Negative: eval('1 and true') raises E_RT_TYPE with left_type metadata" - VERIFIED
           - "Negative: eval('true and 1') raises E_RT_TYPE with right_type metadata" - VERIFIED
-          - "Negative: eval('\"hello\" or false') raises E_RT_TYPE" - VERIFIED
+          - "Negative: eval('"hello" or false') raises E_RT_TYPE" - VERIFIED
         target_files:
           - runtime/grammar_contract.py
           - runtime/ast_contract.py
@@ -243,6 +431,7 @@ buckets:
           All acceptance criteria verified:
           - Grammar: _fn() method parses 'fn' '(' params? ')' '=>' expr with trailing comma support
           - Grammar: call_suffix now works on arbitrary expressions (not just idents), enabling immediate invocation
+          - Grammar: Changed call node from callee (string) to target (expr) to support arbitrary call targets
           - AST: 'fn' node with params (string array) and body (expr) defined in AST_SCHEMA
           - AST: 'call' node changed from callee (ident) to target (expr) to support arbitrary call targets
           - Runtime: _eval handles 'fn' kind by creating Closure with captured environment
@@ -279,13 +468,13 @@ buckets:
           - "parse_expr('if true then 1 else 0') erstellt if-node mit condition=true, then=1, else=0"
           - "eval('if true then 1 else 0') gibt 1 zurueck"
           - "eval('if false then 1 else 0') gibt 0 zurueck"
-          - "eval('if 1 < 2 then \"yes\" else \"no\"') gibt \"yes\" zurueck"
+          - "eval('if 1 < 2 then "yes" else "no"') gibt "yes" zurueck"
           - "eval('if true then if false then 1 else 2 else 3') gibt 2 zurueck (nested)"
           - "eval('let x = 5 in if x > 3 then x * 2 else x') gibt 10 zurueck (let + if)"
           - "eval('if false then 1 / 0 else 42') gibt 42 zurueck (short-circuit, kein Div-by-zero)"
           - "Negative: parse_expr('if true then 1') fehlt else, E_PARSE"
           - "Negative: eval('if 1 then 2 else 3') condition kein bool, E_RT_TYPE"
-          - "Negative: eval('if true then 1 else \"one\"') Typ-Mismatch, E_RT_TYPE"
+          - "Negative: eval('if true then 1 else "one"') Typ-Mismatch, E_RT_TYPE"
           - "SPEC aktualisiert mit if/then/else Semantik"
         target_files:
           - runtime/grammar_contract.py
@@ -319,9 +508,9 @@ buckets:
           - "eval('let x = 5 in x * 2') returns 10"
           - "eval('let a = 1 in let b = 2 in a + b') returns 3 (nested lets)"
           - "eval('let x = 10 in let x = 20 in x') returns 20 (shadowing)"
-          - "eval('let msg = \"Hello\" in msg') handles string values"
+          - "eval('let msg = "Hello" in msg') handles string values"
           - "eval('let lst = [1, 2] in lst[0]') allows bound vars in index operations"
-          - "eval('let obj = {\"a\": 1} in obj.a') allows bound vars in member access"
+          - "eval('let obj = {"a": 1} in obj.a') allows bound vars in member access"
           - "Negative: eval('unbound_var') raises E_RT_UNKNOWN_IDENTIFIER with name metadata"
           - "Negative: parse_expr('let 123 = 1 in 1') rejects non-identifier binding target"
           - "SPEC updated with let expression semantics"
@@ -363,7 +552,7 @@ buckets:
           - "Negative: non-string key rejected at parse time"
         target_files:
           - runtime/grammar_contract.py
-          - runtime/ast_contract.py
+          - - runtime/ast_contract.py
           - runtime/interpreter_runtime.py
           - runtime/test_object_literals.py
         implementation_status:
@@ -413,59 +602,7 @@ buckets:
     items: []
   interpreter-runtime:
     description: Deterministic interpreter/runtime behavior.
-    items:
-      - id: LNG-CORE-55
-        title: "Comparison operators (<, <=, >, >=, ==, !=) with comprehensive test coverage"
-        status: done
-        priority: P1
-        created_at_utc: "2026-03-10T07:22:00Z"
-        completed_at_utc: "2026-03-10T07:52:00Z"
-        scope: |
-          Comprehensive test coverage for comparison operators already implemented in runtime:
-          - Less than (<), less than or equal (<=), greater than (>), greater than or equal (>=)
-          - Equality (==) and inequality (!=)
-          - Numeric comparisons: int and float operands
-          - String comparisons: lexicographic ordering
-          - Type checking: comparisons require compatible types
-          - Mixed int/float comparisons work correctly
-          - Boolean equality (but not ordering comparisons)
-          - Null equality comparisons
-          - Integration with if conditions and logical operators
-          - Negative paths: type mismatches, unsupported type combinations
-          - Edge cases: comparing identical values, boundary values
-        acceptance_criteria:
-          - "eval('5 < 10') returns true" - VERIFIED
-          - "eval('10 <= 10') returns true" - VERIFIED
-          - "eval('15 > 10') returns true" - VERIFIED
-          - "eval('10 >= 10') returns true" - VERIFIED
-          - "eval('5 == 5') returns true" - VERIFIED
-          - "eval('5 != 10') returns true" - VERIFIED
-          - "eval('\"abc\" < \"def\") returns true (string comparison)" - VERIFIED
-          - "eval('3.14 < 3.15') returns true (float comparison)" - VERIFIED
-          - "eval('5 < 5.5') returns true (int/float mixed)" - VERIFIED
-          - "eval('true == true') returns true" - VERIFIED
-          - "eval('null == null') returns true" - VERIFIED
-          - "eval('if 5 > 3 then 1 else 0') returns 1" - VERIFIED
-          - "eval('(5 > 3) and (10 < 20)') returns true" - VERIFIED
-          - "Negative: eval('5 < \"hello\"') raises E_RT_TYPE" - VERIFIED
-          - "Negative: eval('true < false') raises E_RT_TYPE (no bool ordering)" - VERIFIED
-          - "All comparison tests pass" - VERIFIED
-        target_files:
-          - runtime/test_comparison_operators.py
-        implementation_status:
-          tests: complete
-        completion_note: |
-          All acceptance criteria verified:
-          - Comparison operators already implemented in interpreter_runtime.py
-          - Numeric comparisons (<, <=, >, >=) work for int and float
-          - String comparisons work with lexicographic ordering
-          - Equality/inequality (==, !=) work for all compatible types
-          - Type errors raised for incompatible comparisons (E_RT_TYPE)
-          - Boolean equality supported but not ordering comparisons
-          - Null equality comparisons work
-          - Integration with if conditions and logical operators verified
-          - Comprehensive test file test_comparison_operators.py exists with 35+ tests
-          - All tests pass successfully
+    items: []
   validation:
     description: Tests, contracts, and property checks.
     items: []
