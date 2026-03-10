@@ -1,9 +1,9 @@
 @lnd 0.2
 kind: supervisor_state
-version: 37
+version: 38
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
-updated_at_utc: 2026-03-10T16:32:00Z
+updated_at_utc: 2026-03-10T18:32:00Z
 
 state:
   mode: staged
@@ -18,14 +18,14 @@ state:
     - validate
     - revise
     - execute
-  last_stage_status: item_completed
+  last_stage_status: state_synced
   last_error: null
   last_completed_item:
+    item_id: LNG-CORE-64
+    completed_at_utc: "2026-03-10T17:52:00Z"
+  previous_completed_item:
     item_id: LNG-CORE-62
     completed_at_utc: "2026-03-10T16:32:00Z"
-  previous_completed_item:
-    item_id: LNG-CORE-61
-    completed_at_utc: "2026-03-10T15:32:00Z"
 
 blockers: []
 
