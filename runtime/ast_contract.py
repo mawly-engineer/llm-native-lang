@@ -5,7 +5,7 @@ from __future__ import annotations
 from hashlib import sha256
 from typing import Any
 
-AST_SCHEMA_VERSION = "1.0.0"
+AST_SCHEMA_VERSION = "1.0.1"
 
 AST_SCHEMA = {
     "version": AST_SCHEMA_VERSION,
@@ -13,7 +13,7 @@ AST_SCHEMA = {
     "nodes": {
         "let": {
             "required": ["kind", "span", "name", "value", "body"],
-            "fields": {"kind": "literal:let", "span": "span", "name": "ident", "value": "expr", "body": "expr"},
+            "fields": {"kind": "literal:let", "span": "span", "name": "ident", "value": "expr", "body": "expr", "recursive": "bool"},
         },
         "if": {
             "required": ["kind", "span", "cond", "then", "else"],
@@ -146,7 +146,7 @@ AST_SCHEMA = {
 
 
 _AST_FINGERPRINT_SOURCE = [
-    "let:kind,span,name,value,body",
+    "let:kind,span,name,value,body,recursive",
     "if:kind,span,cond,then,else",
     "fn:kind,span,params,body",
     "call:kind,span,callee,args",
@@ -222,6 +222,10 @@ def _validate_expr(node: Any) -> None:
         _require_ident(node.get("name"), "let.name")
         _validate_expr(node.get("value"))
         _validate_expr(node.get("body"))
+        # recursive field is optional, defaults to False
+        recursive = node.get("recursive")
+        if recursive is not None and not isinstance(recursive, bool):
+            raise ASTValidationError("let.recursive must be a bool")
         return
 
     if kind == "if":

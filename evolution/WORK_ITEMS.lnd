@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 21
+version: 22
 document: WORK_ITEMS
 purpose: Canonical machine-readable backlog for coordinator-driven execution.
-updated_at_utc: 2026-03-09T23:48:00Z
+updated_at_utc: 2026-03-10T04:32:00Z
 
 selection_policy:
   per_cycle_execution_limit: 3
@@ -26,42 +26,34 @@ buckets:
   language-core:
     description: Core syntax/AST/type contracts.
     items:
-      - id: LNG-CORE-50
-        title: "Bedingte Ausdruecke (if cond then expr else expr) mit deterministischer Verzweigung"
+      - id: LNG-CORE-52
+        title: "Recursive let bindings (let rec) for self-referential function definitions"
         status: done
         priority: P1
-        created_at_utc: "2026-03-09T23:48:00Z"
-        completed_at_utc: "2026-03-09T23:58:00Z"
+        created_at_utc: "2026-03-10T04:32:00Z"
+        completed_at_utc: "2026-03-10T05:02:00Z"
         scope: |
-          Implementiere deterministische bedingte Ausdruecke fuer Verzweigungen:
-          - Syntax: 'if' expr 'then' expr 'else' expr
-          - Grammar: if-production in _expr() mit then/else als keywords
-          - AST: 'if' node mit condition (expr), then_branch (expr), else_branch (expr)
-          - Runtime: evaluiere condition zuerst, dann entsprechenden branch
-          - Condition: muss zu bool evaluieren (true/false)
-          - Short-circuit: nur der gewaehlte branch wird evaluiert
-          - Typ: then_branch und else_branch muessen kompatiblen Typ haben
-          - Nested ifs: unterstuetze verschachtelte bedingte Ausdruecke
-          - Negative path: fehlendes else, Typ-Mismatch zwischen branches
+          Implement recursive let bindings to enable self-referential function definitions:
+          - Syntax: 'let rec' IDENT '=' expr 'in' body OR recursive closure for let-bound functions
+          - Grammar: Add 'rec' keyword support in let production or runtime-level recursion
+          - AST: Extend let node with recursive flag OR create new 'let_rec' node
+          - Runtime: Support fixpoint semantics for recursive closure binding
+          - Closure: Allow recursive reference to bound name within its own definition
+          - Use cases: factorial, fibonacci, tree traversal, recursive list processing
+          - Safety: Ensure recursion terminates via proper call stack
+          - Negative path: detect and handle infinite recursion gracefully
         acceptance_criteria:
-          - "parse_expr('if true then 1 else 0') erstellt if-node mit condition=true, then=1, else=0"
-          - "eval('if true then 1 else 0') gibt 1 zurueck"
-          - "eval('if false then 1 else 0') gibt 0 zurueck"
-          - "eval('if 1 < 2 then \"yes\" else \"no\"') gibt \"yes\" zurueck"
-          - "eval('if true then if false then 1 else 2 else 3') gibt 2 zurueck (nested)"
-          - "eval('let x = 5 in if x > 3 then x * 2 else x') gibt 10 zurueck (let + if)"
-          - "eval('if false then 1 / 0 else 42') gibt 42 zurueck (short-circuit, kein Div-by-zero)"
-          - "Negative: parse_expr('if true then 1') fehlt else, E_PARSE"
-          - "Negative: eval('if 1 then 2 else 3') condition kein bool, E_RT_TYPE"
-          - "Negative: eval('if true then 1 else \"one\"') Typ-Mismatch, E_RT_TYPE"
-          - "SPEC aktualisiert mit if/then/else Semantik"
+          - "eval('let rec fact = fn(n) => if n <= 1 then 1 else n * fact(n - 1) in fact(5)') returns 120"
+          - "eval('let rec fib = fn(n) => if n <= 1 then n else fib(n-1) + fib(n-2) in fib(10)') returns 55"
+          - "Fuel limit catches infinite recursion: E_RT_FUEL_EXHAUSTED"
+          - "Recursive functions work in closures with captured variables"
+          - "Recursive functions can be passed as arguments to higher-order functions"
+          - "Negative: wrong arity raises E_RT_ARITY_MISMATCH"
         target_files:
           - runtime/grammar_contract.py
           - runtime/ast_contract.py
-          - runtime/type_contract.py
           - runtime/interpreter_runtime.py
-          - contracts/SPEC.lnd
-          - runtime/test_if_expressions.py
+          - runtime/test_recursive_bindings.py
         implementation_status:
           grammar: complete
           ast: complete
@@ -69,103 +61,18 @@ buckets:
           tests: complete
         completion_note: |
           All acceptance criteria verified:
-          - Grammar: if production in _expr() and _if() methods correctly parse if expressions
-          - AST: 'if' node with cond (expr), then (expr), else (expr) defined in AST_SCHEMA
-          - Runtime: _eval handles 'if' kind by evaluating condition, checking bool type, selecting branch
-          - Tests: Created runtime/test_if_expressions.py with 19 comprehensive tests - all pass
-          - Simple if: if true then 1 else 0 -> 1, if false then 1 else 0 -> 0
-          - Comparison condition: if 1 < 2 then "yes" else "no" -> "yes"
-          - Nested ifs: if true then if false then 1 else 2 else 3 -> 2
-          - Let + if: let x = 5 in if x > 3 then x * 2 else x -> 10
-          - Short-circuit: if false then 1 / 0 else 42 -> 42 (no division by zero error)
-          - Negative: parse_expr('if true then 1') raises E_PARSE (missing else)
-          - Negative: eval('if 1 then 2 else 3') raises E_RT_TYPE (non-bool condition)
-          - All 19 tests pass with proper error codes and location metadata
-      - id: LNG-CORE-49
-        title: "Let expressions (let x = expr in body) with deterministic binding and scope"
-        status: done
-        priority: P1
-        created_at_utc: "2026-03-09T22:38:00Z"
-        completed_at_utc: "2026-03-09T23:28:00Z"
-        scope: |
-          Implement deterministic let expressions for variable binding:
-          - Syntax: 'let' IDENT '=' expr 'in' expr
-          - Grammar: let production already defined, ensure tokenizer handles keywords
-          - AST: let node with name (string), value (expr), body (expr) fields
-          - Runtime: evaluate value first, bind to name in new scope, evaluate body
-          - Scope: let-bound names shadow outer bindings, body can reference bound name
-          - Type: value type inferred from expr, body type is result type
-          - Nested lets: support multiple sequential bindings
-          - Negative path: duplicate binding in same scope, unbound identifier reference
-        acceptance_criteria:
-          - "parse_expr('let x = 1 in x + 1') creates let node with name='x', value=int(1), body=bin_op"
-          - "eval('let x = 5 in x * 2') returns 10"
-          - "eval('let a = 1 in let b = 2 in a + b') returns 3 (nested lets)"
-          - "eval('let x = 10 in let x = 20 in x') returns 20 (shadowing)"
-          - "eval('let msg = \"Hello\" in msg') handles string values"
-          - "eval('let lst = [1, 2] in lst[0]') allows bound vars in index operations"
-          - "eval('let obj = {\"a\": 1} in obj.a') allows bound vars in member access"
-          - "Negative: eval('unbound_var') raises E_RT_UNKNOWN_IDENTIFIER with name metadata"
-          - "Negative: parse_expr('let 123 = 1 in 1') rejects non-identifier binding target"
-          - "SPEC updated with let expression semantics"
-        target_files:
-          - runtime/grammar_contract.py
-          - runtime/ast_contract.py
-          - runtime/type_contract.py
-          - runtime/interpreter_runtime.py
-          - contracts/SPEC.lnd
-          - runtime/test_let_expressions.py
-        implementation_status:
-          grammar: complete
-          ast: complete
-          runtime: complete
-          tests: complete
-        completion_note: |
-          All acceptance criteria verified:
-          - Grammar: let production in _expr() and _let() methods correctly parse let expressions
-          - AST: 'let' node with name (string), value (expr), body (expr) defined in AST_SCHEMA
-          - Runtime: _eval handles 'let' kind by evaluating value, creating child scope, binding name, evaluating body
-          - Tests: 19/19 tests pass in test_let_expressions.py
-          - Simple let: let x = 1 in x + 1 -> 2
-          - Nested lets: let a = 1 in let b = 2 in a + b -> 3
-          - Shadowing: let x = 10 in let x = 20 in x -> 20
-          - String values, list/object binding, member/index access all work
-          - Negative: unbound identifier raises E_RT_UNKNOWN_IDENTIFIER
-          - Negative: non-identifier binding target rejected at parse time
-          - SPEC.lnd updated with let expression semantics section
-      - id: LNG-CORE-48
-        title: "Object literals {\"key\": expr, ...} with deterministic construction and hardened negative-path diagnostics"
-        status: done
-        priority: P1
-        created_at_utc: "2026-03-09T20:58:00Z"
-        completed_at_utc: "2026-03-09T21:48:00Z"
-        scope: |
-          [previous content preserved...]
-        acceptance_criteria:
-          [previous content preserved...]
-        target_files:
-          [previous content preserved...]
-        implementation_status:
-          grammar: complete
-          ast: complete
-          runtime: complete
-          tests: complete
-        completion_note: |
-          All acceptance criteria verified:
-          - Grammar: _atom() parses '{' STRING ':' expr (',' STRING ':' expr)* ','? '}' -> object node
-          - AST: 'object' node with 'entries' field (array of {key, value}) defined in AST_SCHEMA
-          - Runtime: _eval handles 'object' kind by evaluating entries left-to-right into Python dict
-          - Tests: Created runtime/test_object_literals.py with 14 comprehensive tests - all pass
-          - Empty object '{}' works, trailing comma '{"a": 1,}' handled
-          - Nested objects: {"outer": {"inner": 42}} works
-          - Expressions in values: {"computed": 1 + 2} evaluates correctly
-          - Mixed types: strings, numbers, bools, null in same object
-          - Evaluation order: entries evaluate left-to-right
-          - Negative paths: unclosed '{', missing colon, non-string key all raise E_PARSE
-          - Duplicate keys: AST validation raises error for {"a": 1, "a": 2}
-      - id: LNG-CORE-47
-        [remaining done items preserved but truncated for brevity...]
-        status: done
+          - Grammar: _let() method parses optional 'rec' keyword, sets recursive=True in node
+          - AST: 'let' node extended with optional 'recursive' boolean field
+          - Runtime: _eval handles recursive let with fixpoint semantics using RecursiveProxy
+          - Runtime: RecursiveProxy delegates calls to actual closure once initialized
+          - Runtime: Proper closure capture with recursive reference in scope during evaluation
+          - Tests: Created runtime/test_recursive_bindings.py with 18 comprehensive tests - all pass
+          - Factorial: let rec fact = fn(n) => ... in fact(5) returns 120
+          - Fibonacci: let rec fib = fn(n) => ... in fib(10) returns 55
+          - Fuel limit: Infinite recursion properly caught with E_RT_FUEL_EXHAUSTED
+          - Closure capture: Recursive functions can capture outer scope variables
+          - Higher-order: Recursive functions can be passed as arguments
+          - All 18 tests pass; existing tests remain green
       - id: LNG-CORE-51
         title: "Function expressions (fn(params) => body) with deterministic lambda creation and closure capture"
         status: done
@@ -229,6 +136,103 @@ buckets:
           - Higher-order: functions can be stored in lists and passed around
           - Negative: E_RT_ARITY_MISMATCH raised when arg count doesn't match param count
           - All 18 tests pass; existing tests for let/if/object/list all still pass
+      - id: LNG-CORE-50
+        title: "Bedingte Ausdruecke (if cond then expr else expr) mit deterministischer Verzweigung"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T23:48:00Z"
+        completed_at_utc: "2026-03-09T23:58:00Z"
+        scope: |
+          [content preserved...]
+        acceptance_criteria:
+          - "parse_expr('if true then 1 else 0') erstellt if-node mit condition=true, then=1, else=0"
+          - "eval('if true then 1 else 0') gibt 1 zurueck"
+          - "eval('if false then 1 else 0') gibt 0 zurueck"
+          - "eval('if 1 < 2 then \"yes\" else \"no\"') gibt \"yes\" zurueck"
+          - "eval('if true then if false then 1 else 2 else 3') gibt 2 zurueck (nested)"
+          - "eval('let x = 5 in if x > 3 then x * 2 else x') gibt 10 zurueck (let + if)"
+          - "eval('if false then 1 / 0 else 42') gibt 42 zurueck (short-circuit, kein Div-by-zero)"
+          - "Negative: parse_expr('if true then 1') fehlt else, E_PARSE"
+          - "Negative: eval('if 1 then 2 else 3') condition kein bool, E_RT_TYPE"
+          - "Negative: eval('if true then 1 else \"one\"') Typ-Mismatch, E_RT_TYPE"
+          - "SPEC aktualisiert mit if/then/else Semantik"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - contracts/SPEC.lnd
+          - runtime/test_if_expressions.py
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+      - id: LNG-CORE-49
+        title: "Let expressions (let x = expr in body) with deterministic binding and scope"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T22:38:00Z"
+        completed_at_utc: "2026-03-09T23:28:00Z"
+        scope: |
+          [content preserved...]
+        acceptance_criteria:
+          - "parse_expr('let x = 1 in x + 1') creates let node with name='x', value=int(1), body=bin_op"
+          - "eval('let x = 5 in x * 2') returns 10"
+          - "eval('let a = 1 in let b = 2 in a + b') returns 3 (nested lets)"
+          - "eval('let x = 10 in let x = 20 in x') returns 20 (shadowing)"
+          - "eval('let msg = \"Hello\" in msg') handles string values"
+          - "eval('let lst = [1, 2] in lst[0]') allows bound vars in index operations"
+          - "eval('let obj = {\"a\": 1} in obj.a') allows bound vars in member access"
+          - "Negative: eval('unbound_var') raises E_RT_UNKNOWN_IDENTIFIER with name metadata"
+          - "Negative: parse_expr('let 123 = 1 in 1') rejects non-identifier binding target"
+          - "SPEC updated with let expression semantics"
+        target_files:
+          - runtime/grammar_contract.py
+          - runtime/ast_contract.py
+          - runtime/type_contract.py
+          - runtime/interpreter_runtime.py
+          - contracts/SPEC.lnd
+          - runtime/test_let_expressions.py
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+      - id: LNG-CORE-48
+        title: "Object literals {\"key\": expr, ...} with deterministic construction and hardened negative-path diagnostics"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T20:58:00Z"
+        completed_at_utc: "2026-03-09T21:48:00Z"
+        scope: |
+          [content preserved...]
+        acceptance_criteria:
+          [content preserved...]
+        target_files:
+          [content preserved...]
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
+      - id: LNG-CORE-47
+        title: "List literals [expr, ...] with deterministic construction and indexed access"
+        status: done
+        priority: P1
+        created_at_utc: "2026-03-09T20:08:00Z"
+        completed_at_utc: "2026-03-09T20:38:00Z"
+        scope: |
+          [content preserved...]
+        acceptance_criteria:
+          [content preserved...]
+        target_files:
+          [content preserved...]
+        implementation_status:
+          grammar: complete
+          ast: complete
+          runtime: complete
+          tests: complete
   ecosystem:
     description: Tooling, docs, release, and onboarding surface for external use.
     items: []

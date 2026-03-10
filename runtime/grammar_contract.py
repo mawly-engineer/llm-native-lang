@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 from typing import Any, List
 
-GRAMMAR_VERSION = "1.0.0"
+GRAMMAR_VERSION = "1.0.1"
 
 # Machine-readable grammar contract (ordered for deterministic fingerprinting)
 GRAMMAR_CONTRACT = {
@@ -36,7 +36,7 @@ GRAMMAR_CONTRACT = {
     ],
     "productions": [
         "expr -> let | if | fn | coalesce",
-        "let -> 'let' IDENT '=' expr 'in' expr",
+        "let -> 'let' 'rec'? IDENT '=' expr 'in' expr",
         "if -> 'if' expr 'then' expr 'else' expr",
         "fn -> 'fn' '(' params? ')' '=>' expr",
         "coalesce -> logical_or ('??' coalesce)?",
@@ -210,7 +210,7 @@ def _tokenize(source: str) -> List[Token]:
             while j < len(source) and (source[j].isalnum() or source[j] == "_"):
                 j += 1
             ident = source[i:j]
-            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or", "true", "false", "null"}:
+            if ident in {"let", "in", "if", "then", "else", "fn", "and", "or", "true", "false", "null", "rec"}:
                 tokens.append(Token("KW", ident, i, j))
             else:
                 tokens.append(Token("IDENT", ident, i, j))
@@ -264,12 +264,17 @@ class _Parser:
 
     def _let(self) -> dict[str, Any]:
         start = self._eat("KW", "let").start
+        # Check for optional 'rec' keyword
+        recursive = False
+        if self._peek().kind == "KW" and self._peek().value == "rec":
+            self._eat("KW", "rec")
+            recursive = True
         name = self._eat("IDENT").value
         self._eat("=", "=")
         value = self._expr()
         self._eat("KW", "in")
         body = self._expr()
-        return self._with_span("let", start, body["span"]["end"], name=name, value=value, body=body)
+        return self._with_span("let", start, body["span"]["end"], name=name, value=value, body=body, recursive=recursive)
 
     def _if(self) -> dict[str, Any]:
         start = self._eat("KW", "if").start

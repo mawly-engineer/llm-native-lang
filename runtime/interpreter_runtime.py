@@ -638,10 +638,93 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
         return (left == right) if op == "==" else (left != right)
 
     if kind == "let":
-        value = _eval(node["value"], env, context)
-        scoped = env.child()
-        scoped.set(node["name"], value)
-        return _eval(node["body"], scoped, context)
+        name = node["name"]
+        is_recursive = node.get("recursive", False)
+        
+        if is_recursive:
+            # For recursive let, we need fixpoint semantics
+            # Create environment with placeholder binding first
+            scoped = env.child()
+            
+            # Create a mutable cell that will hold the actual value
+            # This allows the closure to capture a reference that gets updated
+            recursive_cell = [None]
+            
+            # Create a proxy object that looks like the actual value
+            # When called, it delegates to the cell contents
+            class RecursiveProxy:
+                def __init__(self, cell, proxy_name):
+                    self._cell = cell
+                    self._name = proxy_name
+                
+                def _get_value(self):
+                    if self._cell[0] is None:
+                        raise EvalError(
+                            code="E_RT_RECURSION_LIMIT",
+                            message=f"recursive binding '{self._name}' accessed before initialization",
+                            location={"node_kind": "let", "name": self._name}
+                        )
+                    return self._cell[0]
+                
+                def __call__(self, *args):
+                    val = self._get_value()
+                    if isinstance(val, Closure):
+                        if len(args) != len(val.params):
+                            raise EvalError(
+                                code="E_RT_ARITY_MISMATCH",
+                                message=(
+                                    f"arity mismatch: "
+                                    f"expected {len(val.params)}, got {len(args)}"
+                                ),
+                                location={"node_kind": "let", "name": self._name},
+                            )
+                        call_env = val.env.child()
+                        for param, arg_val in zip(val.params, args):
+                            call_env.set(param, arg_val)
+                        return _eval(val.body, call_env, context)
+                    if callable(val):
+                        return val(*args)
+                    raise EvalError(
+                        code="E_RT_NOT_CALLABLE",
+                        message=f"recursive binding '{self._name}' is not callable",
+                        location={"node_kind": "let", "name": self._name}
+                    )
+                
+                # Proxy attribute access to the actual value
+                def __getattr__(self, attr):
+                    if attr.startswith('_'):
+                        return object.__getattribute__(self, attr)
+                    val = self._get_value()
+                    return getattr(val, attr)
+                
+                # Proxy item access to the actual value
+                def __getitem__(self, key):
+                    val = self._get_value()
+                    return val[key]
+                
+                def __repr__(self):
+                    return f"<recursive {self._name}>"
+            
+            # Bind the proxy to the name before evaluating the value
+            proxy = RecursiveProxy(recursive_cell, name)
+            scoped.set(name, proxy)
+            
+            # Now evaluate the value with the name in scope
+            # This allows the function definition to capture the recursive reference
+            value = _eval(node["value"], scoped, context)
+            
+            # Update the cell with the actual value
+            recursive_cell[0] = value
+            
+            # Bind the actual value (replacing the proxy) and evaluate body
+            scoped.bindings[name] = value  # Replace proxy with actual value
+            return _eval(node["body"], scoped, context)
+        else:
+            # Non-recursive let (existing behavior)
+            value = _eval(node["value"], env, context)
+            scoped = env.child()
+            scoped.set(name, value)
+            return _eval(node["body"], scoped, context)
 
     if kind == "if":
         cond = _eval(node["cond"], env, context)
