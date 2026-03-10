@@ -1,28 +1,40 @@
 @lnd 0.2
 kind: current_state
-id: STATE-2026-03-10-002
-timestamp: 2026-03-10T07:52:00Z
-cycle: 2
-status: active
+id: STATE-2026-03-10-1142-008
+timestamp: 2026-03-10T11:42:00Z
+cycle: 9
+status: blocked
 
-active_stage: execute
-work_item_in_progress: LNG-CORE-55
-blockers: []
+active_stage: idle
+work_item_in_progress: null
+blockers:
+  - id: BLOCKER-2026-03-10-1142-001
+    type: working_tree_not_clean
+    description: "Non-maintenance paths are dirty (runtime/*.py, contracts/*.lnd). Auto-commit blocked per RUN-PRODUCT-CORE-004 maintenance policy."
+    paths:
+      - runtime/interpreter_runtime.py
+      - runtime/type_contract.py
+      - runtime/test_null_coalescing.py
+      - runtime/test_power_operator.py
+      - contracts/RUNTIME.lnd
+      - contracts/SPEC.lnd
+    created_at_utc: "2026-03-10T11:42:00Z"
 
 last_action:
-  type: item_completed
-  item_id: LNG-CORE-55
-  result: tests_verified
-  timestamp: 2026-03-10T07:52:00Z
+  type: cycle_maintenance
+  action: clear_stale_queue_entry
+  item_id: LNG-CORE-58
+  result: queue_cleaned_no_eligible_items
+  timestamp: 2026-03-10T11:42:00Z
 
 git_status:
   branch: main
-  clean: true
-  pending_commits: 0
+  clean: false
+  pending_commits: 13
 
 metrics:
-  total_cycles: 1
-  items_completed: 1
-  items_created: 0
-  validation_passes: 1
-  validation_failures: 0
+  total_cycles: 8
+  items_completed: 4
+  items_created: 2
+  validation_passes: 4
+  validation_failures: 1

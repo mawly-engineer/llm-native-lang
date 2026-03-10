@@ -1,8 +1,8 @@
 @lnd 0.2
-version: 37
+version: 39
 document: ACTIVE_QUEUE
 purpose: Active execution queue only (no history duplication).
-updated_at_utc: 2026-03-10T07:02:00Z
+updated_at_utc: 2026-03-10T11:42:00Z
 
 queue_policy:
   max_active_steps: 5
