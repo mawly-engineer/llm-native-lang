@@ -2,13 +2,24 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-10T22:32:00Z
+updated_at_utc: 2026-03-10T23:42:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
   language_core:
     description: Language specification and core capabilities
-    items: []
+    items:
+      - id: ITEM-001
+        title: Initialize core LND format specification
+        description: Create the foundational LND_FORMAT.lnd specification file
+        priority: p0
+        status: done
+        objective: language_core_capability
+        created_at_utc: 2026-03-10T22:22:00Z
+        completed_at_utc: 2026-03-10T23:42:00Z
+        stage: execute
+        files_changed:
+          - formats/lnd/LND_FORMAT.lnd
 
   runtime_replay:
     description: Runtime execution and replay system
@@ -29,24 +40,17 @@ categories:
   contracts:
     description: LND/LNC format contracts and validation
     items:
-      - id: ITEM-001
-        title: Initialize core LND format specification
-        description: Create the foundational LND_FORMAT.lnd specification file
-        priority: p0
-        status: active
-        objective: language_core_capability
-        created_at_utc: 2026-03-10T22:22:00Z
-        stage: create
-        activated_at_utc: 2026-03-10T22:52:00Z
-
       - id: ITEM-002
         title: Initialize LNC contract profile
         description: Create the foundational LNC_PROFILE.lnd contract file
         priority: p0
-        status: proposed
+        status: done
         objective: llm_format_contract_capability
         created_at_utc: 2026-03-10T22:22:00Z
-        stage: create
+        completed_at_utc: 2026-03-11T00:00:00Z
+        stage: execute
+        files_changed:
+          - formats/lnc/LNC_PROFILE.lnd
 
       - id: ITEM-003
         title: Create AGENT_ROUTER configuration
