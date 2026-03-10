@@ -1,8 +1,9 @@
 @lnd 0.2
-version: 33
+kind: supervisor_state
+version: 34
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
-updated_at_utc: 2026-03-10T11:42:00Z
+updated_at_utc: 2026-03-10T12:02:00Z
 
 state:
   mode: staged
@@ -17,7 +18,7 @@ state:
     - validate
     - revise
     - execute
-  last_stage_status: idle_noop_suppressed
+  last_stage_status: blocker_cleared
   last_error: null
   last_completed_item:
     item_id: LNG-CORE-58
