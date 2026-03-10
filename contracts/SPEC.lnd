@@ -193,6 +193,21 @@ language_runtime_semantics:
       - invalid_escape_raises_E_PARSE_INVALID_ESCAPE_with_location_and_escape_char_metadata
       - unterminated_string_raises_E_PARSE_UNTERMINATED_STRING_with_location
       - escaped_strings_usable_in_concatenation_list_and_object_contexts
+  let_expression:
+    operator: "let <name> = <value_expr> in <body_expr>"
+    scope: deterministic_lexical_binding_with_scope_nesting
+    behavior:
+      - evaluate_value_expr_first_in_current_scope
+      - create_new_child_scope_with_bound_name
+      - bind_name_to_evaluated_value_in_child_scope
+      - evaluate_body_expr_in_child_scope
+      - return_result_of_body_expr_evaluation
+      - shadowing_inner_let_overrides_outer_binding_for_inner_body_only
+      - support_nested_lets_for_sequential_bindings
+      - unbound_identifier_in_body_raises_E_RT_UNKNOWN_IDENTIFIER
+      - binding_target_must_be_identifier_else_parse_error
+      - lexical_scope_only_no_dynamic_scope
+      - bound_names_visible_in_all_subexpressions_of_body
 
 non_goals:
   - human_first_prose_as_primary_system_interface
