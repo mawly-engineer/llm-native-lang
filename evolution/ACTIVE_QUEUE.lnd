@@ -1,10 +1,10 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-004
+id: QUEUE-CYCLE-006
 status: active
-updated_at_utc: 2026-03-11T10:52:00Z
+updated_at_utc: 2026-03-11T12:52:45Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
-next_item_id: 13
+next_item_id: 14

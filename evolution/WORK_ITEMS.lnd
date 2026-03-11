@@ -2,10 +2,25 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-11T09:52:00Z
+updated_at_utc: 2026-03-11T11:32:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog: []
+    description: |
+      Build a replay conformance harness that validates deterministic replay
+      of interpreter execution traces. The harness must:
+      - Capture execution traces with full state snapshots
+      - Replay traces and verify identical outputs
+      - Detect non-deterministic operations
+      - Support serialization round-trip verification
+    acceptance_criteria:
+      - Trace capture API for interpreter_runtime.py
+      - JSON serialization of execution traces
+      - Replay validator with state comparison
+      - Detection of non-deterministic builtins
+      - Integration with existing test suite
+    stage: create
+    commit_ref: null
 
 completed:
   - id: LNG-001
@@ -73,4 +88,5 @@ completed:
       - Returns exit code 0 on valid, 1 on invalid
     stage: done
     commit_ref: null
-next_id: 13
+
+next_id: 14
