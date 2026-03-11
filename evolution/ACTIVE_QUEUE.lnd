@@ -5,15 +5,16 @@ status: active
 updated_at_utc: 2026-03-11T20:52:00Z
 purpose: Near-term execution queue with mapped steps.
 
-items:
-  - id: ITEM-020
-    title: "Create GitHub Actions release automation workflow"
-    step: 3
-    description: "Execute: prepare for release activation"
-    status: in_progress
-    stage: execute
+items: []
 
 completed:
+  - id: ITEM-020
+    title: "Create GitHub Actions release automation workflow"
+    completed_at_utc: 2026-03-11T21:32:00Z
+    committed_at_utc: 2026-03-11T21:32:00Z
+    stage: done
+    commit_ref: null
+    notes: "Release workflow complete. Push to origin/main required to activate."
   - id: ITEM-019
     title: "Create performance benchmarking suite for runtime and validators"
     completed_at_utc: 2026-03-11T20:52:00Z

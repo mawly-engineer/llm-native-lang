@@ -7,17 +7,9 @@ purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
 
-active:
-  - id: ITEM-020
-    title: "Create GitHub Actions release automation workflow"
-    objective: ecosystem_p0_delivery
-    priority: p1
-    status: in_progress
-    created_at_utc: 2026-03-11T21:02:00Z
-    started_at_utc: 2026-03-11T21:02:00Z
-    completed_at_utc: null
-    bucket: ecosystem
-    description: |
+active: []
+
+completed:
       Create an automated release workflow that addresses BLOCKER-001 by:
       - Automating git authentication via GitHub Actions
       - Building and publishing Python package to PyPI
