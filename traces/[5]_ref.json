@@ -1,0 +1,20 @@
+{
+  "trace_id": "[5]_ref",
+  "timestamp_start": 1773248602.0389948,
+  "timestamp_end": 1773248602.0390062,
+  "operations": [],
+  "state_snapshots": [
+    {
+      "timestamp": 1773248602.038999,
+      "state": {
+        "stage": "pre_execution",
+        "args": []
+      }
+    }
+  ],
+  "input_args": [],
+  "output_result": null,
+  "exceptions": [
+    "TestRoundTripIntegrity.test_conformance_harness_integration.<locals>.test_fn() missing 1 required positional argument: 'x'"
+  ]
+}

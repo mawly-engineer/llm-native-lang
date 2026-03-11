@@ -2,7 +2,7 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-11T14:32:00Z
+updated_at_utc: 2026-03-11T17:05:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
@@ -31,6 +31,32 @@ backlog:
     commit_ref: null
 
 completed:
+  - id: ITEM-016
+    title: "Create end-to-end integration test suite for LNC contract execution and replay validation"
+    objective: ecosystem_p0_delivery
+    secondary_objective: runtime_replay_capability
+    priority: p1
+    status: done
+    created_at_utc: 2026-03-11T16:22:00Z
+    completed_at_utc: 2026-03-11T17:05:00Z
+    bucket: ecosystem
+    description: |
+      Build comprehensive integration tests that validate the complete workflow:
+      - Load LNC contracts via lnc_contract_loader.py
+      - Execute contracts through interpreter_runtime.py
+      - Capture execution traces via replay_harness.py
+      - Validate replay conformance with replay_conformance.py
+      - Test CLI commands via kairo_cli.py
+      - Verify round-trip integrity of the entire pipeline
+    acceptance_criteria:
+      - Integration test file: runtime/test_integration_e2e.py
+      - Tests for contract loading + execution + trace capture
+      - Tests for replay validation on captured traces
+      - Tests for CLI validation and execution commands
+      - Tests for error paths and edge cases
+      - All tests pass with deterministic replay
+    stage: done
+    commit_ref: null
   - id: ITEM-014
     title: "Integrate runtime replay with LNC contract execution"
     objective: runtime_replay_capability
@@ -125,4 +151,4 @@ completed:
     stage: done
     commit_ref: 765741f
 
-next_id: 16
+next_id: 17
