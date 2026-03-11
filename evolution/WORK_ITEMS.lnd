@@ -2,7 +2,7 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-11T04:12:00Z
+updated_at_utc: 2026-03-11T05:32:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
@@ -49,6 +49,30 @@ categories:
         files_changed:
           - runtime/replay_conformance.py
           - runtime/test_replay_conformance.py
+
+      - id: ITEM-007
+        title: Implement len() builtin for strings and lists
+        description: Add len(value) builtin to interpreter with support for string and list types, including comprehensive error handling for unsupported types (E_RT_LEN_UNSUPPORTED_TYPE)
+        priority: p0
+        status: done
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-11T04:42:00Z
+        completed_at_utc: 2026-03-11T05:02:00Z
+        stage: execute
+        files_changed:
+          - runtime/interpreter_runtime.py
+          - runtime/test_len_builtin.py
+
+      - id: ITEM-008
+        title: Implement abs() builtin for numeric types
+        description: Add abs(value) builtin to interpreter with support for int and float types, including comprehensive error handling for unsupported types (E_RT_ABS_UNSUPPORTED_TYPE)
+        priority: p0
+        status: create
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-11T05:32:00Z
+        completed_at_utc: null
+        stage: create
+        files_changed: []
 
   contracts:
     description: LND/LNC format contracts and validation

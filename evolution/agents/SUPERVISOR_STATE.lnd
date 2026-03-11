@@ -3,29 +3,29 @@ kind: supervisor_state
 version: 38
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
-updated_at_utc: 2026-03-10T18:32:00Z
+updated_at_utc: 2026-03-11T04:42:00Z
 
 state:
   mode: staged
-  active_flow_id: null
-  active_bucket: null
-  active_backlog_item_id: null
-  active_next_step_id: null
-  current_stage: idle
+  active_flow_id: ITEM-007
+  active_bucket: runtime_replay
+  active_backlog_item_id: ITEM-007
+  active_next_step_id: STEP-007-001
+  current_stage: create
   allowed_stages:
     - idle
     - create
     - validate
     - revise
     - execute
-  last_stage_status: state_synced
+  last_stage_status: item_seeded
   last_error: null
   last_completed_item:
+    item_id: ITEM-006
+    completed_at_utc: "2026-03-11T04:02:00Z"
+  previous_completed_item:
     item_id: LNG-CORE-64
     completed_at_utc: "2026-03-10T17:52:00Z"
-  previous_completed_item:
-    item_id: LNG-CORE-62
-    completed_at_utc: "2026-03-10T16:32:00Z"
 
 blockers: []
 

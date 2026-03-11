@@ -166,6 +166,24 @@ def _builtin_range(*args: Any) -> list[int]:
     return result
 
 
+def _builtin_len(value: Any) -> int:
+    """Builtin: len(value) - returns the length of strings or lists.
+
+    Returns an integer representing the number of elements in the value.
+    Supports strings (character count) and lists (element count).
+    Raises E_RT_LEN_UNSUPPORTED_TYPE for unsupported types.
+    """
+    if isinstance(value, str):
+        return len(value)
+    if isinstance(value, list):
+        return len(value)
+    raise EvalError(
+        code="E_RT_LEN_UNSUPPORTED_TYPE",
+        message=f"len() unsupported type: {type(value).__name__}",
+        location={"builtin": "len", "arg_type": type(value).__name__},
+    )
+
+
 def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
@@ -199,6 +217,7 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     
     # Collection built-ins
     root.set("range", _builtin_range)
+    root.set("len", _builtin_len)
     
     if env:
         for key in sorted(env.keys()):

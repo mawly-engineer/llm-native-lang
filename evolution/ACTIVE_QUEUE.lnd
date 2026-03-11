@@ -2,14 +2,18 @@
 kind: active_queue
 id: QUEUE-001
 status: active
-updated_at_utc: 2026-03-11T01:02:00Z
+updated_at_utc: 2026-03-11T05:32:00Z
 purpose: Near-term execution queue for KAIRO evolution cycles.
 
-items: []
+items:
+  - id: ITEM-008
+    priority: p0
+    objective: runtime_replay_capability
+    stage: create
 
 capacity:
   max_concurrent: 3
-  current_load: 0
+  current_load: 1
 
 priority_policy:
   - product_core_first
