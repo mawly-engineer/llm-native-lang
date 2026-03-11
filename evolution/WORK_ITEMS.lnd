@@ -2,7 +2,7 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-11T05:32:00Z
+updated_at_utc: 2026-03-11T06:02:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
@@ -67,12 +67,14 @@ categories:
         title: Implement abs() builtin for numeric types
         description: Add abs(value) builtin to interpreter with support for int and float types, including comprehensive error handling for unsupported types (E_RT_ABS_UNSUPPORTED_TYPE)
         priority: p0
-        status: create
+        status: done
         objective: runtime_replay_capability
         created_at_utc: 2026-03-11T05:32:00Z
-        completed_at_utc: null
-        stage: create
-        files_changed: []
+        completed_at_utc: 2026-03-11T06:02:00Z
+        stage: execute
+        files_changed:
+          - runtime/interpreter_runtime.py
+          - runtime/test_abs_builtin.py
 
   contracts:
     description: LND/LNC format contracts and validation

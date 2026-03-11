@@ -184,6 +184,26 @@ def _builtin_len(value: Any) -> int:
     )
 
 
+def _builtin_abs(value: Any) -> int | float:
+    """Builtin: abs(value) - returns the absolute value of a number.
+
+    Returns the absolute value of the input number.
+    Supports int and float types.
+    Raises E_RT_ABS_UNSUPPORTED_TYPE for unsupported types.
+    """
+    # Check for int (excluding bool)
+    if isinstance(value, int) and not isinstance(value, bool):
+        return abs(value)
+    # Check for float
+    if isinstance(value, float):
+        return abs(value)
+    raise EvalError(
+        code="E_RT_ABS_UNSUPPORTED_TYPE",
+        message=f"abs() unsupported type: {type(value).__name__}",
+        location={"builtin": "abs", "arg_type": type(value).__name__},
+    )
+
+
 def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
@@ -218,6 +238,7 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     # Collection built-ins
     root.set("range", _builtin_range)
     root.set("len", _builtin_len)
+    root.set("abs", _builtin_abs)
     
     if env:
         for key in sorted(env.keys()):
