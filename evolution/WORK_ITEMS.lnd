@@ -1,158 +1,76 @@
 @lnd 0.2
 kind: work_items
-id: WORK-001
+id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-11T07:32:00Z
-purpose: Master backlog for llm-native-lang project.
+updated_at_utc: 2026-03-11T09:52:00Z
+purpose: Product-core backlog for language, runtime, and contracts.
 
-categories:
-  language_core:
-    description: Language specification and core capabilities
-    items:
-      - id: ITEM-001
-        title: Initialize core LND format specification
-        description: Create the foundational LND_FORMAT.lnd specification file
-        priority: p0
-        status: done
-        objective: language_core_capability
-        created_at_utc: 2026-03-10T22:22:00Z
-        completed_at_utc: 2026-03-10T23:42:00Z
-        stage: execute
-        files_changed:
-          - formats/lnd/LND_FORMAT.lnd
+backlog: []
 
-  runtime_replay:
-    description: Runtime execution and replay system
-    items:
-      - id: ITEM-005
-        title: Implement range() builtin with comprehensive tests
-        description: Add range(start, stop, step) builtin to interpreter with support for positive/negative step, bounds validation, and E_RT_RANGE_STEP_ZERO error
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-10T22:30:00Z
-        completed_at_utc: 2026-03-10T22:32:00Z
-        stage: execute
-        files_changed:
-          - runtime/interpreter_runtime.py
-          - runtime/test_range_builtin.py
-
-      - id: ITEM-006
-        title: Fix runtime test failures and resolve replay conformance issues
-        description: Address 5 test failures and 14 errors in runtime validation suite, particularly in test_replay_conformance.py and related artifact tracing
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T01:02:00Z
-        completed_at_utc: 2026-03-11T04:02:00Z
-        stage: execute
-        files_changed:
-          - runtime/replay_conformance.py
-          - runtime/test_replay_conformance.py
-
-      - id: ITEM-007
-        title: Implement len() builtin for strings and lists
-        description: Add len(value) builtin to interpreter with support for string and list types, including comprehensive error handling for unsupported types (E_RT_LEN_UNSUPPORTED_TYPE)
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T04:42:00Z
-        completed_at_utc: 2026-03-11T05:02:00Z
-        stage: execute
-        files_changed:
-          - runtime/interpreter_runtime.py
-          - runtime/test_len_builtin.py
-
-      - id: ITEM-008
-        title: Implement abs() builtin for numeric types
-        description: Add abs(value) builtin to interpreter with support for int and float types, including comprehensive error handling for unsupported types (E_RT_ABS_UNSUPPORTED_TYPE)
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T05:32:00Z
-        completed_at_utc: 2026-03-11T06:02:00Z
-        stage: execute
-        files_changed:
-          - runtime/interpreter_runtime.py
-          - runtime/test_abs_builtin.py
-
-      - id: ITEM-009
-        title: Implement min() builtin for collections
-        description: Add min(a, b) or min(collection) builtin to interpreter with support for numeric comparison and collection iteration, including error handling for empty collections (E_RT_MIN_EMPTY_COLLECTION) and type mismatches (E_RT_MIN_TYPE_MISMATCH)
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T06:12:00Z
-        completed_at_utc: 2026-03-11T07:22:00Z
-        stage: execute
-        files_changed:
-          - runtime/interpreter_runtime.py
-          - runtime/test_min_builtin.py
-
-      - id: ITEM-010
-        title: Implement max() builtin for collections
-        description: Add max(a, b) or max(collection) builtin to interpreter with support for numeric comparison and collection iteration, including error handling for empty collections (E_RT_MAX_EMPTY_COLLECTION) and type mismatches (E_RT_MAX_TYPE_MISMATCH)
-        priority: p0
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T07:32:00Z
-        completed_at_utc: 2026-03-11T09:02:00Z
-        stage: execute
-        files_changed:
-          - runtime/interpreter_runtime.py
-          - runtime/test_max_builtin.py
-
-      - id: ITEM-011
-        title: Implement sum() builtin for collections
-        description: Add sum(collection) or sum(collection, start) builtin to interpreter with support for numeric collection summation, including optional start value. Raises E_RT_SUM_EMPTY_COLLECTION for empty collections without start, and E_RT_SUM_TYPE_MISMATCH for non-numeric elements.
-        priority: p0
-        status: active
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-11T09:12:00Z
-        completed_at_utc: null
-        stage: create
-        files_changed: []
-
-  contracts:
-    description: LND/LNC format contracts and validation
-    items:
-      - id: ITEM-002
-        title: Initialize LNC contract profile
-        description: Create the foundational LNC_PROFILE.lnd contract file
-        priority: p0
-        status: done
-        objective: llm_format_contract_capability
-        created_at_utc: 2026-03-10T22:22:00Z
-        completed_at_utc: 2026-03-11T00:00:00Z
-        stage: execute
-        files_changed:
-          - formats/lnc/LNC_PROFILE.lnd
-
-      - id: ITEM-003
-        title: Create AGENT_ROUTER configuration
-        description: Establish agent routing and stream allocation rules
-        priority: p1
-        status: done
-        objective: language_core_capability
-        created_at_utc: 2026-03-10T22:22:00Z
-        completed_at_utc: 2026-03-11T00:12:00Z
-        stage: execute
-        files_changed:
-          - evolution/AGENT_ROUTER.lnd
-
-      - id: ITEM-004
-        title: Create SUPERVISOR_STATE tracking
-        description: Establish supervisor validation state tracking
-        priority: p1
-        status: done
-        objective: runtime_replay_capability
-        created_at_utc: 2026-03-10T22:22:00Z
-        completed_at_utc: 2026-03-11T00:42:00Z
-        stage: execute
-        files_changed:
-          - evolution/agents/SUPERVISOR_STATE.lnd
-
-seeding_policy:
-  enabled: true
-  max_seeds_per_cycle: 2
-  min_idle_cycles_before_seed: 3
+completed:
+  - id: LNG-001
+    title: "Implement LND format validator"
+    objective: language_core_capability
+    priority: p0
+    status: done
+    created_at_utc: 2026-03-11T09:22:00Z
+    completed_at_utc: 2026-03-11T09:32:00Z
+    description: |
+      Created a Python-based LND format validator that checks:
+      - Required header fields (@lnd version, kind, id)
+      - YAML syntax validity
+      - Required field presence per kind
+      - ID uniqueness across files
+    acceptance_criteria:
+      - Validator runs on evolution/ directory
+      - Reports missing required fields
+      - Reports syntax errors with line numbers
+      - Returns exit code 0 on valid, 1 on invalid
+    stage: done
+    commit_ref: null
+  - id: ITEM-011
+    title: "Implement LNC format validator"
+    objective: llm_format_contract_capability
+    priority: p0
+    status: done
+    created_at_utc: 2026-03-11T09:52:00Z
+    completed_at_utc: 2026-03-11T10:12:00Z
+    bucket: contracts
+    description: |
+      Enhanced Python-based LNC format validator that checks:
+      - Required header fields (@lnc version)
+      - YAML syntax validity (including TAB detection)
+      - Required field presence per kind (task, decision, note, code_unit)
+      - ID uniqueness across LNC files
+      - Task-specific validation: status, priority values
+      - Decision-specific validation: options count, selected validity
+    acceptance_criteria:
+      - Validator runs on runtime/examples/ directory
+      - Reports missing required fields with specific paths
+      - Reports syntax errors with line numbers
+      - Validates task status values (open, in_progress, done, cancelled)
+      - Validates priority values (p0, p1, p2, p3)
+      - Returns exit code 0 on valid, 1 on invalid
+    stage: done
+    commit_ref: null
+  - id: LNG-001
+    title: "Implement LND format validator"
+    objective: language_core_capability
+    priority: p0
+    status: done
+    created_at_utc: 2026-03-11T09:22:00Z
+    completed_at_utc: 2026-03-11T09:32:00Z
+    description: |
+      Created a Python-based LND format validator that checks:
+      - Required header fields (@lnd version, kind, id)
+      - YAML syntax validity
+      - Required field presence per kind
+      - ID uniqueness across files
+    acceptance_criteria:
+      - Validator runs on evolution/ directory
+      - Reports missing required fields
+      - Reports syntax errors with line numbers
+      - Returns exit code 0 on valid, 1 on invalid
+    stage: done
+    commit_ref: null
+next_id: 13

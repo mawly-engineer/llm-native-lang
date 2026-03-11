@@ -1,4 +1,6 @@
 @lnd 0.2
+kind: work_completed_archive
+id: WORK_COMPLETED_ARCHIVE-001
 version: 7
 document: WORK_COMPLETED_ARCHIVE
 purpose: Append-only archive of completed backlog items for audit/replay.

@@ -261,6 +261,63 @@ def _builtin_min(*args: Any) -> Any:
     return min(args)
 
 
+def _builtin_max(*args: Any) -> Any:
+    """Builtin: max(a, b) or max(collection) - returns the maximum value.
+
+    Supports:
+    - Two or more numeric arguments: max(5, 3) -> 5
+    - Single collection argument: max([3, 1, 4]) -> 4
+    
+    Raises:
+    - E_RT_MAX_EMPTY_COLLECTION: if collection is empty
+    - E_RT_MAX_TYPE_MISMATCH: if non-numeric types or mixed types in comparison
+    """
+    if len(args) == 0:
+        raise EvalError(
+            code="E_RT_MAX_EMPTY_COLLECTION",
+            message="max() requires at least one argument",
+            location={"builtin": "max", "arg_count": 0},
+        )
+    
+    # Helper to check if value is numeric (int or float, not bool)
+    def _is_numeric(val: Any) -> bool:
+        return (isinstance(val, int) and not isinstance(val, bool)) or isinstance(val, float)
+    
+    # If single argument and it's a list, treat as collection
+    if len(args) == 1 and isinstance(args[0], list):
+        collection = args[0]
+        if len(collection) == 0:
+            raise EvalError(
+                code="E_RT_MAX_EMPTY_COLLECTION",
+                message="max() collection is empty",
+                location={"builtin": "max", "collection_type": "list"},
+            )
+        
+        # Validate all elements are numeric
+        for i, item in enumerate(collection):
+            if not _is_numeric(item):
+                raise EvalError(
+                    code="E_RT_MAX_TYPE_MISMATCH",
+                    message=f"max() unsupported type at index {i}: {type(item).__name__}",
+                    location={"builtin": "max", "index": i, "item_type": type(item).__name__},
+                )
+        
+        # Find maximum
+        return max(collection)
+    
+    # Multiple arguments case - treat all args as values to compare
+    # Validate all args are numeric
+    for i, arg in enumerate(args):
+        if not _is_numeric(arg):
+            raise EvalError(
+                code="E_RT_MAX_TYPE_MISMATCH",
+                message=f"max() unsupported type at argument {i}: {type(arg).__name__}",
+                location={"builtin": "max", "arg_index": i, "arg_type": type(arg).__name__},
+            )
+    
+    return max(args)
+
+
 def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
@@ -297,6 +354,7 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     root.set("len", _builtin_len)
     root.set("abs", _builtin_abs)
     root.set("min", _builtin_min)
+    root.set("max", _builtin_max)
     
     if env:
         for key in sorted(env.keys()):
