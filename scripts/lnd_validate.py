@@ -277,7 +277,7 @@ class LNDValidator:
                 for key in obj.keys():
                     if not isinstance(key, str):
                         continue
-                    if not re.match(r'^[a-z0-9_]+$', key):
+                    if not re.match(r'^[a-zA-Z0-9_]+$', key):
                         self.errors.append(LNDError('LND_PARSE_004', 2, f"Invalid key: '{key}'", filepath))
                     if key in keys_seen:
                         self.errors.append(LNDError('LND_PARSE_003', 2, f"Duplicate key: '{key}'", filepath))
