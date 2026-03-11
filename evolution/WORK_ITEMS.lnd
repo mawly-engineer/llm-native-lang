@@ -2,7 +2,7 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-11T01:02:00Z
+updated_at_utc: 2026-03-11T04:12:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
@@ -41,12 +41,14 @@ categories:
         title: Fix runtime test failures and resolve replay conformance issues
         description: Address 5 test failures and 14 errors in runtime validation suite, particularly in test_replay_conformance.py and related artifact tracing
         priority: p0
-        status: create
+        status: done
         objective: runtime_replay_capability
         created_at_utc: 2026-03-11T01:02:00Z
-        completed_at_utc: null
-        stage: create
-        files_changed: []
+        completed_at_utc: 2026-03-11T04:02:00Z
+        stage: execute
+        files_changed:
+          - runtime/replay_conformance.py
+          - runtime/test_replay_conformance.py
 
   contracts:
     description: LND/LNC format contracts and validation
