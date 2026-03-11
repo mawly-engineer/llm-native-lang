@@ -1,0 +1,22 @@
+{
+  "trace_id": "4bda7a92352d233a",
+  "created_at": "2026-03-11T12:54:31.040978+00:00",
+  "source_file": null,
+  "frames": [
+    {
+      "timestamp": 1773233671.0412476,
+      "operation": "call:deterministic_calc",
+      "args": [
+        5,
+        3
+      ],
+      "kwargs": {},
+      "result": 16,
+      "exception": null,
+      "state_snapshot": {}
+    }
+  ],
+  "final_state": {
+    "result": 16
+  }
+}

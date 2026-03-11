@@ -2,7 +2,7 @@
 kind: agent_profile
 id: AGENT-KAIRO-COORDINATOR-001
 status: active
-updated_at_utc: 2026-03-08T12:40:00Z
+updated_at_utc: 2026-03-11T11:22:00Z
 purpose: Canonical rule set for the coordinator agent.
 
 workspace_root: /home/node/.openclaw/workspace/llm-native-lang
@@ -20,14 +20,6 @@ hard_rules:
   - append_cycle_log_on_meaningful_change_only
   - skip_full_test_output_on_no_change
   - compact_cycle_log_auto_after_n_cycles: 10
-  - lightweight_mode_for_small_items:
-      enabled: true
-      max_supervisor_stages: 2
-      eligible_for:
-        - spec_update
-        - doc_tweak
-        - governance_note
-        - single_file_change
   - apply_sot_governance_policy_from_evolution/PROJECT_ENTRY.lnd
   - keep_next_steps_compact
   - enforce_preflight_before_validate
@@ -73,28 +65,11 @@ preflight_gate:
     - set_stage: revise
     - add_explicit_blocker
 
-git_fetch_stability_gate:
-  fetch_retry_limit: 1
-  retry_delay_seconds: 5
-  on_persistent_fetch_failure:
-    - add_blocker: git_fetch_failed
-    - skip_execution_for_cycle
-    - emit_status: infra_blocked
-
 git_cleanliness_gate:
   rule: "End cycle with clean git status after maintenance, commit/push, or report explicit blocker."
   on_dirty_after_attempted_commit:
     - add_blocker: working_tree_not_clean
     - keep_current_stage
-
-maintenance_autofix_gate:
-  run_every_cycle_end: true
-  if_dirty_and_only_maintenance_paths:
-    - auto_commit_and_push
-    - continue_flow
-  if_dirty_and_contains_other_paths:
-    - add_blocker: working_tree_not_clean
-    - halt_stage_progress
 
 definition_of_done_gate:
   require_product_effect_one_of:
@@ -106,64 +81,6 @@ definition_of_done_gate:
     - supervisor_state_only
     - routing_metadata_only
 
-idle_noop_policy:
-  when_no_eligible_item_and_no_state_change:
-    - do_not_append_cycle_log
-    - do_not_commit
-    - do_not_touch_state_files_for_timestamp_only
-    - emit_status: idle_noop_suppressed
-  heartbeat_summary_interval_cycles: 30
-  heartbeat_summary_action:
-    - append_single_summary_log_entry
-
-controlled_backlog_seeding:
-  enabled: true
-  policy_file: evolution/runs/BACKLOG_SEED_RULES.lnd
-  rule: "Seed only after sustained idle streak and only product-core items."
-
-cycle_log_retention_policy:
-  max_entries: 20
-  maintenance_script: scripts/cycle_log_maintain.py
-  also_update: evolution/WORK_ITEMS.lnd
-  trigger_when:
-    - cycle_log_entries_exceed_max
-    - periodic_maintenance_window
-
-cycle_log_write_fallback:
-  primary_method: deterministic_full_rewrite_append
-  fallback_method: deterministic_full_rewrite_append
-  steps:
-    - read_latest_cycle_log
-    - reconstruct_with_new_entry
-    - write_full_file
-    - re_read_and_verify_new_cycle_id_present
-  on_fallback_failure:
-    - add_blocker: cycle_log_write_failed
-    - keep_current_stage
-
-state_file_write_policy:
-  target_files:
-    - evolution/CYCLE_LOG.lnd
-    - evolution/WORK_ITEMS.lnd
-    - evolution/WORK_COMPLETED_ARCHIVE.lnd
-    - evolution/ACTIVE_QUEUE.lnd
-    - evolution/CURRENT_STATE.lnd
-    - evolution/agents/SUPERVISOR_STATE.lnd
-  method: deterministic_full_rewrite
-  protocol:
-    - read_latest_file
-    - reconstruct_exact_next_content
-    - write_full_file
-    - re_read_and_verify_expected_marker_or_state
-  suppression_rules:
-    - skip_write_if_only_timestamp_or_formatting_change
-    - skip_archive_write_if_no_new_done_item
-    - skip_queue_write_if_queue_content_unchanged
-    - skip_current_or_supervisor_state_write_if_stage_and_flow_unchanged
-  on_failure:
-    - retry_once_after_fresh_read
-    - then_add_blocker_with_path_and_reason
-
 staged_order:
   - create
   - validate
@@ -171,45 +88,11 @@ staged_order:
   - validate
   - execute
 
-stage_batching_policy:
-  enabled: true
-  scope: same_backlog_item_only
-  max_transitions_per_cycle: 4
-  stop_conditions:
-    - blocker_detected
-    - validator_failure_requires_revision
-    - git_cleanliness_violation
-  preference:
-    - when_item_is_well_scoped_try_close_in_single_cycle
-
 authoritative_inputs:
   - evolution/PROJECT_ENTRY.lnd
   - evolution/CURRENT_STATE.lnd
-  - evolution/AGENT_ROUTER.lnd
   - evolution/WORK_ITEMS.lnd
   - evolution/ACTIVE_QUEUE.lnd
-  - evolution/agents/SUPERVISOR_STATE.lnd
-  - evolution/agents/SUPERVISOR_PROFILES.lnd
   - evolution/CYCLE_LOG.lnd
   - formats/lnd/LND_FORMAT.lnd
   - formats/lnc/LNC_PROFILE.lnd
-
-output_schema_keys:
-  - selected_primary
-  - selected_secondary
-  - workflow_mode
-  - stage_before
-  - stage_after
-  - stage_result
-  - executed_backlog_item_id
-  - execution_status
-  - auto_expanded
-  - created_backlog_item_id
-  - created_next_step_id
-  - supervisor_validator_status
-  - supervisor_validator_score
-  - implementation_delta
-  - tests
-  - changed_files
-  - commit
-  - blockers

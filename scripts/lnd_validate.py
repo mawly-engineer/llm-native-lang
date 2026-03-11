@@ -18,7 +18,14 @@ class LNDError:
 
 
 def parse_yaml_lite(content):
-    """Lightweight YAML parser for LND structure validation."""
+    """Lightweight YAML parser for LND structure validation.
+    
+    Handles:
+    - Basic key-value pairs
+    - Nested dictionaries
+    - Lists (both inline [a, b] and block style with - items)
+    - Multi-line values with | and >
+    """
     data = {}
     lines = content.split('\n')
     
@@ -43,84 +50,160 @@ def parse_yaml_lite(content):
             return int(val)
         return val
     
-    def parse_lines(start_idx, base_indent, parent_dict, list_mode=False, list_key=None):
-        i = start_idx
+    def parse_block(start_idx, base_indent):
+        """Parse a block of content starting at start_idx with given base_indent.
+        Returns (result_dict, next_idx) where result_dict may contain _list key for root-level lists."""
+        result = {}
         current_list = None
+        current_list_key = None
+        i = start_idx
+        last_key = None
         
         while i < len(lines):
             line = lines[i]
             stripped = line.lstrip()
             
+            # Skip empty lines and comments
             if not stripped or stripped.startswith('#'):
                 i += 1
                 continue
             
             indent = get_indent(line)
             
+            # If we've de-dented past base_indent, return to parent
             if indent < base_indent:
-                return i
+                # Finish current list if any
+                if current_list is not None and current_list_key:
+                    result[current_list_key] = current_list
+                return result, i
             
-            if list_mode:
-                if stripped.startswith('- '):
-                    val = stripped[2:].strip()
-                    if ':' in val and not val.startswith('"') and not val.startswith("'"):
-                        key, rest = val.split(':', 1)
-                        key = key.strip()
-                        rest = rest.strip()
-                        
-                        if isinstance(current_list, list):
-                            if not current_list or key in current_list[-1]:
-                                current_list.append({})
-                            current_list[-1][key] = parse_value(rest) if rest else None
-                    else:
-                        if isinstance(current_list, list):
-                            current_list.append(parse_value(val))
-                    i += 1
-                elif indent == base_indent:
-                    return i
-                else:
-                    i = parse_lines(i, indent, parent_dict)
-            else:
-                if ':' in stripped:
-                    key, rest = stripped.split(':', 1)
-                    key = key.strip()
-                    rest = rest.strip()
+            # List item at base_indent
+            if indent == base_indent and stripped.startswith('- '):
+                item_text = stripped[2:].strip()
+                
+                # Check if it's a dictionary item (key: value) or simple value
+                if ': ' in item_text or item_text.endswith(':'):
+                    # This is a dict in a list
+                    if current_list is None:
+                        current_list = []
                     
-                    if not rest or rest.startswith('#'):
-                        parent_dict[key] = {}
-                        i += 1
-                        i = parse_lines(i, indent + 2, parent_dict[key])
-                    elif rest == '[]':
-                        parent_dict[key] = []
-                        i += 1
-                    elif rest.startswith('[') and rest.endswith(']'):
-                        items = rest[1:-1].split(',')
-                        parent_dict[key] = [parse_value(item) for item in items]
-                        i += 1
-                    else:
-                        parent_dict[key] = parse_value(rest)
-                        i += 1
-                elif stripped.startswith('- '):
-                    if list_key and isinstance(parent_dict.get(list_key), list):
-                        val = stripped[2:].strip()
-                        if ':' in val and not val.startswith('"') and not val.startswith("'"):
-                            key, rest = val.split(':', 1)
-                            key = key.strip()
-                            rest = rest.strip()
-                            
-                            if not parent_dict[list_key] or key in parent_dict[list_key][-1]:
-                                parent_dict[list_key].append({})
-                            parent_dict[list_key][-1][key] = parse_value(rest) if rest else None
+                    if ': ' in item_text:
+                        key, val = item_text.split(': ', 1)
+                        key = key.strip()
+                        val = val.strip()
+                        
+                        if val == '' or val.startswith('#'):
+                            # Value continues on next lines - parse nested block
+                            i += 1
+                            nested, i = parse_block(i, indent + 2)
+                            current_list.append({key: nested if nested else None})
                         else:
-                            parent_dict[list_key].append(parse_value(val))
-                    i += 1
+                            current_list.append({key: parse_value(val)})
+                    else:
+                        # Key only - nested structure follows
+                        key = item_text.rstrip(':').strip()
+                        i += 1
+                        nested, i = parse_block(i, indent + 2)
+                        current_list.append({key: nested})
+                    continue
                 else:
-                    i += 1
+                    # Simple list item
+                    if current_list is None:
+                        current_list = []
+                    current_list.append(parse_value(item_text))
+                i += 1
+                continue
+            
+            # Key-value pair at base_indent
+            if indent == base_indent and (': ' in stripped or stripped.endswith(':')):
+                # Save previous list if any
+                if current_list is not None and current_list_key:
+                    result[current_list_key] = current_list
+                    current_list = None
+                    current_list_key = None
+                
+                if ': ' in stripped:
+                    key, val = stripped.split(': ', 1)
+                    key = key.rstrip(':').strip()
+                    val = val.strip()
+                    
+                    # Check for comment and strip it
+                    if ' #' in val:
+                        val = val.split(' #')[0].strip()
+                    
+                    if val == '' or val.startswith('#'):
+                        result[key] = None
+                    elif val == '[]':
+                        result[key] = []
+                    elif val == '{}':
+                        result[key] = {}
+                    elif val.startswith('[') and val.endswith(']'):
+                        # Inline list
+                        items = []
+                        inner = val[1:-1]
+                        if inner.strip():
+                            for item in inner.split(','):
+                                items.append(parse_value(item))
+                        result[key] = items
+                    elif val in ['|', '>']:
+                        # Multi-line value
+                        i += 1
+                        lines_content = []
+                        while i < len(lines):
+                            next_line = lines[i]
+                            if not next_line.strip():
+                                i += 1
+                                continue
+                            next_indent = get_indent(next_line)
+                            if next_indent <= base_indent and lines[i].strip():
+                                break
+                            lines_content.append(next_line[base_indent + 2:])
+                            i += 1
+                        result[key] = '\n'.join(lines_content)
+                        continue
+                    else:
+                        result[key] = parse_value(val)
+                    last_key = key
+                else:
+                    # Key only - starts a nested structure or list
+                    key = stripped.rstrip(':').strip()
+                    last_key = key
+                    # Check next line to determine if it's a list or dict
+                    if i + 1 < len(lines):
+                        next_line = lines[i + 1]
+                        if next_line.strip() and get_indent(next_line) > base_indent:
+                            if next_line.strip().startswith('- '):
+                                # It's a list
+                                current_list = []
+                                current_list_key = key
+                            else:
+                                # It's a nested dict
+                                i += 1
+                                nested, i = parse_block(i, indent + 2)
+                                result[key] = nested
+                                continue
+                        else:
+                            result[key] = {}
+                i += 1
+                continue
+            
+            # Nested content - skip to next iteration if at higher indent
+            if indent > base_indent:
+                # This shouldn't happen in normal flow - content should be consumed by parent
+                i += 1
+                continue
+            
+            # Unknown line at base_indent - skip it
+            i += 1
         
-        return i
+        # End of file - save any pending list
+        if current_list is not None and current_list_key:
+            result[current_list_key] = current_list
+        
+        return result, i
     
-    parse_lines(0, 0, data)
-    return data
+    result, _ = parse_block(0, 0)
+    return result
 
 
 class LNDValidator:
@@ -150,6 +233,7 @@ class LNDValidator:
         if version != '0.2':
             self.errors.append(LNDError('LND_PARSE_001', 1, f"Unsupported version: {version}", filepath))
         
+        # Check for tabs and hidden characters
         for i, line in enumerate(lines, 1):
             if '\t' in line:
                 self.errors.append(LNDError('LND_PARSE_002', i, "Tab character detected", filepath))
@@ -170,19 +254,21 @@ class LNDValidator:
         if data is None:
             data = {}
         
+        # Check required fields
         for field in ['kind', 'id']:
             if field not in data:
                 self.errors.append(LNDError('LND_SCHEMA_001', 2, f"Missing required key: '{field}'", filepath))
         
         if 'id' in data:
             id_val = str(data['id'])
-            if not re.match(r'^[A-Z0-9-]+$', id_val):
+            if not re.match(r'^[A-Z0-9-_]+$', id_val):
                 self.errors.append(LNDError('LND_SCHEMA_004', 2, f"ID '{id_val}' invalid format", filepath))
             if id_val in self.seen_ids:
                 self.errors.append(LNDError('LND_SCHEMA_003', 2, f"Duplicate ID: '{id_val}'", filepath))
             else:
                 self.seen_ids.add(id_val)
         
+        # Check for duplicate keys and invalid key names
         def check_keys(obj, depth=0, path=""):
             if depth > 8:
                 return
