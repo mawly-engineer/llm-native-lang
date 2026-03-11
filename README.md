@@ -1,35 +1,56 @@
-# llm-native-lang
+# LLM-Native Language
 
-Deterministic language/runtime contracts for LLM-native execution and replay.
+A language-native development ecosystem for LLM-native declarations and contracts.
 
-## What this is
-
-- A compact language contract surface (`.lnd`) for syntax, types, and runtime behavior.
-- A deterministic runtime with replay-oriented semantics.
-- Validator-backed formats for contracts (`.lnd`) and runtime examples (`.lnc`).
-
-## What this is not
-
-- A general-purpose production language.
-- A probabilistic execution engine.
-- A replacement for full compiler toolchains.
-
-## Quickstart
+## Installation
 
 ```bash
-git clone https://github.com/mawly-engineer/llm-native-lang.git
-cd llm-native-lang
-python3 scripts/lnd_validate.py evolution
-python3 scripts/lnd_validate.py contracts
-python3 scripts/lnc_validate.py runtime
+pip install -e .
 ```
 
-## Determinism guarantees
+Or for development:
+```bash
+pip install -e ".[dev]"
+```
 
-- Stable parse/type/runtime contracts are source-of-truth in `contracts/` and `formats/`.
-- Validation tooling enforces machine-readable structure for `.lnd` and `.lnc` files.
-- Runtime tests assert replay and determinism invariants.
+## Quick Start
 
-## Release notes
+### Validate LND files
+```bash
+lnd-validate evolution/
+```
 
-See `.github/release-notes/` for versioned release-note templates.
+### Validate LNC files
+```bash
+lnc-validate runtime/examples/
+```
+
+### Use the KAIRO CLI
+```bash
+kairo validate evolution/
+```
+
+## Package Structure
+
+- `llm_native_lang.runtime` - Runtime execution modules
+- `llm_native_lang.validators` - LND and LNC format validators
+- `llm_native_lang.cli` - KAIRO command-line interface
+
+## Python API
+
+```python
+from llm_native_lang import __version__
+from llm_native_lang.validators.lnd_validate import LNDValidator
+from llm_native_lang.validators.lnc_validate import validate_file
+
+# Validate LND files
+validator = LNDValidator()
+validator.validate_file("path/to/file.lnd")
+
+# Validate LNC files
+ok, errors = validate_file("path/to/file.lnc")
+```
+
+## License
+
+MIT License

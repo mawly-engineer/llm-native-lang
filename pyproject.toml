@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-native-lang"
+version = "0.2.0"
+description = "A language-native development ecosystem for LLM-native declarations and contracts"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "KAIRO Evolution", email = "evolution@llm-native-lang.dev"}
+]
+keywords = ["llm", "language", "runtime", "contracts", "declarations"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Interpreters",
+    "Topic :: Software Development :: Languages",
+]
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+kairo = "llm_native_lang.cli:main"
+lnd-validate = "llm_native_lang.validators.lnd_validate:main"
+lnc-validate = "llm_native_lang.validators.lnc_validate:main"
+
+[project.urls]
+Homepage = "https://github.com/llm-native-lang/llm-native-lang"
+Documentation = "https://llm-native-lang.readthedocs.io"
+Repository = "https://github.com/llm-native-lang/llm-native-lang.git"
+Issues = "https://github.com/llm-native-lang/llm-native-lang/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+llm_native_lang = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
