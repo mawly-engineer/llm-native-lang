@@ -1,117 +1,77 @@
 @lnd 0.2
-version: 2
-document: AGENT_ROUTER
-purpose: Route the single coordinator to the correct specialist focus each cycle.
-updated_at_utc: "2026-03-08T12:05:00Z"
+kind: agent_router
+id: ROUTER-001
+status: active
+updated_at_utc: 2026-03-11T00:12:00Z
+purpose: Route agents to appropriate streams and manage workload distribution.
 
-operating_mode:
-  scheduler_model: single_coordinator
-  coordinator_executes_work_directly: true
-  one_backlog_item_per_cycle: true
-  dynamic_bucket_selection: true
+streams:
+  language_core:
+    description: Language specification and core capabilities
+    priority: 1
+    eligible_agents:
+      - language_designer
+      - specification_validator
+    max_concurrent: 2
+    current_load: 0
+    
+  runtime_replay:
+    description: Runtime execution and replay system
+    priority: 2
+    eligible_agents:
+      - runtime_engineer
+      - replay_specialist
+    max_concurrent: 2
+    current_load: 0
+    
+  contracts:
+    description: LND/LNC format contracts and validation
+    priority: 3
+    eligible_agents:
+      - contract_validator
+      - format_specialist
+    max_concurrent: 2
+    current_load: 0
 
-strategic_targets:
-  objective: Keep delivery anchored to product core while preserving determinism.
-  dimensions:
-    language-core:
-      score_current: 4
-      score_target: 8
-    runtime-replay:
-      score_current: 4
-      score_target: 8
-    llm-format-contract:
-      score_current: 7
-      score_target: 8
-    ecosystem:
-      score_current: 7
-      score_target: 8
-    practical-value:
-      score_current: 6
-      score_target: 8
-  priority_rule: Prefer language-core and runtime-replay unless hard reliability signals force otherwise.
+routing_rules:
+  - rule: product_core_first
+    condition: item.objective in [language_core_capability, runtime_replay_capability, llm_format_contract_capability]
+    priority_boost: 10
+    
+  - rule: language_core_before_runtime
+    condition: item.category == language_core and runtime_replay has items
+    action: prioritize language_core first
+    
+  - rule: blocked_items_last
+    condition: item.has_blocker == true
+    action: deprioritize and move to blocked queue
 
-cycle_quota_guard:
-  window_cycles: 5
-  min_cycles_in_focus_set: 4
-  focus_set:
-    - language-core
-    - runtime-replay
-  enforcement_rule: "If quota is not yet met inside the current 5-cycle window and no hard reliability signal is active, force select_primary from product-core focus_set."
-  tie_break_within_focus_set:
-    - lowest_dimension_score
-    - deterministic_bucket_name_order
+load_balancing:
+  strategy: round_robin_with_capacity
+  rebalance_threshold: 0.8
+  cooldown_cycles: 2
 
-meta_work_limit:
-  max_meta_items_per_5_cycles: 1
-  meta_categories:
-    - process_only
-    - pure_infra
-    - log_only
-  on_limit_exceeded:
-    - force_select_primary: language-core_or_runtime-replay
-
-active_selection:
-  active_primary: language-core
-  active_secondary: validation
-
-routing_rules_in_priority_order:
-  - id: route_integration_on_e2e_red
-    when:
-      signal_e2e_red: true
-    select_primary: integration
-    reason: "E2E instability has highest priority."
-
-  - id: route_validation_on_test_failures
-    when:
-      signal_tests_or_contracts_failing: true
-    select_primary: validation
-    reason: "Failing assertions/contracts must be stabilized before feature expansion."
-
-  - id: route_runtime_on_runtime_gaps
-    when:
-      signal_runtime_gap: true
-    select_primary: interpreter-runtime
-    reason: "Determinism/runtime correctness is a hard gate."
-
-  - id: route_ecosystem_on_gap
-    when:
-      signal_ecosystem_gap: true
-    select_primary: ecosystem
-    reason: "Public usability and project adoption need focused improvement."
-
-  - id: route_practical_value_on_gap
-    when:
-      signal_practical_value_gap: true
-    select_primary: practical-value
-    reason: "Hands-on utility and evidence must improve."
-
-  - id: default_route_by_lowest_dimension_score
-    when:
-      fallback_default: true
-    select_primary: lowest_score_dimension
-    reason: "By default, advance whichever strategic dimension is currently weakest (ecosystem -> practical-value -> language-core)."
-
-product_scope_gate:
-  required_alignment_tags:
-    - language-core
-    - runtime-replay
-    - llm-format-contract
-  fallback_allowed_tags_when_no_product_item:
-    - ecosystem-p0
-  reject_if_only:
-    - process_churn
-    - log_churn
-
-overrides:
-  force_agent: null
-  hold_agents: []
-
-required_cycle_output_fields:
-  - selected_primary
-  - selected_secondary
-  - executed_backlog_item_id
-  - implementation_delta
-  - tests
-  - changed_files
-  - commit
-  - blockers
+agent_pool:
+  language_designer:
+    capabilities: [language_design, spec_authoring, grammar_definition]
+    streams: [language_core]
+    
+  specification_validator:
+    capabilities: [lnd_validation, lnc_validation, compliance_checking]
+    streams: [language_core, contracts]
+    
+  runtime_engineer:
+    capabilities: [runtime_dev, interpreter_building, builtin_implementation]
+    streams: [runtime_replay]
+    
+  replay_specialist:
+    capabilities: [replay_system, execution_tracing, deterministic_metrics]
+    streams: [runtime_replay]
+    
+  contract_validator:
+    capabilities: [lnd_validation, lnc_validation, contract_enforcement]
+    streams: [contracts]
+    
+  format_specialist:
+    capabilities: [format_design, schema_definition, migration_planning]
+    streams: [contracts, language_core]

@@ -2,31 +2,31 @@
 kind: current_state
 id: STATE-001
 status: active
-updated_at_utc: 2026-03-10T23:42:00Z
+updated_at_utc: 2026-03-11T00:42:00Z
 purpose: Track current execution state for KAIRO evolution cycles.
 
 cycle:
-  number: 5
+  number: 7
   stage: execute
-  started_at_utc: 2026-03-10T23:52:00Z
-  completed_at_utc: 2026-03-11T00:00:00Z
+  started_at_utc: 2026-03-11T00:42:00Z
+  completed_at_utc: 2026-03-11T00:42:00Z
 
-active_item: ITEM-002
+active_item: ITEM-004
 
 streams:
   language_core:
     status: idle
     current_item: null
   runtime_replay:
+    status: completed
+    current_item: ITEM-004
+  contracts:
     status: idle
     current_item: null
-  contracts:
-    status: completed
-    current_item: ITEM-002
 
 blockers: []
 
 metrics:
-  total_cycles: 5
-  completed_items: 3
+  total_cycles: 7
+  completed_items: 5
   blocked_cycles: 0
