@@ -2,27 +2,58 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-11T11:32:00Z
+updated_at_utc: 2026-03-11T14:32:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
-backlog: []
+backlog:
+  - id: ITEM-015
+    title: "Create unified CLI tool for LNC validation and execution"
+    objective: ecosystem_p0_delivery
+    priority: p1
+    status: done
+    created_at_utc: 2026-03-11T14:32:00Z
+    completed_at_utc: 2026-03-11T15:02:00Z
+    bucket: ecosystem
     description: |
-      Build a replay conformance harness that validates deterministic replay
-      of interpreter execution traces. The harness must:
-      - Capture execution traces with full state snapshots
-      - Replay traces and verify identical outputs
-      - Detect non-deterministic operations
-      - Support serialization round-trip verification
+      Build a unified command-line interface that provides:
+      - LNC file validation (using existing lnc_validate.py logic)
+      - LNC contract execution with optional trace capture
+      - Replay conformance testing for executed contracts
+      - Export of execution traces to JSON
+      - Batch validation of entire directories
     acceptance_criteria:
-      - Trace capture API for interpreter_runtime.py
-      - JSON serialization of execution traces
-      - Replay validator with state comparison
-      - Detection of non-deterministic builtins
-      - Integration with existing test suite
+      - Single executable script: scripts/kairo_cli.py
+      - Commands: validate, execute, replay-test
+      - Integration with existing runtime/replay_harness.py
+      - Proper exit codes (0=success, 1=validation failure, 2=execution error)
+      - Help text and usage examples
     stage: create
     commit_ref: null
 
 completed:
+  - id: ITEM-014
+    title: "Integrate runtime replay with LNC contract execution"
+    objective: runtime_replay_capability
+    secondary_objective: llm_format_contract_capability
+    priority: p0
+    status: done
+    created_at_utc: 2026-03-11T13:32:00Z
+    completed_at_utc: 2026-03-11T14:12:00Z
+    bucket: integration
+    description: |
+      Bridge the runtime replay system with LNC contract execution to enable:
+      - Trace capture of LNC contract interpretation
+      - Deterministic replay of contract-driven workflows
+      - Validation that contract execution is reproducible
+      - Integration between runtime/replay_harness.py and LNC files
+    acceptance_criteria:
+      - LNC contract loader that executes contracts through interpreter
+      - Trace capture integration for contract execution
+      - Replay validation that contract runs are deterministic
+      - Example LNC files demonstrating contract-driven workflows
+      - Tests showing replay conformance for contract execution
+    stage: done
+    commit_ref: null
   - id: LNG-001
     title: "Implement LND format validator"
     objective: language_core_capability
@@ -68,25 +99,30 @@ completed:
       - Returns exit code 0 on valid, 1 on invalid
     stage: done
     commit_ref: null
-  - id: LNG-001
-    title: "Implement LND format validator"
-    objective: language_core_capability
+  - id: ITEM-013
+    title: "Implement runtime replay conformance harness"
+    objective: runtime_replay_capability
     priority: p0
     status: done
-    created_at_utc: 2026-03-11T09:22:00Z
-    completed_at_utc: 2026-03-11T09:32:00Z
+    created_at_utc: 2026-03-11T12:12:00Z
+    completed_at_utc: 2026-03-11T12:52:00Z
+    bucket: runtime
     description: |
-      Created a Python-based LND format validator that checks:
-      - Required header fields (@lnd version, kind, id)
-      - YAML syntax validity
-      - Required field presence per kind
-      - ID uniqueness across files
+      Create a replay conformance harness that validates deterministic replay:
+      - TraceCapture class for recording execution traces
+      - ExecutionTrace dataclass with full state serialization
+      - ReplayValidator for comparing original vs replayed traces
+      - ConformanceHarness for running multiple iterations
+      - Detection of non-deterministic operations
+      - JSON serialization with round-trip verification
     acceptance_criteria:
-      - Validator runs on evolution/ directory
-      - Reports missing required fields
-      - Reports syntax errors with line numbers
-      - Returns exit code 0 on valid, 1 on invalid
+      - runtime/replay_harness.py with all core classes
+      - Trace capture during function execution
+      - Serialization to/from JSON
+      - Validation that replays match originals
+      - Non-deterministic operation detection
+      - Demo conformance test showing 3 iterations match
     stage: done
-    commit_ref: null
+    commit_ref: 765741f
 
-next_id: 14
+next_id: 16

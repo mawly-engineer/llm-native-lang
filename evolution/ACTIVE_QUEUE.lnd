@@ -1,10 +1,17 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-006
+id: QUEUE-CYCLE-011
 status: active
-updated_at_utc: 2026-03-11T12:52:45Z
+updated_at_utc: 2026-03-11T15:12:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
-next_item_id: 14
+completed:
+  - id: ITEM-015
+    title: "Create unified CLI tool for LNC validation and execution"
+    completed_at_utc: 2026-03-11T15:12:00Z
+    stage: done
+    commit_ref: null
+
+next_item_id: 16
