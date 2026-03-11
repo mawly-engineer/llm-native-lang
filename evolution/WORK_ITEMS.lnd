@@ -2,7 +2,7 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-11T06:02:00Z
+updated_at_utc: 2026-03-11T06:12:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
@@ -75,6 +75,19 @@ categories:
         files_changed:
           - runtime/interpreter_runtime.py
           - runtime/test_abs_builtin.py
+
+      - id: ITEM-009
+        title: Implement min() builtin for collections
+        description: Add min(a, b) or min(collection) builtin to interpreter with support for numeric comparison and collection iteration, including error handling for empty collections (E_RT_MIN_EMPTY_COLLECTION) and type mismatches (E_RT_MIN_TYPE_MISMATCH)
+        priority: p0
+        status: done
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-11T06:12:00Z
+        completed_at_utc: 2026-03-11T07:22:00Z
+        stage: execute
+        files_changed:
+          - runtime/interpreter_runtime.py
+          - runtime/test_min_builtin.py
 
   contracts:
     description: LND/LNC format contracts and validation
