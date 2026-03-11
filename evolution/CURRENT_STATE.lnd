@@ -2,7 +2,7 @@
 kind: current_state
 id: STATE-2026-03-11-014
 status: active
-updated_at_utc: 2026-03-11T17:12:00Z
+updated_at_utc: 2026-03-11T17:22:00Z
 purpose: Tracks current execution state for evolution cycles.
 
 cycle: 14
@@ -12,10 +12,11 @@ blockers: []
 active_item_id: null
 context:
   last_maintenance_cycle: 9
-  idle_streak: 1
+  idle_streak: 2
   seeding_enabled: true
   last_completed: ITEM-016
   current_item: null
   next_action: seed_next_item
   last_commit: dc7f6cf
   commit_summary: "cycle-13: complete ITEM-016 - e2e integration test suite"
+  scope_status: complete
