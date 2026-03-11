@@ -1,0 +1,25 @@
+{
+  "trace_id": "benchmark_iter_2",
+  "timestamp_start": 1773262486.393184,
+  "timestamp_end": 1773262486.3932135,
+  "operations": [],
+  "state_snapshots": [
+    {
+      "timestamp": 1773262486.3931854,
+      "state": {
+        "stage": "pre_execution",
+        "args": []
+      }
+    },
+    {
+      "timestamp": 1773262486.393213,
+      "state": {
+        "stage": "post_execution",
+        "result": 9
+      }
+    }
+  ],
+  "input_args": [],
+  "output_result": 9,
+  "exceptions": []
+}

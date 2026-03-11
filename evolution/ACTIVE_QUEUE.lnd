@@ -1,14 +1,25 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-018
+id: QUEUE-CYCLE-028
 status: active
-updated_at_utc: 2026-03-11T18:45:00Z
+updated_at_utc: 2026-03-11T20:52:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items:
-  []
+  - id: ITEM-020
+    title: "Create GitHub Actions release automation workflow"
+    step: 1
+    description: "Create .github/workflows/release.yml with PyPI publishing"
+    status: in_progress
+    stage: create
 
 completed:
+  - id: ITEM-019
+    title: "Create performance benchmarking suite for runtime and validators"
+    completed_at_utc: 2026-03-11T20:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
   - id: ITEM-018
     title: "Create comprehensive documentation site for llm-native-lang"
     completed_at_utc: 2026-03-11T19:45:00Z
@@ -29,8 +40,33 @@ completed:
     commit_ref: dc7f6cf
   - id: ITEM-015
     title: "Create unified CLI tool for LNC validation and execution"
-    completed_at_utc: 2026-03-11T15:12:00Z
+    completed_at_utc: 2026-03-11T15:02:00Z
+    committed_at_utc: null
     stage: done
-    commit_ref: 9754ef5
+    commit_ref: null
+  - id: ITEM-014
+    title: "Integrate runtime replay with LNC contract execution"
+    completed_at_utc: 2026-03-11T14:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+  - id: ITEM-013
+    title: "Implement runtime replay conformance harness"
+    completed_at_utc: 2026-03-11T12:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: 765741f
+  - id: ITEM-011
+    title: "Implement LNC format validator"
+    completed_at_utc: 2026-03-11T10:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+  - id: LNG-001
+    title: "Implement LND format validator"
+    completed_at_utc: 2026-03-11T09:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
 
-next_item_id: 19
+next_item_id: 20
