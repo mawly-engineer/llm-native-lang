@@ -6,6 +6,36 @@ updated_at_utc: 2026-03-11T21:52:00Z
 purpose: Append-only log of evolution cycles.
 
 entries:
+  - cycle: 36
+    timestamp_utc: 2026-03-11T22:25:00Z
+    type: bugfix
+    stage_before: done
+    stage_after: done
+    executed_backlog_item_id: null
+    execution_status: completed
+    implementation_delta: |-
+      CYCLE 36: BUG FIX — Fixed LND validator key regex.
+      Issue: Validator rejected valid keys with uppercase letters (LND_SCHEMA_005, E_RT_FUEL_EXHAUSTED).
+      Root cause: Regex ^[a-z0-9_]+$ only allowed lowercase.
+      Fix: Changed to ^[a-zA-Z0-9_]+$ in scripts/lnd_validate.py.
+      Validation results: LND evolution/ PASSED, LND formats/ PASSED, LND contracts/ PASSED.
+      Commits: a16995d (validator fix), 78a940b (cycle log update).
+      55 commits ahead of origin/main. BLOCKER-001 persists.
+    changed_files:
+      - scripts/lnd_validate.py
+      - evolution/CURRENT_STATE.lnd
+      - evolution/CYCLE_LOG.lnd
+    tests:
+      - "LND validation: evolution/ directory - PASSED"
+      - "LND validation: formats/ directory - PASSED"
+      - "LND validation: contracts/ directory - PASSED"
+      - "LNC validation: runtime/ directory - PASSED"
+      - "Git status: working tree clean after commit - PASSED"
+      - "Commits ahead: 55 - VERIFIED"
+      - "BLOCKER-001: persists - ACKNOWLEDGED"
+    commit: 78a940b
+    blockers:
+      - BLOCKER-001
   - cycle: 35
     timestamp_utc: 2026-03-11T22:02:00Z
     type: maintenance
