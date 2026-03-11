@@ -1,0 +1,87 @@
+site_name: LLM-Native Lang
+site_description: A language-native development ecosystem for LLM-native declarations and contracts
+site_author: KAIRO Evolution Team
+copyright: Copyright © 2026 KAIRO Evolution
+
+repo_name: llm-native-lang
+repo_url: https://github.com/luis/mawly/llm-native-lang
+edit_uri: blob/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - content.action.edit
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quickstart: getting-started/quickstart.md
+  - User Guide:
+    - LND Format: guide/lnd-format.md
+    - LNC Format: guide/lnc-format.md
+    - Runtime Replay: guide/runtime-replay.md
+  - API Reference:
+    - Overview: api/index.md
+    - Runtime: api/runtime.md
+    - Validators: api/validators.md
+    - CLI: api/cli.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Architecture: development/architecture.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/luis/mawly/llm-native-lang
+  version:
+    provider: mike

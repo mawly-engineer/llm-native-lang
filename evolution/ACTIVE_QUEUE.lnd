@@ -5,9 +5,16 @@ status: active
 updated_at_utc: 2026-03-11T18:45:00Z
 purpose: Near-term execution queue with mapped steps.
 
-items: []
+items:
+  []
 
 completed:
+  - id: ITEM-018
+    title: "Create comprehensive documentation site for llm-native-lang"
+    completed_at_utc: 2026-03-11T19:45:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
   - id: ITEM-017
     title: "Create Python package distribution for llm-native-lang"
     completed_at_utc: 2026-03-11T18:45:00Z

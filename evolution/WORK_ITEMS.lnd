@@ -5,7 +5,38 @@ status: active
 updated_at_utc: 2026-03-11T18:02:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
-backlog: []
+backlog:
+completed:
+  - id: ITEM-018
+    title: "Create comprehensive documentation site for llm-native-lang"
+    objective: ecosystem_p0_delivery
+    priority: p1
+    status: done
+    created_at_utc: 2026-03-11T19:22:00Z
+    started_at_utc: 2026-03-11T19:32:00Z
+    completed_at_utc: 2026-03-11T19:45:00Z
+    bucket: ecosystem
+    description: |
+      Created a comprehensive documentation site with MkDocs and Material theme:
+      - MkDocs configuration with navigation structure
+      - 9 documentation pages covering all aspects
+      - Getting started guides (installation, quickstart)
+      - User guides (LND format, LNC format, runtime replay)
+      - Complete API reference (runtime, validators, CLI)
+      - Development guides (contributing, architecture)
+      - GitHub Actions workflow for automated deployment
+      - Dark/light mode support with search and code copy
+    acceptance_criteria:
+      - mkdocs.yml configuration - COMPLETE
+      - docs/ directory with markdown content - COMPLETE
+      - API reference auto-generated - COMPLETE
+      - Quickstart guide with code examples - COMPLETE
+      - LND format specification documentation - COMPLETE
+      - LNC contract authoring guide - COMPLETE
+      - GitHub Actions workflow for deployment - COMPLETE
+      - pyproject.toml with docs dependencies - COMPLETE
+    stage: done
+    commit_ref: null
 
   - id: ITEM-015
     title: "Create unified CLI tool for LNC validation and execution"
