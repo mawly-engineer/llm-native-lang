@@ -1,18 +1,19 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-017
+id: QUEUE-CYCLE-018
 status: active
-updated_at_utc: 2026-03-11T18:02:00Z
+updated_at_utc: 2026-03-11T18:45:00Z
 purpose: Near-term execution queue with mapped steps.
 
-items:
-  - id: ITEM-017
-    title: "Create Python package distribution for llm-native-lang"
-    stage: create
-    priority: p1
-    objective: ecosystem_p0_delivery
+items: []
 
 completed:
+  - id: ITEM-017
+    title: "Create Python package distribution for llm-native-lang"
+    completed_at_utc: 2026-03-11T18:45:00Z
+    committed_at_utc: 2026-03-11T18:42:00Z
+    stage: done
+    commit_ref: 81b6b64
   - id: ITEM-016
     title: "Create end-to-end integration test suite for LNC contract execution and replay validation"
     completed_at_utc: 2026-03-11T17:05:00Z
@@ -25,4 +26,4 @@ completed:
     stage: done
     commit_ref: 9754ef5
 
-next_item_id: 18
+next_item_id: 19
