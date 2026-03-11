@@ -18,7 +18,7 @@ entries:
       - evolution/ACTIVE_QUEUE.lnd
       - evolution/CURRENT_STATE.lnd
       - evolution/CYCLE_LOG.lnd
-    commit: pending
+    commit: befe69e
     blockers: []
     stage_before: idle
     stage_after: create
