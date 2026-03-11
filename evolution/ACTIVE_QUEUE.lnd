@@ -8,10 +8,10 @@ purpose: Near-term execution queue with mapped steps.
 items:
   - id: ITEM-020
     title: "Create GitHub Actions release automation workflow"
-    step: 1
-    description: "Create .github/workflows/release.yml with PyPI publishing"
+    step: 2
+    description: "Validate release workflow and scripts"
     status: in_progress
-    stage: create
+    stage: validate
 
 completed:
   - id: ITEM-019

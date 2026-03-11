@@ -2,7 +2,7 @@
 kind: cycle_log
 id: LOG-CYCLE-010
 status: active
-updated_at_utc: 2026-03-11T20:42:00Z
+updated_at_utc: 2026-03-11T21:12:00Z
 purpose: Append-only log of evolution cycles.
 
 entries:
@@ -24,8 +24,11 @@ entries:
       - "State transition: idle→create - PASSED"
       - "Product-core scope: 3/3 objectives complete - PASSED"
       - "BLOCKER-001 acknowledged: release workflow will address - PASSED"
-      - "Validation: LND/LNC format check - PENDING"
-    commit: null
+      - "LND validation: evolution/ directory - PASSED"
+      - "LNC validation: runtime/examples/ - PASSED"
+      - "Git commit: 5e4d80b - PASSED"
+      - "Pre-commit validation: PASSED"
+    commit: 5e4d80b
     blockers:
       - BLOCKER-001
   - cycle: 28
@@ -121,6 +124,32 @@ entries:
       - "State transition: idle→create - PASSED"
       - "Backlog seeding: ITEM-019 created - PASSED"
       - "Product-core scope: 3/3 objectives complete - PASSED"
+    commit: null
+    blockers:
+      - BLOCKER-001
+  - cycle: 30
+    timestamp_utc: 2026-03-11T21:12:00Z
+    type: progress
+    stage_before: create
+    stage_after: validate
+    executed_backlog_item_id: ITEM-020
+    execution_status: infrastructure_created
+    implementation_delta: "Cycle 30: Created GitHub Actions release automation workflow infrastructure (ITEM-020). Implemented .github/workflows/release.yml with PyPI trusted publishing via OIDC, version bumping script (bump_version.py), and changelog generator (generate_changelog.py). Workflow includes: test job (LND/LNC validators + pytest), build job (creates wheel/sdist), publish-pypi job (uses OIDC to PyPI), and release job (bumps version, generates changelog, creates Git tag and GitHub release). All scripts validated: bump_version.py and generate_changelog.py pass Python syntax check. Stage transitioned from create to validate. BLOCKER-001 remains (47 commits ahead) but will be resolved when release workflow is activated."
+    changed_files:
+      - .github/workflows/release.yml
+      - scripts/bump_version.py
+      - scripts/generate_changelog.py
+      - evolution/CURRENT_STATE.lnd
+      - evolution/CYCLE_LOG.lnd
+      - evolution/WORK_ITEMS.lnd
+      - evolution/ACTIVE_QUEUE.lnd
+    tests:
+      - "LND validation: evolution/ directory - PASSED"
+      - "LNC validation: runtime/examples/ - PASSED"
+      - "YAML syntax: release.yml - PASSED"
+      - "Python syntax: bump_version.py - PASSED"
+      - "Python syntax: generate_changelog.py - PASSED"
+      - "Stage transition: create→validate - PASSED"
     commit: null
     blockers:
       - BLOCKER-001
