@@ -3,14 +3,14 @@ kind: supervisor_state
 version: 40
 document: SUPERVISOR_STATE
 purpose: Persistent staged workflow state for multi-cycle supervisor ordering.
-updated_at_utc: 2026-03-11T06:12:00Z
+updated_at_utc: 2026-03-11T09:02:00Z
 
 state:
   mode: staged
-  active_flow_id: null
-  active_bucket: null
-  active_backlog_item_id: ITEM-009
-  active_next_step_id: null
+  active_flow_id: FLOW-011
+  active_bucket: runtime_replay
+  active_backlog_item_id: ITEM-011
+  active_next_step_id: STEP-011-001
   current_stage: create
   allowed_stages:
     - idle
@@ -21,11 +21,11 @@ state:
   last_stage_status: seeding_complete
   last_error: null
   last_completed_item:
-    item_id: ITEM-008
-    completed_at_utc: "2026-03-11T06:02:00Z"
+    item_id: ITEM-010
+    completed_at_utc: "2026-03-11T09:02:00Z"
   previous_completed_item:
-    item_id: ITEM-007
-    completed_at_utc: "2026-03-11T05:02:00Z"
+    item_id: ITEM-009
+    completed_at_utc: "2026-03-11T07:22:00Z"
 
 blockers: []
 

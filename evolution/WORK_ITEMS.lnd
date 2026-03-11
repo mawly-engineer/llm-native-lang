@@ -2,7 +2,7 @@
 kind: work_items
 id: WORK-001
 status: active
-updated_at_utc: 2026-03-11T06:12:00Z
+updated_at_utc: 2026-03-11T07:32:00Z
 purpose: Master backlog for llm-native-lang project.
 
 categories:
@@ -88,6 +88,30 @@ categories:
         files_changed:
           - runtime/interpreter_runtime.py
           - runtime/test_min_builtin.py
+
+      - id: ITEM-010
+        title: Implement max() builtin for collections
+        description: Add max(a, b) or max(collection) builtin to interpreter with support for numeric comparison and collection iteration, including error handling for empty collections (E_RT_MAX_EMPTY_COLLECTION) and type mismatches (E_RT_MAX_TYPE_MISMATCH)
+        priority: p0
+        status: done
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-11T07:32:00Z
+        completed_at_utc: 2026-03-11T09:02:00Z
+        stage: execute
+        files_changed:
+          - runtime/interpreter_runtime.py
+          - runtime/test_max_builtin.py
+
+      - id: ITEM-011
+        title: Implement sum() builtin for collections
+        description: Add sum(collection) or sum(collection, start) builtin to interpreter with support for numeric collection summation, including optional start value. Raises E_RT_SUM_EMPTY_COLLECTION for empty collections without start, and E_RT_SUM_TYPE_MISMATCH for non-numeric elements.
+        priority: p0
+        status: active
+        objective: runtime_replay_capability
+        created_at_utc: 2026-03-11T09:12:00Z
+        completed_at_utc: null
+        stage: create
+        files_changed: []
 
   contracts:
     description: LND/LNC format contracts and validation
