@@ -2,10 +2,36 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-11T17:05:00Z
+updated_at_utc: 2026-03-11T18:02:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
+  - id: ITEM-017
+    title: "Create Python package distribution for llm-native-lang"
+    objective: ecosystem_p0_delivery
+    priority: p1
+    status: open
+    created_at_utc: 2026-03-11T18:02:00Z
+    bucket: ecosystem
+    description: |
+      Create a proper Python package structure to enable distribution via pip:
+      - pyproject.toml with package metadata
+      - src/ layout for clean package structure
+      - Entry points for CLI commands (kairo, lnd-validate, lnc-validate)
+      - Version management and dependency specification
+      - Package-level imports for runtime modules
+      - README with installation and usage instructions
+      - MANIFEST.in for including non-Python files
+    acceptance_criteria:
+      - pip install -e . works for editable install
+      - pip install . creates a working package
+      - CLI commands available after install: kairo, lnd-validate, lnc-validate
+      - Package imports work: from llm_native_lang import ...
+      - Version accessible: llm_native_lang.__version__
+      - All runtime modules accessible under llm_native_lang namespace
+    stage: create
+    commit_ref: null
+
   - id: ITEM-015
     title: "Create unified CLI tool for LNC validation and execution"
     objective: ecosystem_p0_delivery
@@ -27,7 +53,7 @@ backlog:
       - Integration with existing runtime/replay_harness.py
       - Proper exit codes (0=success, 1=validation failure, 2=execution error)
       - Help text and usage examples
-    stage: create
+    stage: done
     commit_ref: null
 
 completed:
@@ -151,4 +177,4 @@ completed:
     stage: done
     commit_ref: 765741f
 
-next_id: 17
+next_id: 18
