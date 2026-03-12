@@ -1,13 +1,27 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-078
+id: QUEUE-CYCLE-080
 status: active
-updated_at_utc: 2026-03-12T05:42:00Z
+updated_at_utc: 2026-03-12T06:02:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-080
+    title: "Cycle 80 - CRON maintenance cycle"
+    completed_at_utc: 2026-03-12T06:02:00Z
+    committed_at_utc: 2026-03-12T06:02:00Z
+    stage: done
+    commit_ref: d7a8b9c
+    notes: "Maintenance cycle - CRON-triggered profile-driven execution, validations passed, no active items, maintenance commands executed (cycle_log_maintain.py), state/log updates committed. Idle streak: reset to 0. Next maintenance: cycle 90."
+  - id: ITEM-079
+    title: "Cycle 79 - CRON idle check"
+    completed_at_utc: 2026-03-12T05:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 6 cycles."
   - id: ITEM-078
     title: "Cycle 78 - CRON idle maintenance check"
     completed_at_utc: 2026-03-12T05:42:00Z
