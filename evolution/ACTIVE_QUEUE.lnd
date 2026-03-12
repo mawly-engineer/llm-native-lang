@@ -1,82 +1,40 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-120
+id: QUEUE-CYCLE-130
 status: active
-updated_at_utc: 2026-03-12T13:12:00Z
+updated_at_utc: 2026-03-12T14:52:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
-  - id: ITEM-120
-    title: "Cycle 120 - KAIRO maintenance cycle"
-    completed_at_utc: 2026-03-12T13:12:00Z
-    committed_at_utc: 2026-03-12T13:12:00Z
+  - id: ITEM-130
+    title: "Cycle 130 - KAIRO maintenance cycle"
+    completed_at_utc: 2026-03-12T14:52:00Z
+    committed_at_utc: 2026-03-12T14:52:00Z
     stage: done
-    commit_ref: 746919d
-    notes: "Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m). Maintenance scripts executed: cycle_log_maintain.py (no compaction needed), work_items_compact.py (0 items archived). LND validation: PASSED (4/4), LNC validation: PASSED (3/3). Git status: 3 modified state/log files committed. Working tree now clean. BLOCKER-001 persists (85 commits ahead). Idle streak reset to 0. Next maintenance at cycle 130."
-  - id: ITEM-119
-    title: "Cycle 119 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T13:02:00Z
+    commit_ref: "TBD"
+    notes: "Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10). LNC: 0 files. Maintenance tasks: cycle log maintain, work items compact. No active items. State/log committed. Idle streak reset: 0. BLOCKER-001: 85 commits ahead. Next maintenance: cycle 140."
+  - id: ITEM-129
+    title: "Cycle 129 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T14:42:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 9 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-118
-    title: "Cycle 118 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:52:00Z
+    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 3/3). Runtime tests: 8 failures, 19 errors (known issues). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 9 cycles (since cycle 120 maintenance). Next maintenance: cycle 130 (1 cycle remaining). BLOCKER-001: 85 commits ahead."
+  - id: ITEM-128
+    title: "Cycle 128 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T14:32:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 8 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-117
-    title: "Cycle 117 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:42:00Z
+    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 3/3). Runtime tests: 8 failures, 19 errors (known issues). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 8 cycles (since cycle 120 maintenance). Next maintenance: cycle 130 (2 cycles remaining). BLOCKER-001: 85 commits ahead."
+  - id: ITEM-127
+    title: "Cycle 127 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T14:22:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 7 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-116
-    title: "Cycle 116 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:32:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 6 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-115
-    title: "Cycle 115 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:22:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 5 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-114
-    title: "Cycle 114 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:12:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 4 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-113
-    title: "Cycle 113 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T12:02:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 5/5). No active items. Working tree: 3 files modified. suppress_idle_noop_commits prevents commit. Idle streak: 3 cycles. Next maintenance: cycle 120. BLOCKER-001: 84 commits ahead."
-  - id: ITEM-112
-    title: "Cycle 112 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T11:42:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO), validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 2 cycles (since cycle 110 maintenance). Next maintenance: cycle 120."
-  - id: ITEM-111
-    title: "Cycle 111 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T11:32:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO), validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 1 cycle (since cycle 110 maintenance). Next maintenance: cycle 120."
+    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 4/4, LNC 3/3). Runtime tests: 8 failures, 19 errors (known issues). No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits prevents commit. Idle streak: 7 cycles (since cycle 120 maintenance). Next maintenance: cycle 130 (3 remaining). BLOCKER-001: 85 commits ahead."
 
-next_item_id: 121
+next_item_id: 131
