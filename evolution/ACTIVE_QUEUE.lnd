@@ -1,13 +1,69 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-090
+id: QUEUE-CYCLE-098
 status: active
-updated_at_utc: 2026-03-12T07:52:00Z
+updated_at_utc: 2026-03-12T09:22:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-098
+    title: "Cycle 98 - CRON idle check"
+    completed_at_utc: 2026-03-12T09:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 8 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-097
+    title: "Cycle 97 - CRON idle check"
+    completed_at_utc: 2026-03-12T09:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 7 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-096
+    title: "Cycle 96 - CRON idle check"
+    completed_at_utc: 2026-03-12T09:02:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 6 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-095
+    title: "Cycle 95 - CRON idle check"
+    completed_at_utc: 2026-03-12T08:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 5 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-094
+    title: "Cycle 94 - CRON idle check"
+    completed_at_utc: 2026-03-12T08:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 4 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-093
+    title: "Cycle 93 - CRON idle check"
+    completed_at_utc: 2026-03-12T08:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 3 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-092
+    title: "Cycle 92 - CRON idle check"
+    completed_at_utc: 2026-03-12T08:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 2 cycles (since cycle 90 commit). Next maintenance: cycle 100."
+  - id: ITEM-091
+    title: "Cycle 91 - CRON idle check"
+    completed_at_utc: 2026-03-12T08:02:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, working tree clean, suppress_idle_noop_commits prevents commit. Idle streak: 1 cycle (since cycle 90 commit). Next maintenance: cycle 100."
   - id: ITEM-090
     title: "Cycle 90 - CRON maintenance cycle"
     completed_at_utc: 2026-03-12T07:52:00Z
@@ -15,75 +71,5 @@ completed:
     stage: done
     commit_ref: 90a52d1
     notes: "Maintenance cycle - CRON-triggered profile-driven execution, validations passed, no active items, maintenance commands executed (cycle_log_maintain.py), state/log updates committed (cycles 81-90 accumulation). Idle streak: reset to 0. Next maintenance: cycle 100."
-  - id: ITEM-089
-    title: "Cycle 89 - CRON idle check"
-    completed_at_utc: 2026-03-12T07:42:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 9 cycles (since cycle 80 commit). Working tree: 3 modified files (accumulated state/log updates)."
-  - id: ITEM-088
-    title: "Cycle 88 - CRON idle check"
-    completed_at_utc: 2026-03-12T07:32:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 8 cycles (since cycle 80 commit). Working tree: 3 modified files (accumulated state/log updates)."
-  - id: ITEM-087
-    title: "Cycle 87 - CRON idle check"
-    completed_at_utc: 2026-03-12T07:12:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 7 cycles (since cycle 80 commit). Working tree: 3 modified files (accumulated state/log updates)."
-  - id: ITEM-086
-    title: "Cycle 86 - CRON idle check"
-    completed_at_utc: 2026-03-12T07:02:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 6 cycles (since cycle 80 commit). Working tree: 3 modified files (accumulated state/log updates)."
-  - id: ITEM-085
-    title: "Cycle 85 - CRON idle check"
-    completed_at_utc: 2026-03-12T06:52:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 5 cycles (since cycle 80 commit). Working tree: 3 modified files (accumulated state/log updates)."
-  - id: ITEM-084
-    title: "Cycle 84 - CRON idle check"
-    completed_at_utc: 2026-03-12T06:42:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 4 cycles (since cycle 80 commit)."
-  - id: ITEM-083
-    title: "Cycle 83 - CRON idle check"
-    completed_at_utc: 2026-03-12T06:32:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 3 cycles (since cycle 80 commit)."
-  - id: ITEM-082
-    title: "Cycle 82 - CRON idle check"
-    completed_at_utc: 2026-03-12T06:22:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 2 cycles (since cycle 80 commit)."
-  - id: ITEM-081
-    title: "Cycle 81 - CRON idle check"
-    completed_at_utc: 2026-03-12T06:12:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 1 cycle (since cycle 80 commit)."
-  - id: ITEM-080
-    title: "Cycle 80 - CRON maintenance cycle"
-    completed_at_utc: 2026-03-12T06:02:00Z
-    committed_at_utc: 2026-03-12T06:02:00Z
-    stage: done
-    commit_ref: d7a8b9c
-    notes: "Maintenance cycle - CRON-triggered profile-driven execution, validations passed, no active items, maintenance commands executed (cycle_log_maintain.py), state/log updates committed. Idle streak: reset to 0. Next maintenance: cycle 90."
 
-next_item_id: 21
+next_item_id: 23
