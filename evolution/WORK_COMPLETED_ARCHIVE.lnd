@@ -4,7 +4,7 @@ id: WORK_COMPLETED_ARCHIVE-001
 version: 7
 document: WORK_COMPLETED_ARCHIVE
 purpose: Append-only archive of completed backlog items for audit/replay.
-updated_at_utc: 2026-03-12T18:12:56Z
+updated_at_utc: 2026-03-12T19:53:53Z
 
 archived_items:
   - item_id: LNG-CORE-46
