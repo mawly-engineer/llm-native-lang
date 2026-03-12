@@ -1,24 +1,36 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-172
+id: QUEUE-CYCLE-173
 status: active
-updated_at_utc: 2026-03-12T21:52:00Z
+updated_at_utc: 2026-03-12T22:02:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
-  - id: ITEM-172
-    title: "Cycle 172 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T21:52:00Z
+  - id: ITEM-173
+    title: "Cycle 173 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T22:02:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
     notes: |
       Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
       Validations passed (LND 10/10, LNC 3/3). No active items.
-      Working tree: clean (no changes since cycle 171).
+      Working tree: clean after cycle 172 commit (62b6bae).
       suppress_idle_noop_commits applies - no commit.
+      Idle streak: 2 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
+      BLOCKER-001 persists.
+  - id: ITEM-172
+    title: "Cycle 172 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T21:52:00Z
+    committed_at_utc: "2026-03-12T22:02:00Z"
+    stage: done
+    commit_ref: 62b6bae
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: clean (committed as 62b6bae).
       Idle streak: 1 cycle (since cycle 171 maintenance). Next maintenance: cycle 181.
       BLOCKER-001 persists.
   - id: ITEM-171
@@ -34,18 +46,5 @@ completed:
       Working tree: clean after commit. LND: PASSED (10/10). LNC: PASSED (3/3).
       Idle streak: reset to 0. Next maintenance: cycle 181.
       BLOCKER-001 persists.
-  - id: ITEM-170
-    title: "Cycle 170 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T21:32:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
-      No active items. Working tree: modified (state/log updates).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 9 cycles (since cycle 161 maintenance). Next maintenance: cycle 171.
-      BLOCKER-001 persists.
 
-next_item_id: 172
+next_item_id: 173
