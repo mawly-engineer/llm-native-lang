@@ -1,13 +1,27 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-149
+id: QUEUE-CYCLE-150
 status: active
-updated_at_utc: 2026-03-12T18:02:00Z
+updated_at_utc: 2026-03-12T18:12:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-150
+    title: "Cycle 150 - KAIRO maintenance cycle"
+    completed_at_utc: 2026-03-12T18:12:00Z
+    committed_at_utc: 2026-03-12T18:12:00Z
+    stage: done
+    commit_ref: 512162f
+    notes: |
+      Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Maintenance scripts executed (cycle_log_maintain, work_items_compact).
+      Git commit: maintenance: normalize cycle/work logs (cycle 150).
+      Working tree: clean after maintenance commit.
+      Idle streak: 10 cycles (reset after maintenance). Next maintenance: cycle 160.
+      BLOCKER-001 persists.
   - id: ITEM-149
     title: "Cycle 149 - KAIRO idle check"
     completed_at_utc: 2026-03-12T18:02:00Z
@@ -74,4 +88,4 @@ completed:
       Idle streak: 5 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (5 remaining).
       BLOCKER-001 persists.
 
-next_item_id: 149
+next_item_id: 150
