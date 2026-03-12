@@ -2,7 +2,7 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-12T03:52:00Z
+updated_at_utc: 2026-03-12T04:12:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
