@@ -1,13 +1,34 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-070
+id: QUEUE-CYCLE-073
 status: active
-updated_at_utc: 2026-03-12T04:12:00Z
+updated_at_utc: 2026-03-12T04:42:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-073
+    title: "Cycle 73 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T04:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 3 cycles."
+  - id: ITEM-072
+    title: "Cycle 72 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T04:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 2 cycles."
+  - id: ITEM-071
+    title: "Cycle 71 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T04:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 1 cycle."
   - id: ITEM-070
     title: "Cycle 70 - Maintenance cycle"
     completed_at_utc: 2026-03-12T04:12:00Z
@@ -50,33 +71,5 @@ completed:
     stage: done
     commit_ref: null
     notes: "Idle cycle - no active items, suppress_idle_noop_commits prevents commit."
-  - id: ITEM-064
-    title: "Cycle 64 - Idle with accumulated state commit"
-    completed_at_utc: 2026-03-12T03:12:00Z
-    committed_at_utc: 2026-03-12T03:12:00Z
-    stage: done
-    commit_ref: 64a1f8e
-    notes: "Idle cycle - committed accumulated state/log changes from cycles 61-64."
-  - id: ITEM-063
-    title: "Cycle 63 - Idle maintenance check"
-    completed_at_utc: 2026-03-12T02:52:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - no active items, suppress_idle_noop_commits prevents commit."
-  - id: ITEM-062
-    title: "Cycle 62 - Idle maintenance check"
-    completed_at_utc: 2026-03-12T02:42:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - no active items, suppress_idle_noop_commits prevents commit."
-  - id: ITEM-020
-    title: "Create GitHub Actions release automation workflow"
-    completed_at_utc: 2026-03-11T21:32:00Z
-    committed_at_utc: 2026-03-11T21:32:00Z
-    stage: done
-    commit_ref: null
-    notes: "Release workflow complete. Push to origin/main required to activate."
 
 next_item_id: 20
