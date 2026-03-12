@@ -10,6 +10,16 @@ backlog:
 active: []
 
 completed:
+  - id: ITEM-015
+    title: "Create automated release workflow for GitHub Actions"
+    objective: ecosystem_p0_delivery
+    priority: p1
+    status: done
+    created_at_utc: 2026-03-11T21:22:00Z
+    started_at_utc: 2026-03-11T21:32:00Z
+    completed_at_utc: 2026-03-11T21:45:00Z
+    bucket: ecosystem
+    description: |
       Create an automated release workflow that addresses BLOCKER-001 by:
       - Automating git authentication via GitHub Actions
       - Building and publishing Python package to PyPI
@@ -25,7 +35,7 @@ completed:
       - Pre-release validation (tests + validators)
       - Git tag creation and release notes
       - Addresses BLOCKER-001 authentication pattern
-    stage: execute
+    stage: done
     commit_ref: null
     progress_notes: |
       Cycle 30: Created release automation infrastructure

@@ -1,13 +1,65 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-173
+id: QUEUE-CYCLE-177
 status: active
-updated_at_utc: 2026-03-12T22:02:00Z
+updated_at_utc: 2026-03-12T22:52:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-177
+    title: "Cycle 177 - WORK_ITEMS structure fix"
+    completed_at_utc: 2026-03-12T22:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Structure fix cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Fixed malformed WORK_ITEMS.lnd: ITEM-015 entry had raw text instead of proper YAML structure.
+      Applied proper LND item format with id, title, timestamps, acceptance criteria, etc.
+      Validations passed (LND 10/10, LNC 3/3). Working tree: modified (meaningful change).
+      Idle streak: 6 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
+      BLOCKER-001 persists (does not block this fix).
+  - id: ITEM-176
+    title: "Cycle 176 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T22:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: clean after cycle 175 state (87ed022).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 5 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
+      BLOCKER-001 persists.
+  - id: ITEM-175
+    title: "Cycle 175 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T22:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: clean after cycle 174 state (87ed022).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 4 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
+      BLOCKER-001 persists.
+  - id: ITEM-174
+    title: "Cycle 174 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T22:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: clean after cycle 173 commit (87ed022).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 3 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
+      BLOCKER-001 persists.
   - id: ITEM-173
     title: "Cycle 173 - KAIRO idle check"
     completed_at_utc: 2026-03-12T22:02:00Z
@@ -47,4 +99,4 @@ completed:
       Idle streak: reset to 0. Next maintenance: cycle 181.
       BLOCKER-001 persists.
 
-next_item_id: 173
+next_item_id: 178
