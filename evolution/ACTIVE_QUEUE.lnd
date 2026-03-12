@@ -1,62 +1,77 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-140
+id: QUEUE-CYCLE-149
 status: active
-updated_at_utc: 2026-03-12T16:32:00Z
+updated_at_utc: 2026-03-12T18:02:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
-  - id: ITEM-140
-    title: "Cycle 140 - KAIRO maintenance cycle"
-    completed_at_utc: 2026-03-12T16:32:00Z
-    committed_at_utc: 2026-03-12T16:32:00Z
+  - id: ITEM-149
+    title: "Cycle 149 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T18:02:00Z
+    committed_at_utc: null
     stage: done
-    commit_ref: maintenance
+    commit_ref: null
     notes: |
-      MAINTENANCE CYCLE (every 10 cycles). 
-      - LND validation: PASSED (10/10 files)
-      - LNC validation: PASSED (3/3 files)  
-      - Cycle log maintenance: no compaction needed
-      - State/log files committed (maintenance cycle)
-      - Git status: clean after maintenance commit
-      - Idle streak reset. Next maintenance: cycle 150.
-      - BLOCKER-001 acknowledged (persists but clean working tree).
-  - id: ITEM-139
-    title: "Cycle 139 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T16:22:00Z
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Working tree: modified (state/log updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 9 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (1 remaining).
+      BLOCKER-001 persists.
+  - id: ITEM-148
+    title: "Cycle 148 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T17:52:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable. No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits applies - no commit. Idle streak: 9 cycles. Next maintenance: cycle 140. BLOCKER-001 persists."
-  - id: ITEM-138
-    title: "Cycle 138 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T16:12:00Z
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Working tree: modified (state/log updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 8 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (2 remaining).
+      BLOCKER-001 persists.
+  - id: ITEM-147
+    title: "Cycle 147 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T17:42:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable. No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits applies - no commit. Idle streak: 8 cycles. Next maintenance: cycle 140. BLOCKER-001 persists."
-  - id: ITEM-137
-    title: "Cycle 137 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T16:02:00Z
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Working tree: modified (state/log updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 7 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (3 remaining).
+      BLOCKER-001 persists.
+  - id: ITEM-146
+    title: "Cycle 146 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T17:32:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable. No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits applies - no commit. Idle streak: 7 cycles. Next maintenance: cycle 140. BLOCKER-001: 86 commits ahead."
-  - id: ITEM-136
-    title: "Cycle 136 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T15:52:00Z
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Working tree: modified (state/log updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 6 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (4 remaining).
+      BLOCKER-001 persists.
+  - id: ITEM-145
+    title: "Cycle 145 - KAIRO idle check"
+    completed_at_utc: 2026-03-12T17:22:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable. No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits applies - no commit. Idle streak: 6 cycles. Next maintenance: cycle 140. BLOCKER-001: 86 commits ahead."
-  - id: ITEM-135
-    title: "Cycle 135 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T15:42:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m). Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable. No active items. Working tree: 3 files modified (state/log). suppress_idle_noop_commits applies - no commit. Idle streak: 5 cycles. Next maintenance: cycle 140. BLOCKER-001: 86 commits ahead."
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). Runtime tests: pytest unavailable.
+      No active items. Working tree: modified (state/log updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 5 cycles (since cycle 140 maintenance). Next maintenance: cycle 150 (5 remaining).
+      BLOCKER-001 persists.
 
-next_item_id: 141
+next_item_id: 149
