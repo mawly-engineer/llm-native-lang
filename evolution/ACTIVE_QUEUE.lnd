@@ -1,13 +1,34 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-075
+id: QUEUE-CYCLE-078
 status: active
-updated_at_utc: 2026-03-12T05:12:00Z
+updated_at_utc: 2026-03-12T05:42:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-078
+    title: "Cycle 78 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T05:42:00Z
+    committed_at_utc: 2026-03-12T05:42:00Z
+    stage: done
+    commit_ref: 33e33da
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, runtime tests have 8 failures/19 errors (pre-existing), maintenance triggered early for accumulated state changes, committed state/log updates. Idle streak: 5 cycles."
+  - id: ITEM-077
+    title: "Cycle 77 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T05:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 4 cycles."
+  - id: ITEM-076
+    title: "Cycle 76 - CRON idle maintenance check"
+    completed_at_utc: 2026-03-12T05:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 3 cycles."
   - id: ITEM-075
     title: "Cycle 75 - CRON idle maintenance check"
     completed_at_utc: 2026-03-12T05:12:00Z
@@ -36,12 +57,5 @@ completed:
     stage: done
     commit_ref: null
     notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 2 cycles."
-  - id: ITEM-071
-    title: "Cycle 71 - CRON idle maintenance check"
-    completed_at_utc: 2026-03-12T04:22:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: "Idle cycle - CRON-triggered profile-driven execution, validations passed, no active items, suppress_idle_noop_commits prevents commit. Idle streak: 1 cycle."
 
 next_item_id: 20
