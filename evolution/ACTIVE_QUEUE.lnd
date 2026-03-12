@@ -1,13 +1,26 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-170
+id: QUEUE-CYCLE-171
 status: active
-updated_at_utc: 2026-03-12T21:32:00Z
+updated_at_utc: 2026-03-12T21:42:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-171
+    title: "Cycle 171 - KAIRO maintenance cycle"
+    completed_at_utc: 2026-03-12T21:42:00Z
+    committed_at_utc: 2026-03-12T21:42:00Z
+    stage: done
+    commit_ref: 354260a
+    notes: |
+      Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Work items compaction: 0 items archived. Cycle log compaction: not needed.
+      Commit 354260a: "maintenance: normalize cycle/work logs (cycle 171)"
+      Working tree: clean after commit. LND: PASSED (10/10). LNC: PASSED (3/3).
+      Idle streak: reset to 0. Next maintenance: cycle 181.
+      BLOCKER-001 persists.
   - id: ITEM-170
     title: "Cycle 170 - KAIRO idle check"
     completed_at_utc: 2026-03-12T21:32:00Z
