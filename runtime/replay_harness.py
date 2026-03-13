@@ -195,6 +195,37 @@ class ReplayValidator:
         
         return True
     
+    def validate_execution_content(self, original: ExecutionTrace, replayed: ExecutionTrace) -> bool:
+        """Validate that replayed execution content matches original (ignores trace IDs)."""
+        self.violations = []
+        
+        # Check input args match
+        if not self._compare_values(original.input_args, replayed.input_args):
+            self.violations.append(f"Input args mismatch: {original.input_args} vs {replayed.input_args}")
+        
+        # Check operation count
+        if len(original.operations) != len(replayed.operations):
+            self.violations.append(
+                f"Operation count mismatch: {len(original.operations)} vs {len(replayed.operations)}"
+            )
+        
+        # Compare operations
+        for i, (orig_op, replay_op) in enumerate(zip(original.operations, replayed.operations)):
+            if not self._compare_operations(orig_op, replay_op):
+                self.violations.append(f"Operation {i} mismatch")
+        
+        # Check output results
+        if not self._compare_values(original.output_result, replayed.output_result):
+            self.violations.append(
+                f"Output result mismatch: {original.output_result} vs {replayed.output_result}"
+            )
+        
+        # Check exceptions match
+        if original.exceptions != replayed.exceptions:
+            self.violations.append(f"Exceptions mismatch: {original.exceptions} vs {replayed.exceptions}")
+        
+        return len(self.violations) == 0
+
     def detect_non_deterministic_operations(self, trace: ExecutionTrace) -> List[str]:
         """Detect operations that may be non-deterministic."""
         detected = []
@@ -271,7 +302,7 @@ class ConformanceHarness:
         # Validate
         return self.validator.validate_trace(original, replayed)
     
-    def run_conformance_test(self, func: Callable, trace_id: str, iterations: int = 3) -> Dict[str, Any]:
+    def run_conformance_test(self, func: Callable, trace_id: str, *args, iterations: int = 3) -> Dict[str, Any]:
         """Run multiple iterations and verify all replays match."""
         results = {
             'trace_id': trace_id,
@@ -282,16 +313,16 @@ class ConformanceHarness:
         }
         
         # Capture first execution as reference
-        reference_trace = self.capture_and_save(func, f"{trace_id}_ref")
+        reference_trace = self.capture_and_save(func, f"{trace_id}_ref", *args)
         results['traces'].append(reference_trace.trace_id)
         
         # Run additional iterations and compare
         for i in range(iterations - 1):
-            iteration_trace = self.capture_and_save(func, f"{trace_id}_iter_{i}")
+            iteration_trace = self.capture_and_save(func, f"{trace_id}_iter_{i}", *args)
             results['traces'].append(iteration_trace.trace_id)
             
-            # Validate against reference
-            if not self.validator.validate_trace(reference_trace, iteration_trace):
+            # Validate execution content against reference (ignores trace IDs)
+            if not self.validator.validate_execution_content(reference_trace, iteration_trace):
                 results['all_match'] = False
                 results['violations'].extend(self.validator.violations)
         
