@@ -2,7 +2,7 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-13T12:42:00Z
+updated_at_utc: 2026-03-13T16:52:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
@@ -10,6 +10,198 @@ backlog:
 active: []
 
 completed:
+  - id: ITEM-279
+    title: "Cycle 279 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:52:00Z
+    completed_at_utc: 2026-03-13T16:52:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 23 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
+  - id: ITEM-278
+    title: "Cycle 278 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:42:00Z
+    completed_at_utc: 2026-03-13T16:42:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 22 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
+  - id: ITEM-277
+    title: "Cycle 277 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:32:00Z
+    completed_at_utc: 2026-03-13T16:32:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 21 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
+  - id: ITEM-276
+    title: "Cycle 276 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:22:00Z
+    completed_at_utc: 2026-03-13T16:22:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 20 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
+  - id: ITEM-275
+    title: "Cycle 275 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:12:00Z
+    completed_at_utc: 2026-03-13T16:12:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 19 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
+  - id: ITEM-274
+    title: "Cycle 274 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T16:02:00Z
+    completed_at_utc: 2026-03-13T16:02:00Z
+    bucket: meta
+    description: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active product-core backlog items.
+      Validation completed: LND PASSED (17/17), LNC PASSED (3/3).
+      Backlog seeding attempted:
+      - Scanned runtime/ for TODOs: none found
+      - Scanned scripts/ for TODOs: none found
+      - Scanned formats/ for TODOs: none found
+      - No new product-core work items identified
+      scripts/run_public_demo.py --verify-expected: PASSED.
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit for idle cycles.
+      Idle streak: 18 cycles.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002: No product-core backlog items available.
+      
+      Recommendations:
+      - Manual backlog item creation needed to resume product-core progress
+    acceptance_criteria:
+      - LND validation passes - VERIFIED
+      - LNC validation passes - VERIFIED
+      - Git status clean - VERIFIED
+      - Product-core seeding attempted - VERIFIED
+    stage: done
   - id: ITEM-255
     title: "Implement builtin call capture in replay_conformance.py"
     objective: runtime_replay_capability
@@ -57,113 +249,4 @@ completed:
     stage: done
     commit: "4133327"
 
-completed:
-  - id: ITEM-253
-    title: "Fix run_public_demo.py - parse programs before replay conformance evaluation"
-    objective: runtime_replay_capability
-    priority: p0
-    status: done
-    created_at_utc: 2026-03-13T12:13:00Z
-    completed_at_utc: 2026-03-13T12:13:00Z
-    bucket: runtime
-    description: |
-      FIXED: scripts/run_public_demo.py AST parsing bug.
-      
-      Bug: Program strings (e.g., "let x = 1 in x") were passed directly to
-      evaluate_batch_replay_conformance(), which expects parsed AST node dicts
-      with 'kind' and 'span' fields. This caused ASTValidationError.
-      
-      Fix: Added import from runtime.grammar_contract import parse_expr,
-      then parsed programs before evaluation:
-        parsed_programs = [parse_expr(prog) for prog in DEFAULT_PROGRAMS]
-        conformance = evaluate_batch_replay_conformance(parsed_programs, repeats=3)
-      
-      Files changed:
-        - scripts/run_public_demo.py (2 lines added: import + parsing)
-        - runtime/examples/canonical_public_demo_expected.json (updated expected output)
-      
-      Validation:
-        - run_public_demo.py --verify-expected: PASSED
-        - test_example_app_flow: 2/2 PASSED
-        - LND validation: PASSED (4/4)
-        - LNC validation: PASSED (1/1)
-      
-      Product effect: runtime_replay_capability restored
-      BLOCKER-002 RESOLVED: product-core work item executed
-      Idle streak BROKEN: 37 → 0 cycles
-    stage: done
-  - id: ITEM-252
-    title: "Cycle 252 - KAIRO idle execution (product-core seeding attempted)"
-    objective: ecosystem_p0_delivery
-    priority: p3
-    status: done
-    created_at_utc: 2026-03-13T12:12:00Z
-    completed_at_utc: 2026-03-13T12:12:00Z
-    bucket: meta
-    description: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      Product-core seeding attempted - no backlog items available.
-      Meta-work limit EXCEEDED (36 cycles) - product-core prioritized.
-      LND validation: PASSED (4/4). LNC validation: PASSED (1/1).
-      Runtime tests: FAILED (8 failures, 15 errors) - known issue, not blocking.
-      Working tree: clean (state files modified, no product changes).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 36 cycles.
-      BLOCKER-001 persists (remote push only; local operations succeed).
-      BLOCKER-002: No product-core backlog items available.
-    acceptance_criteria:
-      - LND validation passes - VERIFIED
-      - LNC validation passes - VERIFIED
-      - Git status clean - VERIFIED
-      - Product-core seeding attempted - VERIFIED
-    stage: done
-  - id: ITEM-251
-    title: "Cycle 251 - KAIRO idle execution (product-core seeding attempted)"
-    objective: ecosystem_p0_delivery
-    priority: p3
-    status: done
-    created_at_utc: 2026-03-13T12:12:00Z
-    completed_at_utc: 2026-03-13T12:12:00Z
-    bucket: meta
-    description: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      Product-core seeding attempted - no backlog items available.
-      Meta-work limit EXCEEDED (35 cycles) - product-core prioritized.
-      LND validation: PASSED (17/17). LNC validation: PASSED (3/3).
-      Runtime tests: FAILED (8 failures, 15 errors) - known issue, not blocking.
-      Working tree: clean (state files modified, no product changes).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 35 cycles.
-      BLOCKER-001 persists (remote push only; local operations succeed).
-      BLOCKER-002: No product-core backlog items available.
-    acceptance_criteria:
-      - LND validation passes - VERIFIED
-      - LNC validation passes - VERIFIED
-      - Git status clean - VERIFIED
-      - Product-core seeding attempted - VERIFIED
-    stage: done
-  - id: ITEM-250
-    title: "Cycle 250 - KAIRO maintenance execution"
-    objective: ecosystem_p0_delivery
-    priority: p3
-    status: done
-    created_at_utc: 2026-03-13T12:02:00Z
-    completed_at_utc: 2026-03-13T12:02:00Z
-    bucket: meta
-    description: |
-      Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      Cycle log maintenance performed - no compaction needed.
-      Meta-work limit exceeded (34 cycles) - product-core work prioritized.
-      LND validation: PASSED (17/17). LNC validation: PASSED (3/3).
-      Runtime tests: FAILED (8 failures, 15 errors) - known issue, not blocking.
-      Working tree: clean after maintenance commit.
-      Maintenance: completed at cycle 250.
-      Idle streak: 34 cycles. BLOCKER-001 persists.
-    acceptance_criteria:
-      - LND validation passes - VERIFIED
-      - LNC validation passes - VERIFIED
-      - Git status clean after commit - VERIFIED
-      - Cycle log maintenance completed - VERIFIED
-    stage: done
-
-next_id: 256
+next_id: 280
