@@ -350,7 +350,7 @@ if __name__ == '__main__':
     
     # Test 1: Deterministic function
     print("\n[Test 1] Deterministic function (should pass):")
-    result = harness.run_conformance_test(deterministic_calc, "demo_deterministic", iterations=3)
+    result = harness.run_conformance_test(deterministic_calc, "demo_deterministic", 5, 3, iterations=3)
     print(f"  Trace IDs: {result['traces']}")
     print(f"  All match: {result['all_match']}")
     if result['violations']:

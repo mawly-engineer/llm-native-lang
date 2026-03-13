@@ -1,13 +1,35 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-212
+id: QUEUE-CYCLE-213
 status: active
-updated_at_utc: 2026-03-13T05:32:00Z
+updated_at_utc: 2026-03-13T05:42:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-213
+    title: "Cycle 213 - KAIRO execution cycle (replay_harness demo fix)"
+    completed_at_utc: 2026-03-13T05:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: a469778
+    notes: |
+      Execution cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      PRODUCT EFFECT: Fixed runtime/replay_harness.py demo test function arguments.
+      
+      BUG FIX DETAILS:
+      - Modified demo test to pass arguments 5 and 3 to deterministic_calc()
+      - Changed: harness.run_conformance_test(deterministic_calc, "demo_deterministic", iterations=3)
+      - To: harness.run_conformance_test(deterministic_calc, "demo_deterministic", 5, 3, iterations=3)
+      - All 3 conformance tests now PASS
+      
+      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
+      Conformance tests: PASSED (3/3).
+      Git: commit a469778 (includes Cycle 212 signature fix + this demo fix).
+      Idle streak: reset to 0. Next maintenance: cycle 223.
+      BLOCKER-001 persists.
+
   - id: ITEM-212
     title: "Cycle 212 - KAIRO execution cycle (replay_harness fix)"
     completed_at_utc: 2026-03-13T05:32:00Z
