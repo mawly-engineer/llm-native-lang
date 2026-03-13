@@ -1,11 +1,62 @@
 @lnd 0.2
 kind: cycle_log
-id: LOG-CYCLE-253
+id: LOG-CYCLE-255
 status: active
-updated_at_utc: 2026-03-13T12:13:00Z
+updated_at_utc: 2026-03-13T12:42:00Z
 purpose: Append-only log of evolution cycles.
 
 entries:
+  - cycle: 255
+    timestamp_utc: 2026-03-13T12:42:00Z
+    type: product_core
+    stage_before: idle
+    stage_after: create
+    executed_backlog_item_id: ITEM-255
+    execution_status: create
+    implementation_delta: |-
+      CYCLE 255: PRODUCT-CORE CREATION — CRON-triggered profile-driven execution (KAIRO 10m).
+      BLOCKER-002 RESOLVED: Product-core backlog item ITEM-255 created.
+      Idle streak BROKEN: 1 cycle → 0 (product-core work seeded).
+      
+      ITEM-255: Implement builtin call capture in replay_conformance.py
+      - Target: runtime/replay_conformance.py line 84 TODO
+      - Current: ExecutionTrace.builtin_calls = [] (empty list)
+      - Goal: Capture actual builtin calls via TraceCaptureHook instrumentation
+      
+      Seeding rationale:
+      - Found TODO in replay_conformance.py: "Add builtin call capture via instrumentation"
+      - This extends runtime_replay_capability with detailed execution traces
+      - Product-core objective: enhance deterministic execution tracking
+      
+      Validation results:
+      - LND validation: PASSED (4/4)
+      - LNC validation: PASSED (1/1)
+      - run_public_demo.py --verify-expected: PASSED
+      - test_example_app_flow: 2/2 PASSED
+      
+      Product effect: backlog item created for runtime_replay_capability enhancement
+      Working tree: dirty (state files modified, no code changes yet)
+      Idle streak: BROKEN (now 0 cycles)
+      BLOCKER-001 persists (remote push only; local operations succeed).
+      BLOCKER-002 RESOLVED: product-core work item available.
+      Next: Implement TraceCaptureHook instrumentation in interpreter_runtime.
+    changed_files:
+      - evolution/CURRENT_STATE.lnd
+      - evolution/ACTIVE_QUEUE.lnd
+      - evolution/CYCLE_LOG.lnd
+      - evolution/WORK_ITEMS.lnd
+    tests:
+      - "LND validation: evolution/ directory - PASSED (4/4)"
+      - "LNC validation: runtime/examples/ directory - PASSED (1/1)"
+      - "run_public_demo.py --verify-expected: PASSED"
+      - "test_example_app_flow: 2/2 PASSED"
+      - "Git status: dirty (4 files modified)"
+      - "BLOCKER-002: RESOLVED - product-core work item created"
+      - "Idle streak: BROKEN - now 0 cycles"
+      - "CRON execution: profile-driven creation cycle - COMPLETED"
+    commit: null
+    blockers:
+      - BLOCKER-001
   - cycle: 253
     timestamp_utc: 2026-03-13T12:13:00Z
     type: product_core

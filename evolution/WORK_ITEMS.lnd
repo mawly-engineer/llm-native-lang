@@ -2,12 +2,50 @@
 kind: work_items
 id: BACKLOG-INIT-003
 status: active
-updated_at_utc: 2026-03-13T12:13:00Z
+updated_at_utc: 2026-03-13T12:42:00Z
 purpose: Product-core backlog for language, runtime, and contracts.
 
 backlog:
 
-active: []
+active:
+  - id: ITEM-255
+    title: "Implement builtin call capture in replay_conformance.py"
+    objective: runtime_replay_capability
+    priority: p0
+    status: active
+    created_at_utc: 2026-03-13T12:42:00Z
+    bucket: runtime
+    description: |
+      Implement builtin call capture instrumentation in replay_conformance.py.
+      
+      Current State:
+      - capture_execution_trace() returns ExecutionTrace with builtin_calls=[] (empty)
+      - Line 84 in runtime/replay_conformance.py has TODO: "Add builtin call capture via instrumentation"
+      
+      Target Implementation:
+      - Extend TraceCaptureHook to integrate with interpreter_runtime
+      - Hook into builtin function calls (abs, len, max, min, range, etc.)
+      - Capture: builtin name, args, and result for each call
+      - Store in ExecutionTrace.builtin_calls list
+      
+      Files to modify:
+      - runtime/replay_conformance.py (TraceCaptureHook implementation)
+      - runtime/interpreter_runtime.py (instrumentation hooks)
+      
+      Acceptance Criteria:
+      - builtin_calls list is populated with actual call records
+      - Trace signatures remain deterministic
+      - Replay conformance tests pass
+      - No regression in existing functionality
+    acceptance_criteria:
+      - TraceCaptureHook records builtin calls during execution - PENDING
+      - Builtin call records include name, args, result - PENDING
+      - ExecutionTrace.builtin_calls is populated - PENDING
+      - run_public_demo.py --verify-expected passes - PENDING
+      - test_replay_conformance.py passes - PENDING
+      - LND validation passes - PENDING
+      - LNC validation passes - PENDING
+    stage: create
 
 completed:
   - id: ITEM-253
@@ -118,4 +156,4 @@ completed:
       - Cycle log maintenance completed - VERIFIED
     stage: done
 
-next_id: 254
+next_id: 256
