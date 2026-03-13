@@ -318,7 +318,7 @@ def _builtin_max(*args: Any) -> Any:
     return max(args)
 
 
-def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None) -> tuple[Env, EvalContext]:
+def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limit: int | None, builtin_hook: Any | None = None) -> tuple[Env, EvalContext]:
     try:
         validate_ast(node)
     except ASTValidationError as exc:
@@ -339,22 +339,34 @@ def _prepare_eval(node: dict[str, Any], env: Mapping[str, Any] | None, fuel_limi
     root.set("false", False)
     root.set("true", True)
     
+    # Helper to wrap builtins with instrumentation hook
+    def _wrap_builtin(fn: Callable, name: str) -> Callable:
+        if builtin_hook is None:
+            return fn
+        
+        def wrapped(*args: Any) -> Any:
+            result = fn(*args)
+            builtin_hook.record_call(name, args, result)
+            return result
+        
+        return wrapped
+    
     # Type predicate built-ins
-    root.set("is_int", _is_int)
-    root.set("is_float", _is_float)
-    root.set("is_string", _is_string)
-    root.set("is_bool", _is_bool)
-    root.set("is_list", _is_list)
-    root.set("is_object", _is_object)
-    root.set("is_null", _is_null)
-    root.set("is_function", _is_function)
+    root.set("is_int", _wrap_builtin(_is_int, "is_int"))
+    root.set("is_float", _wrap_builtin(_is_float, "is_float"))
+    root.set("is_string", _wrap_builtin(_is_string, "is_string"))
+    root.set("is_bool", _wrap_builtin(_is_bool, "is_bool"))
+    root.set("is_list", _wrap_builtin(_is_list, "is_list"))
+    root.set("is_object", _wrap_builtin(_is_object, "is_object"))
+    root.set("is_null", _wrap_builtin(_is_null, "is_null"))
+    root.set("is_function", _wrap_builtin(_is_function, "is_function"))
     
     # Collection built-ins
-    root.set("range", _builtin_range)
-    root.set("len", _builtin_len)
-    root.set("abs", _builtin_abs)
-    root.set("min", _builtin_min)
-    root.set("max", _builtin_max)
+    root.set("range", _wrap_builtin(_builtin_range, "range"))
+    root.set("len", _wrap_builtin(_builtin_len, "len"))
+    root.set("abs", _wrap_builtin(_builtin_abs, "abs"))
+    root.set("min", _wrap_builtin(_builtin_min, "min"))
+    root.set("max", _wrap_builtin(_builtin_max, "max"))
     
     if env:
         for key in sorted(env.keys()):
@@ -377,7 +389,31 @@ def eval_expr_with_trace(
     env: Mapping[str, Any] | None = None,
     fuel_limit: int | None = None,
 ) -> tuple[Any, list[str]]:
-    root, context = _prepare_eval(node=node, env=env, fuel_limit=fuel_limit)
+    """Evaluate expression with trace capture but no builtin instrumentation."""
+    root, context = _prepare_eval(node=node, env=env, fuel_limit=fuel_limit, builtin_hook=None)
+    context.trace_ids = []
+    result = _eval(node, root, context)
+    return result, context.trace_ids
+
+
+def eval_expr_with_trace_and_builtin_capture(
+    node: dict[str, Any],
+    env: Mapping[str, Any] | None = None,
+    fuel_limit: int | None = None,
+    builtin_hook: Any | None = None,
+) -> tuple[Any, list[str]]:
+    """Evaluate expression with trace capture and builtin instrumentation.
+    
+    Args:
+        node: The AST node to evaluate
+        env: Optional environment mapping
+        fuel_limit: Optional fuel limit for execution
+        builtin_hook: Optional TraceCaptureHook for recording builtin calls
+        
+    Returns:
+        Tuple of (result, trace_ids)
+    """
+    root, context = _prepare_eval(node=node, env=env, fuel_limit=fuel_limit, builtin_hook=builtin_hook)
     context.trace_ids = []
     result = _eval(node, root, context)
     return result, context.trace_ids

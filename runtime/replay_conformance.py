@@ -12,7 +12,7 @@ from hashlib import sha256
 import json
 from typing import Any, Dict, List, Mapping, Sequence, Callable
 
-from runtime.interpreter_runtime import eval_expr_with_trace, EvalContext, EvalError
+from runtime.interpreter_runtime import eval_expr_with_trace, eval_expr_with_trace_and_builtin_capture, EvalContext, EvalError
 from runtime.ast_contract import validate_ast
 
 
@@ -123,8 +123,13 @@ def capture_execution_trace(
     # Validate AST first
     validate_ast(ast_node)
     
-    # Execute with trace capture
-    result, trace_ids = eval_expr_with_trace(ast_node, env, fuel_limit)
+    # Create hook for capturing builtin calls
+    builtin_hook = TraceCaptureHook()
+    
+    # Execute with trace capture and builtin instrumentation
+    result, trace_ids = eval_expr_with_trace_and_builtin_capture(
+        ast_node, env, fuel_limit, builtin_hook
+    )
     
     # Calculate fuel used
     fuel_used = fuel_limit - len(trace_ids) if fuel_limit is not None else None
@@ -137,7 +142,7 @@ def capture_execution_trace(
         trace_ids=trace_ids,
         final_result=result,
         fuel_used=fuel_used,
-        builtin_calls=[],  # TODO: Add builtin call capture via instrumentation
+        builtin_calls=builtin_hook.builtin_calls,
     )
 
 
