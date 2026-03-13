@@ -1,10 +1,10 @@
 @lnd 0.2
 kind: current_state
-id: STATE-2026-03-13-253
-cycle: 253
-stage: validate
-workflow_mode: active
-updated_at_utc: 2026-03-13T12:13:00Z
+id: STATE-2026-03-13-254
+cycle: 254
+stage: done
+workflow_mode: idle
+updated_at_utc: 2026-03-13T12:32:00Z
 blockers:
   - id: BLOCKER-001
     type: git_remote_push_failed
@@ -12,29 +12,26 @@ blockers:
     first_seen: 2026-03-11T18:32:00Z
     mitigation: "GitHub Actions release workflow created - manual push requires SSH key setup or HTTPS credential configuration"
     attempted_resolutions:
-      - "Cycle 201-253: All cycles validated - working tree clean"
-      - "BLOCKER-002 RESOLVED: Product-core backlog item ITEM-253 seeded"
-active_item_id: ITEM-253
+      - "Cycles 201-253: All cycles validated - working tree clean"
+      - "Cycle 253: ITEM-253 completed successfully"
+active_item_id: null
 context:
   last_maintenance_cycle: 250
-  idle_streak: 0
+  idle_streak: 1
   seeding_enabled: true
-  last_completed: ITEM-252
-  current_item: ITEM-253
-  current_item_stage: validate
-  next_action: execute_runtime_replay_fix
+  last_completed: ITEM-253
+  current_item: null
+  current_item_stage: null
+  next_action: seed_next_product_core_item
   last_commit: "maintenance: normalize cycle/work logs"
-  commit_summary: "Cycle 253: ACTIVE — Product-core item ITEM-253 seeded, idle streak broken"
-  scope_status: runtime_replay
+  commit_summary: "Cycle 254: IDLE — ITEM-253 completed, runtime_replay_capability restored"
+  scope_status: idle
   validation_status: "lnd_lnc_passed"
   execution_notes: |-
-    CYCLE 253: ACTIVE — CRON-triggered profile-driven execution (KAIRO 10m).
-    BLOCKER-002 RESOLVED: Product-core backlog item ITEM-253 created.
-    Idle streak BROKEN: 37 cycles → 0 (product-core work resumed).
-    Active item: ITEM-253 (Fix run_public_demo.py AST parsing bug).
-    Objective: runtime_replay_capability (product-core).
-    LND validation: PASSED (4/4). LNC validation: PASSED (1/1).
-    Working tree: dirty (state files modified).
-    Next: Execute ITEM-253 — fix scripts/run_public_demo.py to parse programs
-    before passing to evaluate_batch_replay_conformance().
+    CYCLE 254: IDLE — Profile-driven state synchronization (KAIRO).
+    ITEM-253 COMPLETED: scripts/run_public_demo.py AST parsing fix.
+    Product effect: runtime_replay_capability restored.
+    Working tree: clean.
+    Idle streak: 1 cycle (product-core work completed).
     BLOCKER-001 persists (remote push only; local operations succeed).
+    Next: Seed next product-core backlog item.

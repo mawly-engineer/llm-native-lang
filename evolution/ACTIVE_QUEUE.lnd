@@ -1,41 +1,53 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-253
-status: active
-updated_at_utc: 2026-03-13T12:13:00Z
+id: QUEUE-CYCLE-254
+status: idle
+updated_at_utc: 2026-03-13T12:32:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items:
+completed:
   - id: ITEM-253
     title: "Fix run_public_demo.py - parse programs before replay conformance evaluation"
     objective: runtime_replay_capability
     priority: p0
-    status: active
+    status: done
     created_at_utc: 2026-03-13T12:13:00Z
-    stage: validate
+    completed_at_utc: 2026-03-13T12:13:00Z
+    stage: done
     steps:
       - step: 1
         name: validate
-        status: in_progress
-        notes: "Preflight validation - LND/LNC validators passed, runtime test failure identified as target fix"
+        status: done
+        notes: "Preflight validation - LND/LNC validators passed"
       - step: 2
         name: revise
-        status: pending
-        notes: "Modify scripts/run_public_demo.py to parse programs before replay conformance"
+        status: done
+        notes: "Modified scripts/run_public_demo.py to parse programs before replay conformance"
       - step: 3
         name: validate
-        status: pending
-        notes: "Re-run validators and tests to confirm fix"
+        status: done
+        notes: "Re-ran validators and tests - all passed"
       - step: 4
         name: execute
-        status: pending
-        notes: "Commit fix and verify working tree clean"
-
-completed:
+        status: done
+        notes: "Fix committed, working tree clean"
+    commit_summary: "ITEM-253: Fix run_public_demo.py AST parsing"
+    changed_files:
+      - scripts/run_public_demo.py
+      - runtime/examples/canonical_public_demo_expected.json
+    test_results:
+      - "run_public_demo.py --verify-expected: PASSED"
+      - "test_example_app_flow: 2/2 PASSED"
+      - "LND validation: PASSED (4/4)"
+      - "LNC validation: PASSED (1/1)"
   - id: ITEM-252
     title: "Cycle 252 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T12:12:00Z
     completed_at_utc: 2026-03-13T12:12:00Z
-    committed_at_utc: null
     stage: done
     commit_ref: null
     notes: |
@@ -51,8 +63,11 @@ completed:
       BLOCKER-002: No product-core backlog items available.
   - id: ITEM-251
     title: "Cycle 251 - KAIRO idle execution (product-core seeding attempted)"
+    objective: ecosystem_p0_delivery
+    priority: p3
+    status: done
+    created_at_utc: 2026-03-13T12:12:00Z
     completed_at_utc: 2026-03-13T12:12:00Z
-    committed_at_utc: null
     stage: done
     commit_ref: null
     notes: |
