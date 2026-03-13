@@ -1,10 +1,10 @@
 @lnd 0.2
 kind: current_state
-id: STATE-2026-03-13-255
-cycle: 255
-stage: create
+id: STATE-2026-03-13-256
+cycle: 256
+stage: execute
 workflow_mode: active
-updated_at_utc: 2026-03-13T12:42:00Z
+updated_at_utc: 2026-03-13T12:52:00Z
 blockers:
   - id: BLOCKER-001
     type: git_remote_push_failed
@@ -14,26 +14,28 @@ blockers:
     attempted_resolutions:
       - "Cycles 201-253: All cycles validated - working tree clean"
       - "Cycle 253: ITEM-253 completed successfully"
+      - "Cycle 256: ITEM-255 completed successfully"
 active_item_id: null
 context:
   last_maintenance_cycle: 250
   idle_streak: 0
   seeding_enabled: true
-  last_completed: ITEM-253
-  current_item: ITEM-255
-  current_item_stage: create
-  next_action: implement_builtin_call_capture
-  last_commit: "state: sync post-cycle-254 state files"
-  commit_summary: "Cycle 255: ACTIVE — ITEM-255 seeded for builtin call capture instrumentation"
+  last_completed: ITEM-255
+  current_item: ITEM-256
+  current_item_stage: idle
+  next_action: await_new_backlog_items
+  last_commit: "4133327 ITEM-255: Implement builtin call capture in replay_conformance.py"
+  commit_summary: "Cycle 256: EXECUTE — ITEM-255 completed with builtin call capture implementation"
   scope_status: runtime_replay
-  validation_status: "lnd_lnc_passed_preflight"
+  validation_status: "lnd_lnc_passed_execution"
   execution_notes: |-
-    CYCLE 255: ACTIVE — CRON-triggered profile-driven execution (KAIRO 10m).
-    ITEM-255 SEEDED: Implement builtin call capture in replay_conformance.py.
+    CYCLE 256: EXECUTE — CRON-triggered profile-driven execution (KAIRO 10m).
+    ITEM-255 COMPLETED: Implement builtin call capture in replay_conformance.py.
     Objective: runtime_replay_capability (product-core).
-    Target: runtime/replay_conformance.py capture_execution_trace() function.
-    TODO: Replace empty builtin_calls list with actual instrumentation.
+    Implementation: TraceCaptureHook integration with interpreter_runtime builtin wrapping.
     LND validation: PASSED (4/4). LNC validation: PASSED (1/1).
-    Working tree: dirty (state files modified).
+    Builtin call capture verified: range, len, abs, min, max, is_int, etc.
+    run_public_demo.py --verify-expected: PASSED
+    Working tree: clean after commit 4133327.
     BLOCKER-001 persists (remote push only; local operations succeed).
-    Next: Implement builtin call capture instrumentation.
+    Next: Await new product-core backlog items.
