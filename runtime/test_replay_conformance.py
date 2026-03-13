@@ -252,7 +252,7 @@ class IntegrationTest(unittest.TestCase):
                 {"kind": "number", "value": 2, "span": _make_span(3, 4)},
                 {"kind": "number", "value": 3, "span": _make_span(6, 7)},
             ],
-            "span": _make_span(0, 1, 1, 8, 1, 9),
+            "span": _make_span(0, 9),
         }
         
         trace = capture_execution_trace(ast)

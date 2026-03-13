@@ -1,13 +1,69 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-213
+id: QUEUE-CYCLE-216
 status: active
-updated_at_utc: 2026-03-13T05:42:00Z
+updated_at_utc: 2026-03-13T06:22:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-216
+    title: "Cycle 216 - KAIRO execution cycle (test span fix)"
+    completed_at_utc: 2026-03-13T06:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Execution cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      PRODUCT EFFECT: Fixed runtime/test_replay_conformance.py span creation bug.
+      
+      BUG FIX DETAILS:
+      - Test "test_complex_program_trace" had incorrect span creation
+      - Called _make_span(0, 1, 1, 8, 1, 9) but function accepts only 2 args
+      - Fixed: changed to _make_span(0, 9) for valid span
+      - All 19 conformance tests now PASS (was 1 ERROR)
+      - Replay conformance test suite fully operational
+      
+      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
+      Conformance tests: PASSED (19/19).
+      Working tree: modified (test_replay_conformance.py).
+      Git: ready for commit (BLOCKER-001 pending).
+      Idle streak: reset to 0. Next maintenance: cycle 223.
+      BLOCKER-001 persists.
+
+  - id: ITEM-215
+    title: "Cycle 215 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T06:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active items in queue. All product-core workstreams remain complete.
+      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
+      Conformance tests: PASSED (3/3).
+      Working tree: clean (state files modified, no product changes).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 2 cycles. Next maintenance: cycle 223.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+
+  - id: ITEM-214
+    title: "Cycle 214 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T05:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active items in queue. All product-core workstreams remain complete.
+      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
+      Conformance tests: PASSED (3/3).
+      Working tree: clean.
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 1 cycle. Next maintenance: cycle 223.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+
   - id: ITEM-213
     title: "Cycle 213 - KAIRO execution cycle (replay_harness demo fix)"
     completed_at_utc: 2026-03-13T05:42:00Z
@@ -30,86 +86,42 @@ completed:
       Idle streak: reset to 0. Next maintenance: cycle 223.
       BLOCKER-001 persists.
 
-  - id: ITEM-212
-    title: "Cycle 212 - KAIRO execution cycle (replay_harness fix)"
-    completed_at_utc: 2026-03-13T05:32:00Z
+  - id: ITEM-214
+    title: "Cycle 214 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T05:52:00Z
     committed_at_utc: null
     stage: done
     commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      No active items in queue. All product-core workstreams remain complete.
+      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
+      Conformance tests: PASSED (3/3).
+      Working tree: clean.
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 1 cycle. Next maintenance: cycle 223.
+      BLOCKER-001 persists (remote push only; local operations succeed).
+
+  - id: ITEM-213
+    title: "Cycle 213 - KAIRO execution cycle (replay_harness demo fix)"
+    completed_at_utc: 2026-03-13T05:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: a469778
     notes: |
       Execution cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      PRODUCT EFFECT: Fixed runtime/replay_harness.py conformance test signature bug.
+      PRODUCT EFFECT: Fixed runtime/replay_harness.py demo test function arguments.
       
       BUG FIX DETAILS:
-      - Modified run_conformance_test() to accept *args parameter
-      - Added validate_execution_content() method to ReplayValidator class
-      - Validates execution without requiring matching trace IDs
-      - All 17 integration tests now pass
+      - Modified demo test to pass arguments 5 and 3 to deterministic_calc()
+      - Changed: harness.run_conformance_test(deterministic_calc, "demo_deterministic", iterations=3)
+      - To: harness.run_conformance_test(deterministic_calc, "demo_deterministic", 5, 3, iterations=3)
+      - All 3 conformance tests now PASS
       
       LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
-      Integration tests: PASSED (17/17).
-      Working tree: has changes (replay_harness.py).
-      Idle streak: 1 cycle. Next maintenance: cycle 221.
+      Conformance tests: PASSED (3/3).
+      Git: commit a469778 (includes Cycle 212 signature fix + this demo fix).
+      Idle streak: reset to 0. Next maintenance: cycle 223.
       BLOCKER-001 persists.
 
-  - id: ITEM-211
-    title: "Cycle 211 - KAIRO maintenance cycle"
-    completed_at_utc: 2026-03-13T05:22:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      No active items in queue. All product-core workstreams remain complete.
-      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
-      Working tree: clean (state files only).
-      Maintenance: cycle_log_maintain.py executed (no compaction needed).
-      Idle streak: reset to 0. Next maintenance: cycle 221.
-      BLOCKER-001 persists.
-
-  - id: ITEM-210
-    title: "Cycle 210 - KAIRO idle check"
-    completed_at_utc: 2026-03-13T05:12:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      No active items in queue. All product-core workstreams remain complete.
-      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
-      Working tree: clean (state files only).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 9 cycles (since cycle 201 maintenance). Next maintenance: cycle 211.
-      BLOCKER-001 persists.
-
-  - id: ITEM-209
-    title: "Cycle 209 - KAIRO idle check"
-    completed_at_utc: 2026-03-13T05:02:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      No active items in queue. All product-core workstreams remain complete.
-      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
-      Working tree: clean (state files only).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 8 cycles (since cycle 201 maintenance). Next maintenance: cycle 211.
-      BLOCKER-001 persists.
-
-  - id: ITEM-208
-    title: "Cycle 208 - KAIRO idle check"
-    completed_at_utc: 2026-03-13T04:52:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      No active items in queue. All product-core workstreams remain complete.
-      LND validation: PASSED (4/4). LNC validation: PASSED (3/3).
-      Working tree: clean (state files only).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 7 cycles (since cycle 201 maintenance). Next maintenance: cycle 211.
-      BLOCKER-001 persists.
-
-next_item_id: 213
+next_item_id: 216
