@@ -12,6 +12,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from runtime.example_app_flow import build_example_run_artifact
 from runtime.replay_conformance import evaluate_batch_replay_conformance
+from runtime.grammar_contract import parse_expr
 
 
 DEFAULT_EXPECTED_PATH = Path("/home/node/.openclaw/workspace/llm-native-lang/runtime/examples/canonical_public_demo_expected.json")
@@ -24,7 +25,9 @@ DEFAULT_PROGRAMS = [
 
 def _build_demo_output() -> dict:
     artifact = build_example_run_artifact(programs=DEFAULT_PROGRAMS)
-    conformance = evaluate_batch_replay_conformance(DEFAULT_PROGRAMS, repeats=3)
+    # Parse programs to AST nodes before passing to replay conformance
+    parsed_programs = [parse_expr(prog) for prog in DEFAULT_PROGRAMS]
+    conformance = evaluate_batch_replay_conformance(parsed_programs, repeats=3)
     return {
         "demo": "LLM -> LNC -> Runtime -> Replay",
         "artifact": artifact,

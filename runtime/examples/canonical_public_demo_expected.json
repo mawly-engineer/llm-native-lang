@@ -50,6 +50,22 @@
           "op": "set_prop",
           "path": "/artifacts/language-runs/language.run",
           "value": "ok"
+        },
+        {
+          "key": "trace_count",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": 3
+        },
+        {
+          "key": "trace_ids",
+          "op": "set_prop",
+          "path": "/artifacts/language-runs/language.run",
+          "value": [
+            "n-000001:let",
+            "n-000002:number",
+            "n-000003:ident"
+          ]
         }
       ],
       "snapshot_head": null
@@ -78,6 +94,7 @@
   "batch_conformance": {
     "conformance": true,
     "failed": 0,
+    "non_deterministic_programs": [],
     "passed": 3,
     "repeats": 3,
     "results": [
@@ -86,33 +103,138 @@
         "mismatch_indices": [],
         "repeats": 3,
         "signatures": [
-          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513",
-          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513",
-          "48ea01db792af72d063e3da6f39421e2cbdba91ae3e021c9c16a497e16088513"
+          "37d872e73cb0cb44db133e27a42300dffd05cad042eef40aaef32c15cc7d97c1",
+          "37d872e73cb0cb44db133e27a42300dffd05cad042eef40aaef32c15cc7d97c1",
+          "37d872e73cb0cb44db133e27a42300dffd05cad042eef40aaef32c15cc7d97c1"
         ],
-        "source": "let x = 1 in x"
+        "source": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 1}}",
+        "traces": [
+          {
+            "builtin_calls": [],
+            "final_result": 1,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 1}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 1,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 1}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 1,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 1}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          }
+        ]
       },
       {
         "conformance": true,
         "mismatch_indices": [],
         "repeats": 3,
         "signatures": [
-          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345",
-          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345",
-          "a45d2dcef541efc04e2f97c37aa163dedeca5721683ed258c2b82d8218fc2345"
+          "f44e496a20101ec91dd7db275ac715f1218e248733ab834a0f6af837bc85a0cb",
+          "f44e496a20101ec91dd7db275ac715f1218e248733ab834a0f6af837bc85a0cb",
+          "f44e496a20101ec91dd7db275ac715f1218e248733ab834a0f6af837bc85a0cb"
         ],
-        "source": "let x = 2 in x"
+        "source": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 2}}",
+        "traces": [
+          {
+            "builtin_calls": [],
+            "final_result": 2,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 2}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 2,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 2}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 2,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"x\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"x\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 2}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          }
+        ]
       },
       {
         "conformance": true,
         "mismatch_indices": [],
         "repeats": 3,
         "signatures": [
-          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9",
-          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9",
-          "7ccc967ec2532270344ff148a557ae6740c41f3c5288ca9c5bb018c4585f8fd9"
+          "ec044d5dfdd7380dd7e1e99d418d83788f7d4813b78ecbde49511604b1a7203a",
+          "ec044d5dfdd7380dd7e1e99d418d83788f7d4813b78ecbde49511604b1a7203a",
+          "ec044d5dfdd7380dd7e1e99d418d83788f7d4813b78ecbde49511604b1a7203a"
         ],
-        "source": "let y = 7 in y"
+        "source": "{\"body\": {\"kind\": \"ident\", \"name\": \"y\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"y\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 7}}",
+        "traces": [
+          {
+            "builtin_calls": [],
+            "final_result": 7,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"y\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"y\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 7}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 7,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"y\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"y\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 7}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          },
+          {
+            "builtin_calls": [],
+            "final_result": 7,
+            "fuel_used": null,
+            "program": "{\"body\": {\"kind\": \"ident\", \"name\": \"y\", \"span\": {\"end\": 14, \"start\": 13}}, \"kind\": \"let\", \"name\": \"y\", \"recursive\": false, \"span\": {\"end\": 14, \"start\": 0}, \"value\": {\"kind\": \"number\", \"span\": {\"end\": 9, \"start\": 8}, \"value\": 7}}",
+            "trace_ids": [
+              "n-000001:let",
+              "n-000002:number",
+              "n-000003:ident"
+            ]
+          }
+        ]
       }
     ],
     "total": 3
