@@ -39,7 +39,7 @@ context:
   current_item: null
   current_item_stage: null
   next_action: idle_wait_for_backlog
-  last_commit: "PENDING"
+  last_commit: "df5fc01"
   commit_summary: "Cycle 181: MAINTENANCE — Cycle log compaction, state normalization"
   scope_status: complete
   validation_status: "passed"
