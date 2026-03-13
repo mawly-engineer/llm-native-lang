@@ -1,19 +1,151 @@
 @lnd 0.2
 kind: active_queue
-id: QUEUE-CYCLE-181
+id: QUEUE-CYCLE-191
 status: active
-updated_at_utc: 2026-03-13T00:02:00Z
+updated_at_utc: 2026-03-13T01:52:00Z
 purpose: Near-term execution queue with mapped steps.
 
 items: []
 
 completed:
+  - id: ITEM-191
+    title: "Cycle 191 - KAIRO maintenance cycle"
+    completed_at_utc: 2026-03-13T01:52:00Z
+    committed_at_utc: 2026-03-13T01:52:00Z
+    stage: done
+    commit_ref: "0bb5110"
+    notes: |
+      Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Cycle log compaction: retained entries 181-190 (recent 10 cycles).
+      Work items: no done items to archive.
+      State files updated and committed.
+      Validations passed (LND 10/10, LNC 3/3).
+      Working tree: clean after commit.
+      Idle streak: reset to 0. Next maintenance: cycle 201.
+      BLOCKER-001 persists (remote push only).
+  - id: ITEM-190
+    title: "Cycle 190 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T01:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 190 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 9 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-189
+    title: "Cycle 189 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T01:32:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 189 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 8 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-188
+    title: "Cycle 188 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T01:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 188 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 7 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-187
+    title: "Cycle 187 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T01:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 187 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 6 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-186
+    title: "Cycle 186 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T01:02:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 186 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 5 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-185
+    title: "Cycle 185 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T00:52:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 185 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 4 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-184
+    title: "Cycle 184 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T00:42:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 184 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 3 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-183
+    title: "Cycle 183 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T00:22:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 183 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 2 cycles (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
+  - id: ITEM-182
+    title: "Cycle 182 - KAIRO idle check"
+    completed_at_utc: 2026-03-13T00:12:00Z
+    committed_at_utc: null
+    stage: done
+    commit_ref: null
+    notes: |
+      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
+      Validations passed (LND 10/10, LNC 3/3). No active items.
+      Working tree: modified (cycle 182 state updates).
+      suppress_idle_noop_commits applies - no commit.
+      Idle streak: 1 cycle (since cycle 181 maintenance). Next maintenance: cycle 191.
+      BLOCKER-001 persists.
   - id: ITEM-181
     title: "Cycle 181 - KAIRO maintenance cycle"
     completed_at_utc: 2026-03-13T00:02:00Z
     committed_at_utc: 2026-03-13T00:02:00Z
     stage: done
-    commit_ref: "PENDING"
+    commit_ref: "fc3674e"
     notes: |
       Maintenance cycle - CRON-triggered profile-driven execution (KAIRO 10m).
       Cycle log compaction: retained entries 171-180 (recent 10 cycles).
@@ -23,18 +155,5 @@ completed:
       Working tree: clean after commit.
       Idle streak: reset to 0. Next maintenance: cycle 191.
       BLOCKER-001 persists (remote push only).
-  - id: ITEM-180
-    title: "Cycle 180 - KAIRO idle check"
-    completed_at_utc: 2026-03-12T23:52:00Z
-    committed_at_utc: null
-    stage: done
-    commit_ref: null
-    notes: |
-      Idle cycle - CRON-triggered profile-driven execution (KAIRO 10m).
-      Validations passed (LND 10/10, LNC 3/3). No active items.
-      Working tree: modified (cycle 179 state + current cycle).
-      suppress_idle_noop_commits applies - no commit.
-      Idle streak: 9 cycles (since cycle 171 maintenance). Next maintenance: cycle 181.
-      BLOCKER-001 persists.
 
-next_item_id: 182
+next_item_id: 192
