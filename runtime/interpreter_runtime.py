@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Mapping
 from collections.abc import Mapping as MappingABC
 
-from runtime.ast_contract import ASTValidationError, validate_ast
+from .ast_contract import ASTValidationError, validate_ast
 
 
 class EvalError(ValueError):
