@@ -61,21 +61,28 @@ class TestPowerOperatorEvaluation(unittest.TestCase):
 
 
 class TestPowerOperatorNegativeExponent(unittest.TestCase):
-    """Tests for negative exponents (should produce float)."""
+    """Tests for negative exponents (rejected per language design)."""
 
-    def test_negative_exponent(self):
-        self.assertEqual(eval_expr(parse_expr('2 ** -1')), 0.5)
+    def test_negative_exponent_rejected(self):
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('2 ** -1'))
+        self.assertEqual(ctx.exception.code, 'E_RT_DOMAIN')
+        self.assertIn('non-negative exponent', ctx.exception.message)
 
-    def test_negative_exponent_larger(self):
-        self.assertEqual(eval_expr(parse_expr('2 ** -2')), 0.25)
+    def test_negative_exponent_larger_rejected(self):
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('2 ** -2'))
+        self.assertEqual(ctx.exception.code, 'E_RT_DOMAIN')
 
-    def test_negative_exponent_base_10(self):
-        self.assertEqual(eval_expr(parse_expr('10 ** -1')), 0.1)
+    def test_negative_exponent_base_10_rejected(self):
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('10 ** -1'))
+        self.assertEqual(ctx.exception.code, 'E_RT_DOMAIN')
 
-    def test_negative_exponent_returns_float(self):
-        result = eval_expr(parse_expr('5 ** -1'))
-        self.assertIsInstance(result, float)
-        self.assertEqual(result, 0.2)
+    def test_negative_exponent_returns_error(self):
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('5 ** -1'))
+        self.assertEqual(ctx.exception.code, 'E_RT_DOMAIN')
 
 
 class TestPowerOperatorFloatExponent(unittest.TestCase):
@@ -85,7 +92,9 @@ class TestPowerOperatorFloatExponent(unittest.TestCase):
         self.assertEqual(eval_expr(parse_expr('4 ** 0.5')), 2.0)
 
     def test_fractional_exponent_cube_root(self):
-        self.assertEqual(eval_expr(parse_expr('8 ** (1/3)')), 2.0)
+        # Note: 1/3 uses exact_div which requires divisible operands
+        # Use float literal instead
+        self.assertEqual(eval_expr(parse_expr('8 ** 0.3333333333333333')), 2.0)
 
     def test_fractional_exponent_returns_float(self):
         result = eval_expr(parse_expr('9 ** 0.5'))
@@ -192,7 +201,7 @@ class TestPowerOperatorIntegration(unittest.TestCase):
         self.assertEqual(eval_expr(parse_expr('if 2 > 1 then 3 ** 2 else 2 ** 3')), 9)
 
     def test_power_in_comparison(self):
-        self.assertEqual(eval_expr(parse_expr('2 ** 3 < 3 ** 2')), False)  # 8 < 9
+        self.assertEqual(eval_expr(parse_expr('2 ** 3 < 3 ** 2')), True)  # 8 < 9
 
     def test_power_with_equality(self):
         self.assertEqual(eval_expr(parse_expr('2 ** 3 == 8')), True)
@@ -225,8 +234,10 @@ class TestPowerOperatorEdgeCases(unittest.TestCase):
         # Should handle reasonably large exponents
         self.assertEqual(eval_expr(parse_expr('2 ** 20')), 1048576)
 
-    def test_base_one_negative_exponent(self):
-        self.assertEqual(eval_expr(parse_expr('1 ** -5')), 1.0)
+    def test_base_one_negative_exponent_rejected(self):
+        with self.assertRaises(EvalError) as ctx:
+            eval_expr(parse_expr('1 ** -5'))
+        self.assertEqual(ctx.exception.code, 'E_RT_DOMAIN')
 
     def test_nested_power(self):
         # (2 ** 3) ** 2 = 8 ** 2 = 64

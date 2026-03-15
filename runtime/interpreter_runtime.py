@@ -900,9 +900,7 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
             return result
         
         # For mixed types or fractional exponents, return float
-        # but convert whole numbers to int for consistency
-        if isinstance(result, float) and result.is_integer():
-            return int(result)
+        # Do NOT convert to int - fractional exponents should preserve float type
         return result
 
     if kind == "coalesce_bin":

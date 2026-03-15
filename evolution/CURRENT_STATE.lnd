@@ -1,10 +1,10 @@
 @lnd 0.2
 kind: current_state
-id: STATE-2026-03-15-450
-cycle: 450
+id: STATE-2026-03-15-452
+cycle: 452
 stage: validate
 workflow_mode: active
-updated_at_utc: 2026-03-15T07:52:00Z
+updated_at_utc: 2026-03-15T08:12:00Z
 blockers:
   - id: BLOCKER-001
     type: git_remote_push_failed
@@ -12,50 +12,43 @@ blockers:
     first_seen: 2026-03-11T18:32:00Z
     mitigation: "GitHub Actions release workflow created - manual push requires SSH key setup or HTTPS credential configuration"
     attempted_resolutions:
-      - "Cycles 201-439: All cycles validated - working tree clean"
-      - "Cycle 350: ITEM-350 completed successfully"
-      - "Cycle 440: ITEM-440 completed successfully"
-      - "Cycle 441: ITEM-441 completed successfully"
-      - "Cycle 442: ITEM-442 completed successfully"
-      - "Cycle 443: ITEM-443 completed successfully"
-      - "Cycle 444: ITEM-444 completed successfully"
-      - "Cycle 445: ITEM-445 completed successfully"
-      - "Cycle 446: ITEM-446 completed successfully"
-      - "Cycle 447: ITEM-447 completed successfully"
-      - "Cycle 448: ITEM-448 completed successfully"
-      - "Cycle 449: ITEM-449 completed successfully"
+      - "Cycles 201-452: All cycles validated - working tree clean"
       - "Cycle 450: ITEM-450 completed successfully"
+      - "Cycle 451: Idle validation completed"
+      - "Cycle 452: Product-core execution completed - power operator tests fixed"
 active_item_id: null
 context:
   last_maintenance_cycle: 290
   idle_streak: 0
   seeding_enabled: true
-  last_completed: ITEM-450
+  last_completed: ITEM-452
   current_item: null
   current_item_stage: idle
   next_action: await_new_backlog_items
-  last_commit: "3a2e793 feat(runtime): reject negative exponents in power operator - Cycle 450: ITEM-450"
-  commit_summary: "Cycle 450: PRODUCT-CORE EXECUTION — negative exponent rejection in power operator"
-  scope_status: runtime_replay
-  validation_status: "lnd_lnc_passed_product_core_change"
+  last_commit: "Cycle 452: fix(runtime): power operator fractional exponent handling and test alignment"
+  commit_summary: "Cycle 452: PRODUCT-CORE EXECUTION — power operator test fixes"
+  scope_status: product_core_active
+  validation_status: "lnd_lnc_passed_product_changes_committed"
   execution_notes: |-
-    CYCLE 450: PRODUCT-CORE EXECUTION — CRON-triggered profile-driven execution (KAIRO 10m).
+    CYCLE 452: PRODUCT-CORE EXECUTION — CRON-triggered profile-driven execution (KAIRO 10m).
     Profile-driven execution completed successfully.
 
-    Product effect: runtime/interpreter_runtime.py
-    - Added explicit rejection of negative exponents in power operator (**)
-    - Raises E_RT_DOMAIN error with clear message for negative exponents
-    - Simplified logic flow for type handling
-    - Maintains deterministic behavior for valid inputs
+    Product effect: runtime/interpreter_runtime.py, runtime/test_power_operator.py
+    - Fixed power operator to preserve float type for fractional exponents
+    - Removed incorrect int conversion for float power results
+    - Fixed test_power_in_comparison: 8 < 9 is True (was incorrectly expecting False)
+    - Updated negative exponent tests to expect E_RT_DOMAIN rejection
+    - Updated fractional exponent cube root test to use float literal
 
     Validation results:
     - LND validation: PASSED (17/17 files across evolution/)
     - LNC validation: PASSED (3/3 runtime examples)
     - scripts/run_public_demo.py --verify-expected: PASSED
     - Runtime determinism proof: VERIFIED (events_replayed_equal, ops_equal)
+    - Power operator tests: 47/47 PASSED
 
-    Git status: clean (17 files committed)
-    Commit: 3a2e793 feat(runtime): reject negative exponents in power operator
+    Git status: clean (6 files modified, 2 product files)
+    Commit: Cycle 452: fix(runtime): power operator fractional exponent handling and test alignment
     Idle streak: RESET to 0 (product-core change executed)
     BLOCKER-001 persists (remote push only; local operations succeed)
     BLOCKER-002: CLEARED (product-core work executed)
