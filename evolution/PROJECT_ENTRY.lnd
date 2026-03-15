@@ -2,7 +2,7 @@
 kind: project_entry
 id: PROJECT-LLM-NATIVE-LANG-001
 status: active
-updated_at_utc: 2026-03-11T11:22:00Z
+updated_at_utc: 2026-03-15T07:42:00Z
 
 project:
   name: llm-native-lang
@@ -27,6 +27,17 @@ workstreams:
   - id: contracts
     name: LLM Format Contracts
     objective: llm_format_contract_capability
+
+core_file_set:
+  - runtime/grammar_contract.py
+  - runtime/ast_contract.py
+  - runtime/interpreter_runtime.py
+  - runtime/replay_conformance.py
+
+agent_and_cron_control_files:
+  - evolution/agents/KAIRO_COORDINATOR.lnd
+  - evolution/runs/RUN_PRODUCT_CORE.lnd
+  - evolution/cron/CRON_EXECUTION_PROTOCOL.lnd
 
 governance:
   sot_policy: strict

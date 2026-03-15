@@ -22,7 +22,7 @@ class FormatValidatorToolingTest(unittest.TestCase):
         )
 
         self.assertEqual(result.returncode, 0)
-        self.assertIn("PASS validated", result.stdout)
+        self.assertIn("Validation passed", result.stdout)
 
     def test_lnc_validator_handles_empty_directory(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -49,7 +49,7 @@ class FormatValidatorToolingTest(unittest.TestCase):
             )
 
         self.assertEqual(result.returncode, 1)
-        self.assertIn("ERR_PROFILE_MISMATCH", result.stdout)
+        self.assertIn("ERR_PROFILE_MISMATCH", result.stderr)
 
     def test_lnc_validator_detects_profile_mismatch_header(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

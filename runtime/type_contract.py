@@ -394,30 +394,25 @@ def _check(node: Any, ctx: _Ctx, path: str) -> TypeSpec:
         return fn_type(*param_types, returns=body_ty)
 
     if kind == "call":
-        callee = node.get("callee")
-        if not isinstance(callee, str) or not callee.strip():
-            raise TypeCheckError(f"{path}.callee: callee must be non-empty string")
-        if callee not in ctx.env:
-            raise TypeCheckError(f"{path}.callee: unknown function '{callee}'")
-
-        callee_ty = ctx.env[callee]
-        if callee_ty.kind != "fn":
-            raise TypeCheckError(f"{path}.callee: expected function, got {callee_ty}")
-
+        target_ty = _check(node.get("target"), ctx, f"{path}.target")
         args = node.get("args")
         if not isinstance(args, list):
             raise TypeCheckError(f"{path}.args: args must be list")
-        if len(args) != len(callee_ty.args):
+
+        if target_ty.kind != "fn":
+            raise TypeCheckError(f"{path}.target: expected function, got {target_ty}")
+
+        if len(args) != len(target_ty.args):
             raise TypeCheckError(
-                f"{path}.args: arity mismatch, expected {len(callee_ty.args)}, got {len(args)}"
+                f"{path}.args: arity mismatch, expected {len(target_ty.args)}, got {len(args)}"
             )
 
         for idx, arg in enumerate(args):
             arg_ty = _check(arg, ctx, f"{path}.args[{idx}]")
-            expected = callee_ty.args[idx]
+            expected = target_ty.args[idx]
             if expected != TYPE_ANY and arg_ty != expected:
                 raise TypeCheckError(f"{path}.args[{idx}]: expected {expected}, got {arg_ty}")
 
-        return TYPE_ANY if callee_ty.returns is None else callee_ty.returns
+        return TYPE_ANY if target_ty.returns is None else target_ty.returns
 
     raise TypeCheckError(f"{path}: unsupported kind '{kind}'")

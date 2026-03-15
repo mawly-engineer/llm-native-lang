@@ -13,13 +13,13 @@ class ASTContractTests(unittest.TestCase):
     def test_schema_freezes_core_node_kinds(self) -> None:
         self.assertEqual(
             list(AST_SCHEMA["nodes"].keys()),
-            ["let", "if", "fn", "call", "index", "optional_call", "member_access", "optional_index_access", "optional_member_access", "list", "object", "unary_pos", "unary_neg", "unary_not", "concat_bin", "mul_bin", "exact_div_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
+            ["let", "if", "fn", "call", "index", "slice", "range_call", "optional_call", "member_access", "optional_index_access", "optional_member_access", "list", "object", "unary_pos", "unary_neg", "unary_not", "concat_bin", "mul_bin", "exact_div_bin", "modulo_bin", "int_div_bin", "power_bin", "coalesce_bin", "logical_bin", "compare_bin", "ident", "number", "bool", "null", "string"],
         )
 
     def test_schema_fingerprint_stable(self) -> None:
         self.assertEqual(
             AST_SCHEMA_FINGERPRINT,
-            "2e37335a1a5d069a60a9092d89dd4d6ddb1b9598e17aea22f5a8644ab48212db",
+            "b357a311d2ae0e6404074e0f5f77aca0470f6f73edde7ad85cfca95b3f690639",
         )
 
     def test_parsed_core_nodes_validate(self) -> None:

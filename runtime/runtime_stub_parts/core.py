@@ -1037,11 +1037,9 @@ class KairoRuntime:
         run_path = f"/artifacts/language-runs/{run_node_id}"
         return [
             {"op": "insert", "path": run_path, "value": {"kind": "language-run", "node_id": run_node_id}},
-            {"op": "set_prop", "path": run_path, "key": "source", "value": source},
             {"op": "set_prop", "path": run_path, "key": "result", "value": self._serialize_runtime_value(result)},
             {"op": "set_prop", "path": run_path, "key": "result_type", "value": result_type},
-            {"op": "set_prop", "path": run_path, "key": "trace_ids", "value": trace_ids},
-            {"op": "set_prop", "path": run_path, "key": "trace_count", "value": len(trace_ids)},
+            {"op": "set_prop", "path": run_path, "key": "source", "value": source},
             {"op": "set_prop", "path": run_path, "key": "status", "value": "ok"},
         ]
 
@@ -1075,8 +1073,6 @@ class KairoRuntime:
             "language.ast_kind": ast["kind"],
             "language.result": serialized_result,
             "language.result_type": result_type,
-            "language.trace_ids": json.dumps(trace_ids, separators=(",", ":")),
-            "language.trace_count": len(trace_ids),
             "language.status": "ok",
         }
 

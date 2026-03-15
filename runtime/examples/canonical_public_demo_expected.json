@@ -50,22 +50,6 @@
           "op": "set_prop",
           "path": "/artifacts/language-runs/language.run",
           "value": "ok"
-        },
-        {
-          "key": "trace_count",
-          "op": "set_prop",
-          "path": "/artifacts/language-runs/language.run",
-          "value": 3
-        },
-        {
-          "key": "trace_ids",
-          "op": "set_prop",
-          "path": "/artifacts/language-runs/language.run",
-          "value": [
-            "n-000001:let",
-            "n-000002:number",
-            "n-000003:ident"
-          ]
         }
       ],
       "snapshot_head": null

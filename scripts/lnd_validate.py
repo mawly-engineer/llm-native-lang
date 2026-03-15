@@ -221,7 +221,10 @@ class LNDValidator:
         lines = content.split('\n')
         
         if not lines or not lines[0].startswith('@lnd'):
-            self.errors.append(LNDError('LND_PARSE_001', 1, "Missing '@lnd <version>' header", filepath))
+            if lines[0].startswith('@lnc'):
+                self.errors.append(LNDError('ERR_PROFILE_MISMATCH', 1, "file extension/header family mismatch (.lnd vs @lnc)", filepath))
+            else:
+                self.errors.append(LNDError('LND_PARSE_001', 1, "Missing '@lnd <version>' header", filepath))
             return False
         
         header_match = re.match(r'^@lnd\s+(\d+\.\d+)$', lines[0])

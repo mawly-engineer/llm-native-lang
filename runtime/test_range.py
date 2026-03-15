@@ -1,10 +1,10 @@
 """Tests for range expression evaluation."""
 
-import pytest
+import unittest
 from runtime.interpreter_runtime import eval_expr, EvalError
 
 
-class TestRangeSingleArgument:
+class TestRangeSingleArgument(unittest.TestCase):
     """Tests for range(end) form."""
 
     def test_range_5(self):
@@ -15,7 +15,7 @@ class TestRangeSingleArgument:
             "args": [{"kind": "number", "span": {"start": 6, "end": 7}, "value": 5}]
         }
         result = eval_expr(node)
-        assert result == [0, 1, 2, 3, 4]
+        self.assertEqual(result, [0, 1, 2, 3, 4])
 
     def test_range_0(self):
         """range(0) should return empty list."""
@@ -25,7 +25,7 @@ class TestRangeSingleArgument:
             "args": [{"kind": "number", "span": {"start": 6, "end": 7}, "value": 0}]
         }
         result = eval_expr(node)
-        assert result == []
+        self.assertEqual(result, [])
 
     def test_range_negative_end(self):
         """range(-3) should return empty list (start=0 > end=-3)."""
@@ -35,10 +35,10 @@ class TestRangeSingleArgument:
             "args": [{"kind": "number", "span": {"start": 6, "end": 8}, "value": -3}]
         }
         result = eval_expr(node)
-        assert result == []
+        self.assertEqual(result, [])
 
 
-class TestRangeTwoArguments:
+class TestRangeTwoArguments(unittest.TestCase):
     """Tests for range(start, end) form."""
 
     def test_range_1_to_5(self):
@@ -52,7 +52,7 @@ class TestRangeTwoArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [1, 2, 3, 4]
+        self.assertEqual(result, [1, 2, 3, 4])
 
     def test_range_equal_start_end(self):
         """range(5, 5) should return empty list."""
@@ -65,7 +65,7 @@ class TestRangeTwoArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == []
+        self.assertEqual(result, [])
 
     def test_range_negative_start(self):
         """range(-2, 3) should return [-2, -1, 0, 1, 2]."""
@@ -78,7 +78,7 @@ class TestRangeTwoArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [-2, -1, 0, 1, 2]
+        self.assertEqual(result, [-2, -1, 0, 1, 2])
 
     def test_range_negative_end(self):
         """range(-5, -2) should return [-5, -4, -3]."""
@@ -91,10 +91,10 @@ class TestRangeTwoArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [-5, -4, -3]
+        self.assertEqual(result, [-5, -4, -3])
 
 
-class TestRangeThreeArguments:
+class TestRangeThreeArguments(unittest.TestCase):
     """Tests for range(start, end, step) form."""
 
     def test_range_with_step_2(self):
@@ -109,7 +109,7 @@ class TestRangeThreeArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [0, 2, 4, 6, 8]
+        self.assertEqual(result, [0, 2, 4, 6, 8])
 
     def test_range_with_negative_step(self):
         """range(5, 0, -1) should return [5, 4, 3, 2, 1]."""
@@ -123,7 +123,7 @@ class TestRangeThreeArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [5, 4, 3, 2, 1]
+        self.assertEqual(result, [5, 4, 3, 2, 1])
 
     def test_range_negative_step_overshoot(self):
         """range(5, -3, -2) should return [5, 3, 1, -1]."""
@@ -137,7 +137,7 @@ class TestRangeThreeArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [5, 3, 1, -1]
+        self.assertEqual(result, [5, 3, 1, -1])
 
     def test_range_step_larger_than_range(self):
         """range(0, 5, 10) should return [0]."""
@@ -151,10 +151,10 @@ class TestRangeThreeArguments:
             ]
         }
         result = eval_expr(node)
-        assert result == [0]
+        self.assertEqual(result, [0])
 
 
-class TestRangeErrorCases:
+class TestRangeErrorCases(unittest.TestCase):
     """Tests for range error handling."""
 
     def test_range_step_zero(self):
@@ -168,9 +168,9 @@ class TestRangeErrorCases:
                 {"kind": "number", "span": {"start": 12, "end": 13}, "value": 0}
             ]
         }
-        with pytest.raises(EvalError) as exc_info:
+        with self.assertRaises(EvalError) as ctx:
             eval_expr(node)
-        assert exc_info.value.code == "E_RT_RANGE_STEP_ZERO"
+        self.assertEqual(ctx.exception.code, "E_RT_RANGE_STEP_ZERO")
 
     def test_range_non_int_argument(self):
         """range("a") should raise E_RT_TYPE."""
@@ -179,12 +179,12 @@ class TestRangeErrorCases:
             "span": {"start": 0, "end": 9},
             "args": [{"kind": "string", "span": {"start": 6, "end": 9}, "value": "a"}]
         }
-        with pytest.raises(EvalError) as exc_info:
+        with self.assertRaises(EvalError) as ctx:
             eval_expr(node)
-        assert exc_info.value.code == "E_RT_TYPE"
+        self.assertEqual(ctx.exception.code, "E_RT_TYPE")
 
 
-class TestRangeWithVariables:
+class TestRangeWithVariables(unittest.TestCase):
     """Tests for range with variable arguments."""
 
     def test_range_with_variables(self):
@@ -199,4 +199,8 @@ class TestRangeWithVariables:
             ]
         }
         result = eval_expr(node, env={"x": 1, "y": 10, "z": 3})
-        assert result == [1, 4, 7]
+        self.assertEqual(result, [1, 4, 7])
+
+
+if __name__ == "__main__":
+    unittest.main()

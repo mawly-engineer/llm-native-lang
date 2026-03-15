@@ -882,16 +882,24 @@ def _eval(node: dict[str, Any], env: Env, context: EvalContext) -> Any:
                 location={"node_kind": "power_bin", "side": "right"},
             )
         
-        # Compute power - Python's ** handles negative and fractional exponents
+        # Reject negative exponents
+        if right < 0:
+            raise EvalError(
+                code="E_RT_DOMAIN",
+                message=f"exponentiation requires non-negative exponent, got {right}",
+                location={"node_kind": "power_bin", "exponent": right},
+            )
+        
+        # Compute power - Python's ** handles fractional exponents
         result = left ** right
         
         # Return int if result is a whole number and inputs were ints
         # Otherwise return float
-        if left_is_int and right_is_int and right >= 0:
-            # Both inputs were positive ints, result is guaranteed int by Python
+        if left_is_int and right_is_int:
+            # Both inputs were ints, result is guaranteed int by Python for non-negative exponents
             return result
         
-        # For mixed types or negative/fractional exponents, return float
+        # For mixed types or fractional exponents, return float
         # but convert whole numbers to int for consistency
         if isinstance(result, float) and result.is_integer():
             return int(result)
